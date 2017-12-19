@@ -54,10 +54,9 @@ class Login extends Component {
 		const {errorStatus, loading} = this.props;
 		return (
 			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
-			<View style={{alignItems : 'center', padding:10}}>
-			                    {this.state.loading ? <CirclesLoader /> : undefined}
-			                    </View>
-
+				<View style={{alignItems : 'center', padding:10}}>
+				    {this.state.loading ? <CirclesLoader /> : undefined}
+				</View>
 				<View style ={commonStyles.inputcontent}>
 					<View style ={commonStyles.iconusername}>
 						<Ionicons name="ios-mail-outline" 
@@ -89,7 +88,6 @@ class Login extends Component {
 						color="#900"
 						style= {{ padding: 10}}
 						/>
-						
 						<TextInput
 							style={commonStyles.inputpassword}
 							value={this.state.password}
@@ -110,20 +108,15 @@ class Login extends Component {
 					</View>
 				</View>
 				<Button
-  					onPress={() => this.onSubmit()}
-  					title="Login"
-  					color="#87cefa"
-  					/>
-
-
+  				onPress={() => this.onSubmit()}
+  				title="Login"
+  				color="#87cefa"
+  				/>
 				{errorStatus ? <Text style={commonStyles.errorText}>{errorStatus}</Text> : undefined}
-<View style={{alignItems: 'center'}}>
+				<View style={{alignItems: 'center'}}>
 				<Text style={{ padding : 20 }}>Forgot password</Text>
-
 				<Text style={{color : '#87cefa' }}>New Customer ?</Text>
 				</View>
-
-
 				<Button
 					onPress = {this.createAcount.bind(this)}
   					title="Create An Acount"
@@ -138,7 +131,6 @@ class Login extends Component {
 
 	validate(){
 		const {email, password} = this.state;
-
 		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
 		if(reg.test(email) === false) 
 		{ 
@@ -149,7 +141,7 @@ class Login extends Component {
 			return false;
 		}
 		if (!password.length)
-		{ 
+		{
 			MessageBarManager.showAlert({
             	message: "Please Enter Your Password",
             	alertType: 'alert',
@@ -158,8 +150,6 @@ class Login extends Component {
 		}
 			return true;
 	} 
-
-
 	onSubmit() {
 		const {email, password, os} = this.state;
 		if (this.validate()) {

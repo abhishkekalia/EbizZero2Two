@@ -158,7 +158,12 @@ var styles =StyleSheet.create({
         fontSize : 10,
         fontWeight : 'bold'
     },
-
+    centering: {
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
+    },
     row: {
         // flex: 1,
         flexDirection: 'column',

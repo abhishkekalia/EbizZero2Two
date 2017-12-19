@@ -508,8 +508,13 @@ export default class MainView extends Component {
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
                     <IconBadge
                         MainElement={ 
+                            <TouchableOpacity 
+                            onPress={()=> this.addtoWishlist(data.product_id)}>
+
                             <Image style={styles.thumb} 
-                                source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>                        }
+                                source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
+                                </TouchableOpacity>
+                            }
                         BadgeElement={
                             <Text style={{color:'#FFFFFF', fontSize: 10, position: 'absolute'}}>{data.discount} %off</Text>
                         }
@@ -577,6 +582,12 @@ var styles =StyleSheet.create({
         // borderColor: '#CCC',
         flexDirection: 'row',
         flexWrap: 'wrap'
+    },
+    centering: {
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
     },
     name : {
         top : 5

@@ -68,6 +68,7 @@ export const login = (username, password, os) => {
             message: "invalid username and password",
             alertType: 'error',
             })
+            dispatch(loginFail(new Error('Username and Password Does not matched')));
     	}
     }) 
     .catch(err => { 

@@ -7,7 +7,8 @@ import {
   UIManager, 
   findNodeHandle, 
   Dimensions, 
-  ListView 
+  ListView ,
+  AsyncStorage
 } from "react-native";
 
 import Entypo from 'react-native-vector-icons/FontAwesome';
@@ -20,18 +21,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 const { width } = Dimensions.get('window')
 const ICON_SIZE = 24
 
-// const u_id = '2';
-// const country = '1';
-// const address_type = '1';
-
 export default class AddressBook extends Component {
      constructor(props) {
         super(props);
         this.getKey = this.getKey.bind(this);      
         this.state={
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
-            u_id: null,
-            country : null
+            u_id: '',
+            country : ''
         };
      }
 
@@ -41,11 +38,6 @@ export default class AddressBook extends Component {
         .done()
 
      }
-
-     componentWillUpdate(){
-          this.fetchAddress();
-     }
-
      async getKey() {
         try { 
             const value = await AsyncStorage.getItem('data'); 
@@ -57,12 +49,11 @@ export default class AddressBook extends Component {
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
-    }country
+    }
 
 
      fetchAddress(){
-                const { u_id, country } = this.state;
-
+        const { u_id, country } = this.state;
           let formData = new FormData();
           formData.append('u_id', String(u_id));
           formData.append('country', String(country)); 
@@ -78,7 +69,7 @@ export default class AddressBook extends Component {
           fetch(Utils.gurl('addressList'), config)  
           .then((response) => response.json())
           .then((responseData) => { 
-                           console.warn(JSON.stringify('responseData'));
+                           // console.warn(JSON.stringify('responseData'));
 
                this.setState({ 
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
@@ -87,6 +78,7 @@ export default class AddressBook extends Component {
     }
 
 	onRemove (data){
+        const { u_id, country } = this.state;
           let formData = new FormData();
           formData.append('u_id', String(u_id));
           formData.append('country', String(country)); 
@@ -103,7 +95,7 @@ export default class AddressBook extends Component {
           fetch(Utils.gurl('deleteAddress'), config)  
           .then((response) => response.json())
           .then((responseData) => {
-          alert(JSON.stringify(responseData)) 
+          // alert(JSON.stringify(responseData)) 
                // console.warn(JSON.stringify(responseData));
 
                // this.setState({ 
@@ -158,6 +150,9 @@ export default class AddressBook extends Component {
                     </TouchableOpacity>
                 </View>
         {listView}
+        <TouchableOpacity style={{ alignItems : 'center', backgroundColor:'#ccc'}}  onPress={()=>routes.pop()}>
+        <Text style={{padding :10}}>Close</Text>
+        </TouchableOpacity>
         </View>
         );
     }

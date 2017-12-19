@@ -156,7 +156,7 @@ if(responseData.status){
         console.warn("size chart");
     }
     buyNow(){
-
+routes.addressbook()
     }
     onSubmit () {
 

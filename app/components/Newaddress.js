@@ -7,40 +7,76 @@ import {
   ScrollView,
   Dimensions,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage,
+  Picker
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 const { width, height } = Dimensions.get('window')
 
 export default class Newaddress extends Component<{}> { 
     constructor(props) {
         super(props);        
+        this.getKey = this.getKey.bind(this);      
         this.state={
-        full_name : this.props.full_name,
-        mobile_number : this.props.mobile_number, 
-        pincode : this.props.pincode, 
-        alternate_number : this.props.alternate_number, 
-        address_line1 : this.props.address_line1, 
-        address_line2 : this.props.address_line2, 
-        landmark : this.props.landmark, 
-        town : this.props.town, 
-        city : this.props.city, 
-        state : this.props.state, 
-        country : this.props.country, 
-        address_type : this.props.address_type,
-        // update : false,
-        address_id : this.props.address_id
+        // full_name : this.props.full_name,
+        // mobile_number : this.props.mobile_number, 
+        // pincode : this.props.pincode, 
+        // alternate_number : this.props.alternate_number, 
+        // address_line1 : this.props.address_line1, 
+        // address_line2 : this.props.address_line2, 
+        // landmark : this.props.landmark, 
+        // town : this.props.town, 
+        // city : this.props.city, 
+        // state : this.props.state, 
+        // country : this.props.country, 
+        // address_type : this.props.address_type,
+        // // update : false,
+        // address_id : this.props.address_id
+        full_name : '',
+        mobile_number : '', 
+        pincode : '', 
+        alternate_number : '', 
+        address_line1 : '', 
+        address_line2 : '', 
+        landmark : '', 
+        town : '', 
+        city : '', 
+        state : '', 
+        country : '', 
+        address_type : '',
+        address_id : '',
+        u_id: '',
+        };
+        this.inputs = {};
+    }
+    componentDidMount (){
+        this.getKey()
+    }
+    async getKey() {
+        try { 
+            const value = await AsyncStorage.getItem('data'); 
+            var response = JSON.parse(value);  
+            this.setState({ 
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
         }
     }
-    componentDidMount (){}
+
     
     fetchAddress(){
+        const { u_id, country } = this.state;
+
         let formData = new FormData();
-        formData.append('u_id', String(2));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
 
         const config = { 
             method: 'POST', 
@@ -75,11 +111,12 @@ export default class Newaddress extends Component<{}> {
             state, 
             country, 
             address_type,
-            address_id 
+            address_id ,
+            u_id
         } = this.state;
         
         let formData = new FormData();
-        formData.append('u_id', String('2'));
+        formData.append('u_id', String(u_id));
         formData.append('address_id', String(address_id));
         formData.append('full_name', String(full_name));
         formData.append('mobile_number', String(mobile_number));
@@ -111,7 +148,8 @@ export default class Newaddress extends Component<{}> {
     }
 
     submit(){
-        const { 
+        const {
+            u_id, 
             full_name, 
             mobile_number, 
             pincode, 
@@ -125,8 +163,10 @@ export default class Newaddress extends Component<{}> {
             country, 
             address_type
    } = this.state;
+
+
         let formData = new FormData();
-        formData.append('u_id', String('2'));
+        formData.append('u_id', String(u_id));
         formData.append('full_name', String(full_name));
         formData.append('mobile_number', String(mobile_number));
         formData.append('pincode', String(pincode));
@@ -138,8 +178,9 @@ export default class Newaddress extends Component<{}> {
         formData.append('city', String(city));
         formData.append('state', String(state));
         formData.append('country', String(country));
-        formData.append('address_type', String(address_type)); 
+        formData.append('address_type', String(0)); 
 
+        if (this.validate()) {
         const config = { 
                 method: 'POST', 
                 headers: { 
@@ -155,14 +196,145 @@ export default class Newaddress extends Component<{}> {
             // console.warn(JSON.stringify(responseData.status))
             // alert(responseData.data.message);
         }).done();
+    }
     }  
-  render() {
+
+    validate(){
+    const { 
+        full_name, 
+        mobile_number, 
+        pincode, 
+        alternate_number, 
+        address_line1, 
+        address_line2, 
+        landmark, 
+        town, 
+        city, 
+        state, 
+        country, 
+        address_type,
+        address_id 
+        } = this.state;
+        
+        if(!full_name.length) 
+        { 
+            MessageBarManager.showAlert({
+            message: "Please Enter Your FullName",
+            alertType: 'alert',
+            })
+            return false;
+        }
+        if (!mobile_number.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Contact Number",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!pincode.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Postal code",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!alternate_number.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Alternate Contact Number",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!address_line1.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Address First Line",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!address_line2.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Address Secound Line",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!landmark.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Landmark",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!town.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Town",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!city.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter City",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!state.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter State",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!country.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Country",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!address_type.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Address Code either 1 or 2",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!address_id.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your address_id",
+                alertType: 'alert',
+            })
+            return false
+        }
+
+            return true;
+    }
+    focusNextField(id) { 
+        this.inputs[id].focus();
+    }
+
+
+    render() {
      
     return (
         <View style={{ flex : 1}}>
         <View style={ { 
-            height : 30, 
-            backgroundColor : '#87cefa', 
+            height : 40, 
+            backgroundColor : '#a9d5d1', 
             flexDirection : 'row', 
             justifyContent:"space-between", 
             alignItems : 'center',
@@ -171,8 +343,8 @@ export default class Newaddress extends Component<{}> {
         
         <Text style={{color:'#fff'}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
         
-        <TouchableOpacity style={{padding:10}}onPress={()=> this.props.address_id ? this.updateAddress() : this.submit()}>
-        <Text style={{ color:'#fff'}}>Save</Text>
+        <TouchableOpacity style={{ backgroundColor:'transparent'}}onPress={()=> this.props.address_id ? this.updateAddress() : this.submit()}>
+        <Text style={{ color:'#fff',padding:5, borderColor:'#fff', borderWidth:1, borderRadius : 20}}>Save</Text>
         </TouchableOpacity> 
         </View>
       <ScrollView style={styles.container}>
@@ -181,17 +353,31 @@ export default class Newaddress extends Component<{}> {
         placeholder='Full Name'
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
-        // autoCorrect={false} 
-        // autoFocus={true} 
         // keyboardType='email-address'
-        value={this.state.full_name} 
+        value={this.state.full_name}
+        onSubmitEditing={() => { 
+            this.focusNextField('two');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['one'] = input;
+        }}
+ 
         onChangeText={(text) => this.setState({ full_name: text })} /> 
 
         <TextInput style={ styles.input}
         placeholder='Contact Number'
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
-        value={this.state.mobile_number} 
+        value={this.state.mobile_number}
+        keyboardType={'numeric'}
+        onSubmitEditing={() => { 
+            this.focusNextField('three');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['two'] = input;
+        }}
         onChangeText={(text) => this.setState({ mobile_number: text })} />
 
         <TextInput style={ styles.input}
@@ -199,13 +385,29 @@ export default class Newaddress extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.pincode} 
+        keyboardType={'numeric'}
+        onSubmitEditing={() => { 
+            this.focusNextField('four');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['three'] = input;
+        }}
         onChangeText={(text) => this.setState({ pincode: text })} />
 
         <TextInput style={ styles.input}
         placeholder='Alternate Contact'
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
+        keyboardType={'numeric'}
         value={this.state.alternate_number} 
+        onSubmitEditing={() => { 
+            this.focusNextField('five');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['four'] = input;
+        }}
         onChangeText={(text) => this.setState({ alternate_number: text })} />
 
         <TextInput style={ styles.input}
@@ -213,6 +415,13 @@ export default class Newaddress extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.address_line1} 
+        onSubmitEditing={() => { 
+            this.focusNextField('six');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['five'] = input;
+        }}
         onChangeText={(text) => this.setState({ address_line1: text })} />
 
         <TextInput style={ styles.input}
@@ -220,6 +429,13 @@ export default class Newaddress extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.address_line2} 
+        onSubmitEditing={() => { 
+            this.focusNextField('seven');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['six'] = input;
+        }}
         onChangeText={(text) => this.setState({ address_line2: text })} />
 
         <TextInput style={ styles.input}
@@ -227,6 +443,13 @@ export default class Newaddress extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.landmark} 
+        onSubmitEditing={() => { 
+            this.focusNextField('eight');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['seven'] = input;
+        }}
         onChangeText={(text) => this.setState({ landmark: text })} />
 
         <TextInput style={ styles.input}
@@ -234,6 +457,13 @@ export default class Newaddress extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.town} 
+        onSubmitEditing={() => { 
+            this.focusNextField('nine');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['eight'] = input;
+        }}
         onChangeText={(text) => this.setState({ town: text })} /> 
 
         <TextInput style={ styles.input}
@@ -241,6 +471,13 @@ export default class Newaddress extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.city} 
+        onSubmitEditing={() => { 
+            this.focusNextField('ten');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['nine'] = input;
+        }}
         onChangeText={(text) => this.setState({ city: text })} />
 
         <TextInput style={ styles.input}
@@ -248,21 +485,25 @@ export default class Newaddress extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.state} 
+        onSubmitEditing={() => { 
+            this.focusNextField('eleven');
+        }}
+        returnKeyType={ "next" } 
+        ref={ input => { 
+            this.inputs['ten'] = input;
+        }}
         onChangeText={(text) => this.setState({ state: text })} />
 
-        <TextInput style={ styles.input}
-        placeholder='Country'
-        autoCapitalize='none'
-        underlineColorAndroid = 'transparent'
-        value={this.state.country} 
-        onChangeText={(text) => this.setState({ country: text })} />
+        <Picker 
+        mode="dropdown"
+        style={{width: width, height: 40, }} 
+        selectedValue={this.state.country} 
+        onValueChange={(country) => this.setState({country})}> 
+            <Picker.Item label="Select Country" value="" /> 
+            <Picker.Item label="United States" value="1" /> 
+            <Picker.Item label="India" value="2" /> 
+        </Picker>
 
-        <TextInput style={ styles.input}
-        placeholder='Address Type'
-        autoCapitalize='none'
-        underlineColorAndroid = 'transparent'
-        value={this.state.address_type} 
-        onChangeText={(text) => this.setState({ address_type: text })} />    
         </ScrollView>
         </View>
     );

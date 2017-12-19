@@ -71,10 +71,10 @@ const Routes = ({loading, needSignIn}) => (
             <Modal 
             hideNavBar={true}
             transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
-
-                    <Stack key="root">
-                        <Scene key='landingpage' component={WelcomeScreen} hideNavBar={true} initial={needSignIn}/>
-                        <Scene key='loginPage' component={LoginPage} title='login' hideNavBar={true}  type={ActionConst.REPLACE} />
+            <Lightbox key="lightbox">
+                <Stack key="root">
+                    <Scene key='landingpage' component={WelcomeScreen} hideNavBar={true} initial={needSignIn}/>
+                    <Scene key='loginPage' component={LoginPage} title='login' hideNavBar={true}  type={ActionConst.REPLACE} />
                 <Drawer
                 key="drawer" 
                 drawer ={true}
@@ -86,7 +86,7 @@ const Routes = ({loading, needSignIn}) => (
                 // initial={true} 
                 hideNavBar={true} 
                 initial={!needSignIn} 
-                renderRightButton={() => <Ionicons name="filter" size={20} onPress={()=> Actions.filterBar()} color="#fff" style={{ padding : 10}}/>}>
+                >
                 
                 <Scene key="tab" hideNavBar>
 
@@ -109,6 +109,7 @@ const Routes = ({loading, needSignIn}) => (
                         iconName="home"
                         // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                        renderRightButton={() => <Ionicons name="filter" size={20} onPress={()=> Actions.filterBar()} color="#fff" style={{ padding : 10}}/>}
                         titleStyle={{ color: 'white', alignSelf: 'center' }}>
                             
                             <Scene 
@@ -167,7 +168,9 @@ const Routes = ({loading, needSignIn}) => (
                     </Tabs>
                 </Scene>
                 </Drawer>
-</Stack>
+            </Stack>
+            <Scene key="addressbook" component={AddressBook} />
+        </Lightbox>
                     <Stack key="registerPage" navBar={CustomGenNavBar} >
                         <Scene 
                         key="register" 
