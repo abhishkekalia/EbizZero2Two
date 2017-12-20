@@ -21,7 +21,7 @@ export default class CustomGenNavBar extends React.Component {
             return (
                 <TouchableOpacity
                 onPress={Actions.pop}
-                style={[styles.navBarItem, { paddingLeft: 10, top : 10}]}>
+                style={[styles.navBarItem, { paddingLeft: 10, }]}>
                     <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25}/>
                 </TouchableOpacity>
             )
@@ -31,7 +31,7 @@ export default class CustomGenNavBar extends React.Component {
     _renderMiddle() { 
         return (
             <View style={styles.navBarItem}>
-              <Text style={{color: '#fff', top : 10, fontSize: 18}}>{ this.props.title }</Text>
+              <Text style={{color: '#fff',  fontSize: 18}}>{ this.props.title }</Text>
             </View>
         )
     }

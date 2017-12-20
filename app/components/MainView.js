@@ -39,7 +39,9 @@ export default class MainView extends Component {
         this.getKey= this.getKey.bind(this);
         this.state={ 
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
-            dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }), 
+            dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
+            serviceArrayStatus : false,
+            status : false, 
             textInputValue: '',
             shoperId : '',
             data : [],
@@ -266,6 +268,7 @@ export default class MainView extends Component {
         .then((responseData) => {
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status : responseData.status,
                 loaded: true, 
                 refreshing: false
             });
@@ -284,6 +287,9 @@ export default class MainView extends Component {
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
+        if (!this.state.status) {
+            return this.noItemFound();
+        }
 
         let listView = (<View></View>);
             listView = (
@@ -295,7 +301,7 @@ export default class MainView extends Component {
                 }
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource}
-                renderRow={this.renderData.bind(this)}
+                renderRow={ this.renderData.bind(this)}
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
@@ -401,7 +407,7 @@ export default class MainView extends Component {
     loadServiceData (){
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
-        formData.append('u_id', String(user_type));
+        formData.append('u_id', String(u_id));
         formData.append('country', String(country));   
         formData.append('u_id', String(user_type));   
         const config = { 
@@ -417,6 +423,7 @@ export default class MainView extends Component {
         .then((responseData) => {
             this.setState({
                 serviceArray: responseData.data,
+                serviceArrayStatus : responseData.status
             });
         })
         .done();
@@ -467,8 +474,19 @@ export default class MainView extends Component {
         return views;
 
     }
+    noServiceFound(){
+        return (
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                <Text> No Item Found In Your Service</Text>
+            </View> 
+        );
+    }
 
     renderServiceChec(data) {
+        if (!this.state.serviceArrayStatus) {
+            return this.noServiceFound();
+        }
+        
         var leftText = data.service_name;
         return (
             <CheckBox
@@ -477,6 +495,14 @@ export default class MainView extends Component {
                 isChecked={data.checked}
                 leftText={leftText}
             />);
+    }
+
+    noItemFound(){
+        return (
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                <Text> No Item Found </Text>
+            </View> 
+        );
     }
 
 // Service filter complete here
@@ -493,24 +519,14 @@ export default class MainView extends Component {
         } else {
             heartType = 'ios-heart' ;
         }
-
-        if (data.status === false) {
-            return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text> No Data found </Text>
-                <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load Products</Text></TouchableOpacity>
-               </View> );
-        }
-
-        
+      
         return (
             <View style={styles.row} > 
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
                     <IconBadge
                         MainElement={ 
                             <TouchableOpacity 
-                            onPress={()=> this.addtoWishlist(data.product_id)}>
-
+                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id})}>
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
                                 </TouchableOpacity>

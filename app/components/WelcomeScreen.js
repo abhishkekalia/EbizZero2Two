@@ -84,7 +84,7 @@ export default class WelcomeScreen extends Component {
             <View style={styles.container}>
                 <View style={styles.row}>
                     <Image style={{ width:21, height:21, marginRight : 15}} source={require('../images/_Select_Country-128.png')} />
-                    <Picker style={{width: width/1.5, height: 40, backgroundColor: 'transparent'}}
+                    <Picker style={{ width: width-100, height: 40}}
                     mode="dropdown"
                     selectedValue={this.state.selectCountry}
                     onValueChange={(itemValue, itemIndex) => 
@@ -92,11 +92,7 @@ export default class WelcomeScreen extends Component {
                     <Picker.Item label="Select country" value="" /> 
                         {this.loadUserTypes()}
                     </Picker>
-                    <Ionicons 
-                    name="chevron-down" 
-                    size={21} 
-                    color="#ff8c00" 
-                    style={styles.countryIcon}/>
+                   
                 </View>
                 <View style={styles.row}>
                     <Ionicons 
@@ -104,21 +100,17 @@ export default class WelcomeScreen extends Component {
                     size={21} 
                     color="#ff8c00" 
                     style={styles.countryIcon}/>
-        
+    
                     <Picker 
                     mode="dropdown"
-                    style={{width: width/1.5, height: 40, backgroundColor: 'transparent'}} 
+                    style={{width: width-100, height: 40}} 
                         selectedValue={this.state.deliveryarea} 
                         onValueChange={(deliveryarea) => this.setState({deliveryarea})}> 
                             <Picker.Item label="Select Delivery Area" value="" /> 
                             <Picker.Item label="Ahmedabad" value="1" /> 
                             <Picker.Item label="Gandhinagar" value="2" /> 
                     </Picker>
-                    <Ionicons 
-                    name="chevron-down" 
-                    size={21} 
-                    color="#ff8c00" 
-                    style={styles.countryIcon}/>
+                   
                 </View>
             </View>
         );

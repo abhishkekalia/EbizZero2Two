@@ -33,6 +33,7 @@ export default class WishList extends Component {
         this.fetchData = this.fetchData.bind(this);
         this.state = { 
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}), 
+            status : false,
             Quentity : 0,
             u_id: null,
             country : null,
@@ -178,6 +179,7 @@ export default class WishList extends Component {
 
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status: responseData.status,
                 refreshing : false
         });
         }).done();
@@ -197,8 +199,19 @@ export default class WishList extends Component {
     this.setState({refreshing: true});
             this.fetchData();
     }
+    noItemFound(){
+        return (
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                <Text> No Item Found In Your Wishlist</Text>
+            </View> 
+        );
+    }
 
     render() {
+        if (!this.state.status) {
+            return this.noItemFound();
+        }
+
         let listView = (<View></View>);
             listView = (
                 <ListView

@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
@@ -339,7 +341,7 @@ export default class Newaddress extends Component<{}> {
             justifyContent:"space-between", 
             alignItems : 'center',
         }}>
-        <Ionicons name="ios-arrow-back" size={25} style={{padding:10, color:'#fff'}} onPress={()=> routes.pop()}/>
+        <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10}} onPress={()=> routes.pop()}/>
         
         <Text style={{color:'#fff'}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
         
@@ -496,14 +498,14 @@ export default class Newaddress extends Component<{}> {
 
         <Picker 
         mode="dropdown"
-        style={{width: width, height: 40, }} 
+        style={{width: width-50, height: 40, }} 
         selectedValue={this.state.country} 
         onValueChange={(country) => this.setState({country})}> 
             <Picker.Item label="Select Country" value="" /> 
             <Picker.Item label="United States" value="1" /> 
             <Picker.Item label="India" value="2" /> 
         </Picker>
-
+        
         </ScrollView>
         </View>
     );

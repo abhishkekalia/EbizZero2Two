@@ -112,7 +112,7 @@ class Login extends Component {
   				title="Login"
   				color="#87cefa"
   				/>
-				{errorStatus ? <Text style={commonStyles.errorText}>{errorStatus}</Text> : undefined}
+				{errorStatus ? undefined : undefined}
 				<View style={{alignItems: 'center'}}>
 				<Text style={{ padding : 20 }}>Forgot password</Text>
 				<Text style={{color : '#87cefa' }}>New Customer ?</Text>
