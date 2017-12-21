@@ -4,20 +4,20 @@ import {
   StyleSheet,
   Text,
   View,
-  Picker,
   ActivityIndicator,
   Dimensions,
   Image
 } from 'react-native';
 import {Actions} from "react-native-router-flux";
-
+import { Picker } from 'react-native-picker-dropdown';
 import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width, height } = Dimensions.get('window')
 
-export default class WelcomeScreen extends Component {
-    constructor(props) { 
+
+export default class WelcomeScreen extends Component<{}> {
+     constructor(props) { 
         super(props); 
         this.fetchData=this.fetchData.bind(this);
         this.gotologin = this.gotologin.bind(this);
@@ -31,6 +31,7 @@ export default class WelcomeScreen extends Component {
             deliveryarea : ''
         }
     }
+
 
     componentDidMount(){
         this.fetchData();
@@ -56,7 +57,7 @@ export default class WelcomeScreen extends Component {
     renderLoadingView() {
         return (
             <ActivityIndicator  
-            style={[styles.centering]} 
+            style={styles.centering} 
             color="#1e90ff" 
             size="large"/>
             );
@@ -69,51 +70,67 @@ export default class WelcomeScreen extends Component {
         }
     }
 
-    loadUserTypes() {
-        return this.state.userTypes.map(user => ( 
-            <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} /> 
-        ))
-    } 
+    // loadUserTypes() {
+    //     return this.state.userTypes.map(user => ( 
+    //         <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} /> 
+    //     ))
+    // } 
 
-    render(){ this.gotologin()
+    render(){ 
+      this.gotologin()
         
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
         return ( 
-            <View style={styles.container}>
-                <View style={styles.row}>
-                    <Image style={{ width:21, height:21, marginRight : 15}} source={require('../images/_Select_Country-128.png')} />
-                    <Picker style={{ width: width-100, height: 40}}
-                    mode="dropdown"
-                    selectedValue={this.state.selectCountry}
-                    onValueChange={(itemValue, itemIndex) => 
-                        this.setState({selectCountry: itemValue})}>
-                    <Picker.Item label="Select country" value="" /> 
-                        {this.loadUserTypes()}
-                    </Picker>
-                   
-                </View>
-                <View style={styles.row}>
-                    <Ionicons 
-                    name="truck-delivery" 
-                    size={21} 
-                    color="#ff8c00" 
-                    style={styles.countryIcon}/>
-    
-                    <Picker 
-                    mode="dropdown"
-                    style={{width: width-100, height: 40}} 
-                        selectedValue={this.state.deliveryarea} 
-                        onValueChange={(deliveryarea) => this.setState({deliveryarea})}> 
-                            <Picker.Item label="Select Delivery Area" value="" /> 
-                            <Picker.Item label="Ahmedabad" value="1" /> 
-                            <Picker.Item label="Gandhinagar" value="2" /> 
-                    </Picker>
-                   
-                </View>
-            </View>
-        );
+        <View style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+      }}>
+        <View style={{
+          alignSelf: 'stretch',
+          paddingBottom: 10,
+        }}>
+          <Picker
+            selectedValue={this.state.selectCountry}
+            onValueChange={(selectCountry) => this.setState({selectCountry})}
+            mode="dropdown"
+            style={{
+                borderWidth : 1,
+                borderColor : '#ccc',
+                alignSelf: 'stretch',
+                color: 'black',
+                padding:10
+            }}
+          >
+            <Picker.Item label="United States" value="1" />
+            <Picker.Item label="India" value="2" />
+            <Picker.Item label="UK" value="3" />
+          </Picker>
+        </View>
+        <View style={{
+          alignSelf: 'stretch',
+        }}>
+          <Picker
+            selectedValue={this.state.deliveryarea}
+            onValueChange={(deliveryarea) => this.setState({deliveryarea})}
+            mode="dropdown"
+            style={{
+                borderWidth : 1,
+                borderColor : '#ccc',
+                alignSelf: 'stretch',
+                color: 'black',
+                padding :10
+            }}
+          >
+            <Picker.Item label="Ahmedabad" value="1" />
+            <Picker.Item label="Gandhinagar" value="2" />
+            <Picker.Item label="Vadodara" value="3" />
+          </Picker>
+        </View>
+      </View>);
     }
 }
 
@@ -124,6 +141,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
         padding: 20
     }, 
+    centering: {
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
+    },
 
     row: {
         flexDirection: 'row',

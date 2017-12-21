@@ -40,6 +40,7 @@ import Searchproduct from './components/Searchproduct';
 import Timeline from "./components/timeline";
 import Settings from "./components/settings";
 import Contact from "./components/Contact";
+import GetMyaddress from "./components/GetMyaddress";
 
 import Filter from './components/Filter';
 
@@ -260,6 +261,19 @@ const Routes = ({loading, needSignIn}) => (
                         title="filter"
                         navBar={CustomNavBar}
                         component={Filter}
+                        back/>
+                    </Stack>
+                    <Stack 
+                    key="getmyaddress" 
+                    hideTabBar={true} 
+                    titleStyle={{alignSelf: 'center'}}
+                    renderRightButton={() => <Ionicons name="plus" size={20} onPress={()=> Actions.newaddress()} color="#fff" style={{  marginTop: 27 ,padding:10}}/>}
+                    >
+                        <Scene
+                        key="getmyaddress"
+                        title="My Address"
+                        navBar={CustomGenNavBar}
+                        component={GetMyaddress}
                         back/>
                     </Stack>
 

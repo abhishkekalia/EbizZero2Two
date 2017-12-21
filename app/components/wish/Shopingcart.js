@@ -57,7 +57,63 @@ export default class Shopingcart extends Component {
             console.log("Error retrieving data" + error);
         }
     }
+    updateQuantity(product_id){
+        const {u_id, country, user_type } = this.state;
 
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('updateQuantity'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+
+            MessageBarManager.showAlert({ 
+        message: responseData.data.message, 
+        alertType: 'alert', 
+    })
+        }).done();
+    }
+    addtoWishlist(product_id){
+        const {u_id, country, user_type } = this.state;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('addToWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            // alert(responseData.data.message);
+
+            MessageBarManager.showAlert({ 
+        message: responseData.data.message, 
+        alertType: 'alert', 
+        // stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
+        // animationType: 'SlideFromLeft',
+    })
+
+        //     this.setState({
+        //     data: responseData.data
+        // });
+        }).done();
+    }
 
     fetchData(){
         const {u_id, country, user_type } = this.state;
@@ -85,7 +141,6 @@ export default class Shopingcart extends Component {
                 refreshing : false
         });
         })
-        .then(()=> this.fetchData())
         .done();
     }
 
@@ -116,14 +171,9 @@ export default class Shopingcart extends Component {
                 message: responseData.data.message, 
                 alertType: 'alert', 
                 stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                // animationType: 'SlideFromLeft',
             })
-
-            // this.setState({ 
-                // imgList: responseData.data.productImages,
-                // data : responseData.data
-        // });
         })
+        .then(this.fetchData())
         .done();
     }
 
@@ -301,7 +351,9 @@ export default class Shopingcart extends Component {
                         <Entypo name="cross" size={20} color="#87cefa"/>
                         <Text style={{ left : 5}}>Remove</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}>
+                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
+                                        onPress={()=> this.addtoWishlist(data.product_id)}
+                                        >
                         <Entypo name="heart-outlined" size={20} color="#87cefa"/> 
                         <Text style={{ left :5}}>Add To wishlist</Text>
                     </TouchableOpacity>

@@ -15,10 +15,12 @@ export default StyleSheet.create({
     	flexDirection: 'row', 
     	borderBottomWidth: 0.5,
 		borderColor: 'red',
+		backgroundColor : 'transparent'
     },
 
 	iconpassword : {
     	flexDirection: 'row',
+    	backgroundColor : 'transparent'
     },
 
 	inputcontent : { 
@@ -42,6 +44,11 @@ export default StyleSheet.create({
     	// backgroundColor: '#fff',
     	color: '#424242',
     	left : 10
+	},
+	button : {
+		height : 40,
+		alignItems : 'center',
+		justifyContent : 'center'
 	},
 
 	label: {

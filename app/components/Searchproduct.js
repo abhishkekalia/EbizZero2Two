@@ -23,6 +23,7 @@ export default class Searchproduct extends Component {
         this.getKey = this.getKey.bind(this);             
         this.state = { 
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
+            status : false,
             u_id: null,
             country : null ,
             user_type: null
@@ -86,6 +87,7 @@ export default class Searchproduct extends Component {
         if(responseData.status){
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status : responseData.status,
                 refreshing : false
             });
         } else {
@@ -125,6 +127,13 @@ export default class Searchproduct extends Component {
             heartType = 'ios-heart-outline'; 
         } else {
             heartType = 'ios-heart' ;
+        }
+        if (!data.status) {
+            return (
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                <Text> No Item Found In Your Service</Text>
+            </View> 
+            );        
         }
         return (
             <View style={styles.row} > 

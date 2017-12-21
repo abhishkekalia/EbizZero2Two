@@ -208,19 +208,39 @@ export default class MainView extends Component {
         fetch(Utils.gurl('addToWishlist'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            // alert(responseData.data.message);
-
             MessageBarManager.showAlert({ 
-        message: responseData.data.message, 
-        alertType: 'alert', 
-        // stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
-        // animationType: 'SlideFromLeft',
-    })
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        .then( this.fetchData())
+        .done();
+    }
+    removeToWishlist(product_id){
+        const {u_id, country, user_type } = this.state;
 
-        //     this.setState({
-        //     data: responseData.data
-        // });
-        }).done();
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('removeFromWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        .then( this.fetchData())
+        .done();
     }
     fetchAllShop(){
         const {u_id, country, user_type } = this.state;
@@ -277,13 +297,15 @@ export default class MainView extends Component {
     renderLoadingView() {
         return (
             <ActivityIndicator  
-            style={[styles.centering]} //styles.gray]}
+            style={[styles.centering]}
             color="#1e90ff" 
             size="large"/>
             );
     }
 
     render() {
+        this.fetchData = this.fetchData.bind(this);
+
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
@@ -519,8 +541,10 @@ export default class MainView extends Component {
         } else {
             heartType = 'ios-heart' ;
         }
-      
-        return (
+      let toggleWidhlist  
+      if(data.is_wishlist === '0') { toggleWidhlist = ()=> this.addtoWishlist(data.product_id)} else { toggleWidhlist = ()=> this.removeToWishlist(data.product_id)}
+
+       return (
             <View style={styles.row} > 
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
                     <IconBadge
@@ -542,19 +566,21 @@ export default class MainView extends Component {
                             position : 'absolute',
                             backgroundColor: '#87cefa'}}
                     />
-                    <EvilIcons style={{ position : 'absolute', left : 0}} 
+                    <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}} 
                         name="share-google" 
                         size={20} 
                         color="#ccc" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
                     <TouchableOpacity 
-                    onPress={()=> this.addtoWishlist(data.product_id)}
+                    onPress={toggleWidhlist }
+                    // onPress= { ()=> this.addtoWishlist(data.product_id)}
                     style={{ 
                         left : width/3-35, 
                         position : 'absolute',
                         width : 50,
-                        height :50
+                        height :50,
+                        backgroundColor : 'transparent'
                     }}
                     >
                         <Ionicons  
@@ -566,7 +592,7 @@ export default class MainView extends Component {
                 </View>
                 
                 <View style={{ padding :5}}>
-                <TouchableOpacity  style={styles.name} onPress={()=>Actions.deascriptionPage({product_id : data.product_id})}>
+                <TouchableOpacity  style={styles.name} onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}>
 
                 <Text style={{fontSize : 13, color :'#000'}}>{data.product_name}</Text>
                 </TouchableOpacity>

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   AsyncStorage,
-  Picker
+  // Picker
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -21,6 +21,7 @@ import Utils from 'app/common/Utils';
 import Slider from './slider'
 import DatePicker from 'react-native-datepicker';
 import AllItem from './AllItem';
+import { Picker } from 'react-native-picker-dropdown';
 
 const {width,height} = Dimensions.get('window');
 
@@ -104,20 +105,19 @@ export default class ProductDescription extends Component {
         fetch(Utils.gurl('addTocart'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-if(responseData.status){
-            MessageBarManager.showAlert({ 
-                message: responseData.data.message, 
-                alertType: 'alert', 
-                stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                // animationType: 'SlideFromLeft',
-            })
-            routes.shopingCart()
+            if(responseData.status){
+                MessageBarManager.showAlert({ 
+                    message: responseData.data.message, 
+                    alertType: 'alert', 
+                    stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                    // animationType: 'SlideFromLeft',
+                })
+                routes.shopingCart()
         }else{
             MessageBarManager.showAlert({ 
                 message: responseData.data.message, 
                 alertType: 'alert', 
                 stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                // animationType: 'SlideFromLeft',
             })
         }
         })
@@ -125,8 +125,7 @@ if(responseData.status){
     }
 
     fetchData(){ 
-                const {u_id, country, user_type } = this.state;
-
+        const {u_id, country, user_type } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(user_type));
         formData.append('country', String(country)); 
@@ -156,7 +155,7 @@ if(responseData.status){
         console.warn("size chart");
     }
     buyNow(){
-routes.addressbook()
+        routes.addressbook();
     }
     onSubmit () {
 
@@ -173,7 +172,7 @@ routes.addressbook()
                 keyboardShouldPersistTaps="always"
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/1.5}}>
-                <Slider imgList={this.state.imgList}/>
+                <Slider imgList={this.state.imgList}  data= {this.state.data.product_id} is_wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
                 </View>
 
                 <View style={{ 
@@ -182,7 +181,7 @@ routes.addressbook()
                     justifyContent: 'space-between'}}>
 
                     <View>
-                        <Text style={{ padding : 10}}>{this.state.data.product_name}</Text>
+                        <Text style={{ padding : 10}}>{this.props.is_wishlist }</Text>
                         <View style={{flexDirection: 'row'}}>
                             <Text style={{color : 'skyblue', paddingLeft : 10}}>AED {this.state.data.special_price}</Text>
                             <Text style={{color: color, textDecorationLine: textDecorationLine, left : 20}}>AED {this.state.data.price}</Text>
@@ -197,9 +196,14 @@ routes.addressbook()
                             </TouchableOpacity>
                         </View>
                         <View>
-                        <View style={{ justifyContent:'space-between', height: 40, backgroundColor:'#ccc', flexDirection:"row" ,alignItems: 'center' }}>
-                            <Picker
-                            style={{width: width/1.5,backgroundColor: '#ccc'}}
+                            <Picker 
+                            style={{
+                                borderWidth : 1,
+                                borderColor : '#ccc',
+                                alignSelf: 'stretch',
+                                color: 'black',
+                                padding : 10
+                            }}
                             mode="dropdown"
                             selectedValue={this.state.size}
                             onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
@@ -208,16 +212,15 @@ routes.addressbook()
                                 <Picker.Item label="Medium" value="medium" />
                                 <Picker.Item label="Large" value="large" />
                             </Picker>
-                            <Icon
-                            name="chevron-down" 
-                            size={21} 
-                            color="#ff8c00" 
-                            style={styles.countryIcon}/>
-                            </View>
-                            <View style={{ justifyContent:'space-between', height: 40, backgroundColor:'#ccc', flexDirection:"row" ,alignItems: 'center' }}>
                             <Picker 
                             mode="dropdown"
-                            style={{width: width/1.5,backgroundColor: '#ccc'}}
+                            style={{
+                                borderWidth : 1,
+                                borderColor : '#ccc',
+                                alignSelf: 'stretch',
+                                color: 'black',
+                                padding : 10
+                            }}
                             selectedValue={this.state.color}
                             onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
                                 <Picker.Item label="Select color" value="" />
@@ -225,12 +228,6 @@ routes.addressbook()
                                 <Picker.Item label="Yellow" value="yellow" />
                                 <Picker.Item label="Pink" value="pink" />
                             </Picker>
-                            <Icon
-                            name="chevron-down" 
-                            size={21} 
-                            color="#ff8c00" 
-                            style={styles.countryIcon}/>
-                            </View>
                         </View>
 
                         <View style={{

@@ -8,7 +8,7 @@ import {
 	Text, 
 	TextInput, 
 	TouchableOpacity, 
-	Button ,
+	Button,
 	Platform
 } from "react-native";
 import {Actions as routes} from "react-native-router-flux";
@@ -17,6 +17,8 @@ import commonStyles from "app/common/styles";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {CirclesLoader} from 'react-native-indicator';
+import Modal from 'react-native-modal';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const INITIAL_STATE = {email: '', password: ''};
 
@@ -27,11 +29,13 @@ class Login extends Component {
 			email: '', 
 			password: '',
 			os : (Platform.OS === 'ios') ? 2 : 1,
-			loading: false
+			loading: false,
+			visibleModal: false
 
 		};
 	    this.inputs = {};
 	}
+
 	focusNextField(id) { 
     	this.inputs[id].focus();
     }
@@ -41,22 +45,19 @@ class Login extends Component {
 
 		if(reg.test(email) === false) 
 			{ 
-
 			MessageBarManager.showAlert({
             message: "Plese Enter Valid Email",
             alertType: 'alert',
             })
-				return false;
-			}
+			return false;
+		}
 	}
 
 	render() {
 		const {errorStatus, loading} = this.props;
 		return (
 			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
-				<View style={{alignItems : 'center', padding:10}}>
-				    {this.state.loading ? <CirclesLoader /> : undefined}
-				</View>
+				
 				<View style ={commonStyles.inputcontent}>
 					<View style ={commonStyles.iconusername}>
 						<Ionicons name="ios-mail-outline" 
@@ -107,21 +108,31 @@ class Login extends Component {
 						/>
 					</View>
 				</View>
-				<Button
-  				onPress={() => this.onSubmit()}
-  				title="Login"
-  				color="#87cefa"
-  				/>
-				{errorStatus ? undefined : undefined}
+				<TouchableOpacity onPress={() => this.onSubmit()} style={[commonStyles.button , {backgroundColor : '#a9d5d1'}]}>
+				<Text style={{ color : '#fff'}}>Login</Text>
+				</TouchableOpacity>
+
 				<View style={{alignItems: 'center'}}>
 				<Text style={{ padding : 20 }}>Forgot password</Text>
 				<Text style={{color : '#87cefa' }}>New Customer ?</Text>
 				</View>
-				<Button
-					onPress = {this.createAcount.bind(this)}
-  					title="Create An Acount"
-  					color="orange"
-  					/>
+				<TouchableOpacity  onPress = {this.createAcount.bind(this)}  style={[commonStyles.button , {backgroundColor : 'orange'}]}>
+				<Text style={{ color : '#fff'}}>Create An Acount</Text>
+
+				</TouchableOpacity>
+
+  					<Modal isVisible={this.state.visibleModal}>
+  					<View style={{alignItems : 'center', padding:10}}>
+				    {errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
+				    
+				    {errorStatus ? <Text 
+					onPress = {()=> this.setState({ visibleModal : false})} 
+					style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
+					
+					</View>
+        </Modal>
+                <KeyboardSpacer/>
+
 			</View>
 		);
 	}
@@ -153,7 +164,7 @@ class Login extends Component {
 	onSubmit() {
 		const {email, password, os} = this.state;
 		if (this.validate()) {
-			this.setState({...INITIAL_STATE, loading: true});
+			this.setState({...INITIAL_STATE, visibleModal: true});
 			this.props.login(email, password, os);
 		}
 	}

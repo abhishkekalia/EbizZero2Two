@@ -9,11 +9,11 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
-  Picker
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Picker } from 'react-native-picker-dropdown';
 
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -195,8 +195,6 @@ export default class Newaddress extends Component<{}> {
         .then((response) => response.json())
         .then((responseData) => {
             routes.pop();
-            // console.warn(JSON.stringify(responseData.status))
-            // alert(responseData.data.message);
         }).done();
     }
     }  
@@ -306,22 +304,22 @@ export default class Newaddress extends Component<{}> {
             })
             return false
         }
-        if (!address_type.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter Address Code either 1 or 2",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!address_id.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter Your address_id",
-                alertType: 'alert',
-            })
-            return false
-        }
+        // if (!address_type.length)
+        // { 
+        //     MessageBarManager.showAlert({
+        //         message: "Please Enter Address Code either 1 or 2",
+        //         alertType: 'alert',
+        //     })
+        //     return false
+        // }
+        // if (!address_id.length)
+        // { 
+        //     MessageBarManager.showAlert({
+        //         message: "Please Enter Your address_id",
+        //         alertType: 'alert',
+        //     })
+        //     return false
+        // }
 
             return true;
     }
@@ -335,18 +333,18 @@ export default class Newaddress extends Component<{}> {
     return (
         <View style={{ flex : 1}}>
         <View style={ { 
-            height : 40, 
+            height : 59, 
             backgroundColor : '#a9d5d1', 
             flexDirection : 'row', 
             justifyContent:"space-between", 
             alignItems : 'center',
         }}>
-        <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10}} onPress={()=> routes.pop()}/>
+        <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10, top : 15}} onPress={()=> routes.pop()}/>
         
-        <Text style={{color:'#fff'}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
+        <Text style={{color:'#fff' ,top : 15}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
         
-        <TouchableOpacity style={{ backgroundColor:'transparent'}}onPress={()=> this.props.address_id ? this.updateAddress() : this.submit()}>
-        <Text style={{ color:'#fff',padding:5, borderColor:'#fff', borderWidth:1, borderRadius : 20}}>Save</Text>
+        <TouchableOpacity style={{ backgroundColor:'transparent', top : 15, marginBottom : 10}}onPress={()=> this.props.address_id ? this.updateAddress() : this.submit()}>
+        <Text style={{ color:'#fff',padding:5, borderColor:'#fff', borderWidth:1, borderRadius : 10}}>Save</Text>
         </TouchableOpacity> 
         </View>
       <ScrollView style={styles.container}>
@@ -498,7 +496,7 @@ export default class Newaddress extends Component<{}> {
 
         <Picker 
         mode="dropdown"
-        style={{width: width-50, height: 40, }} 
+        style={{height: 40, }} 
         selectedValue={this.state.country} 
         onValueChange={(country) => this.setState({country})}> 
             <Picker.Item label="Select Country" value="" /> 

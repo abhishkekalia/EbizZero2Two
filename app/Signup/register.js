@@ -8,8 +8,8 @@ import {
 	Switch,
 	ScrollView,
 	Platform,
-	Picker,
-	Dimensions
+	Dimensions,
+	KeyboardAvoidingView
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -20,6 +20,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import { Picker } from 'react-native-picker-dropdown';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const { width, height } = Dimensions.get('window')
 
@@ -113,9 +115,14 @@ class Register extends Component {
 
 		const {errorStatus, loading} = this.props;
 		return (
-			<ScrollView style={[ commonStyles.content]} testID="Login">
+			<ScrollView testID="Login">
+						<KeyboardAvoidingView 
+			 style={[ commonStyles.content,{ justifyContent: "flex-end"}]} 
+			 behavior="padding" 
+			>
+
 				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
-					<View style ={commonStyles.iconusername}>
+					<View style ={[commonStyles.iconusername , { padding : 10}]}>
 		
 						<TextInput 
 							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10}]}
@@ -139,11 +146,12 @@ class Register extends Component {
 					<View style ={commonStyles.iconusername}>
 						
 						<TextInput
-							style={commonStyles.inputpassword}
+							style={[commonStyles.inputpassword , { padding : 10}]}
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
 							placeholder="Email Address"
+							keyboardType={'email-address'}
 							maxLength={140}
           					onSubmitEditing={() => { 
           						this.focusNextField('three');
@@ -158,7 +166,7 @@ class Register extends Component {
 					<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
 						
 						<TextInput
-							style={commonStyles.inputpassword}
+							style={[commonStyles.inputpassword , { padding : 10}]}
                            	secureTextEntry={this.state.hidden}
                            	value={this.state.password}
 							underlineColorAndroid = 'transparent'
@@ -214,7 +222,7 @@ class Register extends Component {
 				<View style ={commonStyles.iconusername}>
 						
 						<TextInput
-							style={commonStyles.inputusername}
+							style={[commonStyles.inputusername , { padding : 10}]}
 							value={this.state.contact}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -232,32 +240,26 @@ class Register extends Component {
 						/>
 					</View>
 
-					<View style={[commonStyles.iconusername, {
-					        				flexDirection: 'row',
-					        				justifyContent: 'center',
-					        				alignItems: 'center' ,
-					        				marginBottom : 10
-					        					}]}>						
-						<Picker style={{width: width/1.5, height: 40, backgroundColor: 'transparent'}}
-                            mode="dropdown"
-                            selectedValue={this.state.selectCountry}
-                            onValueChange={(itemValue, itemIndex) => 
-                                this.setState({selectCountry: itemValue})}>
-                                
-                                <Picker.Item label="Select country" value="" /> 
-                               {this.loadUserTypes()}
-                            </Picker>
-                            <Ionicons 
-                    		name="chevron-down" 
-                    		size={21} 
-                    		color="#ff8c00"
-                    		style={{width : 40, height:40, padding :10}} 
-                    		/>
+					<View style={{ borderBottomWidth: 0.5, borderColor: 'red'}}>						
+						<Picker
+            selectedValue={this.state.selectCountry}
+            onValueChange={(selectCountry) => this.setState({selectCountry})}
+            mode="dropdown"
+            style={{
+                borderColor : '#ccc',
+                alignSelf: 'stretch',
+                color: 'black',
+                padding:10
+            }}
+          >
+            <Picker.Item label="India" value="1" />
+            <Picker.Item label="UK" value="2" />
+            <Picker.Item label="United States" value="3" />
+          </Picker>
 					</View>
 					<View style ={commonStyles.iconusername}>
-		
 						<TextInput
-							style={commonStyles.inputpassword }
+							style={[commonStyles.inputpassword , { padding : 10}] }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -270,12 +272,7 @@ class Register extends Component {
 							onChangeText={(address) => this.setState({address})}
 						/>
 					</View>
-										<View style={[{
-					        				flexDirection: 'row',
-					        				justifyContent: 'center',
-					        				alignItems: 'center' ,
-					        					}]}>				
-						<Picker style={{width: width/1.5, height: 40, backgroundColor: 'transparent'}}
+						<Picker style={{height: 40, backgroundColor: 'transparent'}}
                         mode="dropdown"
                         selectedValue={this.state.type}
 						onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
@@ -283,22 +280,15 @@ class Register extends Component {
 							<Picker.Item label="USER" value="2" />
 							<Picker.Item label="VENDOR" value="3" />
 						</Picker>
-						<Ionicons 
-                    	name="chevron-down" 
-                    	size={21} 
-                    	color="#ff8c00"
-                    	style={{width : 40, height:40, padding :10}} 
-                    	/>
-					</View>
-
 				</View>
-				<Button 
-					onPress = {this.onSubmit.bind(this)}
-  					title="Create Acount"
-  					color="orange"
-  					/>
+				<TouchableOpacity  onPress = {this.onSubmit.bind(this)}  style={[commonStyles.button , {backgroundColor : 'orange'}]}>
+					<Text style={{ color : '#fff'}}>Create Acount</Text>
+				</TouchableOpacity>
+	    </KeyboardAvoidingView>
+        <KeyboardSpacer/>
 
 			</ScrollView>
+
 		);
 	}
 
@@ -338,6 +328,13 @@ validate(){
         	})
 		return false
 	}
+	if( gender.value === undefined){
+		MessageBarManager.showAlert({
+           message: "Plese Select Gender",
+           alertType: 'alert', 
+         })
+		return false;
+	}
 	if (!contact.length){ //? null : this.alert("Fullname")
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Contact Number",
@@ -364,16 +361,14 @@ validate(){
             message: "Plese Select User Type",
             alertType: 'alert',
         	})
-		return false
+		return false;
 	}
-		return true
+		return true;
 }
 
 	onSubmit() {
 		const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
-		// this.setState({...INITIAL_STATE, loading: true});
-		if(this.validate()) { 
-			console.warn("this is valid text")
+
 			let formData = new FormData();
 			formData.append('fullname', String(fullname));
 			formData.append('email', String(email));
@@ -382,7 +377,7 @@ validate(){
 			formData.append('country', String(selectCountry));
 			formData.append('user_type', String(type));
 			formData.append('device_type', String(os));
-			formData.append('device_token', String(Math.random().toString()));
+			formData.append('device_token', String('ADFCVNGWRETUOP'));
 			formData.append('phone_no', String(contact)); 
 			formData.append('address', String(address)); 
 			formData.append('representative_name', String('Ankita')); 
@@ -396,8 +391,10 @@ validate(){
 			formData.append('cvv', String('456')); 
 			// console.warn(JSON.stringify(formData));
 			// console.warn(this.state.os);
-		
-		const config = { 
+		if(this.validate()) { 
+		this.setState({...INITIAL_STATE, loading: true});
+
+			const config = { 
 	                method: 'POST', 
 	                headers: { 
 	                    'Accept': 'application/json', 
@@ -409,7 +406,8 @@ validate(){
 		fetch(Utils.gurl('register'), config) 
 	    .then((response) => response.json()) 
 	    .then((responseData) => {
-	
+	        console.warn(JSON.stringify(responseData));
+
 	    	routes.loginPage()
 	    	MessageBarManager.showAlert({
             message: "Congratulations You Are Successfully Registered ",

@@ -10,7 +10,6 @@ import {
     Dimensions, 
     TextInput,
     AsyncStorage,
-    Picker,
     Image ,
     RefreshControl,
     ActivityIndicator
@@ -23,6 +22,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Picker } from 'react-native-picker-dropdown';
 
 const { width, height } = Dimensions.get('window');
 
@@ -83,6 +83,7 @@ export default class WishList extends Component {
 
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status : responseData.status,
                 refreshing : false
         });
         }).done();
@@ -155,7 +156,9 @@ export default class WishList extends Component {
             if (responseData.status) {
                 this.fetchData()
             }
-        }).done();
+        })
+        .then(()=> this.fetchData())
+        .done();
     }
     editWishlist(product_id){
         const {u_id, country, user_type } = this.state;
@@ -196,15 +199,14 @@ export default class WishList extends Component {
         // });
     } 
     _onRefresh() {
-    this.setState({refreshing: true});
-            this.fetchData();
+        ()=>this.fetchData();
     }
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text> No Item Found In Your Wishlist</Text>
-            </View> 
-        );
+                <Text> No Item added to your wishlist </Text>
+                <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load wishlist</Text></TouchableOpacity>
+               </View> );
     }
 
     render() {
@@ -229,10 +231,7 @@ export default class WishList extends Component {
                 />
             );
 
-            if ( this.state.dataSource && this.state.dataSource.length == 0 ) {
-                return (
-                <Text> No data </Text>);
-            }
+            
         return (
         <View>
             {listView}
@@ -337,11 +336,7 @@ export default class WishList extends Component {
                                 <Picker.Item label="Large" value="large" />
 
                             </Picker>
-                            <Ionicons 
-                    name="chevron-down" 
-                    size={21} 
-                    color="#ff8c00" 
-                    style={styles.countryIcon}/>
+                            
                     </View>
                     <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
                             <Picker 
@@ -353,11 +348,7 @@ export default class WishList extends Component {
                                 <Picker.Item label="Yellow" value="yellow" />
                                 <Picker.Item label="Pick" value="pink" />
                             </Picker>
-                            <Ionicons 
-                    name="chevron-down" 
-                    size={21} 
-                    color="#ff8c00" 
-                    style={styles.countryIcon}/>
+                            
                     </View>
                             </View>
                                     </View>

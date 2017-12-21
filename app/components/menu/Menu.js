@@ -59,6 +59,7 @@ class Menu extends React.Component {
                         fontSize: 12, 
                         padding: 10, 
                         marginTop : 1,
+                        left :15,
                     }}>Notification</Text>
                </View>
 
