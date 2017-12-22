@@ -298,7 +298,7 @@ export default class MainView extends Component {
         return (
             <ActivityIndicator  
             style={[styles.centering]}
-            color="#1e90ff" 
+            color="#a9d5d1" 
             size="large"/>
             );
     }
@@ -349,7 +349,7 @@ export default class MainView extends Component {
                             <Ionicons 
                             name="md-arrow-dropdown" 
                             size={20} 
-                            color="#87cefa" 
+                            color="#a9d5d1" 
                             />
                         </TouchableOpacity>
                     </View>
@@ -364,7 +364,7 @@ export default class MainView extends Component {
                             <Ionicons 
                             name="md-arrow-dropdown" 
                             size={20} 
-                            color="#87cefa" 
+                            color="#a9d5d1" 
                             />
                         </TouchableOpacity>
                     </View>
@@ -550,7 +550,7 @@ export default class MainView extends Component {
                     <IconBadge
                         MainElement={ 
                             <TouchableOpacity 
-                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id})}>
+                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id ,is_wishlist : data.is_wishlist})}>
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
                                 </TouchableOpacity>
@@ -564,12 +564,12 @@ export default class MainView extends Component {
                             top : width/3-10,
                             left: 0,
                             position : 'absolute',
-                            backgroundColor: '#87cefa'}}
+                            backgroundColor: '#a9d5d1'}}
                     />
                     <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}} 
                         name="share-google" 
                         size={20} 
-                        color="#ccc" 
+                        color="#a9d5d1" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
                     <TouchableOpacity 
@@ -586,7 +586,7 @@ export default class MainView extends Component {
                         <Ionicons  
                         name={heartType} 
                         size={20} 
-                        color="#87cefa" 
+                        color="#a9d5d1" 
                         />
                     </TouchableOpacity>
                 </View>

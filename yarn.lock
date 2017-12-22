@@ -3500,6 +3500,10 @@ react-native-indicator@^0.7.0:
   dependencies:
     prop-types "^15.6.0"
 
+react-native-keyboard-spacer@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-spacer/-/react-native-keyboard-spacer-0.4.1.tgz#46f18a320432098a25ea9fa89f5143dd254d332d"
+
 react-native-message-bar@^2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/react-native-message-bar/-/react-native-message-bar-2.0.7.tgz#a6e6419ac4ef9ff8364da454cf13629fe4bcc6a3"

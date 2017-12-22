@@ -123,7 +123,9 @@ export default class ProductDescription extends Component {
         })
         .done();
     }
-
+componentDidUpdate(){
+    
+}
     fetchData(){ 
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
@@ -160,19 +162,75 @@ export default class ProductDescription extends Component {
     onSubmit () {
 
     }
+    addtoWishlist ( product_id){
+        const {u_id, country, user_type } = this.state;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('addToWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+    .then(()=>this.fetchData)
+
+    }
+    removeToWishlist ( product_id){
+        const {u_id, country, user_type } = this.state;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(this.state.data.product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('removeFromWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        .then(()=>this.fetchData)
+        .done();
+    }
     
     render () { 
         const { date_in, count } = this.state;
         let color = this.state.data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
+      // console.warn(this.props.is_wishlist);
+      let toggleWidhlist  
+      if(this.props.is_wishlist === '0') { toggleWidhlist = ()=> this.addtoWishlist(this.state.data.product_id)} else { toggleWidhlist = ()=> this.removeToWishlist(this.state.data.product_id)}
+      // if(this.props.is_wishlist === '0') { toggleWidhlist = ()=> addtoWishlist(this.state.data.product_id} else { toggleWidhlist = ()=> removeToWishlist(this.state.data.product_id)}
 
         return ( 
             <ScrollView 
                 keyboardShouldPersistTaps="always"
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/1.5}}>
-                <Slider imgList={this.state.imgList}  data= {this.state.data.product_id} is_wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
+                <Slider imgList={this.state.imgList} updateState={toggleWidhlist}  wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
                 </View>
 
                 <View style={{ 
@@ -181,7 +239,7 @@ export default class ProductDescription extends Component {
                     justifyContent: 'space-between'}}>
 
                     <View>
-                        <Text style={{ padding : 10}}>{this.props.is_wishlist }</Text>
+                        <Text style={{ padding : 10}}>{this.state.data.product_name}</Text>
                         <View style={{flexDirection: 'row'}}>
                             <Text style={{color : 'skyblue', paddingLeft : 10}}>AED {this.state.data.special_price}</Text>
                             <Text style={{color: color, textDecorationLine: textDecorationLine, left : 20}}>AED {this.state.data.price}</Text>

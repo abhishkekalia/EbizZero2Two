@@ -5,7 +5,8 @@ import React, {
 
 import { 
 	View, 
-	Text, 
+	Text,
+	ScrollView, 
 	TextInput, 
 	TouchableOpacity, 
 	Button,
@@ -56,7 +57,7 @@ class Login extends Component {
 	render() {
 		const {errorStatus, loading} = this.props;
 		return (
-			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
+			<ScrollView style={[commonStyles.container, commonStyles.content]} testID="Login">
 				
 				<View style ={commonStyles.inputcontent}>
 					<View style ={commonStyles.iconusername}>
@@ -133,7 +134,7 @@ class Login extends Component {
         </Modal>
                 <KeyboardSpacer/>
 
-			</View>
+			</ScrollView>
 		);
 	}
 	createAcount () { 

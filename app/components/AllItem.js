@@ -122,7 +122,7 @@ export default class AllItem extends Component {
                         height:16,
                         top : height/5-10,
                         left: 0,
-                        backgroundColor: '#87cefa'}}/>
+                        backgroundColor: '#a9d5d1'}}/>
                 <Text style={styles.name}>{data.product_name}</Text>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{

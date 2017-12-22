@@ -18,65 +18,19 @@ import { MessageBarManager } from 'react-native-message-bar';
 const {width,height} = Dimensions.get('window');
 
 
-let addtoWishlist = ( product_id, u_id, country ) =>{
 
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('addToWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            MessageBarManager.showAlert({ 
-            message: responseData.data.message, 
-            alertType: 'alert', 
-            })
-        })
-        .done();
-      }
-let removeToWishlist = ( product_id, u_id, country)=> {
 
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('removeFromWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            MessageBarManager.showAlert({ 
-            message: responseData.data.message, 
-            alertType: 'alert', 
-            })
-        })
-        .done();
-    }
+handleClick = () => {
+      this.props.updateState();
+  }
 
 const Slide = props => { 
-  console.warn(props.is_wishlist);
         let heartType
         if (props.is_wishlist === '0') 
             heartType = 'ios-heart-outline'; 
         else 
             heartType = 'ios-heart' ;
         
-      let toggleWidhlist  
-      if(props.is_wishlist === '0') { toggleWidhlist = ()=> addtoWishlist(props.data, props.u_id, props.country)} else { toggleWidhlist = ()=> removeToWishlist(props.data, props.u_id, props.country)}
 
     return ( 
         <View style={[styles.slide]}>
@@ -92,8 +46,8 @@ const Slide = props => {
                         }} 
                         name={heartType}
                         size={30} 
-                        color="#87cefa" 
-                        onPress={toggleWidhlist}
+                        color="#a9d5d1" 
+                        onPress={props.updateState}
                         />
             {
               !props.loaded && <View style={styles.loadingView}> 
@@ -133,9 +87,10 @@ export default class Slider extends Component<{}> {
                       loadHandle={this.loadHandle}
                       loaded={!!this.state.loadQueue[i]}
                       data ={this.props.data}
+                      updateState={this.props.updateState}
                       u_id ={this.props.u_id}
                       country ={this.props.country}
-                      is_wishlist= {this.props.is_wishlist}
+                      is_wishlist= {this.props.wishlist}
                       uri={item}
                       i={i}
                       key={i} />)
