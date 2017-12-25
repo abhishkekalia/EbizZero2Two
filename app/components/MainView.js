@@ -24,8 +24,7 @@ import ModalPicker from './modalpicker';
 import AllItem from './AllItem';
 import CheckBox from 'app/common/CheckBox';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-
-
+import Editwish from './wish/Editwish'
 import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get('window')
@@ -143,8 +142,6 @@ export default class MainView extends Component {
 
         data.checked = !data.checked;
         let msg=data.checked? 'you checked ':'you unchecked '
-
-        // this.toast.show(msg+data.name);
     }
     
     renderView() {
@@ -170,7 +167,6 @@ export default class MainView extends Component {
             </View>
         )
         return views;
-
     }
 
     renderCheckBox(data) {
@@ -208,19 +204,39 @@ export default class MainView extends Component {
         fetch(Utils.gurl('addToWishlist'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            // alert(responseData.data.message);
-
             MessageBarManager.showAlert({ 
-        message: responseData.data.message, 
-        alertType: 'alert', 
-        // stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
-        // animationType: 'SlideFromLeft',
-    })
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        .then( this.fetchData())
+        .done();
+    }
+    removeToWishlist(product_id){
+        const {u_id, country, user_type } = this.state;
 
-        //     this.setState({
-        //     data: responseData.data
-        // });
-        }).done();
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('removeFromWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        .then( this.fetchData())
+        .done();
     }
     fetchAllShop(){
         const {u_id, country, user_type } = this.state;
@@ -277,13 +293,15 @@ export default class MainView extends Component {
     renderLoadingView() {
         return (
             <ActivityIndicator  
-            style={[styles.centering]} //styles.gray]}
-            color="#1e90ff" 
+            style={[styles.centering]}
+            color="#a9d5d1" 
             size="large"/>
             );
     }
 
     render() {
+        this.fetchData = this.fetchData.bind(this);
+
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
@@ -327,7 +345,7 @@ export default class MainView extends Component {
                             <Ionicons 
                             name="md-arrow-dropdown" 
                             size={20} 
-                            color="#87cefa" 
+                            color="#a9d5d1" 
                             />
                         </TouchableOpacity>
                     </View>
@@ -342,7 +360,7 @@ export default class MainView extends Component {
                             <Ionicons 
                             name="md-arrow-dropdown" 
                             size={20} 
-                            color="#87cefa" 
+                            color="#a9d5d1" 
                             />
                         </TouchableOpacity>
                     </View>
@@ -508,7 +526,6 @@ export default class MainView extends Component {
 // Service filter complete here
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-       
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         
@@ -519,14 +536,16 @@ export default class MainView extends Component {
         } else {
             heartType = 'ios-heart' ;
         }
-      
-        return (
+      let toggleWishList  
+      if(data.is_wishlist === '0') { toggleWishList = ()=> this.addtoWishlist(data.product_id)} else { toggleWishList = ()=> this.removeToWishlist(data.product_id)}
+
+       return (
             <View style={styles.row} > 
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
                     <IconBadge
                         MainElement={ 
                             <TouchableOpacity 
-                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id})}>
+                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}>
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
                                 </TouchableOpacity>
@@ -540,33 +559,21 @@ export default class MainView extends Component {
                             top : width/3-10,
                             left: 0,
                             position : 'absolute',
-                            backgroundColor: '#87cefa'}}
+                            backgroundColor: '#a9d5d1'}}
                     />
-                    <EvilIcons style={{ position : 'absolute', left : 0}} 
+                    <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}} 
                         name="share-google" 
                         size={20} 
-                        color="#ccc" 
+                        color="#a9d5d1" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
-                    <TouchableOpacity 
-                    onPress={()=> this.addtoWishlist(data.product_id)}
-                    style={{ 
-                        left : width/3-35, 
-                        position : 'absolute',
-                        width : 50,
-                        height :50
-                    }}
-                    >
-                        <Ionicons  
-                        name={heartType} 
-                        size={20} 
-                        color="#87cefa" 
-                        />
-                    </TouchableOpacity>
+                        <Editwish heartType={heartType} toggleWishList={toggleWishList}/>
                 </View>
                 
                 <View style={{ padding :5}}>
-                <TouchableOpacity  style={styles.name} onPress={()=>Actions.deascriptionPage({product_id : data.product_id})}>
+                <TouchableOpacity  style={styles.name} 
+                // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
+                >
 
                 <Text style={{fontSize : 13, color :'#000'}}>{data.product_name}</Text>
                 </TouchableOpacity>
@@ -657,8 +664,6 @@ var styles =StyleSheet.create({
         height: width/3,
         borderTopLeftRadius : 5,
         borderTopRightRadius : 5
-
-        // position : "absolute"
     },
 
     text: {
@@ -666,5 +671,4 @@ var styles =StyleSheet.create({
         marginTop: 5,
         fontWeight: 'bold'
     },
-     contentContainer: {  }
 });

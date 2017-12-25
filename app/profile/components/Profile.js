@@ -13,6 +13,7 @@ class Profile extends Component {
         this.state={
         	data: '',
             u_id: null,
+            address : [],
             country : null,
             email : null,
             phone_no : null
@@ -24,11 +25,6 @@ class Profile extends Component {
 	    .then(this.getAddress())
 	    .done()
     }
-
-    // componentWillUpdate(){
-	   //  this.getKey()
-	   //  .then(this.getAddress())
-    // }
 
     async getKey() {
         try { 
@@ -46,6 +42,8 @@ class Profile extends Component {
         }
     }
 
+
+
     getAddress(){
 
     	const { u_id, country } = this.state;
@@ -61,19 +59,41 @@ class Profile extends Component {
                 },
             	body: formData,
             }
-        fetch(Utils.gurl('getmyaddress'), config)  
+        fetch(Utils.gurl('MyProfile'), config)  
         .then((response) => response.json())
         .then((responseData) => { 
             this.setState({ 
-            	data: responseData.data,
+            	address : responseData.response.address
             });
         })
         .done();
     }
-
+address (){
+	if(this.state.address == '') {
+			return (<View>
+						<Text  style={{ fontSize :8}}> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+			proident, sunt in culpa qui officia deserunt mollit anim id est laborum  </Text>
+						</View>)
+		}else {
+			return <View><Text style={{ fontSize: 15}}>
+					{address.full_name}
+					</Text>
+					<Text style={{ fontSize : 10}}>
+					M:{address.mobile_number}
+					</Text>
+					<Text style={{fontSize:12}}>
+					{[address.address_line1, ' ', address.address_line2, ' ', address.landmark ,' ', address.town,' ',address.city, ' ', address.state, '(', address.pincode, ')']}
+					</Text></View>
+		}
+}
 	render() {
 		const {identity, logout} = this.props;
-		const {data, u_id} = this.state;
+		const {data, u_id, address} = this.state;
+		
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
@@ -84,7 +104,6 @@ class Profile extends Component {
 							size={25} 
 							style={{ 
 								padding :5, 
-								// borderColor: '#000',
 								width: 30,
 								height :30,
 								backgroundColor : '#ccc',
@@ -101,7 +120,7 @@ class Profile extends Component {
 						</View>
 					</View>
 
-					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} onPress={()=> Actions.newaddress()} >
+					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} onPress={()=> Actions.editProfile()} >
 						<Entypo name="edit" size={25} color="#87cefa"/>
 					</TouchableOpacity >
 				</View>
@@ -109,22 +128,13 @@ class Profile extends Component {
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
 					<View style={{ padding : 20, backgroundColor : '#fff', flex : 1}}>
-						<View style={{ flexDirection : 'row', justifyContent: 'space-between', paddingRight:10, paddingLeft:10,  }}>
+						<TouchableOpacity style={{ flexDirection : 'row', justifyContent: 'space-between', paddingRight:10, paddingLeft:10,  }}  onPress={()=>Actions.getmyaddress()} >
 							<Text style={{ fontSize : 10, color:"#900"}}>My Address Book</Text>
-								<TouchableOpacity style={{ justifyContent: 'center', alignItems : 'center' }} onPress={()=>Actions.addressbook()} >
-									<Ionicons name="ios-arrow-forward" size={25} color="#ccc"/>
-								</TouchableOpacity >
-						</View>
+								
+									<Ionicons name="ios-arrow-forward" size={25} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
+						</TouchableOpacity>
+					{this.address()}
 					
-					<Text style={{ fontSize: 15}}>
-					{data.full_name}
-					</Text>
-					<Text style={{ fontSize : 10}}>
-					M:{data.mobile_number}
-					</Text>
-					<Text style={{fontSize:12}}>
-					{[data.address_line1, ' ', data.address_line2, ' ', data.landmark ,' ', data.town,' ',data.city, ' ', data.state, '(', data.pincode, ')']}
-					</Text>
 				</View>
 				</View>
 				<TouchableOpacity onPress={()=>Actions.settings()} style={styles.setings}>

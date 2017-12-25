@@ -238,7 +238,7 @@ class Register extends Component {
 					        				alignItems: 'center' ,
 					        				marginBottom : 10
 					        					}]}>						
-						<Picker style={{width: width/1.5, height: 40, backgroundColor: 'transparent'}}
+						<Picker style={{ width: width-100, height: 40}}
                             mode="dropdown"
                             selectedValue={this.state.selectCountry}
                             onValueChange={(itemValue, itemIndex) => 
@@ -247,13 +247,7 @@ class Register extends Component {
                                 <Picker.Item label="Select country" value="" /> 
                                {this.loadUserTypes()}
                             </Picker>
-                            <Ionicons 
-                    		name="chevron-down" 
-                    		size={21} 
-                    		color="#ff8c00"
-                    		style={{width : 40, height:40, padding :10}} 
-                    		/>
-					</View>
+                        </View>
 					<View style ={commonStyles.iconusername}>
 		
 						<TextInput
@@ -275,7 +269,7 @@ class Register extends Component {
 					        				justifyContent: 'center',
 					        				alignItems: 'center' ,
 					        					}]}>				
-						<Picker style={{width: width/1.5, height: 40, backgroundColor: 'transparent'}}
+						<Picker style={{ width: width-100, height: 40}}
                         mode="dropdown"
                         selectedValue={this.state.type}
 						onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
@@ -283,12 +277,7 @@ class Register extends Component {
 							<Picker.Item label="USER" value="2" />
 							<Picker.Item label="VENDOR" value="3" />
 						</Picker>
-						<Ionicons 
-                    	name="chevron-down" 
-                    	size={21} 
-                    	color="#ff8c00"
-                    	style={{width : 40, height:40, padding :10}} 
-                    	/>
+						
 					</View>
 
 				</View>
@@ -331,49 +320,54 @@ validate(){
 		return false;
 	}
 
-	if (!password.length){ //? null : this.alert("Fullname")
+	if (!password.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Password",
             alertType: 'alert',
         	})
 		return false
 	}
-	if (!contact.length){ //? null : this.alert("Fullname")
+	if( gender.value === undefined){
+		MessageBarManager.showAlert({
+           message: "Plese Select Gender",
+           alertType: 'alert', 
+         })
+		return false;
+	}
+	if (!contact.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Contact Number",
             alertType: 'alert',
         	})
 		return false
 	}
-	if (!selectCountry.length){ //? null : this.alert("Fullname")
+	if (!selectCountry.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select Country",
             alertType: 'alert',
         	})
 		return false
 	} 
-	if (!address.length){ //? null : this.alert("Fullname")
+	if (!address.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Address",
             alertType: 'alert',
         	})
 		return false
 	}
-	if (!type.length){ //? null : this.alert("Fullname")
+	if (!type.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select User Type",
             alertType: 'alert',
         	})
-		return false
+		return false;
 	}
-		return true
+		return true;
 }
 
-	onSubmit() {
+onSubmit() {
 		const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
-		// this.setState({...INITIAL_STATE, loading: true});
-		if(this.validate()) { 
-			console.warn("this is valid text")
+
 			let formData = new FormData();
 			formData.append('fullname', String(fullname));
 			formData.append('email', String(email));
@@ -382,7 +376,7 @@ validate(){
 			formData.append('country', String(selectCountry));
 			formData.append('user_type', String(type));
 			formData.append('device_type', String(os));
-			formData.append('device_token', String(Math.random().toString()));
+			formData.append('device_token', String('ADFCVNGWRETUOP'));
 			formData.append('phone_no', String(contact)); 
 			formData.append('address', String(address)); 
 			formData.append('representative_name', String('Ankita')); 
@@ -394,10 +388,10 @@ validate(){
 			formData.append('expiry_month', String('3')); 
 			formData.append('expiry_year', String('20')); 
 			formData.append('cvv', String('456')); 
-			// console.warn(JSON.stringify(formData));
-			// console.warn(this.state.os);
-		
-		const config = { 
+		if(this.validate()) { 
+		this.setState({...INITIAL_STATE, loading: true});
+
+			const config = { 
 	                method: 'POST', 
 	                headers: { 
 	                    'Accept': 'application/json', 
@@ -409,22 +403,13 @@ validate(){
 		fetch(Utils.gurl('register'), config) 
 	    .then((response) => response.json()) 
 	    .then((responseData) => {
-	
+	        console.warn(JSON.stringify(responseData));
+
 	    	routes.loginPage()
 	    	MessageBarManager.showAlert({
             message: "Congratulations You Are Successfully Registered ",
             alertType: 'alert',
         	})
-	    		// console.warn(JSON.stringify(responseData.response));
-	
-	    	 // if (responseData.response.status) { 
-	    	 	// routes.homePage();
-	         // } else {
-	            // MessageBarManager.showAlert({
-	            // message: "invalid username and password",
-	            // alertType: 'error',
-	            // })
-	    	// }
 	    }) 
 	    .catch(err => { 
 	    	console.log(err); 

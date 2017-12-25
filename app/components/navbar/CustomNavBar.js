@@ -45,7 +45,7 @@ export default class CustomNavBar extends React.Component {
     }
 
     render() {
-        let dinamicStyle = {backgroundColor: '#87cefa'}
+        let dinamicStyle = {backgroundColor: '#a9d5d1'}
         return (
             <View style={[styles.container, dinamicStyle]}>
                 { this._renderLeft() }

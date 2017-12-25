@@ -40,6 +40,8 @@ import Searchproduct from './components/Searchproduct';
 import Timeline from "./components/timeline";
 import Settings from "./components/settings";
 import Contact from "./components/Contact";
+import GetMyaddress from "./components/GetMyaddress";
+import Editmyprofile from "./components/Editmyprofile";
 
 import Filter from './components/Filter';
 
@@ -91,14 +93,16 @@ const Routes = ({loading, needSignIn}) => (
                 <Scene key="tab" hideNavBar>
 
                     <Tabs 
+                    tabs
                     key="tabbar"
                     swipeEnabled={false}
                     initial={!needSignIn}
                     showLabel={false}
                     tabBarStyle={styles.tabBarStyle}
                     tabBarPosition={'bottom'}
-                    activeBackgroundColor='#6c6e70' 
+                    activeBackgroundColor='#a9d5d1' 
                     inactiveBackgroundColor='#fff'
+                    lazy
                     // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
                     >
 
@@ -262,6 +266,19 @@ const Routes = ({loading, needSignIn}) => (
                         component={Filter}
                         back/>
                     </Stack>
+                    <Stack 
+                    key="getmyaddress" 
+                    hideTabBar={true} 
+                    titleStyle={{alignSelf: 'center'}}
+                    renderRightButton={() => <Ionicons name="plus" size={20} onPress={()=> Actions.newaddress()} color="#fff" style={{  marginTop: 27 ,padding:10}}/>}
+                    >
+                        <Scene
+                        key="getmyaddress"
+                        title="My Address"
+                        navBar={CustomGenNavBar}
+                        component={GetMyaddress}
+                        back/>
+                    </Stack>
 
                     <Stack 
                     key="filterdBy">
@@ -269,6 +286,14 @@ const Routes = ({loading, needSignIn}) => (
                         key="filterdBy" 
                         titleStyle={{alignSelf: 'center'}} 
                         component={Searchproduct} 
+                        navBar={CustomGenNavBar}/>
+                    </Stack>
+                    <Stack 
+                    key="editProfile">
+                        <Scene 
+                        key="profileEdit" 
+                        titleStyle={{alignSelf: 'center'}} 
+                        component={Editmyprofile} 
                         navBar={CustomGenNavBar}/>
                     </Stack>
             </Modal>
@@ -298,4 +323,3 @@ const styles = StyleSheet.create({
   },
 });
 export default connect(mapStateToProps)(Routes);
-
