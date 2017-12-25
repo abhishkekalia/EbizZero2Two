@@ -123,9 +123,6 @@ export default class ProductDescription extends Component {
         })
         .done();
     }
-componentDidUpdate(){
-    
-}
     fetchData(){ 
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
@@ -185,7 +182,8 @@ componentDidUpdate(){
             alertType: 'alert', 
             })
         })
-    .then(()=>this.fetchData)
+    .then(()=>this.fetchData())
+    .done();
 
     }
     removeToWishlist ( product_id){
@@ -221,8 +219,8 @@ componentDidUpdate(){
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
       // console.warn(this.props.is_wishlist);
-      let toggleWidhlist  
-      if(this.props.is_wishlist === '0') { toggleWidhlist = ()=> this.addtoWishlist(this.state.data.product_id)} else { toggleWidhlist = ()=> this.removeToWishlist(this.state.data.product_id)}
+      // let toggleWishList  
+      // if(this.props.is_wishlist === '0') { toggleWishList = ()=> this.addtoWishlist(this.state.data.product_id)} else { toggleWishList = ()=> this.removeToWishlist(this.state.data.product_id)}
       // if(this.props.is_wishlist === '0') { toggleWidhlist = ()=> addtoWishlist(this.state.data.product_id} else { toggleWidhlist = ()=> removeToWishlist(this.state.data.product_id)}
 
         return ( 
@@ -230,7 +228,7 @@ componentDidUpdate(){
                 keyboardShouldPersistTaps="always"
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/1.5}}>
-                <Slider imgList={this.state.imgList} updateState={toggleWidhlist}  wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
+                <Slider imgList={this.state.imgList} updateState={this.props.toggleWishList}  wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
                 </View>
 
                 <View style={{ 

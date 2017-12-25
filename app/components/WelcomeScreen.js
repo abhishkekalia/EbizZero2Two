@@ -16,10 +16,9 @@ import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 const { width, height } = Dimensions.get('window')
 
 
-export default class WelcomeScreen extends Component<{}> {
+export default class WelcomeScreen extends Component {
      constructor(props) { 
         super(props); 
-        this.fetchData=this.fetchData.bind(this);
         this.gotologin = this.gotologin.bind(this);
 
         this.state = { 
@@ -31,29 +30,6 @@ export default class WelcomeScreen extends Component<{}> {
             deliveryarea : ''
         }
     }
-
-
-    componentDidMount(){
-        this.fetchData();
-    }
-    fetchData(){
-        const { container_id, type} = this.state; 
-        fetch(Utils.gurl('countryList'),{
-             method: "GET", headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }   
-        })
-        .then((response) => response.json())
-        .then((responseData) => { 
-                    // console.warn(JSON.stringify(responseData))
-            this.setState({
-                userTypes: responseData.response.data,
-                 loaded: true
-        });
-        }).done();
-    }
-
     renderLoadingView() {
         return (
             <ActivityIndicator  
@@ -70,18 +46,9 @@ export default class WelcomeScreen extends Component<{}> {
         }
     }
 
-    // loadUserTypes() {
-    //     return this.state.userTypes.map(user => ( 
-    //         <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} /> 
-    //     ))
-    // } 
-
     render(){ 
       this.gotologin()
-        
-        if (!this.state.loaded) {
-            return this.renderLoadingView();
-        }
+       
         return ( 
         <View style={{
         flex: 1,
@@ -105,6 +72,7 @@ export default class WelcomeScreen extends Component<{}> {
                 padding:10
             }}
           >
+            <Picker.Item label="Select Country" value="" />
             <Picker.Item label="United States" value="1" />
             <Picker.Item label="India" value="2" />
             <Picker.Item label="UK" value="3" />
@@ -125,6 +93,7 @@ export default class WelcomeScreen extends Component<{}> {
                 padding :10
             }}
           >
+            <Picker.Item label="Select city" value="" />
             <Picker.Item label="Ahmedabad" value="1" />
             <Picker.Item label="Gandhinagar" value="2" />
             <Picker.Item label="Vadodara" value="3" />

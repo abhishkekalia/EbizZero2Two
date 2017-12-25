@@ -37,8 +37,6 @@ export default class WishList extends Component {
             status : false,
             u_id: null,
             country : null,
-            size: '', 
-            color: '', 
             loaded: false,
             toggle : false,
             refreshing: false,        
@@ -66,7 +64,6 @@ export default class WishList extends Component {
 
     fetchData(){ 
         const {u_id, country, user_type } = this.state;
-        console.warn(u_id);
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));  
@@ -87,8 +84,6 @@ export default class WishList extends Component {
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 status : responseData.status,
-                size : response.data.size,
-                color : response.data.color,
                 refreshing : false
         });
         }).done();
@@ -261,6 +256,7 @@ export default class WishList extends Component {
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => {this.removeWishlist(data.product_id)}
          }];
+
         return (
             <View style={{ 
                 flexDirection: 'column' ,
@@ -314,33 +310,9 @@ export default class WishList extends Component {
                                         <Text>| {data.special_price}</Text>
                                         </View>
                                         <Text > Total :{data.price} </Text>
-                                        <View style={{ flexDirection:'row'}}>
-                                        <View style={{width: width/2.5, height: 40, backgroundColor: '#fff'}}> 
-                                        <Picker
-                                          mode="dropdown"
-                                          style={{
-                                              backgroundColor: 'transparent'
-                                            }}
-                                          selectedValue={this.state.size}
-                                          onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
-                                          <Picker.Item label="Select Size" value="" />
-                                          <Picker.Item label="Small" value="small" />
-                                          <Picker.Item label="Medium" value="medium" />
-                                          <Picker.Item label="Large" value="large" />
+                                        <View >
+                                        <SelectItem size={data.size} color={data.color} />
 
-                                          </Picker>
-                                          </View>
-                                          <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
-                                            <Picker 
-                                              mode="dropdown"
-                                              selectedValue={this.state.color}
-                                              onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
-                                              <Picker.Item label="Select color" value="" />
-                                              <Picker.Item label="Red" value="red" />
-                                              <Picker.Item label="Yellow" value="yellow" />
-                                              <Picker.Item label="Pick" value="pink" />
-                                            </Picker>
-                                          </View>
                                     </View>
                                       </View>
                                </View>                             
@@ -362,6 +334,49 @@ export default class WishList extends Component {
     }
 }
 
+
+class SelectItem extends Component{
+        constructor(props) { 
+        super(props); 
+        this.state = { 
+            size: this.props.size, 
+            color: this.props.color, 
+        }; 
+    } 
+    
+    render(){
+        // console.warn(this.props.size);
+        return(
+        <View style={{ flexDirection:'row'}}> 
+            <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+                <Picker
+                mode="dropdown"
+                style={{
+                    backgroundColor: 'transparent'
+                    }}
+                selectedValue={this.state.size}
+                onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
+                    <Picker.Item label="Select Size" value="" />
+                    <Picker.Item label="Small" value="small" />
+                    <Picker.Item label="Medium" value="medium" />
+                    <Picker.Item label="Large" value="large" />
+                </Picker>
+            </View>
+            <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+                <Picker 
+                mode="dropdown"
+                selectedValue={this.state.color} 
+                onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
+                    <Picker.Item label="Select color" value="" />
+                    <Picker.Item label="Red" value="red" />
+                    <Picker.Item label="Yellow" value="yellow" />
+                    <Picker.Item label="Pick" value="pink" />
+                </Picker>
+            </View>
+        </View>
+        )
+    }
+}
 
 const styles = StyleSheet.create ({
     container: {

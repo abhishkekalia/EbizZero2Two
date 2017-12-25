@@ -14,22 +14,17 @@ import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MessageBarManager } from 'react-native-message-bar';
 
-
 const {width,height} = Dimensions.get('window');
 
-
-
-
-handleClick = () => {
-      this.props.updateState();
-  }
-
 const Slide = props => { 
-        let heartType
-        if (props.is_wishlist === '0') 
-            heartType = 'ios-heart-outline'; 
-        else 
-            heartType = 'ios-heart' ;
+    handleClick = () => {
+      props.updateState();
+    }
+    let heartType
+    if (props.is_wishlist === '0') 
+        heartType = 'ios-heart-outline'; 
+    else 
+        heartType = 'ios-heart' ;
         
 
     return ( 
@@ -38,17 +33,16 @@ const Slide = props => {
             style={styles.image} 
             source={{uri: props.uri}} />
             <Ionicons 
-                        style={{ 
-                          left : width-50, 
-                          alignment :'center',
-                          position : 'absolute' ,
-                          top : 20
-                        }} 
-                        name={heartType}
-                        size={30} 
-                        color="#a9d5d1" 
-                        onPress={props.updateState}
-                        />
+                style={{ 
+                    left : width-50, 
+                    position : 'absolute' ,
+                    top : 20
+                }} 
+            name={heartType}
+            size={30} 
+            color="#a9d5d1" 
+            onPress={()=>this.handleClick()}
+            />
             {
               !props.loaded && <View style={styles.loadingView}> 
               <BubblesLoader 
@@ -78,6 +72,12 @@ export default class Slider extends Component<{}> {
             loadQueue 
         })
     }
+    componentWillUpdate(nextProps, nextState) { 
+        // if (nextState.open == true && this.state.open == false) {
+            // this.props.onWillOpen();
+        // }
+    }
+
     render() {
     return (
       <View style={styles.container}>
