@@ -25,7 +25,6 @@ export default class Countmanager extends Component {
         this.state = { 
             Quentity : parseInt(this.props.quantity),
             loaded: true,
-
         }; 
     }
 

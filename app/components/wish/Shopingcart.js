@@ -18,6 +18,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBarManager } from 'react-native-message-bar';
 import  Countmanager  from './Countmanager';
 import { Picker } from 'react-native-picker-dropdown';
+import {Actions as routes} from "react-native-router-flux";
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,7 +28,6 @@ export default class Shopingcart extends Component {
         this.getKey = this.getKey.bind(this);        
         this.fetchData = this.fetchData.bind(this);
 
-        // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}); 
         this.state = { 
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             itemcount : '',
@@ -37,9 +37,9 @@ export default class Shopingcart extends Component {
             color: '', 
             u_id: null,
             user_type : null,
-            country : null
-
-        }; 
+            country : null,
+            ShopingItems : []
+        };
     } 
     componentDidMount(){
         this.getKey()
@@ -238,6 +238,7 @@ export default class Shopingcart extends Component {
     }
 
     render() {
+        console.warn(this.state.ShopingItems)
         const { itemcount, totalamount, subtotalamount } = this.state;
         
         let listView = (<View></View>);
@@ -267,7 +268,7 @@ export default class Shopingcart extends Component {
                 <TouchableHighlight 
                 underlayColor ={"#fff"} 
                 style={[styles.checkout]} 
-                onPress={()=> console.log("checkout")}>
+                onPress={()=>routes.AddressLists({ order_detail :  "order_detail"})}>
                 <Text>Proced to Checkout</Text>
                 </TouchableHighlight>
             </View>
@@ -275,28 +276,13 @@ export default class Shopingcart extends Component {
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-    
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         if ( !data.special_price) {
             return (
                 <Text> No Item added to your cart </Text>
-                );
-        }
-
-
-        let swipeBtns = [{
-            text: 'Edit',
-            backgroundColor: '#ccc',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {}
-         },{
-            text: 'Delete',
-            backgroundColor: '#deb887',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {  }
-         }];
-    
+            );
+        }    
         return (
             <View style={{ 
             flexDirection: 'column',
@@ -327,7 +313,6 @@ export default class Shopingcart extends Component {
                                 <Text> Quentity : </Text>
                                   <Countmanager  
                                         quantity={data.quantity} 
-                                        // updateState={this.updateState} 
                                         u_id={this.state.u_id} 
                                         product_id={data.product_id} 
                                         updatetype={"1"} 

@@ -184,7 +184,7 @@ const Routes = ({loading, needSignIn}) => (
                         type={ActionConst.ANDROID_BACK}/>
                     </Stack>
 
-                    <Stack key="addressbook" >
+                    <Stack key="AddressLists" >
                         <Scene 
                         key="address" 
                         component={AddressBook} 

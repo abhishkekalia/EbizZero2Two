@@ -130,6 +130,7 @@ export default class WishList extends Component {
             }
 
         })
+        .then(()=>this.removeWishlist(product_id))
         .then(()=> this.fetchData())
         .done();
     }
@@ -300,9 +301,6 @@ export default class WishList extends Component {
                                         country={this.state.country} 
                                         />
                                         </View>
-                                        <Text > {data.product_name} </Text>
-                                        <Text > {this.state.color} </Text>
-                                        <Text > {this.state.size} </Text>
 
                                         <Text >US $ : {data.special_price} </Text>
                                         <View style={{ flexDirection : "row"}}>
@@ -310,10 +308,7 @@ export default class WishList extends Component {
                                         <Text>| {data.special_price}</Text>
                                         </View>
                                         <Text > Total :{data.price} </Text>
-                                        <View >
-                                        <SelectItem size={data.size} color={data.color} />
-
-                                    </View>
+                                            <SelectItem size={data.size} color={data.color} />
                                       </View>
                                </View>                             
                 </Swipeout>
@@ -348,7 +343,7 @@ class SelectItem extends Component{
         // console.warn(this.props.size);
         return(
         <View style={{ flexDirection:'row'}}> 
-            <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+            <View style={{width: width/3, height: 40, backgroundColor: '#fff', justifyContent : 'center'}}> 
                 <Picker
                 mode="dropdown"
                 style={{
@@ -362,7 +357,7 @@ class SelectItem extends Component{
                     <Picker.Item label="Large" value="large" />
                 </Picker>
             </View>
-            <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+            <View style={{width: width/3, height: 40, backgroundColor: '#fff' ,justifyContent : 'center'}}> 
                 <Picker 
                 mode="dropdown"
                 selectedValue={this.state.color} 
@@ -370,7 +365,7 @@ class SelectItem extends Component{
                     <Picker.Item label="Select color" value="" />
                     <Picker.Item label="Red" value="red" />
                     <Picker.Item label="Yellow" value="yellow" />
-                    <Picker.Item label="Pick" value="pink" />
+                    <Picker.Item label="Pink" value="pink" />
                 </Picker>
             </View>
         </View>

@@ -41,7 +41,7 @@ export default class Edittwish extends Component {
             <TouchableOpacity 
                     onPress={this.props.toggleWishList }
                     style={{ 
-                        left : width/3-35, 
+                        left : width/2-33, 
                         position : 'absolute',
                         width : 50,
                         height :50,

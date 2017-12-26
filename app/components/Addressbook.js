@@ -15,8 +15,9 @@ import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
 import {Actions as routes} from "react-native-router-flux";
-
+// import RadioButton from 'app/common/RadioButton'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 
 const { width } = Dimensions.get('window')
 const ICON_SIZE = 24
@@ -25,13 +26,19 @@ export default class AddressBook extends Component {
      constructor(props) {
         super(props);
         this.getKey = this.getKey.bind(this);      
+        this.onSelect = this.onSelect.bind(this)
         this.state={
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
             u_id: '',
-            country : ''
+            country : '',
+            isSelected : ''
         };
      }
-
+     onSelect(index, value){
+        this.setState({
+        isSelected: value
+        }, this.addToOrder(value))
+    }
      componentDidMount(){
         this.getKey()
         .then( ()=>this.fetchAddress())
@@ -51,6 +58,33 @@ export default class AddressBook extends Component {
         }
     }
 
+    addToOrder(value){
+        console.warn(this.props.order_detail);
+        const { u_id, country } = this.state;
+          let formData = new FormData();
+          formData.append('u_id', String(u_id));
+          formData.append('country', String(u_id));
+          formData.append('order_detail', String(u_id));
+          formData.append('amount', String(u_id));
+
+          const config = { 
+               method: 'POST', 
+               headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+               },
+               body: formData,
+          }
+          fetch(Utils.gurl('addressList'), config)  
+          .then((response) => response.json())
+          .then((responseData) => { 
+                           // console.warn(JSON.stringify('responseData'));
+
+               this.setState({ 
+                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+               });
+          }).done();
+    }
 
      fetchAddress(){
         const { u_id, country } = this.state;
@@ -141,14 +175,7 @@ export default class AddressBook extends Component {
             );
         return (
         <View style={styles.container}>
-        <View style={{ flexDirection : 'row', justifyContent : 'space-around', backgroundColor:"#fff"}}>
-                    <TouchableOpacity style={styles.topBar}>
-                        <Text>Shipping Address</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.topBar}>
-                        <Text>Billing Address</Text>
-                    </TouchableOpacity>
-                </View>
+        
         {listView}
         <TouchableOpacity style={{ alignItems : 'center', backgroundColor:'#ccc'}}  onPress={()=>routes.pop()}>
         <Text style={{padding :10}}>Close</Text>
@@ -159,9 +186,14 @@ export default class AddressBook extends Component {
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
-           <View style={{ borderBottomWidth :1, borderTopWidth:1, borderColor : "#ccc", top :5, padding :5, marginTop : 5 , backgroundColor:'#fff'}}>
-                    <View>
-                        <View style={{ flexDirection: 'row' , justifyContent: 'space-between'}}>
+            <View>
+            <RadioGroup 
+            style={{ borderBottomWidth :1,borderColor : "#ccc",  padding :5, backgroundColor:'#fff'}} 
+            onSelect = {(sectionID, value) => this.onSelect(sectionID, data.address_id)}
+            >
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'column' }}>
+                        <View style={{ flexDirection: 'row' , justifyContent: 'space-between'}}>    
                             <Text style={{ fontSize: 15}}>{data.full_name}</Text>
                             <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} />
                         </View>
@@ -170,11 +202,13 @@ export default class AddressBook extends Component {
                         {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]}
                         </Text>
                     </View>
-
                 </View>
+            </RadioGroup>
+        </View>
         );
     }
 }
+
 
 
 class PopupMenu extends Component {
