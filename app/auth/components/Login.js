@@ -18,7 +18,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const INITIAL_STATE = {email: '', password: ''};
 
@@ -131,7 +130,6 @@ class Login extends Component {
 					
 					</View>
         </Modal>
-                <KeyboardSpacer/>
 
 			</View>
 		);

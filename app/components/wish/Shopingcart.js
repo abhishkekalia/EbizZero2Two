@@ -86,7 +86,6 @@ export default class Shopingcart extends Component {
     }
     addtoWishlist(product_id){
         const {u_id, country, user_type } = this.state;
-<<<<<<< HEAD
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -105,36 +104,10 @@ export default class Shopingcart extends Component {
         .then((responseData) => {
             // alert(responseData.data.message);
 
-=======
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('addToWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            // alert(responseData.data.message);
-
->>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
             MessageBarManager.showAlert({ 
-        message: responseData.data.message, 
-        alertType: 'alert', 
-        // stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
-        // animationType: 'SlideFromLeft',
-    })
-
-        //     this.setState({
-        //     data: responseData.data
-        // });
+                message: responseData.data.message, 
+                alertType: 'alert', 
+            })
         }).done();
     }
 
@@ -195,11 +168,7 @@ export default class Shopingcart extends Component {
                 stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
             })
         })
-<<<<<<< HEAD
-        .then(this.fetchData())
-=======
         .then(()=>this.fetchData())
->>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
         .done();
     }
 
@@ -381,11 +350,7 @@ export default class Shopingcart extends Component {
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
                                         onPress={()=> this.addtoWishlist(data.product_id)}
                                         >
-<<<<<<< HEAD
-                        <Entypo name="heart-outlined" size={20} color="#87cefa"/> 
-=======
                         <Entypo name="heart-outlined" size={20} color="#a9d5d1"/> 
->>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
                         <Text style={{ left :5}}>Add To wishlist</Text>
                     </TouchableOpacity>
                 </View>

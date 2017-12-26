@@ -23,11 +23,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-<<<<<<< HEAD
-import { Picker } from 'react-native-picker-dropdown';
-=======
 import  Countmanager  from './Countmanager';
->>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
 
 const { width, height } = Dimensions.get('window');
 
@@ -204,18 +200,15 @@ export default class WishList extends Component {
         //   }
         // });
     } 
-<<<<<<< HEAD
     _onRefresh() {
         ()=>this.fetchData();
     }
-=======
    
     updateState = () => {
       this.setState({
           Quentity: !this.state.Quentity
       });
   }
->>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
@@ -244,11 +237,6 @@ export default class WishList extends Component {
                 showsVerticalScrollIndicator={false}
                 />
             );
-<<<<<<< HEAD
-
-            
-=======
->>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
         return (
         <View>
             {listView}
@@ -281,104 +269,88 @@ export default class WishList extends Component {
                 borderRadius : 5, 
             }}>
                 <Swipeout right={swipeBtns}
-                    autoClose={true}
-                    backgroundColor= 'transparent'> 
-                    
-                        <View style={{ 
-                            flexDirection: 'row', 
-                            // justifyContent : 'space-around', 
-                            backgroundColor : "#fff"}}>
-                            
-                            <Image style={[styles.thumb, {margin: 10}]} 
-                            source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
-                            />
+                autoClose={true}
+                backgroundColor= 'transparent'>      
+                    <View style={{ 
+                    flexDirection: 'row', 
+                    // justifyContent : 'space-around', 
+                    backgroundColor : "#fff"}}>  
+                        <Image style={[styles.thumb, {margin: 10}]} 
+                        source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
+                        />
     
-                                <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
-                                    <TouchableHighlight
-                                        underlayColor='transparent'
-                                        onPress={this.viewNote.bind(this, data)} 
-                                        style={styles.row} >
-                                        
-                                        <Text > {data.product_name} </Text>
-                                    
-                                    </TouchableHighlight>
-                                        <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
-
-                                        <View style={{ flexDirection : "row"}}>
-                                            <Text> Quentity :  </Text>
-                                        <Countmanager  
-                                        quantity={data.quantity} 
-                                        // updateState={this.updateState} 
-                                        u_id={this.state.u_id} 
-                                        product_id={data.product_id} 
-                                        updatetype={"0"} 
-                                        country={this.state.country} 
-                                        />
-                                        </View>
-                                        <Text > {data.product_name} </Text>
-                                        <Text > {this.state.color} </Text>
-                                        <Text > {this.state.size} </Text>
-
-                                        <Text >US $ : {data.special_price} </Text>
-                                        <View style={{ flexDirection : "row"}}>
-                                        <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> US $ {data.price}  </Text>
-                                        <Text>| {data.special_price}</Text>
-                                        </View>
-                                        <Text > Total :{data.price} </Text>
-<<<<<<< HEAD
-                                        <View style={{ flexDirection:'row'}}>
-                                        <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
-                                        <Picker
-                            mode="dropdown"
-                            style={{
-                                // width: width/3, height: 40, 
-                                backgroundColor: '#fff'
-                            }}
-                            selectedValue={this.state.size}
-                            onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
-                                <Picker.Item label="Select Size" value="" />
-                                <Picker.Item label="Small" value="small" />
-                                <Picker.Item label="Medium" value="medium" />
-                                <Picker.Item label="Large" value="large" />
-
-                            </Picker>
-                            
-                    </View>
-                    <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
-                            <Picker 
-                            mode="dropdown"
-                            selectedValue={this.state.color}
-                            onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
-                                <Picker.Item label="Select color" value="" />
-                                <Picker.Item label="Red" value="red" />
-                                <Picker.Item label="Yellow" value="yellow" />
-                                <Picker.Item label="Pick" value="pink" />
-                            </Picker>
-                            
-                    </View>
+                        <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
+                            <TouchableHighlight
+                            underlayColor='transparent'
+                            onPress={this.viewNote.bind(this, data)} 
+                            style={styles.row} >
+                                <Text > {data.product_name} </Text>
+                            </TouchableHighlight>
+                            <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
+                            <View style={{ flexDirection : "row"}}>
+                                <Text> Quentity :  </Text>
+                                <Countmanager  
+                                quantity={data.quantity} 
+                                // updateState={this.updateState} 
+                                u_id={this.state.u_id} 
+                                product_id={data.product_id} 
+                                updatetype={"0"} 
+                                country={this.state.country} 
+                                />
                             </View>
-                                    </View>
-
-=======
-                                        <View >
-                                        <SelectItem size={data.size} color={data.color} />
->>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
-
-                                    </View>
-                                      </View>
-                               </View>                             
+                            <Text > {data.product_name} </Text>
+                            <Text > {this.state.color} </Text>
+                            <Text > {this.state.size} </Text>
+                            <Text >US $ : {data.special_price} </Text>
+                            <View style={{ flexDirection : "row"}}>
+                                <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> US $ {data.price}  </Text>
+                                <Text>| {data.special_price}</Text>
+                            </View>
+                            <Text > Total :{data.price} </Text>
+                            <View style={{ flexDirection:'row'}}>
+                                <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+                                    <Picker 
+                                    mode="dropdown"
+                                    style={{
+                                        // width: width/3, height: 40, 
+                                        backgroundColor: '#fff'
+                                    }}
+                                    selectedValue={this.state.size}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
+                                        <Picker.Item label="Select Size" value="" />
+                                        <Picker.Item label="Small" value="small" />
+                                        <Picker.Item label="Medium" value="medium" />
+                                        <Picker.Item label="Large" value="large" />
+                                    </Picker>
+                                </View>
+                                <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+                                    <Picker 
+                                    mode="dropdown"
+                                    selectedValue={this.state.color}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
+                                        <Picker.Item label="Select color" value="" />
+                                        <Picker.Item label="Red" value="red" />
+                                        <Picker.Item label="Yellow" value="yellow" />
+                                        <Picker.Item label="Pick" value="pink" />
+                                    </Picker>
+                                </View>
+                            </View>
+                        </View>
+                        <View >
+                            <SelectItem size={data.size} color={data.color} />
+                        </View>
+                    </View>
                 </Swipeout>
-                
                 <View style={styles.bottom}>
-                        <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}>
+                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}>
                         <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
-                            <Text style={{ left : 5}}>Share WishList</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
-                        onPress={()=>this.addtoCart(data.quantity[sectionID], data.product_id)}>
-                            <FontAwesome name="opencart" size={20} color="#a9d5d1"/> 
-                            <Text style={{ left :5}}>Move to Cart</Text>
-                        </TouchableOpacity>
+                        <Text style={{ left : 5}}>Share WishList</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
+                    onPress={()=>this.addtoCart(data.quantity[sectionID], data.product_id)}>
+                        <FontAwesome name="opencart" size={20} color="#a9d5d1"/> 
+                        <Text style={{ left :5}}>Move to Cart</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         )

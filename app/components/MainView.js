@@ -589,6 +589,7 @@ export default class MainView extends Component {
                 <View style={{ padding :5}}>
                 <TouchableOpacity  style={styles.name} onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}>
                         <Editwish heartType={heartType} toggleWishList={toggleWishList}/>
+                </TouchableOpacity>
                 </View>
                 
                 <View style={{ padding :5}}>

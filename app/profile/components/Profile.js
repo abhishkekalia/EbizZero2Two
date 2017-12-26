@@ -124,38 +124,10 @@ address (){
 						<Entypo name="edit" size={25} color="#87cefa"/>
 					</TouchableOpacity >
 				</View>
-				
-				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
-
-					<View style={{ padding : 20, backgroundColor : '#fff', flex : 1}}>
-						<TouchableOpacity style={{ flexDirection : 'row', justifyContent: 'space-between', paddingRight:10, paddingLeft:10,  }}  onPress={()=>Actions.getmyaddress()} >
-							<Text style={{ fontSize : 10, color:"#900"}}>My Address Book</Text>
-								<TouchableOpacity style={{ justifyContent: 'center', alignItems : 'center' }} 
-								>
-									<Ionicons name="ios-arrow-forward" size={25} color="#ccc"/>
-								</TouchableOpacity >
-						</TouchableOpacity>
-					
-					<Text style={{ fontSize: 15}}>
-					{address.full_name}
-					</Text>
-					<Text style={{ fontSize : 10}}>
-					M:{address.mobile_number}
-					</Text>
-					<Text style={{fontSize:12}}>
-					{[address.address_line1, ' ', address.address_line2, ' ', address.landmark ,' ', address.town,' ',address.city, ' ', address.state, '(', address.pincode, ')']}
-					</Text>
-								
-						<Ionicons name="ios-arrow-forward" size={25} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
-						</TouchableOpacity>
-					{this.address()}
-				</View>
-				</View>
-				<TouchableOpacity onPress={()=>Actions.settings()} style={styles.setings}>
-					<Text>Settings</Text>
-					<Ionicons name="ios-arrow-forward" size={25} color="#ccc"/>
-				</TouchableOpacity>
 			</View>
+				
+
+				
 		)
 	}
 }
