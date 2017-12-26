@@ -69,7 +69,28 @@ class Profile extends Component {
         })
         .done();
     }
-
+address (){
+	if(this.state.address == '') {
+			return (<View>
+						<Text  style={{ fontSize :8}}> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+			proident, sunt in culpa qui officia deserunt mollit anim id est laborum  </Text>
+						</View>)
+		}else {
+			return <View><Text style={{ fontSize: 15}}>
+					{address.full_name}
+					</Text>
+					<Text style={{ fontSize : 10}}>
+					M:{address.mobile_number}
+					</Text>
+					<Text style={{fontSize:12}}>
+					{[address.address_line1, ' ', address.address_line2, ' ', address.landmark ,' ', address.town,' ',address.city, ' ', address.state, '(', address.pincode, ')']}
+					</Text></View>
+		}
+}
 	render() {
 		const {identity, logout} = this.props;
 		const {data, u_id, address} = this.state;
@@ -99,7 +120,7 @@ class Profile extends Component {
 						</View>
 					</View>
 
-					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} onPress={()=> Actions.newaddress()} >
+					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} onPress={()=> Actions.editProfile()} >
 						<Entypo name="edit" size={25} color="#87cefa"/>
 					</TouchableOpacity >
 				</View>
@@ -124,6 +145,10 @@ class Profile extends Component {
 					<Text style={{fontSize:12}}>
 					{[address.address_line1, ' ', address.address_line2, ' ', address.landmark ,' ', address.town,' ',address.city, ' ', address.state, '(', address.pincode, ')']}
 					</Text>
+								
+						<Ionicons name="ios-arrow-forward" size={25} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
+						</TouchableOpacity>
+					{this.address()}
 				</View>
 				</View>
 				<TouchableOpacity onPress={()=>Actions.settings()} style={styles.setings}>

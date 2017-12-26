@@ -6,10 +6,10 @@ import {
   View,
   ActivityIndicator,
   Dimensions,
-  Image
+  Image,
+  Picker
 } from 'react-native';
 import {Actions} from "react-native-router-flux";
-import { Picker } from 'react-native-picker-dropdown';
 import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 

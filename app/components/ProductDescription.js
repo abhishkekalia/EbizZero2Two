@@ -10,6 +10,7 @@ import {
   AsyncStorage,
   // Picker
 } from 'react-native';
+
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -123,7 +124,6 @@ export default class ProductDescription extends Component {
         })
         .done();
     }
-
     fetchData(){ 
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
@@ -160,19 +160,76 @@ export default class ProductDescription extends Component {
     onSubmit () {
 
     }
+    addtoWishlist ( product_id){
+        const {u_id, country, user_type } = this.state;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('addToWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+    .then(()=>this.fetchData())
+    .done();
+
+    }
+    removeToWishlist ( product_id){
+        const {u_id, country, user_type } = this.state;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(this.state.data.product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('removeFromWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        .then(()=>this.fetchData)
+        .done();
+    }
     
     render () { 
         const { date_in, count } = this.state;
         let color = this.state.data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
+      // console.warn(this.props.is_wishlist);
+      // let toggleWishList  
+      // if(this.props.is_wishlist === '0') { toggleWishList = ()=> this.addtoWishlist(this.state.data.product_id)} else { toggleWishList = ()=> this.removeToWishlist(this.state.data.product_id)}
+      // if(this.props.is_wishlist === '0') { toggleWidhlist = ()=> addtoWishlist(this.state.data.product_id} else { toggleWidhlist = ()=> removeToWishlist(this.state.data.product_id)}
 
         return ( 
             <ScrollView 
                 keyboardShouldPersistTaps="always"
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/1.5}}>
-                <Slider imgList={this.state.imgList}  data= {this.state.data.product_id} is_wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
+                <Slider imgList={this.state.imgList} updateState={this.props.toggleWishList}  wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
                 </View>
 
                 <View style={{ 

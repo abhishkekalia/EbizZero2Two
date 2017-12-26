@@ -12,7 +12,8 @@ import {
     AsyncStorage,
     Image ,
     RefreshControl,
-    ActivityIndicator
+    ActivityIndicator,
+    Picker
 
 } from 'react-native';
 import Swipeout from 'react-native-swipeout';
@@ -22,7 +23,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+<<<<<<< HEAD
 import { Picker } from 'react-native-picker-dropdown';
+=======
+import  Countmanager  from './Countmanager';
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
 
 const { width, height } = Dimensions.get('window');
 
@@ -34,20 +39,19 @@ export default class WishList extends Component {
         this.state = { 
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}), 
             status : false,
-            Quentity : 0,
             u_id: null,
             country : null,
-            size: '', 
-            color: '', 
             loaded: false,
             toggle : false,
-            refreshing: false,        }; 
+            refreshing: false,        
+        }; 
     } 
     componentDidMount(){
         this.getKey()
         .then( ()=>this.fetchData())
         .done()
     }
+
     
     async getKey() {
         try { 
@@ -161,11 +165,13 @@ export default class WishList extends Component {
         .done();
     }
     editWishlist(product_id){
-        const {u_id, country, user_type } = this.state;
+        const { size, color, u_id, country, } = this.state; 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));  
         formData.append('product_id', String(product_id));
+        formData.append('size', String(size)); 
+        formData.append('color', String(color)); 
 
         const config = { 
             method: 'POST', 
@@ -176,15 +182,15 @@ export default class WishList extends Component {
             body: formData,
         } 
 
-        fetch(Utils.gurl('removeFromWishlist'), config) 
+        fetch(Utils.gurl('editWishlist'), config) 
         .then((response) => response.json())
         .then((responseData) => {
 
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                status: responseData.status,
-                refreshing : false
-        });
+            MessageBarManager.showAlert({ 
+                    message: responseData.data.message, 
+                    alertType: 'alert', 
+                    stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                })
         }).done();
     }
 
@@ -198,9 +204,18 @@ export default class WishList extends Component {
         //   }
         // });
     } 
+<<<<<<< HEAD
     _onRefresh() {
         ()=>this.fetchData();
     }
+=======
+   
+    updateState = () => {
+      this.setState({
+          Quentity: !this.state.Quentity
+      });
+  }
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
@@ -212,15 +227,14 @@ export default class WishList extends Component {
     render() {
         if (!this.state.status) {
             return this.noItemFound();
-        }
-
+        } 
         let listView = (<View></View>);
             listView = (
                 <ListView
                 refreshControl={ 
                     <RefreshControl
                     refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh} />
+                    onRefresh={this.fetchData} />
                 }
                 contentContainerStyle={styles.container}
                 dataSource={this.state.dataSource}
@@ -230,8 +244,11 @@ export default class WishList extends Component {
                 showsVerticalScrollIndicator={false}
                 />
             );
+<<<<<<< HEAD
 
             
+=======
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
         return (
         <View>
             {listView}
@@ -239,16 +256,9 @@ export default class WishList extends Component {
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-        let color = data.special_price ? '#C5C8C9' : '#000';
+        let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
 
-        if ( !data.special_price) {
-            return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text> No Item added to your wishlist </Text>
-                <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load wishlist</Text></TouchableOpacity>
-               </View> );
-        }
 
         let swipeBtns = [{
             text: 'Edit',
@@ -261,6 +271,7 @@ export default class WishList extends Component {
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => {this.removeWishlist(data.product_id)}
          }];
+
         return (
             <View style={{ 
                 flexDirection: 'column' ,
@@ -291,28 +302,22 @@ export default class WishList extends Component {
                                         <Text > {data.product_name} </Text>
                                     
                                     </TouchableHighlight>
-                                        <View style={{ flexDirection : "row"}}>
-                                        
-                                            <Text> Quentity :  </Text>
-                                            <TouchableOpacity 
-                                                style={styles.qtybutton} 
-                                                onPress={(Quentity)=> this.setState({Quentity : this.state.Quentity -1})}>
+                                        <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
 
-                                                <Text> - </Text>
-                                            
-                                            </TouchableOpacity>
-                                            
-                                            <Text style={[styles.qtybutton, {color : "#87cefa"}]}> { this.state.Quentity ? this.state.Quentity : data.quantity[sectionID] } </Text>
-                                            
-                                            <TouchableOpacity 
-                                                style={styles.qtybutton} 
-                                                onPress={(Quentity)=> this.setState({Quentity: parseInt(data.quantity[sectionID]) +1 })}>
-                                                
-                                                <Text> +</Text>
-                                            
-                                            </TouchableOpacity>
-                                        
+                                        <View style={{ flexDirection : "row"}}>
+                                            <Text> Quentity :  </Text>
+                                        <Countmanager  
+                                        quantity={data.quantity} 
+                                        // updateState={this.updateState} 
+                                        u_id={this.state.u_id} 
+                                        product_id={data.product_id} 
+                                        updatetype={"0"} 
+                                        country={this.state.country} 
+                                        />
                                         </View>
+                                        <Text > {data.product_name} </Text>
+                                        <Text > {this.state.color} </Text>
+                                        <Text > {this.state.size} </Text>
 
                                         <Text >US $ : {data.special_price} </Text>
                                         <View style={{ flexDirection : "row"}}>
@@ -320,6 +325,7 @@ export default class WishList extends Component {
                                         <Text>| {data.special_price}</Text>
                                         </View>
                                         <Text > Total :{data.price} </Text>
+<<<<<<< HEAD
                                         <View style={{ flexDirection:'row'}}>
                                         <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
                                         <Picker
@@ -353,19 +359,24 @@ export default class WishList extends Component {
                             </View>
                                     </View>
 
+=======
+                                        <View >
+                                        <SelectItem size={data.size} color={data.color} />
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
 
-                                </View>
-                                
+                                    </View>
+                                      </View>
+                               </View>                             
                 </Swipeout>
                 
                 <View style={styles.bottom}>
                         <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}>
-                        <SimpleLineIcons name="share-alt" size={20} color="#a52a2a"/>
+                        <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
                             <Text style={{ left : 5}}>Share WishList</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
                         onPress={()=>this.addtoCart(data.quantity[sectionID], data.product_id)}>
-                            <FontAwesome name="opencart" size={20} color="#a52a2a"/> 
+                            <FontAwesome name="opencart" size={20} color="#a9d5d1"/> 
                             <Text style={{ left :5}}>Move to Cart</Text>
                         </TouchableOpacity>
                 </View>
@@ -375,13 +386,55 @@ export default class WishList extends Component {
 }
 
 
+class SelectItem extends Component{
+        constructor(props) { 
+        super(props); 
+        this.state = { 
+            size: this.props.size, 
+            color: this.props.color, 
+        }; 
+    } 
+    
+    render(){
+        // console.warn(this.props.size);
+        return(
+        <View style={{ flexDirection:'row'}}> 
+            <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+                <Picker
+                mode="dropdown"
+                style={{
+                    backgroundColor: 'transparent'
+                    }}
+                selectedValue={this.state.size}
+                onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
+                    <Picker.Item label="Select Size" value="" />
+                    <Picker.Item label="Small" value="small" />
+                    <Picker.Item label="Medium" value="medium" />
+                    <Picker.Item label="Large" value="large" />
+                </Picker>
+            </View>
+            <View style={{width: width/3, height: 40, backgroundColor: '#fff'}}> 
+                <Picker 
+                mode="dropdown"
+                selectedValue={this.state.color} 
+                onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
+                    <Picker.Item label="Select color" value="" />
+                    <Picker.Item label="Red" value="red" />
+                    <Picker.Item label="Yellow" value="yellow" />
+                    <Picker.Item label="Pick" value="pink" />
+                </Picker>
+            </View>
+        </View>
+        )
+    }
+}
+
 const styles = StyleSheet.create ({
     container: {
         // flex: 1,
         flexDirection: 'column',
         // justifyContent: 'center',
         // alignItems: 'center',
-        // backgroundColor: '#ccc',
         padding : 10 
     },
 

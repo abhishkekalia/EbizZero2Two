@@ -211,5 +211,9 @@ var styles = StyleSheet.create({
         minHeight : 500,
         fontWeight : 'bold'
     }
+<<<<<<< HEAD
 });
 
+=======
+});
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de

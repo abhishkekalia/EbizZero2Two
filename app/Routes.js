@@ -41,7 +41,7 @@ import Timeline from "./components/timeline";
 import Settings from "./components/settings";
 import Contact from "./components/Contact";
 import GetMyaddress from "./components/GetMyaddress";
-
+import Editmyprofile from "./components/Editmyprofile";
 import Filter from './components/Filter';
 
 import MenuIcon from './images/imgpsh.png';
@@ -92,14 +92,16 @@ const Routes = ({loading, needSignIn}) => (
                 <Scene key="tab" hideNavBar>
 
                     <Tabs 
+                    tabs
                     key="tabbar"
                     swipeEnabled={false}
                     initial={!needSignIn}
                     showLabel={false}
                     tabBarStyle={styles.tabBarStyle}
                     tabBarPosition={'bottom'}
-                    activeBackgroundColor='#6c6e70' 
+                    activeBackgroundColor='#a9d5d1' 
                     inactiveBackgroundColor='#fff'
+                    lazy
                     // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
                     >
 
@@ -285,6 +287,14 @@ const Routes = ({loading, needSignIn}) => (
                         component={Searchproduct} 
                         navBar={CustomGenNavBar}/>
                     </Stack>
+                    <Stack 
+                    key="editProfile">
+                        <Scene 
+                        key="profileEdit" 
+                        titleStyle={{alignSelf: 'center'}} 
+                        component={Editmyprofile} 
+                        navBar={CustomGenNavBar}/>
+                    </Stack>
             </Modal>
         <Scene component={MessageBar} key="msgbar"/>
     </Overlay>
@@ -312,4 +322,3 @@ const styles = StyleSheet.create({
   },
 });
 export default connect(mapStateToProps)(Routes);
-

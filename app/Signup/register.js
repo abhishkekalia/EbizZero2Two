@@ -240,6 +240,7 @@ class Register extends Component {
 						/>
 					</View>
 
+<<<<<<< HEAD
 					<View style={{ borderBottomWidth: 0.5, borderColor: 'red'}}>						
 						<Picker
             selectedValue={this.state.selectCountry}
@@ -257,6 +258,24 @@ class Register extends Component {
             <Picker.Item label="United States" value="3" />
           </Picker>
 					</View>
+=======
+					<View style={[commonStyles.iconusername, {
+					        				flexDirection: 'row',
+					        				justifyContent: 'center',
+					        				alignItems: 'center' ,
+					        				marginBottom : 10
+					        					}]}>						
+						<Picker style={{ width: width-100, height: 40}}
+                            mode="dropdown"
+                            selectedValue={this.state.selectCountry}
+                            onValueChange={(itemValue, itemIndex) => 
+                                this.setState({selectCountry: itemValue})}>
+                                
+                                <Picker.Item label="Select country" value="" /> 
+                               {this.loadUserTypes()}
+                            </Picker>
+                        </View>
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
 					<View style ={commonStyles.iconusername}>
 						<TextInput
 							style={[commonStyles.inputpassword , { padding : 10}] }
@@ -272,7 +291,16 @@ class Register extends Component {
 							onChangeText={(address) => this.setState({address})}
 						/>
 					</View>
+<<<<<<< HEAD
 						<Picker style={{height: 40, backgroundColor: 'transparent'}}
+=======
+										<View style={[{
+					        				flexDirection: 'row',
+					        				justifyContent: 'center',
+					        				alignItems: 'center' ,
+					        					}]}>				
+						<Picker style={{ width: width-100, height: 40}}
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
                         mode="dropdown"
                         selectedValue={this.state.type}
 						onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
@@ -280,6 +308,12 @@ class Register extends Component {
 							<Picker.Item label="USER" value="2" />
 							<Picker.Item label="VENDOR" value="3" />
 						</Picker>
+<<<<<<< HEAD
+=======
+						
+					</View>
+
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
 				</View>
 				<TouchableOpacity  onPress = {this.onSubmit.bind(this)}  style={[commonStyles.button , {backgroundColor : 'orange'}]}>
 					<Text style={{ color : '#fff'}}>Create Acount</Text>
@@ -321,7 +355,7 @@ validate(){
 		return false;
 	}
 
-	if (!password.length){ //? null : this.alert("Fullname")
+	if (!password.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Password",
             alertType: 'alert',
@@ -335,28 +369,32 @@ validate(){
          })
 		return false;
 	}
+<<<<<<< HEAD
 	if (!contact.length){ //? null : this.alert("Fullname")
+=======
+	if (!contact.length){
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Contact Number",
             alertType: 'alert',
         	})
 		return false
 	}
-	if (!selectCountry.length){ //? null : this.alert("Fullname")
+	if (!selectCountry.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select Country",
             alertType: 'alert',
         	})
 		return false
 	} 
-	if (!address.length){ //? null : this.alert("Fullname")
+	if (!address.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Address",
             alertType: 'alert',
         	})
 		return false
 	}
-	if (!type.length){ //? null : this.alert("Fullname")
+	if (!type.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select User Type",
             alertType: 'alert',
@@ -366,7 +404,7 @@ validate(){
 		return true;
 }
 
-	onSubmit() {
+onSubmit() {
 		const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
 
 			let formData = new FormData();
@@ -389,8 +427,11 @@ validate(){
 			formData.append('expiry_month', String('3')); 
 			formData.append('expiry_year', String('20')); 
 			formData.append('cvv', String('456')); 
+<<<<<<< HEAD
 			// console.warn(JSON.stringify(formData));
 			// console.warn(this.state.os);
+=======
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
 		if(this.validate()) { 
 		this.setState({...INITIAL_STATE, loading: true});
 
@@ -413,16 +454,6 @@ validate(){
             message: "Congratulations You Are Successfully Registered ",
             alertType: 'alert',
         	})
-	    		// console.warn(JSON.stringify(responseData.response));
-	
-	    	 // if (responseData.response.status) { 
-	    	 	// routes.homePage();
-	         // } else {
-	            // MessageBarManager.showAlert({
-	            // message: "invalid username and password",
-	            // alertType: 'error',
-	            // })
-	    	// }
 	    }) 
 	    .catch(err => { 
 	    	console.log(err); 

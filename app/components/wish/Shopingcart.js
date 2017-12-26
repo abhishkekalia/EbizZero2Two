@@ -16,6 +16,7 @@ import Utils from 'app/common/Utils';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBarManager } from 'react-native-message-bar';
+import  Countmanager  from './Countmanager';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,6 +33,7 @@ export default class Shopingcart extends Component {
             totalamount : '',
             subtotalamount : '', 
             Quentity : 0,
+            color: '', 
             u_id: null,
             user_type : null,
             country : null
@@ -84,6 +86,7 @@ export default class Shopingcart extends Component {
     }
     addtoWishlist(product_id){
         const {u_id, country, user_type } = this.state;
+<<<<<<< HEAD
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -102,6 +105,26 @@ export default class Shopingcart extends Component {
         .then((responseData) => {
             // alert(responseData.data.message);
 
+=======
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('addToWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            // alert(responseData.data.message);
+
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
             MessageBarManager.showAlert({ 
         message: responseData.data.message, 
         alertType: 'alert', 
@@ -162,7 +185,6 @@ export default class Shopingcart extends Component {
             },
             body: formData,
         }
-        
         fetch(Utils.gurl('removeFromCart'), config) 
         .then((response) => response.json())
         .then((responseData) => {
@@ -173,7 +195,11 @@ export default class Shopingcart extends Component {
                 stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
             })
         })
+<<<<<<< HEAD
         .then(this.fetchData())
+=======
+        .then(()=>this.fetchData())
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
         .done();
     }
 
@@ -274,9 +300,8 @@ export default class Shopingcart extends Component {
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
     
-        let color = data.special_price ? '#C5C8C9' : '#000';
+        let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-
         if ( !data.special_price) {
             return (
                 <Text> No Item added to your cart </Text>
@@ -298,14 +323,14 @@ export default class Shopingcart extends Component {
     
         return (
             <View style={{ 
-            flexDirection: 'column' ,
+            flexDirection: 'column',
             marginTop : 2, 
             borderWidth : 0.5, 
             borderColor : "#ccc", 
             borderRadius : 5}}>
                 <View style={{ 
                 flexDirection: 'row', 
-                backgroundColor : "#fff"}}>
+                backgroundColor : "transparent"}}>
                             
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
                         <View style={{ flexDirection: 'row'}}>
@@ -318,21 +343,21 @@ export default class Shopingcart extends Component {
                             style={styles.row} >        
                                 <Text > {data.product_name} </Text>
                             </TouchableHighlight>
+
+                           <Text> Color :{data.color} </Text>
+                                <Text> Size: {data.size} </Text>
+
                             <View style={{ flexDirection : "row"}}>
                                 <Text> Quentity : </Text>
-                                <TouchableOpacity 
-                                style={styles.qtybutton} 
-                                onPress={(Quentity)=> this.setState({Quentity : this.state.Quentity -1})}>
-                                    <Text> - </Text>        
-                                </TouchableOpacity>
-                                            
-                                <Text style={[styles.qtybutton, {color : "#87cefa"}]}> { this.state.Quentity } </Text>
-                                            
-                                <TouchableOpacity 
-                                style={styles.qtybutton} 
-                                onPress={(Quentity)=> this.setState({Quentity: this.state.Quentity +1 })}>
-                                    <Text> +</Text>        
-                                </TouchableOpacity>
+                                  <Countmanager  
+                                        quantity={data.quantity} 
+                                        // updateState={this.updateState} 
+                                        u_id={this.state.u_id} 
+                                        product_id={data.product_id} 
+                                        updatetype={"1"} 
+                                        country={this.state.country} 
+                                        />
+
                             </View>
                             <Text >US $ : {data.special_price} </Text>
                             <View style={{ flexDirection : "row"}}>
@@ -343,18 +368,24 @@ export default class Shopingcart extends Component {
                         </View>
                     </View>
                 </View>
+               
             </View>
+             
                 <View style={styles.bottom}>
                     <TouchableOpacity 
                     onPress={()=> this.removeFromCart(data.cart_id, data.product_id)}
                     style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}>
-                        <Entypo name="cross" size={20} color="#87cefa"/>
+                        <Entypo name="cross" size={20} color="#a9d5d1"/>
                         <Text style={{ left : 5}}>Remove</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
                                         onPress={()=> this.addtoWishlist(data.product_id)}
                                         >
+<<<<<<< HEAD
                         <Entypo name="heart-outlined" size={20} color="#87cefa"/> 
+=======
+                        <Entypo name="heart-outlined" size={20} color="#a9d5d1"/> 
+>>>>>>> 81129869a12c0199cbd4f9a9928d2192d09df3de
                         <Text style={{ left :5}}>Add To wishlist</Text>
                     </TouchableOpacity>
                 </View>
@@ -453,7 +484,7 @@ const styles = StyleSheet.create ({
     },
     checkout : {
         width : width/2,
-        backgroundColor : "#87cefa",
+        backgroundColor : "#a9d5d1",
         alignItems : 'center',
         padding : 10
      }
