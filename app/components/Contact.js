@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity,
-  Dimensions, 
-  Button ,
-  Platform,
-  StyleSheet
+    View, 
+    Text, 
+    TextInput, 
+    TouchableOpacity,
+    Dimensions, 
+    Button ,
+    Platform,
+    StyleSheet,
+    Picker,
+    AsyncStorage
 } from "react-native";
 const { width, height } = Dimensions.get('window')
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 export default class Contact extends Component<{}> {
     constructor(props) {
@@ -21,9 +24,70 @@ export default class Contact extends Component<{}> {
             name: '', 
             email: '', 
             issue: '', 
-            message: '', 
+            message: '',
+            u_id: '',
+            country : '',
         }
     }
+    componentDidMount(){
+        this.getKey()
+        .done()
+        
+        // var o = {"0":"1","1":"2","2":"3","3":"abhi"};
+        // var arr = Object.keys(o).map(function(k) { return o[k] });
+        // console.warn(arr)
+    }
+    async getKey() {
+        try { 
+            const value = await AsyncStorage.getItem('data'); 
+            var response = JSON.parse(value);  
+            this.setState({ 
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country ,
+                user_type: response.userdetail.user_type ,
+                name: response.userdetail.fullname ,
+                email: response.userdetail.email 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
+    validate(){
+        const {name, email, issue,message } = this.state;
+        if (!name.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Name",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!email.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Email",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!issue.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Select Your Issue",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!message.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Message",
+                alertType: 'alert',
+            })
+            return false
+        }
+            return true;
+    } 
     contactUS(){
         const { name, email , issue, message } = this.state;
         let formData = new FormData();
@@ -41,12 +105,17 @@ export default class Contact extends Component<{}> {
                 },
                 body: formData,
             }
+        if (this.validate()) {            
         fetch(Utils.gurl('contactUs'), config)  
         .then((response) => response.json())
         .then((responseData) => {
-        console.warn(JSON.stringify(responseData)) 
+           MessageBarManager.showAlert({
+                message: responseData.data.message,
+                alertType: 'alert',
+            })
         })
         .done();
+    }
     }
 
     render() {
@@ -70,15 +139,23 @@ export default class Contact extends Component<{}> {
                     maxLength={140}
                     onSubmitEditing={() => this.onSubmit()}
                     onChangeText={(email) => this.setState({email})}/>
-                <TextInput
-                    style={styles.input}
-                    value={this.state.issue}
-                    underlineColorAndroid = 'transparent'
-                    autoCorrect={false}
-                    placeholder="Issue"
-                    maxLength={140}
-                    onSubmitEditing={() => this.onSubmit()}
-                    onChangeText={(issue) => this.setState({issue})}/>
+                <View style={{
+                    borderWidth : 1, 
+                    borderColor : "#ccc", 
+                    borderRadius : 5,
+                    margin: 5,
+                }}>
+                    <Picker
+                    mode="dropdown"
+                    selectedValue={this.state.issue}
+                    onValueChange={(itemValue, itemIndex) => this.setState({issue: itemValue})
+                    }>
+                        <Picker.Item label="Select Issue" value="" />
+                        <Picker.Item label="Damage" value="1" />
+                        <Picker.Item label="Poor Quality" value="2" />
+                        <Picker.Item label="Not Happy " value="3" />
+                    </Picker>
+                </View>
                 <TextInput
                     style={styles.input}
                     multiline={true}

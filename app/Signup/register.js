@@ -8,8 +8,8 @@ import {
 	Switch,
 	ScrollView,
 	Platform,
-	Dimensions,
-	KeyboardAvoidingView
+	Picker,
+	Dimensions
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -20,7 +20,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-import { Picker } from 'react-native-picker-dropdown';
 
 const { width, height } = Dimensions.get('window')
 
@@ -114,14 +113,9 @@ class Register extends Component {
 
 		const {errorStatus, loading} = this.props;
 		return (
-			<ScrollView testID="Login">
-						<KeyboardAvoidingView 
-			 style={[ commonStyles.content,{ justifyContent: "flex-end"}]} 
-			 behavior="padding" 
-			>
-
+			<ScrollView style={[ commonStyles.content]} testID="Login">
 				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
-					<View style ={[commonStyles.iconusername , { padding : 10}]}>
+					<View style ={commonStyles.iconusername}>
 		
 						<TextInput 
 							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10}]}
@@ -145,12 +139,11 @@ class Register extends Component {
 					<View style ={commonStyles.iconusername}>
 						
 						<TextInput
-							style={[commonStyles.inputpassword , { padding : 10}]}
+							style={commonStyles.inputpassword}
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
 							placeholder="Email Address"
-							keyboardType={'email-address'}
 							maxLength={140}
           					onSubmitEditing={() => { 
           						this.focusNextField('three');
@@ -165,7 +158,7 @@ class Register extends Component {
 					<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
 						
 						<TextInput
-							style={[commonStyles.inputpassword , { padding : 10}]}
+							style={commonStyles.inputpassword}
                            	secureTextEntry={this.state.hidden}
                            	value={this.state.password}
 							underlineColorAndroid = 'transparent'
@@ -221,7 +214,7 @@ class Register extends Component {
 				<View style ={commonStyles.iconusername}>
 						
 						<TextInput
-							style={[commonStyles.inputusername , { padding : 10}]}
+							style={commonStyles.inputusername}
 							value={this.state.contact}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -239,23 +232,6 @@ class Register extends Component {
 						/>
 					</View>
 
-					<View style={{ borderBottomWidth: 0.5, borderColor: 'red'}}>						
-						<Picker
-            selectedValue={this.state.selectCountry}
-            onValueChange={(selectCountry) => this.setState({selectCountry})}
-            mode="dropdown"
-            style={{
-                borderColor : '#ccc',
-                alignSelf: 'stretch',
-                color: 'black',
-                padding:10
-            }}
-          >
-            <Picker.Item label="India" value="1" />
-            <Picker.Item label="UK" value="2" />
-            <Picker.Item label="United States" value="3" />
-          </Picker>
-					</View>
 					<View style={[commonStyles.iconusername, {
 					        				flexDirection: 'row',
 					        				justifyContent: 'center',
@@ -273,8 +249,11 @@ class Register extends Component {
                             </Picker>
                         </View>
 					<View style ={commonStyles.iconusername}>
+		
 						<TextInput
-							style={[commonStyles.inputpassword , { padding : 10}] }
+							// multiline = {true}
+							// numberOfLines = {6}
+    						style={commonStyles.inputpassword }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -287,7 +266,6 @@ class Register extends Component {
 							onChangeText={(address) => this.setState({address})}
 						/>
 					</View>
-
 										<View style={[{
 					        				flexDirection: 'row',
 					        				justifyContent: 'center',
@@ -305,13 +283,13 @@ class Register extends Component {
 					</View>
 
 				</View>
-				<TouchableOpacity  onPress = {this.onSubmit.bind(this)}  style={[commonStyles.button , {backgroundColor : 'orange'}]}>
-					<Text style={{ color : '#fff'}}>Create Acount</Text>
-				</TouchableOpacity>
-	    </KeyboardAvoidingView>
+				<Button 
+					onPress = {this.onSubmit.bind(this)}
+  					title="Create Acount"
+  					color="orange"
+  					/>
 
 			</ScrollView>
-
 		);
 	}
 
@@ -412,8 +390,6 @@ onSubmit() {
 			formData.append('expiry_month', String('3')); 
 			formData.append('expiry_year', String('20')); 
 			formData.append('cvv', String('456')); 
-			// console.warn(JSON.stringify(formData));
-			// console.warn(this.state.os);
 		if(this.validate()) { 
 		this.setState({...INITIAL_STATE, loading: true});
 

@@ -25,39 +25,26 @@ export default class Newaddress extends Component<{}> {
         super(props);        
         this.getKey = this.getKey.bind(this);      
         this.state={
-        // full_name : this.props.full_name,
-        // mobile_number : this.props.mobile_number, 
-        // pincode : this.props.pincode, 
-        // alternate_number : this.props.alternate_number, 
-        // address_line1 : this.props.address_line1, 
-        // address_line2 : this.props.address_line2, 
-        // landmark : this.props.landmark, 
-        // town : this.props.town, 
-        // city : this.props.city, 
-        // state : this.props.state, 
-        // country : this.props.country, 
-        // address_type : this.props.address_type,
-        // // update : false,
-        // address_id : this.props.address_id
-        full_name : '',
-        mobile_number : '', 
-        pincode : '', 
-        alternate_number : '', 
-        address_line1 : '', 
-        address_line2 : '', 
-        landmark : '', 
-        town : '', 
-        city : '', 
-        state : '', 
-        country : '', 
-        address_type : '',
-        address_id : '',
-        u_id: '',
+            full_name : '',
+            mobile_number : '', 
+            pincode : '', 
+            alternate_number : '', 
+            address_line1 : '', 
+            address_line2 : '', 
+            landmark : '', 
+            town : '', 
+            city : '', 
+            state : '', 
+            country : '', 
+            address_type : '1',
+            address_id : '',
+            u_id: '',
         };
         this.inputs = {};
     }
     componentDidMount (){
-        this.getKey()
+        this.getKey() 
+        .done();    
     }
     async getKey() {
         try { 
@@ -180,7 +167,7 @@ export default class Newaddress extends Component<{}> {
         formData.append('city', String(city));
         formData.append('state', String(state));
         formData.append('country', String(country));
-        formData.append('address_type', String(0)); 
+        formData.append('address_type', String(address_type)); 
 
         if (this.validate()) {
         const config = { 
@@ -232,10 +219,10 @@ export default class Newaddress extends Component<{}> {
             })
             return false
         }
-        if (!pincode.length)
+        if (!pincode.length )
         { 
             MessageBarManager.showAlert({
-                message: "Please Enter Postal code",
+                message: "Please Enter  Five Digit Postal code",
                 alertType: 'alert',
             })
             return false
@@ -304,14 +291,14 @@ export default class Newaddress extends Component<{}> {
             })
             return false
         }
-        // if (!address_type.length)
-        // { 
-        //     MessageBarManager.showAlert({
-        //         message: "Please Enter Address Code either 1 or 2",
-        //         alertType: 'alert',
-        //     })
-        //     return false
-        // }
+        if (!address_type.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Address Code either 1 or 2",
+                alertType: 'alert',
+            })
+            return false
+        }
         // if (!address_id.length)
         // { 
         //     MessageBarManager.showAlert({
@@ -386,7 +373,8 @@ export default class Newaddress extends Component<{}> {
         underlineColorAndroid = 'transparent'
         value={this.state.pincode} 
         keyboardType={'numeric'}
-        onSubmitEditing={() => { 
+        maxLength={5}
+         onSubmitEditing={() => { 
             this.focusNextField('four');
         }}
         returnKeyType={ "next" } 

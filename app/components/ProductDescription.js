@@ -8,9 +8,8 @@ import {
   TouchableOpacity,
   TextInput,
   AsyncStorage,
-  // Picker
+  Picker
 } from 'react-native';
-
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,7 +21,6 @@ import Utils from 'app/common/Utils';
 import Slider from './slider'
 import DatePicker from 'react-native-datepicker';
 import AllItem from './AllItem';
-import { Picker } from 'react-native-picker-dropdown';
 
 const {width,height} = Dimensions.get('window');
 
@@ -155,7 +153,7 @@ export default class ProductDescription extends Component {
         console.warn("size chart");
     }
     buyNow(){
-        routes.addressbook();
+        routes.AddressLists();
     }
     onSubmit () {
 
@@ -238,7 +236,7 @@ export default class ProductDescription extends Component {
                     justifyContent: 'space-between'}}>
 
                     <View>
-                        <Text style={{ padding : 10}}>{this.props.is_wishlist }</Text>
+                        <Text style={{ padding : 10}}>{this.state.data.product_name}</Text>
                         <View style={{flexDirection: 'row'}}>
                             <Text style={{color : 'skyblue', paddingLeft : 10}}>AED {this.state.data.special_price}</Text>
                             <Text style={{color: color, textDecorationLine: textDecorationLine, left : 20}}>AED {this.state.data.price}</Text>

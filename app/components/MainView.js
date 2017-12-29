@@ -238,6 +238,7 @@ export default class MainView extends Component {
         .then( this.fetchData())
         .done();
     }
+
     fetchAllShop(){
         const {u_id, country, user_type } = this.state;
 
@@ -245,7 +246,7 @@ export default class MainView extends Component {
         formData.append('u_id', String(user_type));
         formData.append('country', String(country)); 
 
-    const config = { 
+        const config = { 
                 method: 'POST', 
                 headers: { 
                     'Accept': 'application/json', 
@@ -556,7 +557,7 @@ export default class MainView extends Component {
                         IconBadgeStyle={{
                             width:50,
                             height:16,
-                            top : width/3-10,
+                            marginTop : width/3+30,
                             left: 0,
                             position : 'absolute',
                             backgroundColor: '#a9d5d1'}}
@@ -567,37 +568,15 @@ export default class MainView extends Component {
                         color="#a9d5d1" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
-                    <TouchableOpacity 
-                    onPress={toggleWidhlist }
-                    // onPress= { ()=> this.addtoWishlist(data.product_id)}
-                    style={{ 
-                        left : width/3-35, 
-                        position : 'absolute',
-                        width : 50,
-                        height :50,
-                        backgroundColor : 'transparent'
-                    }}
-                    >
-                        <Ionicons  
-                        name={heartType} 
-                        size={20} 
-                        color="#87cefa" 
-                        />
-                    </TouchableOpacity>
-                </View>
-                
-                <View style={{ padding :5}}>
-                <TouchableOpacity  style={styles.name} onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}>
                         <Editwish heartType={heartType} toggleWishList={toggleWishList}/>
-                </TouchableOpacity>
                 </View>
                 
-                <View style={{ padding :5}}>
+                <View style={{ padding :15}}>
                 <TouchableOpacity  style={styles.name} 
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
 
-                <Text style={{fontSize : 13, color :'#000'}}>{data.product_name}</Text>
+                <Text style={{fontSize : 13, color :'#000', fontFamily : 'halvetica' }}>{data.product_name}</Text>
                 </TouchableOpacity>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
@@ -665,12 +644,12 @@ var styles =StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width : width/3 -7,
+        width : width/2 -6,
         // padding: 5,
         margin: 3,
         borderWidth: 1,
         borderColor: '#CCC',
-        borderRadius : 5
+        borderRadius : 5,
     },
     button: {
         width: width/2,
@@ -683,9 +662,9 @@ var styles =StyleSheet.create({
 
     thumb: {
         width: width/3-10,
-        height: width/3,
-        borderTopLeftRadius : 5,
-        borderTopRightRadius : 5
+        height: width/3+30,
+        resizeMode : 'center',
+        top : 15
     },
 
     text: {
@@ -693,4 +672,5 @@ var styles =StyleSheet.create({
         marginTop: 5,
         fontWeight: 'bold'
     },
+     contentContainer: {  }
 });

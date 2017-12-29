@@ -59,7 +59,7 @@ class Menu extends React.Component {
                         fontSize: 12, 
                         padding: 10, 
                         marginTop : 1,
-                        left :15,
+                        left :5,
                     }}>Notification</Text>
                </View>
 
@@ -73,7 +73,7 @@ class Menu extends React.Component {
 
 
                 <Text
-                onPress={Actions.intro}
+                onPress={Actions.myorder}
                 style={[styles.item, styles.seprator]}>My Order</Text>
 
                 <Text

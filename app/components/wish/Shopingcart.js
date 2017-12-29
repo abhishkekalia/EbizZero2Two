@@ -10,25 +10,38 @@ import {
     Dimensions, 
     TextInput,
     AsyncStorage,
-    Image 
+    Image,
+    Picker 
 } from 'react-native';
 import Utils from 'app/common/Utils';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBarManager } from 'react-native-message-bar';
 import  Countmanager  from './Countmanager';
+import {Actions as routes} from "react-native-router-flux";
 
 const { width, height } = Dimensions.get('window');
 
+const ShopingcartItems = [{
+    "product_id": "47",
+    "size": "medium",
+    "quantity": "1",
+    "delivery_address_id": "31",
+    "vendor_id":"4",
+    "price":"2600",
+    "delivery_datetime": "2017-12-29 02:02:56",
+    "order_date": "2017-12-28 08:44:04"
+}]
 export default class Shopingcart extends Component {
     constructor(props) { 
         super(props); 
         this.getKey = this.getKey.bind(this);        
         this.fetchData = this.fetchData.bind(this);
 
-        // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}); 
         this.state = { 
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+            ShopingItems : null,
+            SetToList : null,
             itemcount : '',
             totalamount : '',
             subtotalamount : '', 
@@ -36,14 +49,19 @@ export default class Shopingcart extends Component {
             color: '', 
             u_id: null,
             user_type : null,
-            country : null
+            country : null,
+        };
+        // this.ShopingItems = [];
 
-        }; 
     } 
     componentDidMount(){
         this.getKey()
         .then(()=>this.fetchData())
         .done()
+        
+        // var o = {"0":"1","1":"2","2":"3","3":"abhi"};
+        // var arr = Object.keys(o).map(function(k) { return o[k] });
+        // console.warn(arr)
     }
 
     async getKey() {
@@ -59,31 +77,7 @@ export default class Shopingcart extends Component {
             console.log("Error retrieving data" + error);
         }
     }
-    updateQuantity(product_id){
-        const {u_id, country, user_type } = this.state;
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('updateQuantity'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-
-            MessageBarManager.showAlert({ 
-        message: responseData.data.message, 
-        alertType: 'alert', 
-    })
-        }).done();
-    }
+    
     addtoWishlist(product_id){
         const {u_id, country, user_type } = this.state;
 
@@ -107,7 +101,13 @@ export default class Shopingcart extends Component {
             MessageBarManager.showAlert({ 
                 message: responseData.data.message, 
                 alertType: 'alert', 
-            })
+        stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
+        animationType: 'SlideFromLeft',
+    })
+
+        //     this.setState({
+        //     data: responseData.data
+        // });
         }).done();
     }
 
@@ -129,8 +129,39 @@ export default class Shopingcart extends Component {
         fetch(Utils.gurl('cartList'), config) 
         .then((response) => response.json())
         .then((responseData) => { 
+            var Items = responseData.data,
+                length = Items.length,
+                organization,
+                Select =[],
+                user,
+                i;
+
+            var today = new Date();
+            var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+
+            currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+            nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
+
+            for (i = 0; i < length; i++) {
+                organization = Items[i];
+                Select.push ({
+                            "product_id": organization.product_id,
+                            "size": organization.size,
+                            "quantity": organization.quantity,
+                            "delivery_address_id": "29",
+                            "vendor_id":"4",
+                            "price":organization.price,
+                            "delivery_datetime": currentdate,
+                            "order_date": nextdate 
+                        })                 
+            }
+
+                            // console.warn(Select)
+
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                ShopingItems : Select,
+                SetToList : responseData.data,
                 itemcount : responseData.itemcount,    
                 totalamount : responseData.totalamount,    
                 subtotalamount : responseData.subtotalamount, 
@@ -173,15 +204,29 @@ export default class Shopingcart extends Component {
     }
 
     viewNote(rowData) {
-        // this.props.navigator.push({
-        //   title: 'The Note',
-        //   component: ViewNote,
-        //   passProps: {
-        //     noteText: rowData,
-        //     noteId: this.noteId(rowData),
-        //   }
-        // });
     } 
+    validate(){
+        const { ShopingItems} = this.state; 
+
+        if (!ShopingItems.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Select Items For Your Cart",
+                alertType: 'alert',
+            })
+            return false
+        }
+            return true;
+    }
+    procedToCheckout(){
+        if (this.validate()) { 
+            routes.AddressLists({ 
+                order_detail : this.state.ShopingItems, 
+                SetToList :this.state.SetToList,  
+                totalAmount : this.state.subtotalamount 
+            })
+        }
+    }
 
     renderHeader(itemcount, totalamount){
         return(
@@ -254,13 +299,13 @@ export default class Shopingcart extends Component {
                 <TouchableHighlight 
                 underlayColor ={"#fff"} 
                 style={[styles.shoping]} 
-                onPress={()=>console.log("continoue shoping")}>
+                onPress={()=>routes.homePage()}>
                 <Text>Continoue Shoping</Text>
                 </TouchableHighlight>
                 <TouchableHighlight 
                 underlayColor ={"#fff"} 
                 style={[styles.checkout]} 
-                onPress={()=> console.log("checkout")}>
+                onPress={()=> this.procedToCheckout()}>
                 <Text>Proced to Checkout</Text>
                 </TouchableHighlight>
             </View>
@@ -268,28 +313,15 @@ export default class Shopingcart extends Component {
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-    
+// this.ShopingItems.push(data.product_name);
+
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         if ( !data.special_price) {
             return (
                 <Text> No Item added to your cart </Text>
-                );
-        }
-
-
-        let swipeBtns = [{
-            text: 'Edit',
-            backgroundColor: '#ccc',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {}
-         },{
-            text: 'Delete',
-            backgroundColor: '#deb887',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {  }
-         }];
-    
+            );
+        }    
         return (
             <View style={{ 
             flexDirection: 'column',
@@ -313,18 +345,15 @@ export default class Shopingcart extends Component {
                                 <Text > {data.product_name} </Text>
                             </TouchableHighlight>
 
-                           <Text> Color :{data.color} </Text>
-                                <Text> Size: {data.size} </Text>
-
                             <View style={{ flexDirection : "row"}}>
                                 <Text> Quentity : </Text>
                                   <Countmanager  
                                         quantity={data.quantity} 
-                                        // updateState={this.updateState} 
                                         u_id={this.state.u_id} 
                                         product_id={data.product_id} 
                                         updatetype={"1"} 
                                         country={this.state.country} 
+                                        callback={this.fetchData.bind(this)}
                                         />
 
                             </View>
@@ -334,6 +363,8 @@ export default class Shopingcart extends Component {
                                 <Text>| {data.special_price}</Text>
                             </View>
                                 <Text > Total :{data.price} </Text>
+                            <SelectItem size={data.size} color={data.color} />
+
                         </View>
                     </View>
                 </View>
@@ -358,7 +389,45 @@ export default class Shopingcart extends Component {
         )
     }
 }
+class SelectItem extends Component{
+        constructor(props) { 
+        super(props); 
+        this.state = { 
+            size: this.props.size, 
+            color: this.props.color, 
+        }; 
+    }
+    
+    render(){
+        return(
+        <View style={{ flexDirection:'row'}}> 
+            <View style={{width: width/3, height: 40,}}> 
+                <Picker
+                mode="dropdown"
 
+                selectedValue={this.state.size}
+                onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
+                    <Picker.Item label="Select Size" value="" />
+                    <Picker.Item label="Small" value="small" />
+                    <Picker.Item label="Medium" value="medium" />
+                    <Picker.Item label="Large" value="large" />
+                </Picker>
+            </View>
+            <View style={{width: width/3, height: 40,}}> 
+                <Picker 
+                mode="dropdown"
+                selectedValue={this.state.color} 
+                onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
+                    <Picker.Item label="Select color" value="" />
+                    <Picker.Item label="Red" value="red" />
+                    <Picker.Item label="Yellow" value="yellow" />
+                    <Picker.Item label="Pink" value="pink" />
+                </Picker>
+            </View>
+        </View>
+        )
+    }
+}
 
 const styles = StyleSheet.create ({
     container: {
@@ -443,7 +512,7 @@ const styles = StyleSheet.create ({
     },
     shoping : {
         width : width/2,
-        backgroundColor : "#a52a2a",
+        backgroundColor : "#f53d3d",
         alignItems : 'center',
         padding : 10
     },

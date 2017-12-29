@@ -21,7 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 export default class Editwish extends Component {
-	constructor(props) { 
+    constructor(props) { 
         super(props); 
         this.state = { 
         }; 
@@ -35,13 +35,13 @@ export default class Editwish extends Component {
     //         size="small"/>
     //         );
     // }
-	render(){ 
+    render(){ 
         
-		return(
+        return(
             <TouchableOpacity 
                     onPress={this.props.toggleWishList }
                     style={{ 
-                        left : width/3-35, 
+                        left : width/2-33, 
                         position : 'absolute',
                         width : 50,
                         height :50,
@@ -55,8 +55,8 @@ export default class Editwish extends Component {
                         />
                     </TouchableOpacity>
 
-		)
-	}
+        )
+    }
 }
 
 const styles = StyleSheet.create ({

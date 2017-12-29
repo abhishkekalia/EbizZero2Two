@@ -56,9 +56,9 @@ export default class GetMyaddress extends Component {
         }
     }
 
-     _onRefresh() {
-    this.setState({refreshing: true});
-            this.getAddress();
+     _onRefresh() {()=>
+    this.setState({refreshing: true}, this.getAddress());
+            
         }
 
     getAddress(){
@@ -83,6 +83,7 @@ export default class GetMyaddress extends Component {
             this.setState({ 
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 status : responseData.status,
+                refreshing: false,
                 loaded : true
             });
         })
@@ -129,7 +130,7 @@ export default class GetMyaddress extends Component {
 
     renderData(data, rowData, sectionID, rowID, index) {
         return (
-            <TouchableOpacity >
+            <TouchableOpacity style={{ padding : 20}} >
             <Text style={{ fontSize: 15}}>
 
                    {data.full_name}

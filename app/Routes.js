@@ -42,6 +42,9 @@ import Settings from "./components/settings";
 import Contact from "./components/Contact";
 import GetMyaddress from "./components/GetMyaddress";
 import Editmyprofile from "./components/Editmyprofile";
+import Myfaturah from './components/Myfaturah';
+import OrderList from './components/OrderList';
+
 import Filter from './components/Filter';
 
 import MenuIcon from './images/imgpsh.png';
@@ -183,7 +186,7 @@ const Routes = ({loading, needSignIn}) => (
                         type={ActionConst.ANDROID_BACK}/>
                     </Stack>
 
-                    <Stack key="addressbook" >
+                    <Stack key="AddressLists" >
                         <Scene 
                         key="address" 
                         component={AddressBook} 
@@ -254,6 +257,19 @@ const Routes = ({loading, needSignIn}) => (
                         component={Timeline} />                                 
                     </Stack>
                     
+                    <Stack
+                    back
+                    backTitle="Back"
+                    hideNavBar={true}
+                    duration={0}
+                    key="myfaturah"
+                    titleStyle={{ color: 'black', alignSelf: 'center' }}
+                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                        <Scene 
+                        key="faturah" 
+                        component={Myfaturah} />                                 
+                    </Stack>
+
                     <Stack 
                     key="filterBar" 
                     hideTabBar={true} 
@@ -269,7 +285,7 @@ const Routes = ({loading, needSignIn}) => (
                     key="getmyaddress" 
                     hideTabBar={true} 
                     titleStyle={{alignSelf: 'center'}}
-                    renderRightButton={() => <Ionicons name="plus" size={20} onPress={()=> Actions.newaddress()} color="#fff" style={{  marginTop: 27 ,padding:10}}/>}
+                    renderRightButton={() => <Ionicons name="plus" size={20} onPress={()=> Actions.newaddress()} color="#fff" style={{  alignItems:'center',padding:10}}/>}
                     >
                         <Scene
                         key="getmyaddress"
@@ -288,11 +304,24 @@ const Routes = ({loading, needSignIn}) => (
                         navBar={CustomGenNavBar}/>
                     </Stack>
                     <Stack 
-                    key="editProfile">
+                    key="editProfile"
+                    // onBack={ () => Actions.pop({refresh: {test:Math.random() } }) }
+                        >
                         <Scene 
                         key="profileEdit" 
                         titleStyle={{alignSelf: 'center'}} 
                         component={Editmyprofile} 
+                        navBar={CustomGenNavBar}/>
+                    </Stack>
+
+                    <Stack 
+                    key="myorder"
+                    // onBack={ () => Actions.pop({refresh: {test:Math.random() } }) }
+                        >
+                        <Scene 
+                        key="orderList" 
+                        titleStyle={{alignSelf: 'center'}} 
+                        component={OrderList} 
                         navBar={CustomGenNavBar}/>
                     </Stack>
             </Modal>

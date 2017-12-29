@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: HEADER_HEIGHT + 150
+		// paddingTop: HEADER_HEIGHT + 150
 	},
 	content: {
 		flex: 1,
