@@ -9,11 +9,11 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
+  Picker
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Picker } from 'react-native-picker-dropdown';
 
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';

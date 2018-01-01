@@ -1961,6 +1961,10 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
+i18n-js@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/i18n-js/-/i18n-js-3.0.2.tgz#d14cff2562758e7d30d34ddd58dd12d53fd07b5f"
+
 iconv-lite@0.4.11:
   version "0.4.11"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.11.tgz#2ecb42fd294744922209a2e7c404dac8793d8ade"
@@ -3490,9 +3494,23 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
+react-native-flexi-radio-button@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-flexi-radio-button/-/react-native-flexi-radio-button-0.2.2.tgz#a0180393c531ba3477722c6e42a31ceb1c11623b"
+
+react-native-i18n@^2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-2.0.10.tgz#d22a6136abca1dee07c527f73cd805f9296bddc1"
+  dependencies:
+    i18n-js "^3.0.2"
+
 react-native-icon-badge@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/react-native-icon-badge/-/react-native-icon-badge-1.1.3.tgz#43de0c923afe4968dfcff127ec5c57057b16f787"
+
+react-native-image-picker@^0.26.7:
+  version "0.26.7"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.26.7.tgz#ad2ee957f7f6cc01396893ea03d84cb2adb2e376"
 
 react-native-indicator@^0.7.0:
   version "0.7.0"
@@ -3511,21 +3529,21 @@ react-native-modal@^4.1.1:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
 
-react-native-picker-dropdown@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-picker-dropdown/-/react-native-picker-dropdown-0.0.1.tgz#e44e85c7d79b2276739cd9352882b4281360f456"
-
 react-native-progress-bar@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/react-native-progress-bar/-/react-native-progress-bar-0.1.2.tgz#2fbe32ed49d15e2a57a2b9d29b6d588a4fa1554e"
+
+react-native-radio-button-classic@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-radio-button-classic/-/react-native-radio-button-classic-0.0.5.tgz#8b9c3eae1184c3f9eb8135bfb6a5e510de4ebf08"
 
 react-native-radio-buttons@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-radio-buttons/-/react-native-radio-buttons-1.0.0.tgz#be828b85897f80ca66ad66ad7adedb6b1890ab9d"
 
-react-native-router-flux@^4.0.0-beta.24:
-  version "4.0.0-beta.24"
-  resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-4.0.0-beta.24.tgz#93fb1976688bd6e34f73b2ae6764704efb7bcdd5"
+react-native-router-flux@^4.0.0-beta.25:
+  version "4.0.0-beta.25"
+  resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-4.0.0-beta.25.tgz#be5d32347198f2873f7d0076981890ac15cebbce"
   dependencies:
     lodash.isequal "^4.5.0"
     mobx "^3.3.1"
@@ -3533,7 +3551,7 @@ react-native-router-flux@^4.0.0-beta.24:
     opencollective "^1.0.3"
     path-to-regexp "^2.1.0"
     prop-types "^15.6.0"
-    react-navigation "^1.0.0-beta.19"
+    react-navigation "1.0.0-beta.21"
 
 react-native-swipe@^1.0.0:
   version "1.0.0"
@@ -3627,7 +3645,7 @@ react-native@0.51.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation@^1.0.0-beta.19, react-navigation@^1.0.0-beta.21:
+react-navigation@1.0.0-beta.21, react-navigation@^1.0.0-beta.21:
   version "1.0.0-beta.21"
   resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.0.0-beta.21.tgz#086c504ba84c966ef8db898baef6fa14ff45a06f"
   dependencies:
@@ -3759,7 +3777,7 @@ redux-thunk@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.2.0.tgz#e615a16e16b47a19a515766133d1e3e99b7852e5"
 
-redux@^3.7.2:
+redux@3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:

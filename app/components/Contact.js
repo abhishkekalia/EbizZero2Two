@@ -89,10 +89,10 @@ export default class Contact extends Component<{}> {
             return true;
     } 
     contactUS(){
-        const { name, email , issue, message } = this.state;
+        const { u_id,country, name, email , issue, message } = this.state;
         let formData = new FormData();
-        formData.append('u_id', String(1));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
         formData.append('name', String(name)); 
         formData.append('email', String(email)); 
         formData.append('issue_type', String(issue)); 

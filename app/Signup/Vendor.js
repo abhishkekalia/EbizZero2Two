@@ -36,7 +36,7 @@ const options = [
 	{ label:'Male', value: 'male' },
     { label:'Female', value: 'female'}];
 
-class Register extends Component {
+class Vendorreg extends Component {
 
 	constructor(props) {
 		super(props); 
@@ -289,8 +289,7 @@ class Register extends Component {
   				color="orange"
   				/>
   				<View style={{flexDirection : 'column', alignItems : 'center', flex: 1}}>
-  					<TouchableOpacity style={{padding :20}}
-  					onPress={()=> routes.registerVendor()}>
+  					<TouchableOpacity style={{padding :20}}>
   					<Text >If you are vendor ? Register Here</Text>
   					</TouchableOpacity>
   					<Text style={{ padding : 20}}>By Signing in You are agreeing to Our Terms and 
@@ -420,4 +419,4 @@ onSubmit() {
 	}
 }
 
-export default Register;
+export default Vendorreg;

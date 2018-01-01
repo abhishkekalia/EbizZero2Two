@@ -17,7 +17,8 @@ import MessageBar from './common/MessageBar';
 
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import {connect} from "react-redux";
-import Register from "./Signup/register"
+import Register from "./Signup/register";
+import Vendorreg from "./Signup/Vendor";
 import HomePage from "./dashboard/DashboardPage";
 import LoginPage from "./auth/LoginPage";
 import ProfilePage from "./profile/ProfilePage";
@@ -41,9 +42,11 @@ import Timeline from "./components/timeline";
 import Settings from "./components/settings";
 import Contact from "./components/Contact";
 import GetMyaddress from "./components/GetMyaddress";
+import Marketingadd from "./components/Marketingadd";
 import Editmyprofile from "./components/Editmyprofile";
 import Myfaturah from './components/Myfaturah';
 import OrderList from './components/OrderList';
+import I18n from 'react-native-i18n'
 
 import Filter from './components/Filter';
 
@@ -102,6 +105,7 @@ const Routes = ({loading, needSignIn}) => (
                     showLabel={false}
                     tabBarStyle={styles.tabBarStyle}
                     tabBarPosition={'bottom'}
+                    gestureEnabled={false} 
                     activeBackgroundColor='#a9d5d1' 
                     inactiveBackgroundColor='#fff'
                     lazy
@@ -185,6 +189,14 @@ const Routes = ({loading, needSignIn}) => (
                         navBar={CustomGenNavBar} 
                         type={ActionConst.ANDROID_BACK}/>
                     </Stack>
+                    <Stack key="registerVendor" navBar={CustomGenNavBar} >
+                        <Scene 
+                        key="register" 
+                        component={Vendorreg} 
+                        title="Registaration" 
+                        navBar={CustomGenNavBar} 
+                        type={ActionConst.ANDROID_BACK}/>
+                    </Stack>
 
                     <Stack key="AddressLists" >
                         <Scene 
@@ -199,7 +211,7 @@ const Routes = ({loading, needSignIn}) => (
                         <Scene 
                         key="deascription" 
                         component={ProductDescription} 
-                        title="Description" 
+                        title={I18n.t('greeting')} 
                         navBar={CustomGenNavBar} 
                         type={ActionConst.ANDROID_BACK}/>
                     </Stack>
@@ -241,6 +253,14 @@ const Routes = ({loading, needSignIn}) => (
                         key="settings" 
                         component={Settings} 
                         title="setting"
+                        navBar={CustomGenNavBar} /> 
+                    </Stack>
+
+                    <Stack key="postad">                                
+                        <Scene 
+                        key="adpost" 
+                        component={Marketingadd} 
+                        title="Advertisement"
                         navBar={CustomGenNavBar} /> 
                     </Stack>
 

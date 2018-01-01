@@ -77,6 +77,10 @@ class Menu extends React.Component {
                 style={[styles.item, styles.seprator]}>My Order</Text>
 
                 <Text
+                onPress={Actions.postad}
+                style={[styles.item, styles.seprator]}>Post Advertisement</Text>
+
+                <Text
                 onPress={Actions.sync}
                 style={[styles.item, styles.seprator]}> Rate us on App Store</Text>    
                 <Text

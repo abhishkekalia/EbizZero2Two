@@ -91,8 +91,8 @@ export default class OrderList extends Component<{}> {
                 rowIDs[i] = [];
 
                 for(j = 0; j < orderLength; j++) {
-                    orderDetail = orderDetail[j];
-                    rowIDs[i].push(orderDetail);
+                    // orderDetail = orderDetail[j];
+                    rowIDs[i].push(orderDetail[j]);
 
                     dataBlob[orderDetail] = orderDetail;
                 }
@@ -153,9 +153,9 @@ export default class OrderList extends Component<{}> {
 Object.assign(OrderList.prototype, {
     bindableMethods : {
         renderRow : function (rowData, sectionID, rowID) {
-            // console.warn(rowID);
             return (
-                <TouchableOpacity  
+                <TouchableOpacity 
+                style={{ padding : 10}}  
                 // onPress={() => this.onPressRow(rowData, sectionID)}
                 >
                     <View style={styles.rowStyle}>

@@ -26,10 +26,22 @@ import CheckBox from 'app/common/CheckBox';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Editwish from './wish/Editwish'
 import Modal from 'react-native-modal';
+import I18n from 'react-native-i18n'
 
 const { width, height } = Dimensions.get('window')
 let index = 0;
 
+// titleChange =(title) => {
+I18n.fallbacks = true
+I18n.translations = {
+  en: {
+    greeting: "Description"
+  },
+}
+// }
+var titleChange =(title)=> {
+    // return console.warn(title)
+};
 export default class MainView extends Component {
     constructor(props) {
         super(props); 
@@ -96,9 +108,47 @@ export default class MainView extends Component {
 
     filterbyShop = () => {
         this.setState({ 
-            isModalVisible: !this.state.isModalVisible
-        },Actions.filterdBy({ vendor : this.state.rows }) )
+            isModalVisible: !this.state.isModalVisible,
+            loaded : false,
+        },this.fetchDataByShop() )
     }
+
+    fetchDataByShop(){
+        const {u_id, country, rows } = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('vendor_id', String(rows));  
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+
+        fetch(Utils.gurl('filterByShop'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status : responseData.status,
+                loaded: true, 
+                refreshing: false
+            });
+        }).done();
+    }
+    renderLoadingView() {
+        return (
+            <ActivityIndicator  
+            style={[styles.centering]}
+            color="#a9d5d1" 
+            size="large"/>
+            );
+    }
+
 
     blur() {
         const {dataSource } = this.state;
@@ -515,7 +565,15 @@ export default class MainView extends Component {
                 leftText={leftText}
             />);
     }
-
+moveToDesc(title, product_id, is_wishlist, toggleWishList){
+    titleChange (title);
+    Actions.deascriptionPage({ 
+        title: product_id, 
+        product_id : product_id , 
+        is_wishlist : is_wishlist, 
+        toggleWishList: toggleWishList
+    })
+}
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
@@ -546,7 +604,9 @@ export default class MainView extends Component {
                     <IconBadge
                         MainElement={ 
                             <TouchableOpacity 
-                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}>
+                            onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist, toggleWishList)}
+                            // onPress={()=>Actions.deascriptionPage({ title: data.product_id, product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}
+                            >
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
                                 </TouchableOpacity>
