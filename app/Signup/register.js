@@ -9,6 +9,7 @@ import {
 	ScrollView,
 	Platform,
 	Picker,
+	Keyboard,
 	Dimensions
 } from "react-native";
 import {Loader} from "app/common/components";
@@ -43,7 +44,9 @@ class Register extends Component {
 		this.toggleSwitch = this.toggleSwitch.bind(this);
 	    this.focusNextField = this.focusNextField.bind(this);
     	this.state = {
-            userTypes: [], 
+            userTypes: [],
+            termsandcondition_title:'',
+			termsandcondition_description:'', 
             selectCountry: '',
 			fullname: '', 
 			email: '', 
@@ -55,7 +58,7 @@ class Register extends Component {
 			gender : '',
 			hidden : true,
 			userType : null,
-			type : '',
+			type : '2',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 		};
 	    this.inputs = {};
@@ -63,6 +66,7 @@ class Register extends Component {
 	}
 	componentDidMount(){
         this.fetchData();
+        this.gettermandcondition()
 
     }
 
@@ -75,6 +79,25 @@ class Register extends Component {
     		hidden : !this.state.hidden
     	})
     }
+    gettermandcondition(){
+        fetch(Utils.gurl('gettermandcondition'),{
+             method: "GET", headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }   
+        })
+        .then((response) => response.json())
+        .then((responseData) => { 
+        	if (responseData.status) {
+            	this.setState({
+            	    termsandcondition_title: responseData.data.termsandcondition_title,
+            	    termsandcondition_description: responseData.data.termsandcondition_description,
+            	     loaded: true
+        		});
+        	}
+        }).done();
+    }
+
 
     fetchData(){
         fetch(Utils.gurl('countryList'),{
@@ -113,7 +136,7 @@ class Register extends Component {
 
 		const {errorStatus, loading} = this.props;
 		return (
-			<ScrollView style={[ commonStyles.content]} testID="Login">
+			<ScrollView style={[ commonStyles.content]} testID="Login" keyboardShouldPersistTaps={'handled'}>
 				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
 					<View style ={commonStyles.iconusername}>
 		
@@ -181,14 +204,14 @@ class Register extends Component {
 							<Text>Show Password </Text>
 					</TouchableOpacity>
 
- 				<View style={{borderBottomWidth: 0.5, borderColor: 'red'}}>
+ 				<View style={{borderBottomWidth: 0.5, borderColor: '#ccc'}}>
  				        			<Text/>
 
         			<SegmentedControls
-        			  tint= {'#87cefa'}
-        			  selectedTint= {'white'}
-        			  backTint= {'#fff'}
-        			  optionStyle= {{
+        			  	tint= {'#a9d5d1'}
+        			  	selectedTint= {'white'}
+        			  	backTint= {'#fff'}
+        			  	optionStyle= {{
         			    fontSize: 12,
         			    fontWeight: 'bold',
         			    fontFamily: 'Snell Roundhand'
@@ -238,7 +261,7 @@ class Register extends Component {
 					        				alignItems: 'center' ,
 					        				marginBottom : 10
 					        					}]}>						
-						<Picker style={{ width: width-100, height: 40}}
+						<Picker style={{ width: width-50, height: 40}}
                             mode="dropdown"
                             selectedValue={this.state.selectCountry}
                             onValueChange={(itemValue, itemIndex) => 
@@ -248,11 +271,13 @@ class Register extends Component {
                                {this.loadUserTypes()}
                             </Picker>
                         </View>
-					<View style ={commonStyles.iconusername}>
-		
+
+					<View style={[{
+					flexDirection: 'row',
+					// justifyContent: 'center',
+					// alignItems: 'center' ,
+						}]}>		
 						<TextInput
-							// multiline = {true}
-							// numberOfLines = {6}
     						style={commonStyles.inputpassword }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
@@ -266,21 +291,6 @@ class Register extends Component {
 							onChangeText={(address) => this.setState({address})}
 						/>
 					</View>
-										<View style={[{
-					        				flexDirection: 'row',
-					        				justifyContent: 'center',
-					        				alignItems: 'center' ,
-					        					}]}>				
-						<Picker style={{ width: width-100, height: 40}}
-                        mode="dropdown"
-                        selectedValue={this.state.type}
-						onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
-							<Picker.Item label="Select Type"/>
-							<Picker.Item label="USER" value="2" />
-							<Picker.Item label="VENDOR" value="3" />
-						</Picker>
-						
-					</View>
 
 				</View>
 				<Button 
@@ -293,8 +303,16 @@ class Register extends Component {
   					onPress={()=> routes.registerVendor()}>
   					<Text >If you are vendor ? Register Here</Text>
   					</TouchableOpacity>
-  					<Text style={{ padding : 20}}>By Signing in You are agreeing to Our Terms and 
+  					<Text style={{ padding : 20}}>By Signing in You are agreeing to Our </Text>
+
+  					<TouchableOpacity 
+  					onPress={()=> routes.terms({ 
+  						title: this.state.termsandcondition_title,
+  						description: this.state.termsandcondition_description
+  					})}>
+  					<Text> Terms and 
   					Conditions of Use and Privacy Policy</Text>
+  					</TouchableOpacity>
   				</View>
 			</ScrollView>
 		);
@@ -366,6 +384,8 @@ validate(){
 }
 
 onSubmit() {
+		Keyboard.dismiss();
+
 		const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
 
 			let formData = new FormData();
@@ -384,10 +404,10 @@ onSubmit() {
 			formData.append('twitter_id', String('fsdfsd')); 
 			formData.append('instagram_id', String('sdfsdf')); 
 			formData.append('snapchat_id', String('dfdsf')); 
-			formData.append('card_number', String('343454645664')); 
-			formData.append('expiry_month', String('3')); 
-			formData.append('expiry_year', String('20')); 
-			formData.append('cvv', String('456')); 
+			// formData.append('card_number', String('343454645664')); 
+			// formData.append('expiry_month', String('3')); 
+			// formData.append('expiry_year', String('20')); 
+			// formData.append('cvv', String('456')); 
 		if(this.validate()) { 
 		this.setState({...INITIAL_STATE, loading: true});
 

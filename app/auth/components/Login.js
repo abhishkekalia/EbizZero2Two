@@ -2,7 +2,6 @@ import React, {
 	Component, 
 	PropTypes
 } from 'react';
-
 import { 
 	View, 
 	Text, 
@@ -11,6 +10,7 @@ import {
 	Button,
 	Platform,
 	Image,
+	Keyboard,
 	Dimensions
 } from "react-native";
 import {Actions as routes} from "react-native-router-flux";
@@ -21,6 +21,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
 const { width, height } = Dimensions.get('window')
+import Utils from 'app/common/Utils';
 
 const INITIAL_STATE = {email: '', password: ''};
 
@@ -28,19 +29,42 @@ class Login extends Component {
 	constructor() {
 		super();
 		this.state = {
+            termsandcondition_title:'',
+			termsandcondition_description:'', 
 			email: '', 
 			password: '',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			loading: false,
 			visibleModal: false
-
 		};
 	    this.inputs = {};
 	}
+	componentDidMount(){
+        this.gettermandcondition()
+    }
 
 	focusNextField(id) { 
     	this.inputs[id].focus();
     }
+    gettermandcondition(){
+        fetch(Utils.gurl('gettermandcondition'),{
+             method: "GET", headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }   
+        })
+        .then((response) => response.json())
+        .then((responseData) => { 
+        	if (responseData.status) {
+            	this.setState({
+            	    termsandcondition_title: responseData.data.termsandcondition_title,
+            	    termsandcondition_description: responseData.data.termsandcondition_description,
+            	    loaded: true
+        		});
+        	}
+        }).done();
+    }
+
 	onBlurUser() { 
 		const { email } = this.state;
 		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
@@ -86,6 +110,7 @@ class Login extends Component {
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
+							keyboardType={'email-address'}
 							placeholder="Email Address"
 							maxLength={140}
 							onSubmitEditing={() => { 
@@ -131,7 +156,6 @@ class Login extends Component {
 				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
 				<Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/>
-
   					<Modal isVisible={this.state.visibleModal}>
   					<View style={{alignItems : 'center', padding:10}}>
 				    {errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
@@ -149,9 +173,19 @@ class Login extends Component {
         	justifyContent: 'center',
         	alignItems: 'center'
         }}>
-        	<Text style={{ fontSize : 10, width : width/2}}> 
-			By Signing in you are agreeing to our terms and conditions of use and Privacy Policy
+        	<Text style={{ fontSize : 10, width : width/2,}}> 
+			By Signing in you are agreeing to our 
 			</Text>
+			<TouchableOpacity 
+			onPress={()=> routes.terms({ 
+  				title: this.state.termsandcondition_title,
+  				description: this.state.termsandcondition_description
+  			})}>
+
+			<Text style={{color :'#a9d5d1', fontSize : 10, }}>
+			terms and conditions of use and Privacy Policy
+			</Text>
+			</TouchableOpacity>
 		</View>
 	
 			</View>
@@ -183,6 +217,7 @@ class Login extends Component {
 			return true;
 	} 
 	onSubmit() {
+	Keyboard.dismiss();
 		const {email, password, os} = this.state;
 		if (this.validate()) {
 			this.setState({...INITIAL_STATE, visibleModal: true});

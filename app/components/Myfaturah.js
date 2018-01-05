@@ -53,7 +53,19 @@ export default class Myfaturah extends Component {
     }
 
     _onNavigationStateChange = (navState) => {
-        this.setState({ loading: navState.loading }); 
+            let extraOptions = {};
+
+            if (!navState.loading) { 
+                extraOptions.url = navState.url; 
+            }
+        this.setState({ 
+            loading: navState.loading,
+            // backButtonEnabled: navState.canGoBack,
+            // forwardButtonEnabled: navState.canGoForward,
+            // status: navState.title,
+            // scalesPageToFit: true,
+            // ...extraOptions
+       }); 
 
         if (navState.url.indexOf(BASEURL) != -1) {
             let status = navState.url.split("?")[1];

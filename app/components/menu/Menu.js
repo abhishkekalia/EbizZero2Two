@@ -78,14 +78,11 @@ class Menu extends React.Component {
 
                 <Text
                 onPress={Actions.postad}
-                style={[styles.item, styles.seprator]}>Post Advertisement</Text>
+                style={[styles.item, styles.seprator]}> Marketing</Text>
 
                 <Text
                 onPress={Actions.sync}
                 style={[styles.item, styles.seprator]}> Rate us on App Store</Text>    
-                <Text
-                onPress={Actions.marketing}
-                style={[styles.item, styles.seprator]}> Marketing</Text>
                 <Text
                 onPress={()=>( Utils.persistremove()),logout}
                 style={styles.item}> logout</Text>

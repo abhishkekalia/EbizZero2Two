@@ -129,6 +129,7 @@ class Profile extends Component {
 
 					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} 
 					onPress={()=> Actions.editProfile({
+						title : this.state.dataSource.fullname,
 						fullname : this.state.dataSource.fullname ,
 						representative_name : this.state.dataSource.representative_name,
 						address : this.state.dataSource.address,

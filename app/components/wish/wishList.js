@@ -81,13 +81,32 @@ export default class WishList extends Component {
         fetch(Utils.gurl('wishlist'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                status : responseData.status,
-                refreshing : false
-        });
+            if(responseData.status){
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    status : responseData.status,
+                    refreshing : false
+                });
+            }else {
+                this.setState({
+                    status : responseData.status,
+                    refreshing : false
+                })
+            }
         }).done();
+    }
+    validate(){
+        const { ShopingItems} = this.state; 
+
+        if (!ShopingItems.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Select Items For Your Cart",
+                alertType: 'alert',
+            })
+            return false
+        }
+            return true;
     }
 
     addtoCart(count, product_id){
@@ -110,30 +129,29 @@ export default class WishList extends Component {
             },
             body: formData,
         }
-        
-        fetch(Utils.gurl('addTocart'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            if(responseData.status){
-                MessageBarManager.showAlert({ 
-                    message: responseData.data.message, 
-                    alertType: 'alert', 
-                    stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                })
-                Actions.shopingCart();
-            }else {
-                MessageBarManager.showAlert({ 
-                    message: responseData.data.message, 
-                    alertType: 'alert', 
-                    stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                })
-
-            }
-
-        })
-        .then(()=>this.removeWishlist(product_id))
-        .then(()=> this.fetchData())
-        .done();
+        if (this.validate()) {
+            fetch(Utils.gurl('addTocart'), config) 
+            .then((response) => response.json())
+            .then((responseData) => {
+                if(responseData.status){
+                    MessageBarManager.showAlert({ 
+                        message: responseData.data.message, 
+                        alertType: 'alert', 
+                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                    })
+                    Actions.shopingCart();
+                }else {
+                    MessageBarManager.showAlert({ 
+                        message: responseData.data.message, 
+                        alertType: 'alert', 
+                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                    })
+                }
+            })
+            .then(()=>this.removeWishlist(product_id))
+            .then(()=> this.fetchData())
+            .done();
+        }
     }
 
     removeWishlist(product_id){
@@ -204,7 +222,6 @@ export default class WishList extends Component {
             fetch(Utils.gurl('editWishlist'), config) 
             .then((response) => response.json())
             .then((responseData) => {
-    
                 MessageBarManager.showAlert({ 
                         message: responseData.data.message, 
                         alertType: 'alert', 
@@ -226,10 +243,10 @@ export default class WishList extends Component {
     } 
    
     updateState = () => {
-      this.setState({
-          Quentity: !this.state.Quentity
-      });
-  }
+        this.setState({
+            Quentity: !this.state.Quentity
+        });
+    }
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
@@ -277,7 +294,7 @@ export default class WishList extends Component {
 
         let swipeBtns = [{
             text: 'Edit',
-            backgroundColor: '#FFCC00',
+            backgroundColor: '#a9d5d1',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => {this.editWishlist(data.product_id)}
          },{
@@ -307,7 +324,7 @@ export default class WishList extends Component {
                         <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
                             <TouchableHighlight
                                 underlayColor='transparent'
-                                onPress={this.viewNote.bind(this, data)} 
+                                // onPress={this.viewNote.bind(this, data)} 
                                 style={styles.row} >
                                 <Text > {data.product_name} </Text>
                             </TouchableHighlight>
@@ -316,7 +333,6 @@ export default class WishList extends Component {
                                 <Text> Quentity :  </Text>
                                 <Countmanager  
                                 quantity={data.quantity} 
-                                // updateState={this.updateState} 
                                 u_id={this.state.u_id} 
                                 product_id={data.product_id} 
                                 updatetype={"0"} 
@@ -340,7 +356,7 @@ export default class WishList extends Component {
                         <Text style={{ left : 5}}>Share WishList</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
-                    onPress={()=>this.addtoCart(data.quantity[sectionID], data.product_id)}>
+                    onPress={()=>this.addtoCart(data.quantity, data.product_id)}>
                         <FontAwesome name="opencart" size={20} color="#a9d5d1"/> 
                         <Text style={{ left :5}}>Move to Cart</Text>
                     </TouchableOpacity>
@@ -350,9 +366,8 @@ export default class WishList extends Component {
     }
 }
 
-
 class SelectItem extends Component{
-        constructor(props) { 
+    constructor(props) { 
         super(props); 
         this.state = { 
             size: this.props.size, 
@@ -371,12 +386,13 @@ class SelectItem extends Component{
     render(){
         return(
         <View style={{ flexDirection:'row'}}> 
-            <View style={{width: width/3, height: 40, backgroundColor: '#fff', justifyContent : 'center'}}> 
+            <View style={{width: width/3,  backgroundColor: '#fff', justifyContent : 'center'}}>
+                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Size : {this.state.size}</Text>
+ 
                 <Picker
                 mode="dropdown"
                 selectedValue={this.state.size}
                 onValueChange={(itemValue, itemIndex) => this.Size(itemValue)
-                 // this.setState({size: itemValue})
              }>
                     <Picker.Item label="Select Size" value="" />
                     <Picker.Item label="Small" value="small" />
@@ -384,12 +400,13 @@ class SelectItem extends Component{
                     <Picker.Item label="Large" value="large" />
                 </Picker>
             </View>
-            <View style={{width: width/3, height: 40, backgroundColor: '#fff' ,justifyContent : 'center'}}> 
+            <View style={{width: width/3, backgroundColor: '#fff' ,justifyContent : 'center'}}> 
+                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Color : {this.state.color}  </Text>
+
                 <Picker 
                 mode="dropdown"
                 selectedValue={this.state.color} 
                 onValueChange={(itemValue, itemIndex) => this.Color(itemValue) 
-                 // this.setState({color: itemValue})
              }>
                     <Picker.Item label="Select color" value="" />
                     <Picker.Item label="Red" value="red" />

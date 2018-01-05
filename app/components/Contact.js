@@ -8,7 +8,9 @@ import {
     Button ,
     Platform,
     StyleSheet,
+    ScrollView,
     Picker,
+    Keyboard,
     AsyncStorage
 } from "react-native";
 const { width, height } = Dimensions.get('window')
@@ -28,7 +30,13 @@ export default class Contact extends Component<{}> {
             u_id: '',
             country : '',
         }
+        this.inputs = {};
+
     }
+    focusNextField(id) { 
+        this.inputs[id].focus();
+    }
+
     componentDidMount(){
         this.getKey()
         .done()
@@ -89,6 +97,8 @@ export default class Contact extends Component<{}> {
             return true;
     } 
     contactUS(){
+            Keyboard.dismiss();
+
         const { u_id,country, name, email , issue, message } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -113,6 +123,7 @@ export default class Contact extends Component<{}> {
                 message: responseData.data.message,
                 alertType: 'alert',
             })
+           this.setState({message : '', issue : ''})
         })
         .done();
     }
@@ -120,7 +131,7 @@ export default class Contact extends Component<{}> {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <TextInput
                     style={styles.input}
                     value={this.state.name}
@@ -128,7 +139,13 @@ export default class Contact extends Component<{}> {
                     autoCorrect={false}
                     placeholder="Name"
                     maxLength={140}
-                    onSubmitEditing={() => this.onSubmit()}
+                            onSubmitEditing={() => { 
+                                this.focusNextField('two');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => { 
+                                this.inputs['one'] = input;
+                            }}
                     onChangeText={(name) => this.setState({name})}/>
                 <TextInput
                     style={styles.input}
@@ -137,7 +154,13 @@ export default class Contact extends Component<{}> {
                     autoCorrect={false}
                     placeholder="Email Address"
                     maxLength={140}
-                    onSubmitEditing={() => this.onSubmit()}
+                            onSubmitEditing={() => { 
+                                this.focusNextField('three');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => { 
+                                this.inputs['two'] = input;
+                            }}
                     onChangeText={(email) => this.setState({email})}/>
                 <View style={{
                     borderWidth : 1, 
@@ -158,14 +181,17 @@ export default class Contact extends Component<{}> {
                 </View>
                 <TextInput
                     style={styles.input}
-                    multiline={true}
                     numberOfLines={4}
                     value={this.state.message}
                     underlineColorAndroid = 'transparent'
                     autoCorrect={false}
                     placeholder="Message"
                     maxLength={140}
-                    onSubmitEditing={() => this.onSubmit()}
+
+                            returnKeyType={ "done" }
+                            ref={ input => { 
+                                this.inputs['three'] = input;
+                            }}
                     onChangeText={(message) => this.setState({message})}
                     />
                 <Button title="Send Request" onPress={()=> this.contactUS()}/>
@@ -179,7 +205,7 @@ export default class Contact extends Component<{}> {
                     <Ionicons name="ios-stopwatch-outline" size={25} color="#900"/>
                     <Text>Daily 8 Am to 12 Pm</Text>
                 </View>
-            </View>
+            </ScrollView>
         );
     }
 }

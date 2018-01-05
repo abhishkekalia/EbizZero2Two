@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
+  Keyboard,
   Picker,
   Button,
 } from 'react-native';
@@ -63,6 +64,8 @@ export default class Editmyprofile extends Component<{}> {
     }
 
     submit(){
+            Keyboard.dismiss();
+
         const { 
             u_id, 
             fullname, 
@@ -126,14 +129,6 @@ export default class Editmyprofile extends Component<{}> {
             })
             return false;
         }
-        if (!phone_no.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter Your Contact Number",
-                alertType: 'alert',
-            })
-            return false
-        }
         
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
         if(reg.test(email) === false) 
@@ -143,6 +138,14 @@ export default class Editmyprofile extends Component<{}> {
                  alertType: 'alert', 
                })
           return false;
+        }
+        if (!phone_no.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Your Contact Number",
+                alertType: 'alert',
+            })
+            return false
         }
 
         if (!country.length)
@@ -164,7 +167,7 @@ export default class Editmyprofile extends Component<{}> {
      
     return (
         <View style={{ flex : 1}}>
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
      
         <TextInput style={ styles.input}
         placeholder='Full Name'
@@ -187,7 +190,7 @@ export default class Editmyprofile extends Component<{}> {
         autoCapitalize='none'
         underlineColorAndroid = 'transparent'
         value={this.state.email}
-        keyboardType={'numeric'}
+        keyboardType={'email-address'}
         onSubmitEditing={() => { 
             this.focusNextField('three');
         }}
@@ -204,11 +207,11 @@ export default class Editmyprofile extends Component<{}> {
         value={this.state.phone_no} 
         keyboardType={'numeric'}
         onSubmitEditing={() => { 
-            this.focusNextField('five');
+                                this.submit();
         }}
         returnKeyType={ "done" } 
         ref={ input => { 
-            this.inputs['four'] = input;
+            this.inputs['three'] = input;
         }}
         onChangeText={(text) => this.setState({ phone_no: text })} />
         </ScrollView>

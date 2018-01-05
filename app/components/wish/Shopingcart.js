@@ -50,6 +50,7 @@ export default class Shopingcart extends Component {
             u_id: null,
             user_type : null,
             country : null,
+            status : false
         };
         // this.ShopingItems = [];
 
@@ -156,17 +157,23 @@ export default class Shopingcart extends Component {
                         })                 
             }
 
-                            // console.warn(Select)
+            if(responseData.status){
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    ShopingItems : Select,
+                    SetToList : responseData.data,
+                    itemcount : responseData.itemcount,    
+                    totalamount : responseData.totalamount,    
+                    subtotalamount : responseData.subtotalamount, 
+                    refreshing : false,
+                    status : responseData.status
 
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                ShopingItems : Select,
-                SetToList : responseData.data,
-                itemcount : responseData.itemcount,    
-                totalamount : responseData.totalamount,    
-                subtotalamount : responseData.subtotalamount, 
-                refreshing : false
-        });
+                });
+            }else {
+                this.setState({
+                    status : responseData.status
+                })
+            }
         })
         .done();
     }
@@ -218,6 +225,13 @@ export default class Shopingcart extends Component {
         }
             return true;
     }
+    getSize(size){
+        this.setState({size});
+    }    
+    getColor(color){
+        this.setState({color});
+    }
+
     procedToCheckout(){
         if (this.validate()) { 
             routes.AddressLists({ 
@@ -226,21 +240,6 @@ export default class Shopingcart extends Component {
                 totalAmount : this.state.subtotalamount 
             })
         }
-    }
-
-    renderHeader(itemcount, totalamount){
-        return(
-            <View 
-                style={{ 
-                    flexDirection : "row", 
-                    justifyContent: "space-between", 
-                    padding : 5,
-                    paddingBottom : 0,
-                    alignItems:'center', 
-                    flex : 0}}> 
-                <Text> Items ({itemcount})</Text>
-                <Text>Total : ${totalamount}</Text>
-            </View>)
     }
 
     renderFooter(itemcount, totalamount, subtotalamount){
@@ -274,6 +273,12 @@ export default class Shopingcart extends Component {
             
         )
     }
+    noItemFound(){
+        return (
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                <Text> No Item added to your cart </Text>
+               </View> );
+    }
 
     render() {
         const { itemcount, totalamount, subtotalamount } = this.state;
@@ -289,9 +294,12 @@ export default class Shopingcart extends Component {
                 showsVerticalScrollIndicator={false}
                 />
             );
+
+        if (!this.state.status) {
+            return this.noItemFound();
+        } 
         return (
         <View style={{flex: 1, flexDirection: 'column'}}>
-        {this.renderHeader( itemcount,totalamount)}
             {listView}
         {this.renderFooter(itemcount, totalamount, subtotalamount)}
 
@@ -313,15 +321,10 @@ export default class Shopingcart extends Component {
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-// this.ShopingItems.push(data.product_name);
 
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-        if ( !data.special_price) {
-            return (
-                <Text> No Item added to your cart </Text>
-            );
-        }    
+    
         return (
             <View style={{ 
             flexDirection: 'column',
@@ -346,24 +349,26 @@ export default class Shopingcart extends Component {
                             </TouchableHighlight>
 
                             <View style={{ flexDirection : "row"}}>
-                                <Text> Quentity : </Text>
-                                  <Countmanager  
-                                        quantity={data.quantity} 
-                                        u_id={this.state.u_id} 
-                                        product_id={data.product_id} 
-                                        updatetype={"1"} 
-                                        country={this.state.country} 
-                                        callback={this.fetchData.bind(this)}
-                                        />
+                                <Text style={{paddingRight : 10}}> Quentity : </Text>
+                                    <Countmanager  
+                                    quantity={data.quantity} 
+                                    u_id={this.state.u_id} 
+                                    product_id={data.product_id} 
+                                    updatetype={"1"} 
+                                    country={this.state.country} 
+                                    callback={this.fetchData.bind(this)}
+                                    />
 
                             </View>
+                            <Text style={{paddingRight : 10}}> {data.size} </Text>
+
                             <Text >US $ : {data.special_price} </Text>
                             <View style={{ flexDirection : "row"}}>
                                 <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> US $ {data.price}  </Text>
                                 <Text>| {data.special_price}</Text>
                             </View>
                                 <Text > Total :{data.price} </Text>
-                            <SelectItem size={data.size} color={data.color} />
+                            <SelectItem size={data.size} color={data.color} getsize={this.getSize.bind(this)} getcolor={this.getColor.bind(this)} />
 
                         </View>
                     </View>
@@ -379,8 +384,8 @@ export default class Shopingcart extends Component {
                         <Text style={{ left : 5}}>Remove</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
-                                        onPress={()=> this.addtoWishlist(data.product_id)}
-                                        >
+                        onPress={()=> this.addtoWishlist(data.product_id)}
+                        >
                         <Entypo name="heart-outlined" size={20} color="#a9d5d1"/> 
                         <Text style={{ left :5}}>Add To wishlist</Text>
                     </TouchableOpacity>
@@ -401,7 +406,8 @@ class SelectItem extends Component{
     render(){
         return(
         <View style={{ flexDirection:'row'}}> 
-            <View style={{width: width/3, height: 40,}}> 
+            <View style={{width: width/3, justifyContent : 'center'}}> 
+            <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Size : {this.state.size} </Text>
                 <Picker
                 mode="dropdown"
 
@@ -413,7 +419,9 @@ class SelectItem extends Component{
                     <Picker.Item label="Large" value="large" />
                 </Picker>
             </View>
-            <View style={{width: width/3, height: 40,}}> 
+            <View style={{width: width/3, justifyContent : 'center'}}>
+                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}> Color : {this.state.color} </Text>
+ 
                 <Picker 
                 mode="dropdown"
                 selectedValue={this.state.color} 

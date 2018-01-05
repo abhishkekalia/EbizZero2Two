@@ -36,7 +36,8 @@ export default class AddressBook extends Component {
             country : '',
             isSelected : '',
             loading: false,
-            visibleModal: false
+            visibleModal: false,
+            status : false
         };
     }
 
@@ -47,10 +48,6 @@ export default class AddressBook extends Component {
         })
     }
     componentDidMount(){
-
-        // setTimeout(()=>{
-        //     this.removeLoader ()
-        // }, 5000);
         this.getKey()
         .then( ()=>this.fetchAddress())
         .done();
@@ -77,7 +74,7 @@ export default class AddressBook extends Component {
                         "size": organization.size,
                         "quantity": organization.quantity,
                         "delivery_address_id": this.state.isSelected,
-                        "vendor_id":"4",
+                        "vendor_id":organization.vendor_id,
                         "price":organization.price,
                         "delivery_datetime": currentdate,
                         "order_date": nextdate 
@@ -143,9 +140,16 @@ export default class AddressBook extends Component {
         fetch(Utils.gurl('addressList'), config)  
         .then((response) => response.json())
         .then((responseData) => { 
-             this.setState({ 
-              dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-             });
+            if(responseData.status){
+                this.setState({
+                status : responseData.status, 
+                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                });
+            }else{
+                this.setState({
+                status : responseData.status, 
+                });
+            }
         }).done();
     }
 
@@ -200,9 +204,21 @@ export default class AddressBook extends Component {
         if (index === 0) this.onEdit(data);
         else this.onRemove(data)
     }
+    noItemFound(){
+        return (
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                <Text>You have no Added Address </Text>
+                <TouchableOpacity onPress={()=>routes.newaddress()}><Text>Add From here</Text></TouchableOpacity>
+               </View> );
+    }
+
     render() {
         const { isSelected } = this.state;
         isSelected ? this.getItems(isSelected) : undefined;
+
+         if (!this.state.status) {
+            return this.noItemFound();
+        } 
         let listView = (<View></View>);
             listView = (
                 <ListView

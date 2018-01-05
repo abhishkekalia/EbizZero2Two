@@ -40,7 +40,6 @@ export default class ProductDescription extends Component {
             size: '', 
             color: '', 
             quantity:'',
-
         }
         this.loadHandle = this.loadHandle.bind(this)
     }
@@ -141,10 +140,12 @@ export default class ProductDescription extends Component {
         fetch(Utils.gurl('productDetailView'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            this.setState({ 
-                imgList: responseData.data.productImages,
-                data : responseData.data
-        });
+            if(responseData.status){ 
+                this.setState({ 
+                    imgList: responseData.data.productImages,
+                    data : responseData.data
+                });
+            }
         })
         .done();
     }
@@ -176,10 +177,12 @@ export default class ProductDescription extends Component {
         fetch(Utils.gurl('addToWishlist'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            MessageBarManager.showAlert({ 
-            message: responseData.data.message, 
-            alertType: 'alert', 
-            })
+           if(responseData.status){
+                MessageBarManager.showAlert({ 
+                    message: responseData.data.message, 
+                    alertType: 'alert', 
+                })
+            }
         })
     .then(()=>this.fetchData())
     .done();
@@ -227,7 +230,9 @@ export default class ProductDescription extends Component {
                 keyboardShouldPersistTaps="always"
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/1.5}}>
-                <Slider imgList={this.state.imgList} updateState={this.props.toggleWishList}  wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
+                <Slider imgList={this.state.imgList} 
+                updateState={this.props.toggleWishList}  
+                wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
                 </View>
 
                 <View style={{ 

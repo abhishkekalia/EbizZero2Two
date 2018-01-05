@@ -31,17 +31,6 @@ import I18n from 'react-native-i18n'
 const { width, height } = Dimensions.get('window')
 let index = 0;
 
-// titleChange =(title) => {
-I18n.fallbacks = true
-I18n.translations = {
-  en: {
-    greeting: "Description"
-  },
-}
-// }
-var titleChange =(title)=> {
-    // return console.warn(title)
-};
 export default class MainView extends Component {
     constructor(props) {
         super(props); 
@@ -79,6 +68,7 @@ export default class MainView extends Component {
         .then( ()=>this.fetchAllShop())
         .then( ()=>this.loadData())
         .then( ()=>this.loadServiceData())
+        .done();
 
     }
 
@@ -146,7 +136,7 @@ export default class MainView extends Component {
             style={[styles.centering]}
             color="#a9d5d1" 
             size="large"/>
-            );
+        );
     }
 
 
@@ -182,17 +172,28 @@ export default class MainView extends Component {
         })
         .done();
     }
-
     onClick(data) {
+        data.checked = !data.checked;
+        data.checked? this.check(data): this.unCheck(data)
+        
+    }
+    check (data){
         var newStateArray = this.state.rows.slice(); 
         newStateArray.push(data.u_id); 
         this.setState({
             rows: newStateArray
         });
-
-        data.checked = !data.checked;
-        let msg=data.checked? 'you checked ':'you unchecked '
     }
+
+unCheck(data){
+        var index = this.state.rows.indexOf(data.u_id); 
+        if (index > -1) {
+           var newArray =  this.state.rows.splice(index, 1);
+            this.setState({
+                rows: newArray
+            });
+        }
+}
     
     renderView() {
         if (!this.state.dataArray || this.state.dataArray.length === 0)return;
@@ -229,7 +230,8 @@ export default class MainView extends Component {
                 isChecked={data.checked}
                 leftText={leftText}
                 icon_name={icon_name}
-            />);
+            />
+        );
     }
 
     sharing(product_id){
@@ -333,12 +335,55 @@ export default class MainView extends Component {
         fetch(Utils.gurl('allProductItemList'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                status : responseData.status,
-                loaded: true, 
-                refreshing: false
-            });
+            if(responseData.status){
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                });
+            }else {
+                this.setState({
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                })
+            }
+        }).done();
+    }
+    filterByCategory(){
+        const {u_id, country, user_type } = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('categoty_id', String(this.props.filterdBy));  
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+
+        fetch(Utils.gurl('filterByCategory'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                });
+            }else {
+                this.setState({
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                })
+            }
         }).done();
     }
     renderLoadingView() {
@@ -351,6 +396,7 @@ export default class MainView extends Component {
     }
 
     render() {
+        // console.warn(this.props.filterdBy);
         this.fetchData = this.fetchData.bind(this);
 
         if (!this.state.loaded) {
@@ -417,10 +463,8 @@ export default class MainView extends Component {
                     </View>
                 </View>
                 <GetMarketing/>
-                <Text>Featured Item</Text>
+                <Text style={{ padding : 10, fontWeight : '100', fontFamily :"halvetica"}}>All Item</Text>
                 {listView}
-                <Text style={{}}>All Item</Text>
-                <AllItem/>
                 <Modal isVisible={this.state.isModalVisible}>
                 <View style={styles.container}>
                     <ScrollView>
@@ -566,9 +610,8 @@ export default class MainView extends Component {
             />);
     }
 moveToDesc(title, product_id, is_wishlist, toggleWishList){
-    titleChange (title);
     Actions.deascriptionPage({ 
-        title: product_id, 
+        title: title, 
         product_id : product_id , 
         is_wishlist : is_wishlist, 
         toggleWishList: toggleWishList

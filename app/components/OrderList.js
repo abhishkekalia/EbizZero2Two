@@ -6,6 +6,7 @@ import {
     ListView,
     TouchableOpacity,
     ActivityIndicator,
+    AsyncStorage,
     Alert,
 } from 'react-native';
 import Utils from 'app/common/Utils';
@@ -37,7 +38,10 @@ export default class OrderList extends Component<{}> {
         }
         return {
             loaded : false,
+            status : false,
             dataSource : new ListView.DataSource({
+                u_id                    : null,
+                country                 : null,
                 getSectionData          : getSectionData,
                 getRowData              : getRowData,
                 rowHasChanged           : (row1, row2) => row1 !== row2,
@@ -47,13 +51,31 @@ export default class OrderList extends Component<{}> {
     }
     
     componentDidMount() {
-        this.fetchData();
+        this.getKey()
+        .then(()=>this.fetchData())
+        .done();
     }
 
+    async getKey() {
+        try { 
+            const value = await AsyncStorage.getItem('data'); 
+            var response = JSON.parse(value);  
+            this.setState({ 
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country ,
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
+
+
     fetchData () {
+                const { u_id,country, } = this.state; 
+
         let formData = new FormData();
-        formData.append('u_id', String(8));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
 
         const config = { 
                 method: 'POST', 
@@ -98,17 +120,35 @@ export default class OrderList extends Component<{}> {
                 }
             }
 
+            if (responseData.status) {
+
             this.setState({
                 dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
-                loaded     : true
+                loaded     : true,
+                status     : responseData.status
             });
+        }else {
+             this.setState({
+                loaded     : true,
+                status     : responseData.status
+            });
+        }
 
         }).done();        
     }    
+    noItemFound(){
+        return (
+            <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
+                <Text>You Have No Itmes In Ordered</Text>
+               </View> );
+    }
 
     render() {
         if (!this.state.loaded) {
             return this.renderLoadingView();
+        }
+        if (!this.state.status) {
+            return this.noItemFound();
         }
 
         return this.renderListView();
@@ -128,13 +168,14 @@ export default class OrderList extends Component<{}> {
 
     renderListView() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {padding : 5}]}>
                
                 <ListView
                     dataSource = {this.state.dataSource}
                     style      = {styles.listview}
                     renderRow  = {this.renderRow}
                     renderSectionHeader = {this.renderSectionHeader}
+                    enableEmptySections = {true}
                 />
             </View>
         );
@@ -248,7 +289,7 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        padding: 6,
-        backgroundColor: '#ccc'
+        padding: 5,
+        backgroundColor: '#a9d5d1'
     }
 });
