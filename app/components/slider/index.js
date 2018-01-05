@@ -3,6 +3,7 @@ import {
   Platform,
   StyleSheet,
   Dimensions,
+  TouchableOpacity,
   Text,
   Image,
   View
@@ -10,16 +11,36 @@ import {
 import Swiper from 'react-native-swiper';
 import { BubblesLoader } from 'react-native-indicator';
 import Utils from 'app/common/Utils';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { MessageBarManager } from 'react-native-message-bar';
 
 const {width,height} = Dimensions.get('window');
 
 const Slide = props => { 
+    handleClick = () => {
+      props.updateState();
+    }
+    let heartType
+    if (props.is_wishlist === '0') 
+        heartType = 'ios-heart-outline'; 
+    else 
+        heartType = 'ios-heart' ;        
     return ( 
-        <View style={styles.slide}>
-            <Image onLoad={props.loadHandle.bind(null, props.i)}  
+        <View style={[styles.slide]}>
+          <Image onLoad={props.loadHandle.bind(null, props.i)}  
             style={styles.image} 
             source={{uri: props.uri}} />
+            <Ionicons 
+                style={{ 
+                    left : width-50, 
+                    position : 'absolute' ,
+                    top : 20
+                }} 
+            name={heartType}
+            size={30} 
+            color="#a9d5d1" 
+            onPress={()=>this.handleClick()}
+            />
             {
               !props.loaded && <View style={styles.loadingView}> 
               <BubblesLoader 
@@ -49,6 +70,12 @@ export default class Slider extends Component<{}> {
             loadQueue 
         })
     }
+    componentWillUpdate(nextProps, nextState) { 
+        // if (nextState.open == true && this.state.open == false) {
+            // this.props.onWillOpen();
+        // }
+    }
+
     render() {
     return (
       <View style={styles.container}>
@@ -57,6 +84,11 @@ export default class Slider extends Component<{}> {
                     this.props.imgList.map((item, i) => <Slide
                       loadHandle={this.loadHandle}
                       loaded={!!this.state.loadQueue[i]}
+                      data ={this.props.data}
+                      updateState={this.props.updateState}
+                      u_id ={this.props.u_id}
+                      country ={this.props.country}
+                      is_wishlist= {this.props.wishlist}
                       uri={item}
                       i={i}
                       key={i} />)
@@ -95,7 +127,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent'
     },
     image: {
-      width,
+      width : '100%',
       flex: 1,
       backgroundColor: 'transparent'
     },

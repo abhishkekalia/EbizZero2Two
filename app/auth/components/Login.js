@@ -2,14 +2,16 @@ import React, {
 	Component, 
 	PropTypes
 } from 'react';
-
 import { 
 	View, 
 	Text, 
 	TextInput, 
 	TouchableOpacity, 
-	Button ,
-	Platform
+	Button,
+	Platform,
+	Image,
+	Keyboard,
+	Dimensions
 } from "react-native";
 import {Actions as routes} from "react-native-router-flux";
 import {Loader} from "app/common/components";
@@ -17,6 +19,9 @@ import commonStyles from "app/common/styles";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {CirclesLoader} from 'react-native-indicator';
+import Modal from 'react-native-modal';
+const { width, height } = Dimensions.get('window')
+import Utils from 'app/common/Utils';
 
 const INITIAL_STATE = {email: '', password: ''};
 
@@ -24,40 +29,75 @@ class Login extends Component {
 	constructor() {
 		super();
 		this.state = {
+            termsandcondition_title:'',
+			termsandcondition_description:'', 
 			email: '', 
 			password: '',
 			os : (Platform.OS === 'ios') ? 2 : 1,
-			loading: false
-
+			loading: false,
+			visibleModal: false
 		};
 	    this.inputs = {};
 	}
+	componentDidMount(){
+        this.gettermandcondition()
+    }
+
 	focusNextField(id) { 
     	this.inputs[id].focus();
     }
+    gettermandcondition(){
+        fetch(Utils.gurl('gettermandcondition'),{
+             method: "GET", headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }   
+        })
+        .then((response) => response.json())
+        .then((responseData) => { 
+        	if (responseData.status) {
+            	this.setState({
+            	    termsandcondition_title: responseData.data.termsandcondition_title,
+            	    termsandcondition_description: responseData.data.termsandcondition_description,
+            	    loaded: true
+        		});
+        	}
+        }).done();
+    }
+
 	onBlurUser() { 
 		const { email } = this.state;
 		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
 
 		if(reg.test(email) === false) 
 			{ 
-
 			MessageBarManager.showAlert({
             message: "Plese Enter Valid Email",
             alertType: 'alert',
             })
-				return false;
-			}
+			return false;
+		}
 	}
 
 	render() {
 		const {errorStatus, loading} = this.props;
 		return (
 			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
-				<View style={{alignItems : 'center', padding:10}}>
-				    {this.state.loading ? <CirclesLoader /> : undefined}
-				</View>
-				<View style ={commonStyles.inputcontent}>
+			<View style={{ flex : 1, 
+				flexDirection: 'column',
+                justifyContent: 'center', 
+                alignItems : 'center'}}>
+			<Image 
+			source={require('../../images/login_img.png')}
+			style={{ width : '25%', height : '50%' }}
+			/>	
+			<Text style={{color: '#f53d3d' , fontSize : 10, width : width/2}}> 
+			Use the email address and password used when you created your acount
+			</Text>
+			</View>	
+
+			<View style={{ padding : 20, top : 30}}>		
+				<View style ={[commonStyles.inputcontent,]}>
 					<View style ={commonStyles.iconusername}>
 						<Ionicons name="ios-mail-outline" 
 						size={30} 
@@ -70,6 +110,7 @@ class Login extends Component {
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
+							keyboardType={'email-address'}
 							placeholder="Email Address"
 							maxLength={140}
 							onSubmitEditing={() => { 
@@ -107,21 +148,46 @@ class Login extends Component {
 						/>
 					</View>
 				</View>
-				<Button
-  				onPress={() => this.onSubmit()}
-  				title="Login"
-  				color="#87cefa"
-  				/>
-				{errorStatus ? undefined : undefined}
+
+				<Button title ="Login" onPress={() => this.onSubmit()}  color="#a9d5d1"/>
+
 				<View style={{alignItems: 'center'}}>
 				<Text style={{ padding : 20 }}>Forgot password</Text>
-				<Text style={{color : '#87cefa' }}>New Customer ?</Text>
+				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
-				<Button
-					onPress = {this.createAcount.bind(this)}
-  					title="Create An Acount"
-  					color="orange"
-  					/>
+				<Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/>
+  					<Modal isVisible={this.state.visibleModal}>
+  					<View style={{alignItems : 'center', padding:10}}>
+				    {errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
+				    
+				    {errorStatus ? <Text 
+					onPress = {()=> this.setState({ visibleModal : false})} 
+					style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
+					
+				</View>
+        	</Modal>
+		</View>
+		<View style={{ 
+			flex: 1,
+        	flexDirection: 'column',
+        	justifyContent: 'center',
+        	alignItems: 'center'
+        }}>
+        	<Text style={{ fontSize : 10, width : width/2,}}> 
+			By Signing in you are agreeing to our 
+			</Text>
+			<TouchableOpacity 
+			onPress={()=> routes.terms({ 
+  				title: this.state.termsandcondition_title,
+  				description: this.state.termsandcondition_description
+  			})}>
+
+			<Text style={{color :'#a9d5d1', fontSize : 10, }}>
+			terms and conditions of use and Privacy Policy
+			</Text>
+			</TouchableOpacity>
+		</View>
+	
 			</View>
 		);
 	}
@@ -151,9 +217,10 @@ class Login extends Component {
 			return true;
 	} 
 	onSubmit() {
+	Keyboard.dismiss();
 		const {email, password, os} = this.state;
 		if (this.validate()) {
-			this.setState({...INITIAL_STATE, loading: true});
+			this.setState({...INITIAL_STATE, visibleModal: true});
 			this.props.login(email, password, os);
 		}
 	}

@@ -62,6 +62,8 @@ export default class Countmanager extends Component {
             loaded : true
         }))
         .done();
+
+        this.props.callback();
     }
     decrement () {
  	if(this.state.Quentity > 1) 

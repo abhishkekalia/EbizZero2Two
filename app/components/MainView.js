@@ -26,6 +26,7 @@ import CheckBox from 'app/common/CheckBox';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Editwish from './wish/Editwish'
 import Modal from 'react-native-modal';
+import I18n from 'react-native-i18n'
 
 const { width, height } = Dimensions.get('window')
 let index = 0;
@@ -67,6 +68,7 @@ export default class MainView extends Component {
         .then( ()=>this.fetchAllShop())
         .then( ()=>this.loadData())
         .then( ()=>this.loadServiceData())
+        .done();
 
     }
 
@@ -96,9 +98,47 @@ export default class MainView extends Component {
 
     filterbyShop = () => {
         this.setState({ 
-            isModalVisible: !this.state.isModalVisible
-        },Actions.filterdBy({ vendor : this.state.rows }) )
+            isModalVisible: !this.state.isModalVisible,
+            loaded : false,
+        },this.fetchDataByShop() )
     }
+
+    fetchDataByShop(){
+        const {u_id, country, rows } = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('vendor_id', String(rows));  
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+
+        fetch(Utils.gurl('filterByShop'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status : responseData.status,
+                loaded: true, 
+                refreshing: false
+            });
+        }).done();
+    }
+    renderLoadingView() {
+        return (
+            <ActivityIndicator  
+            style={[styles.centering]}
+            color="#a9d5d1" 
+            size="large"/>
+        );
+    }
+
 
     blur() {
         const {dataSource } = this.state;
@@ -132,17 +172,28 @@ export default class MainView extends Component {
         })
         .done();
     }
-
     onClick(data) {
+        data.checked = !data.checked;
+        data.checked? this.check(data): this.unCheck(data)
+        
+    }
+    check (data){
         var newStateArray = this.state.rows.slice(); 
         newStateArray.push(data.u_id); 
         this.setState({
             rows: newStateArray
         });
-
-        data.checked = !data.checked;
-        let msg=data.checked? 'you checked ':'you unchecked '
     }
+
+unCheck(data){
+        var index = this.state.rows.indexOf(data.u_id); 
+        if (index > -1) {
+           var newArray =  this.state.rows.splice(index, 1);
+            this.setState({
+                rows: newArray
+            });
+        }
+}
     
     renderView() {
         if (!this.state.dataArray || this.state.dataArray.length === 0)return;
@@ -179,7 +230,8 @@ export default class MainView extends Component {
                 isChecked={data.checked}
                 leftText={leftText}
                 icon_name={icon_name}
-            />);
+            />
+        );
     }
 
     sharing(product_id){
@@ -238,6 +290,7 @@ export default class MainView extends Component {
         .then( this.fetchData())
         .done();
     }
+
     fetchAllShop(){
         const {u_id, country, user_type } = this.state;
 
@@ -245,7 +298,7 @@ export default class MainView extends Component {
         formData.append('u_id', String(user_type));
         formData.append('country', String(country)); 
 
-    const config = { 
+        const config = { 
                 method: 'POST', 
                 headers: { 
                     'Accept': 'application/json', 
@@ -282,12 +335,55 @@ export default class MainView extends Component {
         fetch(Utils.gurl('allProductItemList'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                status : responseData.status,
-                loaded: true, 
-                refreshing: false
-            });
+            if(responseData.status){
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                });
+            }else {
+                this.setState({
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                })
+            }
+        }).done();
+    }
+    filterByCategory(){
+        const {u_id, country, user_type } = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('categoty_id', String(this.props.filterdBy));  
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+
+        fetch(Utils.gurl('filterByCategory'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                });
+            }else {
+                this.setState({
+                    status : responseData.status,
+                    loaded: true, 
+                    refreshing: false
+                })
+            }
         }).done();
     }
     renderLoadingView() {
@@ -300,6 +396,7 @@ export default class MainView extends Component {
     }
 
     render() {
+        // console.warn(this.props.filterdBy);
         this.fetchData = this.fetchData.bind(this);
 
         if (!this.state.loaded) {
@@ -366,10 +463,8 @@ export default class MainView extends Component {
                     </View>
                 </View>
                 <GetMarketing/>
-                <Text>Featured Item</Text>
+                <Text style={{ padding : 10, fontWeight : '100', fontFamily :"halvetica"}}>All Item</Text>
                 {listView}
-                <Text style={{}}>All Item</Text>
-                <AllItem/>
                 <Modal isVisible={this.state.isModalVisible}>
                 <View style={styles.container}>
                     <ScrollView>
@@ -514,7 +609,14 @@ export default class MainView extends Component {
                 leftText={leftText}
             />);
     }
-
+moveToDesc(title, product_id, is_wishlist, toggleWishList){
+    Actions.deascriptionPage({ 
+        title: title, 
+        product_id : product_id , 
+        is_wishlist : is_wishlist, 
+        toggleWishList: toggleWishList
+    })
+}
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
@@ -545,7 +647,9 @@ export default class MainView extends Component {
                     <IconBadge
                         MainElement={ 
                             <TouchableOpacity 
-                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}>
+                            onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist, toggleWishList)}
+                            // onPress={()=>Actions.deascriptionPage({ title: data.product_id, product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}
+                            >
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
                                 </TouchableOpacity>
@@ -556,7 +660,7 @@ export default class MainView extends Component {
                         IconBadgeStyle={{
                             width:50,
                             height:16,
-                            top : width/3-10,
+                            marginTop : width/3+30,
                             left: 0,
                             position : 'absolute',
                             backgroundColor: '#a9d5d1'}}
@@ -570,12 +674,12 @@ export default class MainView extends Component {
                         <Editwish heartType={heartType} toggleWishList={toggleWishList}/>
                 </View>
                 
-                <View style={{ padding :5}}>
+                <View style={{ padding :15}}>
                 <TouchableOpacity  style={styles.name} 
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
 
-                <Text style={{fontSize : 13, color :'#000'}}>{data.product_name}</Text>
+                <Text style={{fontSize : 13, color :'#000', fontFamily : 'halvetica' }}>{data.product_name}</Text>
                 </TouchableOpacity>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
@@ -643,12 +747,12 @@ var styles =StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width : width/3 -7,
+        width : width/2 -6,
         // padding: 5,
         margin: 3,
         borderWidth: 1,
         borderColor: '#CCC',
-        borderRadius : 5
+        borderRadius : 5,
     },
     button: {
         width: width/2,
@@ -661,9 +765,9 @@ var styles =StyleSheet.create({
 
     thumb: {
         width: width/3-10,
-        height: width/3,
-        borderTopLeftRadius : 5,
-        borderTopRightRadius : 5
+        height: width/3+30,
+        resizeMode : 'center',
+        top : 15
     },
 
     text: {
@@ -671,4 +775,5 @@ var styles =StyleSheet.create({
         marginTop: 5,
         fontWeight: 'bold'
     },
+     contentContainer: {  }
 });

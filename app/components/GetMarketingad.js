@@ -17,7 +17,8 @@ export default class GetMarketing extends Component {
         this.state={ 
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
             u_id: null,
-            country : null
+            country : null,
+            status : false
         }
     }
 
@@ -57,10 +58,18 @@ export default class GetMarketing extends Component {
     fetch(Utils.gurl('getMarketingAd'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                refreshing : false
-        });
+            if(responseData.status){
+            console.warn(responseData)
+                this.setState({
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    refreshing : false,
+                    status : responseData.status
+                });
+            }else {
+                this.setState({
+                    status : responseData.status
+                });                
+            }
         }).done();
     }
 
@@ -81,21 +90,23 @@ export default class GetMarketing extends Component {
                     bouncesZoom={false}                
                     />
                 );
+        if ( !this.state.status) {
+            return (
+                <Text style={{ fontSize: 13, left :10}}>No Advertise For You</Text>
+            );
+        }
+
         return (
         <View style={{ borderBottomWidth: 0.5, borderColor: '#CCC' , height: 50}}>{listView}</View>
         );
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-        if ( !data.path) {
-            return (
-                <Text style={{ fontSize: 10}}>No Advertise For You</Text>
-                );
-        }
+
         return (
             <TouchableOpacity style={styles.row} onPress={()=> Actions.timeLine({ 
                     uri : data.path })}> 
                         <Image style={styles.thumb} 
-                            source={{ uri : data.path}}/>
+                        source={{ uri : data.path}}/>
             </TouchableOpacity>
         );
     }

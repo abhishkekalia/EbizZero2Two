@@ -21,7 +21,7 @@ export default class TabIcon extends Component {
     var color = this.props.selected ? '#ff8c00' : '#301c2a';
 
     return (
-      <View style={{flex:1, flexDirection:'column', alignItems:'center', alignSelf:'center', justifyContent: 'center'}}>
+      <View style={{flex:1, flexDirection:'column', alignItems:'center', alignSelf:'center', justifyContent: 'center', position:'absolute'}}>
         <Icon style={{color: this.props.focused ? '#ff8c00' : '#301c2a'}} name={this.props.iconName || "circle"} size={18}/>
         <Text style={{color:this.props.focused ? '#ff8c00' : '#301c2a' ,fontSize: this.props.focused ? 13 : 10}}>{this.props.title}</Text>
       </View>

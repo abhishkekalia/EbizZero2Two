@@ -1,3 +1,4 @@
+
 import React, {Component, PropTypes} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
 import { Actions} from "react-native-router-flux";
@@ -14,7 +15,8 @@ class Profile extends Component {
         
         this.getKey = this.getKey.bind(this);        
         this.state={
-        	data: '',
+        	dataSource: [],
+        	status : false,
             u_id: null,
             address : [],
             country : null,
@@ -25,7 +27,7 @@ class Profile extends Component {
 
     componentDidMount(){
 	    this.getKey()
-	    .then(this.getAddress())
+	    .then(()=>this.getAddress())
 	    .done()
     }
 
@@ -44,13 +46,8 @@ class Profile extends Component {
             console.log("Error retrieving data" + error);
         }
     }
-
-
-
     getAddress(){
-
     	const { u_id, country } = this.state;
-
     	let formData = new FormData();
     	formData.append('u_id', String(u_id));
     	formData.append('country', String(country)); 
@@ -65,38 +62,48 @@ class Profile extends Component {
         fetch(Utils.gurl('MyProfile'), config)  
         .then((response) => response.json())
         .then((responseData) => { 
-            this.setState({ 
+        this.setState({ 
+            	status : responseData.response.status,
+            	dataSource : responseData.response.data,
             	address : responseData.response.address
             });
         })
         .done();
     }
-address (){
-	if(this.state.address == '') {
-			return (<View>
-						<Text  style={{ fontSize :8}}> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum  </Text>
-						</View>)
+
+    address(address){
+		if(this.state.address == '') {
+			return (
+				<View>
+					<Text  style={{ fontSize :8}}> 
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+					proident, sunt in culpa qui officia deserunt mollit anim id est laborum 
+					</Text>
+				</View>
+			)
 		}else {
-			return <View><Text style={{ fontSize: 15}}>
-					{address.full_name}
-					</Text>
-					<Text style={{ fontSize : 10}}>
-					M:{address.mobile_number}
-					</Text>
-					<Text style={{fontSize:12}}>
-					{[address.address_line1, ' ', address.address_line2, ' ', address.landmark ,' ', address.town,' ',address.city, ' ', address.state, '(', address.pincode, ')']}
-					</Text></View>
+			return (
+					<View>
+							<Text style={{ fontSize: 15}}>
+							{address.full_name}
+							</Text>
+							<Text style={{ fontSize : 10}}>
+							M:{address.mobile_number}
+							</Text>
+							<Text style={{fontSize:12}}>
+							{[address.address_line1, ' ', address.address_line2, ' ', address.landmark ,' ', address.town,' ',address.city, ' ', address.state, '(', address.pincode, ')']}
+							</Text>
+						</View>);
 		}
-}
+	}
 	render() {
 		const {identity, logout} = this.props;
-		const {data, u_id, address} = this.state;
-		
+		const {data, u_id, address, dataSource} = this.state;
+
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
@@ -117,26 +124,42 @@ address (){
 						</View>
 
 						<View style={{flexDirection : 'column'}}>
-							<Text style={[styles.label, { color : '#ccc'}]}>{identity.username}</Text>
+							<Text style={[styles.label, { color : '#ccc'}]}>{dataSource.fullname}</Text>
 							<Text style={[styles.label, { color : '#ccc'}]}>{this.state.email}</Text>
-							<Text style={[styles.label, { color : '#ff6347'}]}>Contact: {this.state.phone_no}</Text>
+							<Text style={[styles.label, { color : '#ff6347'}]}>Contact: {dataSource.mobile}</Text>
 						</View>
 					</View>
 
-					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} onPress={()=> Actions.editProfile()} >
+					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} 
+					onPress={()=> Actions.editProfile({
+						title : this.state.dataSource.fullname,
+						fullname : this.state.dataSource.fullname ,
+						representative_name : this.state.dataSource.representative_name,
+						address : this.state.dataSource.address,
+						gender : this.state.dataSource.gender,
+						mobile : this.state.dataSource.mobile,
+						email : this.state.dataSource.email
+					})} >
 						<Entypo name="edit" size={25} color="#87cefa"/>
 					</TouchableOpacity >
 				</View>
 				
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
-					<View style={{ padding : 20, backgroundColor : '#fff', flex : 1}}>
-						<TouchableOpacity style={{ flexDirection : 'row', justifyContent: 'space-between', paddingRight:10, paddingLeft:10,  }}  onPress={()=>Actions.getmyaddress()} >
+					<View style={{ padding : 20, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
+						<TouchableOpacity style={{ 
+							flexDirection : 'row', 
+							justifyContent: 'space-between', 
+							paddingRight:10, 
+							paddingLeft:10,
+							borderBottomWidth : 1, 
+							borderColor : '#ccc'  
+						}}  onPress={()=>Actions.getmyaddress()} >
 							<Text style={{ fontSize : 10, color:"#900"}}>My Address Book</Text>
 								
 									<Ionicons name="ios-arrow-forward" size={25} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
 						</TouchableOpacity>
-					{this.address()}
+					{this.address(address)}
 					
 				</View>
 				</View>

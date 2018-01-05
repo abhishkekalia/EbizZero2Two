@@ -17,7 +17,8 @@ import MessageBar from './common/MessageBar';
 
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import {connect} from "react-redux";
-import Register from "./Signup/register"
+import Register from "./Signup/register";
+import Vendorreg from "./Signup/Vendor";
 import HomePage from "./dashboard/DashboardPage";
 import LoginPage from "./auth/LoginPage";
 import ProfilePage from "./profile/ProfilePage";
@@ -26,6 +27,7 @@ import Menu from './components/menu/MenuContainer';
 import Ionicons from 'react-native-vector-icons/Feather';
 import wishList from './components/wish/wishList'
 import Shopingcart from './components/wish/Shopingcart'
+import Terms from './components/Terms';
 
 import CustomNavBar from "./components/navbar/CustomNavBar";
 import CustomGenNavBar from "./components/navbar/CustomGenNavBar";
@@ -41,11 +43,20 @@ import Timeline from "./components/timeline";
 import Settings from "./components/settings";
 import Contact from "./components/Contact";
 import GetMyaddress from "./components/GetMyaddress";
+import Marketingadd from "./components/Marketingadd";
 import Editmyprofile from "./components/Editmyprofile";
-
+import Myfaturah from './components/Myfaturah';
+import OrderList from './components/OrderList';
+import I18n from 'react-native-i18n'
 import Filter from './components/Filter';
-
 import MenuIcon from './images/imgpsh.png';
+
+// -------------vendor ----------
+import Product from './Vendor/Product';
+// import AddProduct from "./app/Vendor/Addproduct";
+
+// -------------vendor ----------
+
 // const reducerCreate = params => (state, action) => Reducer(params)(state, action);
 
 const reducerCreate = params => {
@@ -76,7 +87,13 @@ const Routes = ({loading, needSignIn}) => (
             <Lightbox key="lightbox">
                 <Stack key="root">
                     <Scene key='landingpage' component={WelcomeScreen} hideNavBar={true} initial={needSignIn}/>
-                    <Scene key='loginPage' component={LoginPage} title='login' hideNavBar={true}  type={ActionConst.REPLACE} />
+                    <Scene key='loginPage' 
+                    component={LoginPage} 
+                    title='login' 
+                    hideNavBar={false}  
+                    type={ActionConst.REPLACE} 
+                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
+                    titleStyle={{color : "#FFF", alignSelf: 'center'}}/>
                 <Drawer
                 key="drawer" 
                 drawer ={true}
@@ -87,7 +104,7 @@ const Routes = ({loading, needSignIn}) => (
                 // initial={true} 
                 // initial={true} 
                 hideNavBar={true} 
-                initial={!needSignIn} 
+                // initial={!needSignIn} 
                 >
                 
                 <Scene key="tab" hideNavBar>
@@ -100,6 +117,7 @@ const Routes = ({loading, needSignIn}) => (
                     showLabel={false}
                     tabBarStyle={styles.tabBarStyle}
                     tabBarPosition={'bottom'}
+                    gestureEnabled={false} 
                     activeBackgroundColor='#a9d5d1' 
                     inactiveBackgroundColor='#fff'
                     lazy
@@ -175,6 +193,92 @@ const Routes = ({loading, needSignIn}) => (
             </Stack>
             <Scene key="addressbook" component={AddressBook} />
         </Lightbox>
+
+            <Scene 
+            key="vendortab" 
+            hideNavBar 
+            initial
+            >
+
+                    <Tabs 
+                    tabs
+                    key="tabbar"
+                    swipeEnabled={false}
+                    initial={!needSignIn}
+                    showLabel={false}
+                    tabBarStyle={styles.tabBarStyle}
+                    tabBarPosition={'bottom'}
+                    gestureEnabled={false} 
+                    activeBackgroundColor='#a9d5d1' 
+                    inactiveBackgroundColor='#fff'
+                    lazy
+                    // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
+                    >
+
+                        <Stack
+                        key="Product"
+                        title="Product"
+                        icon={TabIcon}
+                        iconName="tag"
+                        // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
+                        navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                        titleStyle={{ color: 'white', alignSelf: 'center' }}>
+                            
+                            <Scene 
+                            key="product" 
+                            titleStyle={{alignSelf: 'center'}} 
+                            component={Product} 
+                            title="Product"
+                            // navigationBarStyle={{backgroundColor: '#1e2226'}}  
+                            titleStyle={{color : "#FFF", alignSelf: 'center'}}
+                            type="replace"/>
+
+                        </Stack>
+                        
+                        <Stack
+                        key="service"
+                        title="service"
+                        icon={TabIcon}
+                        iconName="slack"
+                        navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                            <Scene 
+                            key="service"
+                            titleStyle={{color : "#FFF", alignSelf: 'center'}}
+                            navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
+                            component={wishList} 
+                            title="WishList"/>
+                        </Stack>
+
+                        <Stack
+                        key="Cart"
+                        title="Cart"
+                        icon={TabIcon}
+                        iconName="align-right"
+                        navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+
+                            <Scene 
+                            key="shopingCart"
+                            titleStyle={{color : "#FFF", alignSelf: 'center'}}
+                            navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
+                            component={Shopingcart} 
+                            title="Cart"/>
+                        </Stack>
+                        
+                        <Stack
+                        key="profile"
+                        title="Profile"
+                        icon={TabIcon}
+                        iconName="user-secret"
+                        navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                            <Scene 
+                            titleStyle={{color : "#FFF", alignSelf: 'center'}}
+                            key="profilePage" 
+                            component={ProfilePage} 
+                            title="Profile"/>
+                        </Stack>
+                        
+                    </Tabs>
+                </Scene>
                     <Stack key="registerPage" navBar={CustomGenNavBar} >
                         <Scene 
                         key="register" 
@@ -183,8 +287,16 @@ const Routes = ({loading, needSignIn}) => (
                         navBar={CustomGenNavBar} 
                         type={ActionConst.ANDROID_BACK}/>
                     </Stack>
+                    <Stack key="registerVendor" navBar={CustomGenNavBar} >
+                        <Scene 
+                        key="vendorRegister" 
+                        component={Vendorreg} 
+                        title="Vendor-Registration" 
+                        navBar={CustomGenNavBar} 
+                        type={ActionConst.ANDROID_BACK}/>
+                    </Stack>
 
-                    <Stack key="addressbook" >
+                    <Stack key="AddressLists" >
                         <Scene 
                         key="address" 
                         component={AddressBook} 
@@ -193,11 +305,10 @@ const Routes = ({loading, needSignIn}) => (
                         type={ActionConst.ANDROID_BACK}/> 
                     </Stack>
 
-                    <Stack key="deascriptionPage" >
+                    <Stack key="deascriptionPage" renderTitle >
                         <Scene 
                         key="deascription" 
                         component={ProductDescription} 
-                        title="Description" 
                         navBar={CustomGenNavBar} 
                         type={ActionConst.ANDROID_BACK}/>
                     </Stack>
@@ -233,12 +344,28 @@ const Routes = ({loading, needSignIn}) => (
                         title="Newaddress"
                         hideNavBar={true}/>
                     </Stack>
+                    <Stack key="terms" renderTitle>
+                        <Scene 
+                        key="terms" 
+                        component={Terms}
+
+                        // title="Conditions"
+                        navBar={CustomGenNavBar} /> 
+                    </Stack>
 
                     <Stack key="settings">                                
                         <Scene 
                         key="settings" 
                         component={Settings} 
-                        title="setting"
+                        title="Settings"
+                        navBar={CustomGenNavBar} /> 
+                    </Stack>
+
+                    <Stack key="postad">                                
+                        <Scene 
+                        key="adpost" 
+                        component={Marketingadd} 
+                        title="Advertisement"
                         navBar={CustomGenNavBar} /> 
                     </Stack>
 
@@ -255,6 +382,19 @@ const Routes = ({loading, needSignIn}) => (
                         component={Timeline} />                                 
                     </Stack>
                     
+                    <Stack
+                    back
+                    backTitle="Back"
+                    hideNavBar={true}
+                    duration={0}
+                    key="myfaturah"
+                    titleStyle={{ color: 'black', alignSelf: 'center' }}
+                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                        <Scene 
+                        key="faturah" 
+                        component={Myfaturah} />                                 
+                    </Stack>
+
                     <Stack 
                     key="filterBar" 
                     hideTabBar={true} 
@@ -270,7 +410,7 @@ const Routes = ({loading, needSignIn}) => (
                     key="getmyaddress" 
                     hideTabBar={true} 
                     titleStyle={{alignSelf: 'center'}}
-                    renderRightButton={() => <Ionicons name="plus" size={20} onPress={()=> Actions.newaddress()} color="#fff" style={{  marginTop: 27 ,padding:10}}/>}
+                    renderRightButton={() => <Ionicons name="plus" size={20} onPress={()=> Actions.newaddress()} color="#fff" style={{  alignItems:'center',padding:15}}/>}
                     >
                         <Scene
                         key="getmyaddress"
@@ -289,11 +429,25 @@ const Routes = ({loading, needSignIn}) => (
                         navBar={CustomGenNavBar}/>
                     </Stack>
                     <Stack 
-                    key="editProfile">
+                    key="editProfile"
+                    renderTitle
+                    // onBack={ () => Actions.pop({refresh: {test:Math.random() } }) }
+                        >
                         <Scene 
                         key="profileEdit" 
                         titleStyle={{alignSelf: 'center'}} 
                         component={Editmyprofile} 
+                        navBar={CustomGenNavBar}/>
+                    </Stack>
+
+                    <Stack 
+                    key="myorder"
+                    // onBack={ () => Actions.pop({refresh: {test:Math.random() } }) }
+                        >
+                        <Scene 
+                        key="orderList" 
+                        titleStyle={{alignSelf: 'center'}} 
+                        component={OrderList} 
                         navBar={CustomGenNavBar}/>
                     </Stack>
             </Modal>
