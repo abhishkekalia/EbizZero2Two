@@ -232,16 +232,19 @@ export default class AddProduct extends Component {
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d'    
 
         return (
-            <ScrollView contentContainerStyle={commonStyles.container} keyboardShouldPersistTaps={'handled'}>
+            <ScrollView 
+            contentContainerStyle={commonStyles.container} 
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps={'handled'}>
                 <View style={commonStyles.ImageAdd}>
                     <Text style={{color: borderColorImage}}>Select Product Image</Text>  
-                    <View style={{ borderWidth: 1, borderColor: '#ccc', borderRadius : 40}}>
+                    <View style={{ borderWidth: 1, borderColor: 'transparent', borderRadius : 40}}>
                         <Feather onPress={this.selectPhotoTapped.bind(this)} 
                             name="upload-cloud" size= {30} style={{padding :20 }} /> 
                     </View>
-                    <View style={{ borderWidth: 1, borderColor: '#ccc', top: 10}}>
+                    <View style={{  top: 10, flexDirection:'row'}}>
                         { this.state.avatarSource === null ? <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="image" size= {30} style={{padding :20 }} /> :
+                            name="image" size= {30} style={{padding :20, borderWidth: 1, borderColor: '#ccc', }} /> :
                                 <SelectedImage 
                                 productImages={this.state.rows} 
                                 />

@@ -20,9 +20,9 @@ export default StyleSheet.create({
         height: 100
     },
     ImageAdd :{
-    	flex : 1,
+    	flex : 0.5,
     	borderColor : '#ccc',
-    	borderWidth :0.5,
+    	borderWidth :1,
         alignItems: 'center',
         justifyContent : 'space-between',
         borderRadius : 5
@@ -30,7 +30,7 @@ export default StyleSheet.create({
     formItems:{
         flex: 1,
       	borderColor : '#ccc',
-    	borderWidth :0.5,
+    	borderWidth :1,
         backgroundColor: 'transparent',
         top : 10,
         padding :10,

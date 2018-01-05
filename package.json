@@ -19,7 +19,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.4.1",
     "react-native-message-bar": "^2.0.7",
     "react-native-modal": "^4.1.1",
-    "react-native-popup-dialog": "^0.10.45",
+    "react-native-popup-dialog": "0.10.45",
     "react-native-progress-bar": "^0.1.2",
     "react-native-radio-buttons": "^1.0.0",
     "react-native-router-flux": "^4.0.0-beta.25",

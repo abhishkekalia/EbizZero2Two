@@ -21,18 +21,14 @@ export default class SelectedImage extends Component {
             isLoading: true,
         }
     }
-    componentDidMount() {
-        return fetch('https://reactnativecode.000webhostapp.com/FlowersList.php')
-        .then((response) => response.json())
-        .then((responseJson) => { 
-            let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}); 
-            this.setState({
-                isLoading: false,
-                dataSource: this.state.dataSource.cloneWithRows(this.props.productImages),
-            });
-        })
-        .catch((error) => {
-          console.error(error);
+    componentWillReceiveProps(props) {
+        this.fetch(props.productImages)
+    }
+
+    fetch(productImages) {
+        this.setState({
+            isLoading: false,
+            dataSource: this.state.dataSource.cloneWithRows(productImages),
         });
     }
 
@@ -49,7 +45,7 @@ export default class SelectedImage extends Component {
     render() {
         if (this.state.isLoading) { 
             return (
-                <View style={{flex: 1, justifyContent: 'center',}}>
+                <View style={{ justifyContent: 'center',}}>
                     <ActivityIndicator />
                 </View>
             );
@@ -59,7 +55,7 @@ export default class SelectedImage extends Component {
             <ListView
             contentContainerStyle={styles.list}
             dataSource={this.state.dataSource}
-            renderSeparator= {this.ListViewItemSeparator}
+            // renderSeparator= {this.ListViewItemSeparator}
             renderRow={(rowData) =>
                 <View style={styles.row}> 
                     <Image source = {{ uri: rowData.uri }} style={styles.imageViewContainer} />
@@ -68,13 +64,12 @@ export default class SelectedImage extends Component {
         );
     }
 }
- 
 const styles = StyleSheet.create({ 
     imageViewContainer: {
         width: '100%',
-        height: 70 ,
-        margin: 10,
-        borderRadius : 10
+        height: '100%',
+        // margin: 10,
+        borderRadius : 5
     },
     list: {
         justifyContent: 'space-around',
