@@ -9,6 +9,9 @@ import Utils from 'app/common/Utils';
 class Profile extends Component {
 	constructor(props) {
         super(props);
+
+
+        
         this.getKey = this.getKey.bind(this);        
         this.state={
         	data: '',
