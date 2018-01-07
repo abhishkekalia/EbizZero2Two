@@ -159,72 +159,12 @@ export default class ProductDescription extends Component {
     onSubmit () {
 
     }
-    addtoWishlist ( product_id){
-        const {u_id, country, user_type } = this.state;
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('addToWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-           if(responseData.status){
-                MessageBarManager.showAlert({ 
-                    message: responseData.data.message, 
-                    alertType: 'alert', 
-                })
-            }
-        })
-    .then(()=>this.fetchData())
-    .done();
-
-    }
-    removeToWishlist ( product_id){
-        const {u_id, country, user_type } = this.state;
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(this.state.data.product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('removeFromWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            MessageBarManager.showAlert({ 
-            message: responseData.data.message, 
-            alertType: 'alert', 
-            })
-        })
-        .then(()=>this.fetchData)
-        .done();
-    }
     
     render () { 
         const { date_in, count } = this.state;
         let color = this.state.data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
-      // console.warn(this.props.is_wishlist);
-      // let toggleWishList  
-      // if(this.props.is_wishlist === '0') { toggleWishList = ()=> this.addtoWishlist(this.state.data.product_id)} else { toggleWishList = ()=> this.removeToWishlist(this.state.data.product_id)}
-      // if(this.props.is_wishlist === '0') { toggleWidhlist = ()=> addtoWishlist(this.state.data.product_id} else { toggleWidhlist = ()=> removeToWishlist(this.state.data.product_id)}
-
         return ( 
             <ScrollView 
                 keyboardShouldPersistTaps="always"
@@ -232,7 +172,10 @@ export default class ProductDescription extends Component {
                 <View style={{ height : height/1.5}}>
                 <Slider imgList={this.state.imgList} 
                 updateState={this.props.toggleWishList}  
-                wishlist= {this.props.is_wishlist } u_id= {this.state.u_id } country= {this.state.country }/>
+                wishlist= {this.props.is_wishlist } 
+                u_id= {this.state.u_id } 
+                country= {this.state.country }
+                product_id={this.props.product_id}/>
                 </View>
 
                 <View style={{ 
@@ -381,8 +324,8 @@ export default class ProductDescription extends Component {
 const styles = {
     contentContainer: { 
     },
-    description: {
-width : width/3
+    description: { 
+        width : width/3
     },
     qtybutton: {
         width : 40,

@@ -17,9 +17,6 @@ import { MessageBarManager } from 'react-native-message-bar';
 const {width,height} = Dimensions.get('window');
 
 const Slide = props => { 
-    handleClick = () => {
-      props.updateState();
-    }
     let heartType
     if (props.is_wishlist === '0') 
         heartType = 'ios-heart-outline'; 
@@ -39,7 +36,7 @@ const Slide = props => {
             name={heartType}
             size={30} 
             color="#a9d5d1" 
-            onPress={()=>this.handleClick()}
+            onPress={()=>props.callback()}
             />
             {
               !props.loaded && <View style={styles.loadingView}> 
@@ -52,13 +49,13 @@ const Slide = props => {
         </View>
     )
 }
-
 export default class Slider extends Component<{}> {
     constructor (props) { 
         super(props); 
         this.state = { 
             data : [],
             loadQueue: [0, 0, 0, 0],
+            is_wishlist : this.props.wishlist
         }
         this.loadHandle = this.loadHandle.bind(this)
     }
@@ -70,32 +67,104 @@ export default class Slider extends Component<{}> {
             loadQueue 
         })
     }
-    componentWillUpdate(nextProps, nextState) { 
-        // if (nextState.open == true && this.state.open == false) {
-            // this.props.onWillOpen();
-        // }
+    changeLabel(){
+        let wish
+        if (this.state.is_wishlist === '0') 
+            wish = '1'; 
+        else 
+        wish = '0'; 
+            this.setState({
+            is_wishlist : wish
+        }
+        ,()=>{this.updateState()}
+        )
+    }
+    updateState(){
+        let toggleWishList  
+        if(this.state.is_wishlist === '0') { 
+            this.addtoWishlist() 
+        } else { 
+            this.removeToWishlist()
+        }
+    }
+    addtoWishlist ( ){
+        const {u_id, country, product_id } = this.props;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('addToWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+           if(responseData.status){
+                MessageBarManager.showAlert({ 
+                    message: responseData.data.message, 
+                    alertType: 'alert', 
+                })
+            }
+        })
+        .then(()=>this.props.updateState())
+    .done();
+
+    }
+    removeToWishlist (){
+        const {u_id, country, product_id } = this.props;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('removeFromWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        .then(()=>this.props.updateState())
+        .done();
     }
 
     render() {
+
     return (
-      <View style={styles.container}>
-         <Swiper loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={false}>
-                  {
-                    this.props.imgList.map((item, i) => <Slide
+        <View style={styles.container}>
+            <Swiper loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={false}>
+                {
+                this.props.imgList.map((item, i) => <Slide
                       loadHandle={this.loadHandle}
                       loaded={!!this.state.loadQueue[i]}
                       data ={this.props.data}
                       updateState={this.props.updateState}
                       u_id ={this.props.u_id}
                       country ={this.props.country}
-                      is_wishlist= {this.props.wishlist}
+                      is_wishlist= {this.state.is_wishlist}
+                      callback = {this.changeLabel.bind(this)}
                       uri={item}
                       i={i}
-                      key={i} />)
-                  }
-                </Swiper>
-
-      </View>
+                      key={i} />
+                    )
+                }
+            </Swiper>
+        </View>
     );
   }
 }

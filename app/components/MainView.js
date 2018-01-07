@@ -396,16 +396,13 @@ unCheck(data){
     }
 
     render() {
-        // console.warn(this.props.filterdBy);
         this.fetchData = this.fetchData.bind(this);
-
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
         if (!this.state.status) {
             return this.noItemFound();
         }
-
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -543,8 +540,6 @@ unCheck(data){
     }
 
     onServiceClick(data) {
-        // console.warn(JSON.stringify(this.state.serviceArray))
-        // console.warn(JSON.stringify(data.u_id))
         var newStateArray = this.state.servicerows.slice();
         newStateArray.push(data.service_id); 
         this.setState({
@@ -609,14 +604,15 @@ unCheck(data){
                 leftText={leftText}
             />);
     }
-moveToDesc(title, product_id, is_wishlist, toggleWishList){
-    Actions.deascriptionPage({ 
-        title: title, 
-        product_id : product_id , 
-        is_wishlist : is_wishlist, 
-        toggleWishList: toggleWishList
-    })
-}
+    moveToDesc(title, product_id, is_wishlist, toggleWishList){
+        Actions.deascriptionPage({ 
+            title: title, 
+            product_id : product_id , 
+            is_wishlist : is_wishlist, 
+            // toggleWishList: toggleWishList
+        })
+    }
+
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
@@ -631,15 +627,15 @@ moveToDesc(title, product_id, is_wishlist, toggleWishList){
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         
-        let heartType
+      //   let heartType
 
-        if (data.is_wishlist === '0') {
-            heartType = 'ios-heart-outline'; 
-        } else {
-            heartType = 'ios-heart' ;
-        }
-      let toggleWishList  
-      if(data.is_wishlist === '0') { toggleWishList = ()=> this.addtoWishlist(data.product_id)} else { toggleWishList = ()=> this.removeToWishlist(data.product_id)}
+      //   if (data.is_wishlist === '0') {
+      //       heartType = 'ios-heart-outline'; 
+      //   } else {
+      //       heartType = 'ios-heart' ;
+      //   }
+      // let toggleWishList  
+      // if(data.is_wishlist === '0') { toggleWishList = ()=> this.addtoWishlist(data.product_id)} else { toggleWishList = ()=> this.removeToWishlist(data.product_id)}
 
        return (
             <View style={styles.row} > 
@@ -648,7 +644,6 @@ moveToDesc(title, product_id, is_wishlist, toggleWishList){
                         MainElement={ 
                             <TouchableOpacity 
                             onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist, toggleWishList)}
-                            // onPress={()=>Actions.deascriptionPage({ title: data.product_id, product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}
                             >
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
@@ -671,7 +666,7 @@ moveToDesc(title, product_id, is_wishlist, toggleWishList){
                         color="#a9d5d1" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
-                        <Editwish heartType={heartType} toggleWishList={toggleWishList}/>
+                        <Editwish u_id={this.state.u_id} country={this.state.country} is_wishlist={data.is_wishlist} product_id={data.product_id}/>
                 </View>
                 
                 <View style={{ padding :15}}>
@@ -739,7 +734,7 @@ var styles =StyleSheet.create({
         flex:1, 
         justifyContent : "space-around", 
         flexDirection: 'row', 
-        borderWidth : 0.5, 
+        borderWidth : 1, 
         borderColor: "#ccc", 
         alignItems: 'center'
     },

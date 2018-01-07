@@ -80,10 +80,17 @@ export default class AllItem extends Component {
     fetch(Utils.gurl('allProductItemList'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            this.setState({
+            if(responseData.status){
+                this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 refreshing : false
-        });
+                });
+            }
+            else{
+                this.setState({
+                refreshing : false
+                })
+            }
         }).done();
     }
 
@@ -111,14 +118,13 @@ export default class AllItem extends Component {
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         
-        let heartType
+      //   let heartType
 
-        if (data.is_wishlist === '0') {
-            heartType = 'ios-heart-outline'; 
-        } else {
-            heartType = 'ios-heart' ;
-        }
-      let toggleWishList  
+      //   if (data.is_wishlist === '0') {
+      //       heartType = 'ios-heart-outline'; 
+      //   } else {
+      //       heartType = 'ios-heart' ;
+      //   }
 
        return (
             <View style={styles.row} > 
@@ -150,7 +156,7 @@ export default class AllItem extends Component {
                         color="#a9d5d1" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
-                        <Editwish heartType={heartType} toggleWishList={toggleWishList}/>
+                        <Editwish u_id={this.state.u_id} country={this.state.country} is_wishlist={data.is_wishlist} product_id={data.product_id}/>
                 </View>
                 
                 <View style={{ padding :15}}>

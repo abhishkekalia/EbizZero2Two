@@ -104,7 +104,7 @@ const Routes = ({loading, needSignIn}) => (
                 // initial={true} 
                 // initial={true} 
                 hideNavBar={true} 
-                // initial={!needSignIn} 
+                initial={!needSignIn} 
                 >
                 
                 <Scene key="tab" hideNavBar>
@@ -118,7 +118,7 @@ const Routes = ({loading, needSignIn}) => (
                     tabBarStyle={styles.tabBarStyle}
                     tabBarPosition={'bottom'}
                     gestureEnabled={false} 
-                    activeBackgroundColor='#a9d5d1' 
+                    // activeBackgroundColor='#a9d5d1' 
                     inactiveBackgroundColor='#fff'
                     lazy
                     // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
@@ -197,7 +197,7 @@ const Routes = ({loading, needSignIn}) => (
             <Scene 
             key="vendortab" 
             hideNavBar 
-            initial
+            // initial
             >
 
                     <Tabs 

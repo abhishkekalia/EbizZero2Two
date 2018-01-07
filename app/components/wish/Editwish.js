@@ -16,30 +16,101 @@ import {
 const { width, height } = Dimensions.get('window');
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 
 export default class Editwish extends Component {
     constructor(props) { 
-        super(props); 
+        super(props);
         this.state = { 
+            is_wishlist : this.props.is_wishlist
         }; 
     }
+    changeLabel(){
+        let wish
+        if (this.state.is_wishlist === '0') 
+            wish = '1'; 
+        else 
+        wish = '0'; 
+            this.setState({
+            is_wishlist : wish
+        }
+        ,()=>{this.updateState()}
+        )
+    }
+    updateState(){
+        let toggleWishList  
+        if(this.state.is_wishlist === '0') { 
+            this.removeToWishlist()
+        } else { 
+            this.addtoWishlist() 
+        }
+    }
+    addtoWishlist ( ){
+        const {u_id, country, product_id } = this.props;
 
-    // renderLoadingView() {
-    //     return (
-    //         <ActivityIndicator  
-    //         style={[styles.centering]}
-    //         color="#a9d5d1" 
-    //         size="small"/>
-    //         );
-    // }
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('addToWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+           if(responseData.status){
+                MessageBarManager.showAlert({ 
+                    message: responseData.data.message, 
+                    alertType: 'alert', 
+                })
+            }
+        })
+        // .then(()=>this.props.updateState())
+    .done();
+
+    }
+    removeToWishlist (){
+        const {u_id, country, product_id } = this.props;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(product_id)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('removeFromWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({ 
+            message: responseData.data.message, 
+            alertType: 'alert', 
+            })
+        })
+        // .then(()=>this.props.updateState())
+        .done();
+    }
+
     render(){ 
-        
+          let heartType
+    if (this.state.is_wishlist === '0') 
+        heartType = 'ios-heart-outline'; 
+    else 
+        heartType = 'ios-heart' ;        
+  
         return(
             <TouchableOpacity 
-                    onPress={this.props.toggleWishList }
+                    onPress={()=>this.changeLabel() }
                     style={{ 
                         left : width/2-33, 
                         position : 'absolute',
@@ -49,7 +120,7 @@ export default class Editwish extends Component {
                     }}
                     >
                         <Ionicons  
-                        name={this.props.heartType} 
+                        name={heartType} 
                         size={20} 
                         color="#a9d5d1" 
                         />
