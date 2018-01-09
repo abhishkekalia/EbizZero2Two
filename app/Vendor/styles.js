@@ -8,6 +8,18 @@ export default StyleSheet.create({
         backgroundColor: 'transparent',
         padding :10
     },
+    inputs : {
+        width : width/2,
+        paddingLeft: 0,
+        height : 40,
+        borderBottomWidth : 1,
+        borderColor : '#ccc',
+        color: '#424242',
+    },
+    feature : {
+        flexDirection : 'row',
+        justifyContent : 'space-between'
+    },
     avatarContainer: {
         borderColor: '#9B9B9B',
         borderWidth: 1 / PixelRatio.get(),
@@ -60,6 +72,19 @@ export default StyleSheet.create({
     label : {
     	left : 10,
     	color : '#a9d5d1'
+    },
+    chip : {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    submit : {
+        marginRight: 10,
+        padding : 5,
+        alignItems : 'center',
+        borderRadius : 5,
+        borderColor : '#fff',
+        borderWidth : 1
     }
 
 });

@@ -50,6 +50,7 @@
 		D0AC0FEA83D64DB2844A8A04 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 689772489B4B45B1A1ACD46E /* Zocial.ttf */; };
 		7E59367490C4428F9BE52F95 /* libRNI18n.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0D05599ABE453E8F312DF6 /* libRNI18n.a */; };
 		8718492D32AA4685A38E2098 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E98EDB426B3430085B4DD74 /* libRNImagePicker.a */; };
+		6DB71F1648A74967A2C8EEF4 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDC61653A204394865173FC /* libRNFetchBlob.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -294,6 +295,8 @@
 		7A0D05599ABE453E8F312DF6 /* libRNI18n.a */ = {isa = PBXFileReference; name = "libRNI18n.a"; path = "libRNI18n.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		49858B5F693540B0A533712A /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		0E98EDB426B3430085B4DD74 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		1F2BE4FBFAB44C7191A2E9E0 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		DCDC61653A204394865173FC /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,6 +328,7 @@
 				226494146F8D450C9809D4DC /* libRNVectorIcons.a in Frameworks */,
 				7E59367490C4428F9BE52F95 /* libRNI18n.a in Frameworks */,
 				8718492D32AA4685A38E2098 /* libRNImagePicker.a in Frameworks */,
+				6DB71F1648A74967A2C8EEF4 /* libRNFetchBlob.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +500,7 @@
 				9E6E51C1FCD34251B12BB21E /* RNVectorIcons.xcodeproj */,
 				B22FCBD028C5448A807AD55A /* RNI18n.xcodeproj */,
 				49858B5F693540B0A533712A /* RNImagePicker.xcodeproj */,
+				1F2BE4FBFAB44C7191A2E9E0 /* RNFetchBlob.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1074,12 +1079,14 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EbizZero2Two.app/EbizZero2Two";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 			};
 			name = Debug;
@@ -1100,12 +1107,14 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EbizZero2Two.app/EbizZero2Two";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 			};
 			name = Release;
@@ -1130,6 +1139,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 			};
 			name = Debug;
@@ -1153,6 +1163,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 			};
 			name = Release;
@@ -1182,12 +1193,14 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 			};
 			name = Debug;
@@ -1217,12 +1230,14 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-i18n/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 				);
 			};
 			name = Release;
@@ -1247,6 +1262,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1271,6 +1287,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Release;

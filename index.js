@@ -6,4 +6,4 @@ import Vendorreg from "./app/Signup/Vendor";
 // import AddProduct from "./app/Vendor/Addproduct";
 import Product from './app/Vendor/Product';
 
-AppRegistry.registerComponent('EbizZero2Two', () => Product);
+AppRegistry.registerComponent('EbizZero2Two', () => Root);

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { 
     StyleSheet, 
     ActivityIndicator, 
@@ -8,38 +7,68 @@ import {
     View, 
     Image, 
     Platform,
-    Dimensions
+    Dimensions,
+    TouchableOpacity, 
+    AsyncStorage, 
+
 } from 'react-native';
+import {Actions as routes} from "react-native-router-flux";
+import Utils from 'app/common/Utils';
+
  const { width, height } = Dimensions.get('window')
 
- 
 export default class MyProduct extends Component {
-    constructor(props) {
+   constructor(props) {
         super(props);
         this.state = {
-            isLoading: true
+            isLoading: true,
+            dataSource : new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
         }
     }
-
+ 
     GetItem (flower_name) {
-        Alert.alert(flower_name); 
+        alert(flower_name); 
     }
 
     componentDidMount() {
-        return fetch('https://reactnativecode.000webhostapp.com/FlowersList.php')
+        this.fetchData();
+    }
+    componentWillMount() {
+        routes.refresh({ right: this._renderRightButton });    
+    }
+    _renderRightButton = () => {
+        return null
+    };
+
+    fetchData(){ 
+        const {u_id, country } = this.state; 
+        let formData = new FormData();
+        formData.append('u_id', String(2));
+        formData.append('country', String(1)); 
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+            }
+        fetch(Utils.gurl('productList'), config) 
         .then((response) => response.json())
-        .then((responseJson) => {
-          let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-          this.setState({
-            isLoading: false,
-            dataSource: ds.cloneWithRows(responseJson),
-          }, function() {
-            // In this block you can do something with new state.
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        .then((responseData) => {
+            if(responseData.status){
+                this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                isLoading : false
+                });
+            }
+            else{
+                this.setState({
+                isLoading : false
+                })
+            }
+        }).done();
     }
 
     ListViewItemSeparator = () => {
@@ -62,45 +91,225 @@ export default class MyProduct extends Component {
                 </View>
             );
         }
-        return (
-            <View style={styles.MainContainer}> 
-                <ListView
+        let listView = (<View></View>);
+            listView = (
+               <ListView
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
                 renderSeparator= {this.ListViewItemSeparator} 
                 renderRow={this.renderData.bind(this)}/>
+            );
+        return (
+        <View>
+            {listView}
+        </View>
+        );
+    }
+    renderData(data: string, sectionID: number, rowID: number, index) {
+        return (
+            <View style={{ 
+            width : width-30,
+            flexDirection: 'column' ,
+            marginTop : 2, 
+            borderWidth : 1, 
+            borderColor : "#ccc", 
+            borderRadius : 2}}>
+                <Category product_category= {data.product_category}/>
+                <TouchableOpacity style={{ 
+                flexDirection: 'row', 
+                backgroundColor : "#fff",
+                borderBottomWidth : 1, 
+                borderColor : "#ccc", 
+                }}>
+                    <Image style={[styles.thumb, {margin: 10}]} 
+                    source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
+                    />  
+                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
+                        <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.product_name} </Text>
+                        <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
+                        <View style={{ flexDirection : "row"}}>
+                            <Text style={{color:"#a9d5d1"}}> Quantity Available : {data.quantity} </Text>
+                        </View>
+                        <View style={{ flexDirection : "row", justifyContent : 'space-around'}}>
+                            <Text style={{color : '#f53d3d'}} >Special Price : </Text>
+                            <Text > {data.special_price} </Text>
+                            <Text style={{color : '#f53d3d'}}> Price :</Text>
+                            <Text > {data.price} </Text>
+                        </View>
+                        <View style={{ flexDirection : "row"}}>
+                           <Text style={{color : '#f53d3d'}}> Status : </Text>
+                           <Text > {data.is_approved ? 'approved' : 'pending'} </Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+                <View style={styles.bottom}>
+                    <TouchableOpacity 
+                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]} 
+                    onPress={()=>routes.vendordesc({ 
+                        title: data.product_name, 
+                        product_name : data.product_name,
+                        productImages : data.productImages,
+                        short_description : data.short_description,
+                        detail_description : data.detail_description,
+                        price : data.price,
+                        special_price : data.special_price,
+                    })}>
+                        <Text style={{ color :'#fff', fontSize: 12}}>Preview</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#f53d3d'}]} 
+                    onPress={()=>this.addtoCart(data.quantity, data.product_id)}>
+                        <Text style={{ color :'#fff', fontSize : 12}}>Deactivate</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
-    renderData(rowData: string, sectionID: number, rowID: number, index) {
-        return (
-            <View style={{flex:1, flexDirection: 'row'}}> 
-            <Image source = {{ uri: rowData.flower_image_url }} style={styles.imageViewContainer} />
-            <Text onPress={this.GetItem.bind(this, rowData.flower_name)} style={styles.textViewContainer} >{rowData.flower_name}</Text>
-            </View>
-        );
+}
+var array = [
+    { name:"string 1", value:"this", other: "that" },
+    { name:"string 2", value:"this", other: "that" }
+];
+class Category extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            product_category : [],
+            isLoading : true
+        }
     }
 
+    componentDidMount(){
+        this.fetchData();
+    }
+
+    search = (nameKey, myArray)=>{ 
+        for (var i = 0; i < myArray.length; i++) { 
+            if (myArray[i].category_id === nameKey) { 
+                return myArray[i].category_name;
+            }
+        }
+    }
+
+    fetchData(){ 
+        // const {u_id, country } = this.state; 
+        let formData = new FormData();
+        formData.append('u_id', String(2));
+        formData.append('country', String(1)); 
+        
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+        fetch(Utils.gurl('getFilterMenu'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                this.setState({
+                product_category: responseData.data.category,
+                });
+            }
+            else{
+                this.setState({
+                isLoading : false
+                })
+            }
+        }).done();
+    }
+
+  render() {
+    let product_id = this.props.product_category
+    let product = this.state.product_category
+
+    let resultObject = this.search(product_id, product);
+
+    return (
+      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc'}]}>
+      <Text style={{ color : '#f53d3d', paddingLeft: 10}}>Category : </Text>
+        <Text style={styles.welcome}>{ this.state.product_category ? resultObject: undefined}
+        </Text>
+      </View>
+    );
+  }
 }
  
 const styles = StyleSheet.create({ 
-    MainContainer :{ 
-        justifyContent: 'center',
-        flex:1,
-        margin: 5,
-        paddingTop: (Platform.OS === 'ios') ? 20 : 0,
-    },
-    imageViewContainer: {
-        width: '50%',
-        height: 100 ,
-        margin: 10,
-        borderRadius : 10
+    container: {
+        flexDirection: 'column',
+        padding : 10 
     },
 
-    textViewContainer: { 
-        textAlignVertical:'center',
-        width:'50%', 
-        padding:20 } 
+    row: {
+        flexDirection: 'row',
+        marginTop : 1
+    },
+    qtybutton: {
+        paddingLeft: 10,
+        paddingRight: 10,
+
+        alignItems: 'center',
+        borderWidth : 0.5,
+        borderColor : "#ccc",
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+    },
+        countryIcon: {
+        width : 40,
+        height:40,
+        padding :10
+    },
+
+
+    lowerButton :{
+        // alignItems : 'center', 
+        borderWidth : 0.5, 
+        borderColor : "#ccc",
+        padding : 5,
+        borderRadius : 5
+    },
+
+    thumb: {
+        width   : "20%",
+        height  :width/5 ,
+    },
+
+    textQue :{
+        flex: 1,
+        fontSize: 18,
+        fontWeight: '400',
+        left : 5
+    },
+
+    centering: {
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
+    },
+    bottom : {
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        backgroundColor : "#fff",
+        padding : 5
+    },
+
+    headline: {
+        paddingTop : 10,
+        paddingBottom : 10,
+        marginLeft : 15,
+        fontSize    : 15,
+        color       : "#000",
+        fontWeight  : 'bold'
+    },
+    detail: {
+        padding : 10,
+        backgroundColor : '#fff',
+        minHeight : 500,
+        fontWeight : 'bold'
+    }
 });

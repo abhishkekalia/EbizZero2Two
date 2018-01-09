@@ -24,7 +24,9 @@ const Slide = props => {
         heartType = 'ios-heart' ;        
     return ( 
         <View style={[styles.slide]}>
-          <Image onLoad={props.loadHandle.bind(null, props.i)}  
+          <Image onLoad={props.loadHandle.bind(null, props.i)} 
+                resizeMode={'stretch'}
+ 
             style={styles.image} 
             source={{uri: props.uri}} />
             <Ionicons 

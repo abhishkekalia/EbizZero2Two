@@ -171,7 +171,7 @@ export default class ProductDescription extends Component {
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/1.5}}>
                 <Slider imgList={this.state.imgList} 
-                updateState={this.props.toggleWishList}  
+                updateState={this.props.updateState}  
                 wishlist= {this.props.is_wishlist } 
                 u_id= {this.state.u_id } 
                 country= {this.state.country }

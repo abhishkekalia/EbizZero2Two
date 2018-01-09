@@ -53,6 +53,7 @@ import MenuIcon from './images/imgpsh.png';
 
 // -------------vendor ----------
 import Product from './Vendor/Product';
+import ProductVendor from './Vendor/ProductVendor';
 // import AddProduct from "./app/Vendor/Addproduct";
 
 // -------------vendor ----------
@@ -104,7 +105,7 @@ const Routes = ({loading, needSignIn}) => (
                 // initial={true} 
                 // initial={true} 
                 hideNavBar={true} 
-                initial={!needSignIn} 
+                // initial={!needSignIn} 
                 >
                 
                 <Scene key="tab" hideNavBar>
@@ -197,7 +198,7 @@ const Routes = ({loading, needSignIn}) => (
             <Scene 
             key="vendortab" 
             hideNavBar 
-            // initial
+            initial
             >
 
                     <Tabs 
@@ -231,7 +232,9 @@ const Routes = ({loading, needSignIn}) => (
                             title="Product"
                             // navigationBarStyle={{backgroundColor: '#1e2226'}}  
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
-                            type="replace"/>
+                            type="replace"
+                            onRight={()=>{}} 
+                            rightTitle={' Save'} />
 
                         </Stack>
                         
@@ -380,6 +383,13 @@ const Routes = ({loading, needSignIn}) => (
                         <Scene 
                         key="timelineStatus" 
                         component={Timeline} />                                 
+                    </Stack>
+                    <Stack key="vendordesc" renderTitle >
+                        <Scene 
+                        key="deascription" 
+                        component={ProductVendor} 
+                        navBar={CustomGenNavBar} 
+                        type={ActionConst.ANDROID_BACK}/>
                     </Stack>
                     
                     <Stack

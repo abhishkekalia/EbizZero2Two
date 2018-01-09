@@ -604,12 +604,12 @@ unCheck(data){
                 leftText={leftText}
             />);
     }
-    moveToDesc(title, product_id, is_wishlist, toggleWishList){
+    moveToDesc(title, product_id, is_wishlist){
         Actions.deascriptionPage({ 
             title: title, 
             product_id : product_id , 
-            is_wishlist : is_wishlist, 
-            // toggleWishList: toggleWishList
+            is_wishlist : is_wishlist,
+            updateState : console.warn("hello") 
         })
     }
 
@@ -643,7 +643,7 @@ unCheck(data){
                     <IconBadge
                         MainElement={ 
                             <TouchableOpacity 
-                            onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist, toggleWishList)}
+                            onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}
                             >
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
