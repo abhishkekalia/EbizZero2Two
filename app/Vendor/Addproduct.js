@@ -27,19 +27,18 @@ import commonStyles from "./styles";
 import ActionSheet from 'react-native-actionsheet';
 import GetImage from './imageSlider';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+
 import RNFetchBlob from 'react-native-fetch-blob';
 const CANCEL_INDEX = 0
 const DESTRUCTIVE_INDEX = 4
 const title = 'Select Category'
 
 import SelectedImage from './SelectedImage';
-// const slideAnimation = new SlideAnimation({
-//   slideFrom: 'bottom',
-// });
 
 const { width, height } = Dimensions.get('window');
 
-
+const INITIAL_STATE = { quantity: '',  Size: ''}
 export default class AddProduct extends Component { 
     constructor(props) { 
         super(props);
@@ -53,6 +52,7 @@ export default class AddProduct extends Component {
             user_type : null,
             country : null,
             visibleModal: false,
+            additional: false,
             height : '',
             productname : '',
             detaildescription : '',
@@ -109,11 +109,6 @@ export default class AddProduct extends Component {
         );
     };
 
-    // _handleIconTouch = () => {
-    //     console.warn('Touched!');
-    // }
-
-
     async getKey() {
         try { 
             const value = await AsyncStorage.getItem('data'); 
@@ -126,6 +121,7 @@ export default class AddProduct extends Component {
             console.log("Error retrieving data" + error);
         }
     }
+
     getCategory(){
         const { u_id, country,} = this.state; 
         let formData = new FormData();
@@ -161,110 +157,130 @@ export default class AddProduct extends Component {
                 }
             })
             .done();
-
-
     }
     validate(){
-        const { u_id, product_category , productname, 
+        const { product_category , productname, 
             shortdescription, detaildescription, price, 
-            special, discount,final_price, quantityRows, 
-            country, size, is_feature } = this.state;
+            discount,final_price, quantityRows, 
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state; 
 
-        if (!product_category.length){
-        MessageBarManager.showAlert({
-            message: "Plese Select Category",
-            alertType: 'alert',
-            })      
-        return false
-    } 
-    
-    
+        let path = Imagepath.length
+        if(path < 4){
+            MessageBarManager.showAlert({
+                message: "Plese Select At Lest four Image",
+                alertType: 'warning',
+                })      
+            return false
+            }
+        if (!product_category){
+        } 
+        if (!productname.length){
+            MessageBarManager.showAlert({
+                message: "Plese Insert Product Name",
+                alertType: 'warning',
+                })      
+            return false
+        } 
+        if (!shortdescription.length){
+            MessageBarManager.showAlert({
+                message: "Plese Insert Short Description Of Product",
+                alertType: 'warning',
+                })      
+            return false
+        }    
+        if (!detaildescription.length){
+            MessageBarManager.showAlert({
+                message: "Plese Insert Detail description Of Product",
+                alertType: 'warning',
+                })      
+            return false
+        }    
+        if (!price){
+            MessageBarManager.showAlert({
+                message: "Plese Insert Price",
+                alertType: 'warning',
+                })      
+            return false
+        }    
+        if (!special){
+            MessageBarManager.showAlert({
+                message: "Plese Insert special Price",
+                alertType: 'warning',
+                })      
+            return false
+             
+        }
+        if ( special > price){
+            MessageBarManager.showAlert({
+                message: "Special Price cannot be greater than Price",
+                alertType: 'warning',
+                })      
+            return false
+        }
+        if (!quantityRows.length > 0){
+            MessageBarManager.showAlert({
+                message: "Plese Enter Quantity of Items",
+                alertType: 'warning',
+                })      
+            return false
+             
+        } 
+        if (!sizeRows.length > 0){
+            MessageBarManager.showAlert({
+                message: "Plese Enter Size of Items",
+                alertType: 'warning',
+                })      
+            return false
+             
+        } 
+       
         return true;
     }
 
     uploadTocloud(){
-        const { u_id, product_category , productname, 
+        const { 
+            product_category , productname, 
             shortdescription, detaildescription, price, 
-            special, discount,final_price, quantityRows, 
-            country, size, is_feature, Imagepath , rows ,sizeRows} = this.state; 
-
-        // let formData = new FormData();
-        // formData.append('u_id', String(u_id));
-        // formData.append('country', String(country)); 
-        // formData.append('product_category', String(product_category)); 
-        // formData.append('product_name', String(productname)); 
-        // formData.append('short_description', String(shortdescription)); 
-        // formData.append('detail_description', String(detaildescription)); 
-        // formData.append('price', String(price)); 
-        // formData.append('special_price', String(special)); 
-        // formData.append('discount', String(10)); 
-        // formData.append('final_price', String(special)); 
-        // formData.append('quantity', quantityRows); 
-        // formData.append('size', sizeRows); 
-        // formData.append('is_feature', String(is_feature)); 
-        // formData.append('product_images[]', { 
-        //     name : 'avatar-foo', 
-        //     filename : 'avatar-foo.png', 
-        //     type:'image/foo', 
-        //     data: RNFetchBlob.wrap(Imagepath)
-        // });         
-
-        // const config = { 
-        //     method: 'POST', 
-        //     headers: { 
-        //         Authorization : "Bearer access-token",
-        //         'Accept': 'application/json', 
-        //         'Content-Type': 'multipart/form-data;',
-        //     },
-        //     body: formData,
-        // } 
-        //    RNFetchBlob.fetch(Utils.gurl('productAdd'), config) 
-        //     .then((response) => response.json())
-        //     .then((responseData) => {
-        //         console.warn(responseData)
-
-        //         // if(responseData.status){
-        //         //     this.setState({
-        //         //         visibleModal : false});
-        //         // }
-        //     }).done();
-
-
-        let form = new FormData()
-        form.append('u_id', String(2));
-        form.append('country', String(1)); 
-        form.append('product_category', String("product_category")); 
-        form.append('product_name', String("productname")); 
-        form.append('short_description', String("shortdescription")); 
-        form.append('detail_description', String("detaildescription")); 
-        form.append('price', String(125)); 
-        form.append('special_price', String(120)); 
-        form.append('discount', String(10)); 
-        form.append('final_price', String(100)); 
-        form.append('quantity', String(125)); 
-        form.append('size', String("2yr")); 
-        form.append('is_feature', String("0")); 
-
-
-
-
-
-        // RNFetchBlob.fetch('POST', Utils.gurl('productAdd'),{ 
-        //     Authorization : "Bearer access-token", 
-        //     'Accept': 'application/json', 
-        //     'Content-Type': 'multipart/form-data;',
-        // },
-        // [{
-        //     name : 'product_images[]', 
-        //     filename : 'profile.jpg', 
-        //     data: RNFetchBlob.wrap(Imagepath[0]),
-        // },
-        // {},])
-        // .uploadProgress((written, total) => {
-        // console.log('uploaded', written/total)
-        // })
-        // .then((res)=> console.warn(res))
-        // .done();
+            discount,final_price, quantityRows, 
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state;
+        
+        if(this.validate()) { 
+            this.setState({
+                visibleModal : true
+            });
+        
+            RNFetchBlob.fetch('POST', Utils.gurl('productAdd'),{ 
+                Authorization : "Bearer access-token", 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            [
+            { name : 'product_images[]',  filename : Imagepath[0].name, data: RNFetchBlob.wrap(Imagepath[0].uri)},
+            { name : 'product_images[]',  filename : Imagepath[1].name, data: RNFetchBlob.wrap(Imagepath[1].uri)},
+            { name : 'product_images[]',  filename : Imagepath[2].name, data: RNFetchBlob.wrap(Imagepath[2].uri)},
+            { name : 'product_images[]',  filename : Imagepath[3].name, data: RNFetchBlob.wrap(Imagepath[3].uri)},
+            { name : 'u_id', data: String(2)}, 
+            { name : 'country', data: String(1)}, 
+            { name : 'product_category', data: String(product_category)}, 
+            { name : 'product_name', data: String(productname)}, 
+            { name : 'short_description', data: String(shortdescription)}, 
+            { name : 'detail_description', data: String(detaildescription)}, 
+            { name : 'price', data: String(price)}, 
+            { name : 'special_price', data: String(special)}, 
+            { name : 'discount', data: String(10)}, 
+            { name : 'final_price', data: String(special)}, 
+            { name : 'quantity', data: quantityRows.toString()}, 
+            { name : 'size', data: sizeRows.toString()}, 
+            { name : 'is_feature', data: String(is_feature)}, 
+            ])
+            .uploadProgress((written, total) => {
+            console.log('uploaded', Math.floor(written/total*100) + '%') 
+            })
+            .then((res)=> this.setState({
+                visibleModal : false
+            }))
+            .done();
+        }
     }
     selectPhotoTapped() {
         const options = {
@@ -272,7 +288,7 @@ export default class AddProduct extends Component {
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-              skipBackup: true
+            skipBackup: true
             }
         }; 
 
@@ -288,8 +304,8 @@ export default class AddProduct extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-                // console.warn(response.data)
                 let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
+                
                 let uri = response.uri;
 
               // let path = { uri , name: response.fileName, type: 'image/jpg'};
@@ -300,20 +316,18 @@ export default class AddProduct extends Component {
                     videoSelect : false,
                     // image : path,
                 });
-            var newStateArray = this.state.rows.slice(); 
-            var newPathArray = this.state.Imagepath.slice(); 
-            newStateArray.push(source); 
-            newPathArray.push(uri); 
-                this.setState({ 
-                    rows: newStateArray,
-                    Imagepath: newPathArray
-                });
+                var newStateArray = this.state.rows.slice(); 
+                var newPathArray = this.state.Imagepath.slice(); 
+                newStateArray.push(source); 
+                newPathArray.push(source); 
+                    this.setState({ 
+                        rows: newStateArray,
+                        Imagepath: newPathArray
+                    });
             }
         });
     }
     productCont(){
-        this.popupDialog.dismiss();
-
         Keyboard.dismiss();
         
         const { quantity, Size} = this.state;
@@ -323,16 +337,15 @@ export default class AddProduct extends Component {
 
         newStateArray.push(quantity); 
         newsizeArray.push(Size); 
-        this.setState({
+        this.setState({...INITIAL_STATE, 
             quantityRows: newStateArray,
-            sizeRows: newsizeArray
+            sizeRows: newsizeArray,
+            additional : false
         });
     }
     render() {
-        const { imageSelect} = this.state; 
+        const { imageSelect, quantityRows, sizeRows} = this.state; 
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
-        var textQuantity = this.state.quantityRows.map((title)=> <Text style={{color : '#000', fontSize: 14, fontWeight :"200" }}>{title} , </Text>)
-        var textSize = this.state.sizeRows.map((title)=> <Text style={{color : '#000', fontSize: 14, fontWeight :"200" }}>{title} , </Text>)
         
         let is_feature;
         if(this.state.is_feature === '0' ){ is_feature = false} else { is_feature = true}
@@ -471,7 +484,7 @@ export default class AddProduct extends Component {
                     <View style={commonStyles.feature}>
                         <Text style={commonStyles.label}>Product Is Feature *</Text>
                         <Switch
-                        value={is_feature }
+                        value={is_feature}
                         onValueChange={(val) => 
                             this.setState({ is_feature : val ? "2" : "0"})
                         }
@@ -491,15 +504,11 @@ export default class AddProduct extends Component {
                         <View>
                             <View style={commonStyles.textField}>
                                 <Text style={commonStyles.label}>Quantity *</Text>
-                                <View style={{ flex:1, flexDirection : 'row', }}> 
-                                    {textQuantity}
-                                </View>
+                                <Text style={{ color : '#000', left : 20 }}>{quantityRows.toString()}</Text>
                             </View>
                             <View style={commonStyles.textField}>
                                 <Text style={commonStyles.label}>Size *</Text>
-                                <View style={{ flex:1, flexDirection : 'row', }}>
-                                    {textSize}
-                                </View>
+                                <Text style={{ color : '#000',left : 20}}>{sizeRows.toString()}</Text>
                             </View>
                         </View>
                         <TouchableOpacity style={{
@@ -508,28 +517,15 @@ export default class AddProduct extends Component {
                             borderRadius : 3,
                             top : 5
                         }}
-                        onPress={() => {
-                          this.popupDialog.show();
-                        }}>
+                        onPress={() => this.setState({ additional: true,})}>
                             <Text style={{fontSize : 12}}>Add Quantity & Size</Text>
                         </TouchableOpacity> 
                     </View>
                 </View>
-                <PopupDialog 
-                        ref={(popupDialog) => { this.popupDialog = popupDialog; }}
-                        containerStyle ={{ 
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex :1
-                            // width : width,
-                            // height :height/1.6
-                        }}>
-                        <View style={{ 
-                            // flexDirection: 'column', 
-                            // justifyContent: 'center', 
-                            alignItems: 'center'
-                        }} > 
-                        <Text style={{color :"#a9d5d1", fontWeight : 'bold',}}>Please Enter Quantity and Size Of Items</Text> 
+
+                    <Modal isVisible={this.state.additional}>
+                    <View style={{alignItems : 'center', padding:10, backgroundColor : '#fff'}}>
+                        <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10}}>Please Enter Quantity and Size Of Items</Text> 
                         <Text style={{color :"#a9d5d1" , width : width/2,bottom : 10}}>Quantity :</Text> 
                         <TextInput
                             style={[commonStyles.inputs, { bottom : 20}]}
@@ -566,9 +562,9 @@ export default class AddProduct extends Component {
                             onChangeText={(Size) => this.setState({Size})}
                         />
                         
-                        <Button title="submit" onPress={()=>this.productCont()} color="#a9d5d1"/>
-                        </View>
-                    </PopupDialog>
+                        <Button title="submit" onPress={()=>this.productCont()} color="#a9d5d1"/>                    
+                </View>
+            </Modal>
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                     <CirclesLoader />

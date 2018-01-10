@@ -53,6 +53,7 @@ import MenuIcon from './images/imgpsh.png';
 
 // -------------vendor ----------
 import Product from './Vendor/Product';
+import Service from './Vendor/Service';
 import ProductVendor from './Vendor/ProductVendor';
 // import AddProduct from "./app/Vendor/Addproduct";
 
@@ -200,22 +201,20 @@ const Routes = ({loading, needSignIn}) => (
             hideNavBar 
             initial
             >
-
-                    <Tabs 
-                    tabs
-                    key="tabbar"
-                    swipeEnabled={false}
-                    initial={!needSignIn}
-                    showLabel={false}
-                    tabBarStyle={styles.tabBarStyle}
-                    tabBarPosition={'bottom'}
-                    gestureEnabled={false} 
-                    activeBackgroundColor='#a9d5d1' 
-                    inactiveBackgroundColor='#fff'
-                    lazy
-                    // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
-                    >
-
+                <Tabs 
+                tabs
+                key="tabbar"
+                swipeEnabled={false}
+                initial={!needSignIn}
+                showLabel={false}
+                tabBarStyle={styles.tabBarStyle}
+                tabBarPosition={'bottom'}
+                gestureEnabled={false} 
+                activeBackgroundColor='#fff' 
+                inactiveBackgroundColor='#fff'
+                lazy
+                // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
+                >
                         <Stack
                         key="Product"
                         title="Product"
@@ -233,8 +232,7 @@ const Routes = ({loading, needSignIn}) => (
                             // navigationBarStyle={{backgroundColor: '#1e2226'}}  
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             type="replace"
-                            onRight={()=>{}} 
-                            rightTitle={' Save'} />
+                             />
 
                         </Stack>
                         
@@ -248,13 +246,13 @@ const Routes = ({loading, needSignIn}) => (
                             key="service"
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
-                            component={wishList} 
-                            title="WishList"/>
+                            component={Service} 
+                            title="Service"/>
                         </Stack>
 
                         <Stack
-                        key="Cart"
-                        title="Cart"
+                        key="order"
+                        title="Order"
                         icon={TabIcon}
                         iconName="align-right"
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
