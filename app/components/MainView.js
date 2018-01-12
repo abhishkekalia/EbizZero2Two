@@ -73,7 +73,10 @@ export default class MainView extends Component {
     }
 
     _onRefresh() {
-    this.setState({refreshing: true});
+    this.setState({
+        refreshing: true,
+        dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }), 
+    });
             this.fetchData();
     }
 
@@ -425,7 +428,12 @@ unCheck(data){
             contentContainerStyle={styles.contentContainer} 
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="always">
-                <StatusBar backgroundColor="#a9d5d1" barStyle="light-content"/>
+                <StatusBar 
+                hidden={false} 
+                translucent={true} 
+                backgroundColor="rgba(0, 0, 0, 0)" 
+                // backgroundColor="#a9d5d1" 
+                barStyle="light-content"/>
                 <View style={{ flexDirection : 'row'}}>
                     <View style={ styles.button,[{ 
                         width : width/2,
@@ -609,7 +617,7 @@ unCheck(data){
             title: title, 
             product_id : product_id , 
             is_wishlist : is_wishlist,
-            updateState : console.warn("hello") 
+            updateState : this._onRefresh.bind(this)
         })
     }
 

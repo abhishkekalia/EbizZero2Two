@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Utils from 'app/common/Utils';
 
-export default class OrderList extends Component<{}> {
+export default class ProductOrder extends Component<{}> {
      constructor(props) {
         super(props);
         this.state = this.getInitialState();
@@ -85,7 +85,7 @@ export default class OrderList extends Component<{}> {
                 },
                 body: formData,
             }
-        fetch(Utils.gurl('userOrderList'), config)
+        fetch(Utils.gurl('orderList'), config)
      
             .then((response) => response.json())
             .then((responseData) => {
@@ -102,8 +102,7 @@ export default class OrderList extends Component<{}> {
             for (i = 0; i < length; i++) {
                 order = orders[i];
                 sectionIDs.push(order.order_id);
-    
-                dataBlob[order.order_id] = order.inserted_date;
+                dataBlob[order.order_id] = order.vendor_id;
 
                 orderDetail = order.orderDetail;
                 orderLength = orderDetail.length;
@@ -184,44 +183,48 @@ export default class OrderList extends Component<{}> {
     renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.section}>
-                <Text style={styles.text}>{sectionData}</Text>
-                <Text style={styles.text}>#{sectionID}</Text>
+                <Text style={styles.text}>Vendor Id :{sectionData}</Text>
+                <Text style={styles.text}>order_id :#{sectionID}</Text>
             </View>
         ); 
     }
 };
 
-Object.assign(OrderList.prototype, {
+Object.assign(ProductOrder.prototype, {
     bindableMethods : {
         renderRow : function (rowData, sectionID, rowID) {
             return (
-                <TouchableOpacity 
-                style={{ padding : 10}}  
-                // onPress={() => this.onPressRow(rowData, sectionID)}
-                >
-                    <View style={styles.rowStyle}>
-                        <View style={{ flexDirection : 'column'}}>
-                            <Text style={styles.rowText}>Product ID </Text>
-                            <Text style={styles.rowText}>#{rowID.order_id} </Text>
-                        </View>
-                        <View style={{ flexDirection : 'column'}}>
-                            <Text style={styles.rowText}>Product Name </Text> 
-                            <Text style={styles.rowText}>{rowID.product_name} </Text>
+                <View style={styles.row}>
+                    <View style={{ flexDirection : 'row'}}>
+                        <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Product ID : </Text>
+                        <Text style={styles.rowText}>{rowID.product_id} </Text>
+                    </View>
+                    <View style={{ flexDirection : 'row'}}>
+                        <Text style={[styles.rowText, {color : '#000'} ]}>{rowID.product_name} </Text>
                     </View> 
-                    <View style={{ flexDirection : 'column'}}>
-                        <Text style={styles.rowText}>Quantity</Text> 
-                        <Text style={styles.rowText}>{rowID.quantity} </Text> 
+                    <View style={{ flexDirection : 'row'}}>
+                        <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Qty :</Text> 
+                        <Text style={[styles.rowText, { color : '#ccc'}]}>{rowID.quantity} </Text> 
                     </View>
-                    <View style={{ flexDirection : 'column'}}>
-                        <Text style={styles.rowText}>Order Status</Text> 
-                        <Text style={styles.rowText}>{ rowID.order_status ? 'pending' : 'paid'} </Text> 
-                    </View>
-                    <View style={{ flexDirection : 'column'}}>
-                        <Text style={styles.rowText}>price</Text> 
+                    <View style={{ flexDirection : 'row'}}>
+                        <Text style={[styles.rowText, {color : '#f53d3d'}]}>Price Sold: </Text> 
                         <Text style={styles.rowText}>{rowID.price} </Text> 
                     </View>
-                     </View>
-                </TouchableOpacity>
+                    <View style={{ flexDirection : 'row'}}>
+                        <Text style={[styles.rowText, {color : '#f53d3d'}]}>Special Price: </Text> 
+                        <Text style={styles.rowText}>{rowID.special_price} </Text> 
+                    </View>
+                    <View style={styles.footer}>
+                        <View style={{ flexDirection : 'row'}}>
+                            <Text style={[styles.rowText, {color : '#f53d3d'} ]}>Order Status : </Text> 
+                            <Text style={[styles.rowText, { color : '#a9d5d1'}]}>{ rowID.order_status ? 'pending' : 'paid'} </Text> 
+                        </View>
+                        <View style={{ flexDirection : 'row'}}>
+                            <Text style={[styles.rowText, , {color : '#f53d3d'}]}>Order Date : </Text> 
+                            <Text style={styles.rowText}>{ rowID.order_date} </Text> 
+                        </View>
+                    </View>
+                </View>
             );
         },
         onPressRow : function (rowData, sectionID) {
@@ -267,16 +270,20 @@ var styles = StyleSheet.create({
         fontSize: 16
     },
     rowStyle: {
-        paddingVertical: 20,
-        // paddingLeft: 16,
-        borderTopColor: 'white',
-        borderLeftColor: 'white',
-        borderRightColor: 'white',
-        borderBottomColor: '#E0E0E0',
-        borderWidth: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flex : 1,
+            flexDirection: 'column' ,
+            marginTop : 2, 
+            borderWidth : 1, 
+            borderColor : "#ccc", 
+            borderRadius : 2
 
+    },
+    footer : { 
+        flexDirection : 'row', 
+        justifyContent : 'space-around', 
+        borderWidth : 1, 
+        borderColor : '#ccc',
+        borderRadius : 2
     },
     rowText: {
         fontSize: 12
@@ -291,5 +298,60 @@ var styles = StyleSheet.create({
         alignItems: 'flex-start',
         padding: 5,
         backgroundColor: '#a9d5d1'
-    }
+    },
+     container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF'
+    },
+
+    row: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        padding: 10,
+        backgroundColor: '#F6F6F6'
+    },
+
+    thumb: {
+        width   :50,
+        height  :50,
+    },
+
+    textQue :{
+        flex: 1,
+        fontSize: 18,
+        fontWeight: '400',
+        left : 5
+    },
+
+    centering: {
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
+    },
+
+    heading: {
+        paddingTop : 5,
+        paddingBottom : 5,
+        backgroundColor : '#fff',
+        borderBottomWidth : 3,
+        borderBottomColor : '#a9a9a9'
+    },
+    headline: {
+        paddingTop : 10,
+        paddingBottom : 10,
+        marginLeft : 15,
+        fontSize    : 15,
+        color       : "#000",
+        fontWeight  : 'bold'
+    },
+    detail: {
+        padding : 10,
+        backgroundColor : '#fff',
+        minHeight : 500,
+        fontWeight : 'bold'
+}
 });

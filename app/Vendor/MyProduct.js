@@ -23,6 +23,8 @@ export default class MyProduct extends Component {
         this.state = {
             isLoading: true,
             dataSource : new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
+            u_id : null,
+            country : null
         }
     }
  
@@ -30,21 +32,33 @@ export default class MyProduct extends Component {
         alert(flower_name); 
     }
 
-    componentDidMount() {
-        this.fetchData();
+    componentDidMount(){
+        this.getKey()
+        .then( ()=>this.fetchData())
     }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton });    
     }
     _renderRightButton = () => {
         return null
-    };
-
+    }; 
+    async getKey() {
+        try { 
+            const value = await AsyncStorage.getItem('data'); 
+            var response = JSON.parse(value);  
+            this.setState({ 
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
     fetchData(){ 
         const {u_id, country } = this.state; 
         let formData = new FormData();
-        formData.append('u_id', String(2));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
 
         const config = { 
             method: 'POST', 
@@ -70,7 +84,6 @@ export default class MyProduct extends Component {
             }
         }).done();
     }
-
     ListViewItemSeparator = () => {
         return (
             <View

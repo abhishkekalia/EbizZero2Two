@@ -23,12 +23,14 @@ export default class MyService extends Component {
         this.state = {
             isLoading: true,
             dataSource : new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
+            u_id : null,
+            country : null
         }
     }
  
-
-    componentDidMount() {
-        this.fetchData();
+    componentDidMount(){
+        this.getKey()
+        .then( ()=>this.fetchData())
     }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton });    
@@ -36,12 +38,24 @@ export default class MyService extends Component {
     _renderRightButton = () => {
         return null
     };
+    async getKey() {
+        try { 
+            const value = await AsyncStorage.getItem('data'); 
+            var response = JSON.parse(value);  
+            this.setState({ 
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
 
     fetchData(){ 
         const {u_id, country } = this.state; 
         let formData = new FormData();
-        formData.append('u_id', String(4));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
 
         const config = { 
             method: 'POST', 
@@ -83,7 +97,6 @@ export default class MyService extends Component {
     Description (product_name, productImages ,short_description, detail_description, price ,special_price){
         routes.vendordesc({ 
                         title: product_name,
-                        type : 'service', 
                         product_name : product_name,
                         productImages : productImages,
                         short_description : short_description,

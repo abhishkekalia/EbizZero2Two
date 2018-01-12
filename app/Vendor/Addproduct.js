@@ -242,7 +242,7 @@ export default class AddProduct extends Component {
             product_category , productname, 
             shortdescription, detaildescription, price, 
             discount,final_price, quantityRows, 
-            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state;
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, u_id, country} = this.state;
         
         if(this.validate()) { 
             this.setState({
@@ -259,8 +259,8 @@ export default class AddProduct extends Component {
             { name : 'product_images[]',  filename : Imagepath[1].name, data: RNFetchBlob.wrap(Imagepath[1].uri)},
             { name : 'product_images[]',  filename : Imagepath[2].name, data: RNFetchBlob.wrap(Imagepath[2].uri)},
             { name : 'product_images[]',  filename : Imagepath[3].name, data: RNFetchBlob.wrap(Imagepath[3].uri)},
-            { name : 'u_id', data: String(2)}, 
-            { name : 'country', data: String(1)}, 
+            { name : 'u_id', data: String(u_id)}, 
+            { name : 'country', data: String(country)}, 
             { name : 'product_category', data: String(product_category)}, 
             { name : 'product_name', data: String(productname)}, 
             { name : 'short_description', data: String(shortdescription)}, 
@@ -276,9 +276,11 @@ export default class AddProduct extends Component {
             .uploadProgress((written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%') 
             })
-            .then((res)=> this.setState({
-                visibleModal : false
-            }))
+            .then((res)=>{ 
+                        this.setState({
+                            visibleModal : false
+                        })}
+                )
             .done();
         }
     }

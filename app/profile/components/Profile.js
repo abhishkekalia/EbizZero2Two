@@ -167,6 +167,9 @@ class Profile extends Component {
 					<Text>Settings</Text>
 					<Ionicons name="ios-arrow-forward" size={25} color="#ccc"/>
 				</TouchableOpacity>
+				<TouchableOpacity onPress={logout} style={styles.setings}>
+				<Text>Logout</Text>
+				</TouchableOpacity>
 			</View>
 		)
 	}

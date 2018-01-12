@@ -54,6 +54,7 @@ import MenuIcon from './images/imgpsh.png';
 // -------------vendor ----------
 import Product from './Vendor/Product';
 import Service from './Vendor/Service';
+import Order from './Vendor/Order';
 import ProductVendor from './Vendor/ProductVendor';
 // import AddProduct from "./app/Vendor/Addproduct";
 
@@ -75,7 +76,7 @@ const getSceneStyle = () => ({
   shadowRadius: 3,
 });
 
-const Routes = ({loading, needSignIn}) => (
+const Routes = ({loading, needSignIn, user, vendor}) => (
   loading ?
     <Loader/> :
     <Router 
@@ -106,7 +107,7 @@ const Routes = ({loading, needSignIn}) => (
                 // initial={true} 
                 // initial={true} 
                 hideNavBar={true} 
-                // initial={!needSignIn} 
+                initial={user} 
                 >
                 
                 <Scene key="tab" hideNavBar>
@@ -199,7 +200,7 @@ const Routes = ({loading, needSignIn}) => (
             <Scene 
             key="vendortab" 
             hideNavBar 
-            initial
+            initial={vendor}
             >
                 <Tabs 
                 tabs
@@ -223,31 +224,34 @@ const Routes = ({loading, needSignIn}) => (
                         // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                         titleStyle={{ color: 'white', alignSelf: 'center' }}>
-                            
                             <Scene 
                             key="product" 
                             titleStyle={{alignSelf: 'center'}} 
                             component={Product} 
-                            title="Product"
+                            title="PRODUCT"
                             // navigationBarStyle={{backgroundColor: '#1e2226'}}  
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             type="replace"
-                             />
-
+                            onRight={ ()=> console.log("")}
+                            rightButtonImage={null}
+                            />
                         </Stack>
                         
                         <Stack
                         key="service"
                         title="service"
                         icon={TabIcon}
-                        iconName="slack"
+                        iconName="tag"
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                             <Scene 
                             key="service"
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
                             component={Service} 
-                            title="Service"/>
+                            title="SERVICE"
+                            onRight={ ()=> console.log("")}
+                            rightButtonImage={null}
+                        />
                         </Stack>
 
                         <Stack
@@ -261,8 +265,8 @@ const Routes = ({loading, needSignIn}) => (
                             key="shopingCart"
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
-                            component={Shopingcart} 
-                            title="Cart"/>
+                            component={Order} 
+                            title="ORDERS"/>
                         </Stack>
                         
                         <Stack
@@ -438,9 +442,7 @@ const Routes = ({loading, needSignIn}) => (
                     </Stack>
                     <Stack 
                     key="editProfile"
-                    renderTitle
-                    // onBack={ () => Actions.pop({refresh: {test:Math.random() } }) }
-                        >
+                    renderTitle>
                         <Scene 
                         key="profileEdit" 
                         titleStyle={{alignSelf: 'center'}} 
@@ -466,9 +468,22 @@ const Routes = ({loading, needSignIn}) => (
 );
 
 function mapStateToProps(state) {
+    let is_user
+    let is_vendor 
+    if(state.auth.user_type === "3"){
+        is_user = false
+        is_vendor = true
+    }else if(state.auth.user_type === "2") {
+        is_user = true
+        is_vendor = false
+   
+    }
   return {
     loading: !state.storage.storageLoaded,
-    needSignIn: !state.auth.token
+    needSignIn: !state.auth.token,
+    user: is_user,
+    vendor: is_vendor
+
   }
 }
 

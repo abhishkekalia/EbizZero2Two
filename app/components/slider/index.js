@@ -84,9 +84,9 @@ export default class Slider extends Component<{}> {
     updateState(){
         let toggleWishList  
         if(this.state.is_wishlist === '0') { 
-            this.addtoWishlist() 
-        } else { 
             this.removeToWishlist()
+        } else { 
+            this.addtoWishlist() 
         }
     }
     addtoWishlist ( ){

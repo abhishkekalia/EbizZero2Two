@@ -8,16 +8,19 @@ import {
     View, 
     Image, 
     Platform,
-    Dimensions
+    Dimensions,
+    FlatList
 } from 'react-native';
- const { width, height } = Dimensions.get('window')
+
+import { Card } from "react-native-elements";
+const { width, height } = Dimensions.get('window')
 
 export default class SelectedImage extends Component {
     constructor(props) {
         super(props);
                
         this.state={ 
-            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }), 
+            dataSource: [], 
             isLoading: true,
         }
     }
@@ -28,20 +31,10 @@ export default class SelectedImage extends Component {
     fetch(productImages) {
         this.setState({
             isLoading: false,
-            dataSource: this.state.dataSource.cloneWithRows(productImages),
+            dataSource: productImages,
         });
     }
 
-    ListViewItemSeparator = () => {
-        return (
-            <View
-            style={{
-                height: .5,
-                width: "100%",
-                backgroundColor: "#000",
-            }}/>
-        );
-    }
     render() {
         if (this.state.isLoading) { 
             return (
@@ -52,40 +45,30 @@ export default class SelectedImage extends Component {
         }
  
         return (
-            <ListView
-            contentContainerStyle={styles.list}
-            dataSource={this.state.dataSource}
-            // renderSeparator= {this.ListViewItemSeparator}
-            renderRow={(rowData) =>
-                <View style={styles.row}> 
-                    <Image source = {{ uri: rowData.uri }} style={styles.imageViewContainer} />
-                </View>
-            }/>
+            <FlatList
+            horizontal
+            data= {this.state.dataSource}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item: rowData }) => { 
+                return ( 
+                <Card 
+                image={{ uri: rowData.uri }}
+                containerStyle={styles.imageViewContainer}
+                />
+                );
+            }}
+            keyExtractor={(item, index) => index}
+            />
         );
     }
 }
 const styles = StyleSheet.create({ 
     imageViewContainer: {
-        width: '100%',
-        height: '100%',
-        // margin: 10,
-        borderRadius : 5
-    },
-    list: {
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-        flexWrap: 'wrap'
-    },
-    row: {
-        justifyContent: 'center',
-        padding: 5,
-        margin: 3,
-        width: width/3-20,
-        height: width/3-20,
-        backgroundColor: '#F6F6F6',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#CCC'
-    }, 
+        width: 80,
+        height: 90,
+        margin: 10,
+        borderWidth : 1,
+        borderColor : '#ccc',
+        padding :2
+    }
 });

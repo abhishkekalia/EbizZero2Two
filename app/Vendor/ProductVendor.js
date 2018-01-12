@@ -105,9 +105,9 @@ export default class ProductVendor extends Component {
                     }}>
 
                     <View >
-                        <Text style={{ padding : 10}}>Product : {this.props.product_name}</Text>
-                        <View style={{flexDirection: 'row'}}>
-                            <Text style={{color : 'skyblue', paddingLeft : 10}}>special_price : AED {this.props.special_price}</Text>
+                        <Text style={{ padding : 10, color:"#000"}}>{this.props.product_name}</Text>
+                        <View style={{flexDirection: 'row', justifyContent  :'space-around'}}>
+                            <Text style={{color : 'skyblue', paddingLeft : 10}}>Special Price : AED {this.props.special_price}</Text>
                             <Text style={{color: color, textDecorationLine: textDecorationLine, left : 20}}>Price : AED {this.props.price}</Text>
                             <Text style={{color: colorOffer, left : 30}}>({this.props.discount} %OFF )</Text>
                         </View>

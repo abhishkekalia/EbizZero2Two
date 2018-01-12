@@ -49,6 +49,16 @@ export default class Editmyprofile extends Component<{}> {
           gender: option,
         });
     }
+    componentWillMount() {
+        routes.refresh({ right: this._renderRightButton });    
+    }
+   _renderRightButton = () => {
+        return(
+            <TouchableOpacity onPress={() => this.uploadTocloud() } >
+            <Text style={{color : '#fff'}}>ADD</Text>
+            </TouchableOpacity>
+        );
+    };
 
     async getKey() {
         try { 
@@ -65,7 +75,6 @@ export default class Editmyprofile extends Component<{}> {
 
     submit(){
             Keyboard.dismiss();
-
         const { 
             u_id, 
             fullname, 

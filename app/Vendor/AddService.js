@@ -167,7 +167,7 @@ export default class AddService extends Component {
     uploadTocloud(){
         const { service_type , service_name, 
             short_description, detail_description, price, 
-            special_price, Imagepath } = this.state;
+            special_price, Imagepath , u_id, country} = this.state;
         
         if(this.validate()) { 
             this.setState({
@@ -184,8 +184,8 @@ export default class AddService extends Component {
             { name : 'service_images[]',  filename : Imagepath[1].name, data: RNFetchBlob.wrap(Imagepath[1].uri)},
             { name : 'service_images[]',  filename : Imagepath[2].name, data: RNFetchBlob.wrap(Imagepath[2].uri)},
             { name : 'service_images[]',  filename : Imagepath[3].name, data: RNFetchBlob.wrap(Imagepath[3].uri)},
-            { name : 'u_id', data: String(2)}, 
-            { name : 'country', data: String(1)}, 
+            { name : 'u_id', data: String(u_id)}, 
+            { name : 'country', data: String(country)}, 
             { name : 'service_type', data: String(service_type)}, 
             { name : 'service_name', data: String(service_name)}, 
             { name : 'short_description', data: String(short_description)}, 
@@ -194,7 +194,7 @@ export default class AddService extends Component {
             { name : 'special_price', data: String(special_price)}, 
             ])
             .uploadProgress((written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%') 
+            console.warn('uploaded', Math.floor(written/total*100) + '%') 
             })
             .then((res)=> this.setState({
                 visibleModal : false
