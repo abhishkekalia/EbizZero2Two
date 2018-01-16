@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     Text,
-    View
+    View,
+    TouchableOpacity
 } from 'react-native';
 
 import SegmentedControlTab from 'react-native-segmented-control-tab'
-import ProductOrder from "./Order/ProductOrder";
-import ServiceOrder from "./Order/ServiceOrder";
+import FeaturedProduct from './FeaturedProduct'
+import Feather from 'react-native-vector-icons/Feather';
+import { Actions} from "react-native-router-flux";
 
-class Order extends Component {
+class Marketing extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -55,7 +57,7 @@ class Order extends Component {
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
-                    values={['Product', 'Service']}
+                    values={['Featured Product', 'Marketing Campaign']}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -65,19 +67,29 @@ class Order extends Component {
                     tabTextStyle={{ color: '#ccc', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <ProductOrder/>}
+                    <FeaturedProduct/>}
                 {this.state.customStyleIndex === 1 &&
-                    <ServiceOrder/>}
+                    <UploadAdd/>}
+
             </View>
         );
     }
+}
+const UploadAdd = props => { 
+    
+    return ( 
+        <TouchableOpacity style={styles.upload} onPress={()=> Actions.marketingcompaign()}>
+        <Feather name="upload-cloud" size= {20} color="#fff" />
+        <Text style={{color : '#fff'}}>Upload Add</Text>
+        </TouchableOpacity>
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         // justifyContent: 'center',
-        // alignItems: 'center',
+        alignItems: 'center',
         backgroundColor: 'white',
         // padding: 10
     },
@@ -92,6 +104,14 @@ const styles = StyleSheet.create({
         padding: 20,
         fontSize: 14,
         fontWeight: '500'
+    },
+    upload : {
+        padding : 10,
+        backgroundColor : '#f53d3d',
+        left : 70,
+        top : 10,
+        flexDirection : 'row',
+        borderRadius : 5
     },
     headerText: {
         padding: 8,
@@ -114,4 +134,4 @@ const styles = StyleSheet.create({
 
 
 
-export default Order
+export default Marketing

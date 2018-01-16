@@ -71,8 +71,7 @@ export default class ProductOrder extends Component<{}> {
 
 
     fetchData () {
-                const { u_id,country, } = this.state; 
-
+        const { u_id,country, } = this.state; 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country)); 

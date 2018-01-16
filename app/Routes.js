@@ -56,6 +56,10 @@ import Product from './Vendor/Product';
 import Service from './Vendor/Service';
 import Order from './Vendor/Order';
 import ProductVendor from './Vendor/ProductVendor';
+import ServiceCustomer from './Vendor/Order/ServiceCustomer'
+import ProfileVendor from "./vendorprofile/ProfileVendor";
+import MarketingCompaign from "./Vendor/marketing/MarketingCompaign";
+
 // import AddProduct from "./app/Vendor/Addproduct";
 
 // -------------vendor ----------
@@ -233,7 +237,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             type="replace"
                             onRight={ ()=> console.log("")}
-                            rightButtonImage={null}
+                            rightTitle={null}
                             />
                         </Stack>
                         
@@ -250,7 +254,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                             component={Service} 
                             title="SERVICE"
                             onRight={ ()=> console.log("")}
-                            rightButtonImage={null}
+                            rightTitle={null}
                         />
                         </Stack>
 
@@ -266,19 +270,21 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
                             component={Order} 
-                            title="ORDERS"/>
+                            title="ORDERS"
+                            rightTitle={null}
+                            />
                         </Stack>
                         
                         <Stack
-                        key="profile"
+                        key="vendorprofile"
                         title="Profile"
                         icon={TabIcon}
                         iconName="user-secret"
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                             <Scene 
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
-                            key="profilePage" 
-                            component={ProfilePage} 
+                            key="ProfileVendor" 
+                            component={ProfileVendor} 
                             title="Profile"/>
                         </Stack>
                         
@@ -450,6 +456,15 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         navBar={CustomGenNavBar}/>
                     </Stack>
 
+                    <Stack key="servicecustomer">    
+                        <Scene 
+                        key="service" 
+                        component={ServiceCustomer} 
+                        // title="ServiceCustomer" 
+                        navBar={CustomGenNavBar} 
+                        type={ActionConst.ANDROID_BACK}
+                        renderTitle/>
+                    </Stack>
                     <Stack 
                     key="myorder"
                     // onBack={ () => Actions.pop({refresh: {test:Math.random() } }) }
@@ -459,6 +474,15 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         titleStyle={{alignSelf: 'center'}} 
                         component={OrderList} 
                         navBar={CustomGenNavBar}/>
+                    </Stack>
+                    <Stack key="marketingcompaign">    
+                        <Scene 
+                        key="compaign" 
+                        component={MarketingCompaign} 
+                        title="Marketing" 
+                        navBar={CustomGenNavBar} 
+                        type={ActionConst.ANDROID_BACK}
+                        />
                     </Stack>
             </Modal>
         <Scene component={MessageBar} key="msgbar"/>
