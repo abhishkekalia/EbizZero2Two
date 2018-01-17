@@ -162,7 +162,7 @@ export default class ProductDescription extends Component {
     
     render () { 
         const { date_in, count } = this.state;
-        let color = this.state.data.special_price ? '#C5C8C9' : '#000';
+        let color = this.state.data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
         return ( 
@@ -184,11 +184,12 @@ export default class ProductDescription extends Component {
                     justifyContent: 'space-between'}}>
 
                     <View>
-                        <Text style={{ padding : 10}}>{this.state.data.product_name}</Text>
+                        <Text style={{ padding : 10, color : '#000'}}>{this.state.data.product_name}</Text>
                         <View style={{flexDirection: 'row'}}>
-                            <Text style={{color : 'skyblue', paddingLeft : 10}}>AED {this.state.data.special_price}</Text>
-                            <Text style={{color: color, textDecorationLine: textDecorationLine, left : 20}}>AED {this.state.data.price}</Text>
-                            <Text style={{color: colorOffer, left : 30}}>({this.state.data.discount} %OFF )</Text>
+                            <Text style={{  color : '#a9d5d1', paddingLeft : 10}}>Price</Text>
+                            <Text style={{color : '#ccc', }}> KWD {this.state.data.special_price}</Text>
+                            <Text style={{color: color, textDecorationLine: textDecorationLine, left : 5}}>{this.state.data.price}</Text>
+                            <Text style={{color: colorOffer, left : 10}}>{this.state.data.discount} %OFF </Text>
                         </View>
                         <View style={{ flexDirection : 'row'}}>
                             <TouchableOpacity style={styles.button} onPress={()=>this.buyNow()}>
@@ -277,13 +278,10 @@ export default class ProductDescription extends Component {
                                 value={this.state.address} />
                         </View>
                         <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20}}>
-                            <Text style={{ height : 40 }}> Product info & care</Text>
-                            <Text> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
+                            <Text style={{ height : 30 , textAlign : 'center'}}> Product info & care</Text>
+                            <Text> {this.state.data.short_description}
+                            </Text>
+                            <Text> {this.state.data.detail_description}
                             </Text>
                             <View style={{ flexDirection: 'column', paddingTop : 10}}>
                                 <View style={{ flexDirection: 'row'}}>

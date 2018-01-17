@@ -10,6 +10,7 @@ import {
     Alert,
 } from 'react-native';
 import Utils from 'app/common/Utils';
+import {Actions as routes} from "react-native-router-flux";
 
 export default class ProductOrder extends Component<{}> {
      constructor(props) {
@@ -49,7 +50,10 @@ export default class ProductOrder extends Component<{}> {
             })
         }
     }
-    
+        componentWillMount() {
+        routes.refresh({ right: undefined });    
+    }
+
     componentDidMount() {
         this.getKey()
         .then(()=>this.fetchData())
@@ -243,9 +247,6 @@ Object.assign(ProductOrder.prototype, {
 });
 
 var styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
     activityIndicator: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -302,8 +303,8 @@ var styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF'
+        // alignItems: 'center',
+        backgroundColor: 'transparent'
     },
 
     row: {

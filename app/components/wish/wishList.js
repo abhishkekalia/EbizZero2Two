@@ -36,11 +36,11 @@ export default class WishList extends Component {
             status : false,
             u_id: null,
             country : null,
-            loaded: false,
+            loaded: true,
             toggle : false,
             refreshing: false, 
             color: '',
-            size : ''       
+            size : '',
         }; 
     } 
     componentDidMount(){
@@ -90,7 +90,8 @@ export default class WishList extends Component {
             }else {
                 this.setState({
                     status : responseData.status,
-                    refreshing : false
+                    refreshing : false,
+                    loaded : true
                 })
             }
         }).done();
@@ -260,8 +261,19 @@ export default class WishList extends Component {
     getColor(color){
         this.setState({color});
     }
+    renderLoadingView() {
+        return (
+            <ActivityIndicator  
+            color="#a9d5d1" 
+            size="small"/>
+            );
+    }
 
     render() {
+       if (!this.state.loaded) {
+            return this.renderLoadingView();
+        }
+
         if (!this.state.status) {
             return this.noItemFound();
         } 

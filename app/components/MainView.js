@@ -241,59 +241,6 @@ unCheck(data){
         console.warn(product_id);
     }
 
-    addtoWishlist(product_id){
-        const {u_id, country, user_type } = this.state;
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('addToWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            MessageBarManager.showAlert({ 
-            message: responseData.data.message, 
-            alertType: 'alert', 
-            })
-        })
-        .then( this.fetchData())
-        .done();
-    }
-    removeToWishlist(product_id){
-        const {u_id, country, user_type } = this.state;
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('removeFromWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            MessageBarManager.showAlert({ 
-            message: responseData.data.message, 
-            alertType: 'alert', 
-            })
-        })
-        .then( this.fetchData())
-        .done();
-    }
-
     fetchAllShop(){
         const {u_id, country, user_type } = this.state;
 
@@ -309,9 +256,7 @@ unCheck(data){
                 },
                 body: formData,
             }
-
-            fetch(Utils.gurl('listOfAllShop'), config) 
-
+        fetch(Utils.gurl('listOfAllShop'), config) 
         .then((response) => response.json())
         .then((responseData) => {
             this.setState({
@@ -430,9 +375,7 @@ unCheck(data){
             keyboardShouldPersistTaps="always">
                 <StatusBar 
                 hidden={false} 
-                translucent={true} 
-                backgroundColor="rgba(0, 0, 0, 0)" 
-                // backgroundColor="#a9d5d1" 
+                backgroundColor="#a9d5d1" 
                 barStyle="light-content"/>
                 <View style={{ flexDirection : 'row'}}>
                     <View style={ styles.button,[{ 
@@ -674,7 +617,12 @@ unCheck(data){
                         color="#a9d5d1" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
-                        <Editwish u_id={this.state.u_id} country={this.state.country} is_wishlist={data.is_wishlist} product_id={data.product_id}/>
+                        <Editwish 
+                        u_id={this.state.u_id} 
+                        country={this.state.country} 
+                        is_wishlist={data.is_wishlist} 
+                        product_id={data.product_id}
+                        fetchData={()=>this.fetchData()}/>
                 </View>
                 
                 <View style={{ padding :15}}>

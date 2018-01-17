@@ -11,7 +11,8 @@ import {
 	Platform,
 	Image,
 	Keyboard,
-	Dimensions
+	Dimensions,
+	NetInfo
 } from "react-native";
 import {Actions as routes} from "react-native-router-flux";
 import {Loader} from "app/common/components";
@@ -39,8 +40,37 @@ class Login extends Component {
 		};
 	    this.inputs = {};
 	}
+	componentwillMount(){
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
+
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ netStatus: isConnected }); }
+            );
+
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            if (isConnected)
+            {
+            	this.gettermandcondition()
+            }else{
+                console.log(`is connected: ${this.state.netStatus}`);
+            }
+        });
+    }
 	componentDidMount(){
-        this.gettermandcondition()
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            this.setState({ 
+                netStatus: isConnected 
+            }); 
+        });
+    }
+    handleConnectionChange = (isConnected) => { 
+        this.setState({ netStatus: isConnected }); 
+        {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({ 
+                message: `Internet connection not available`,
+                alertType: 'error',
+            })
+        }
     }
 
 	focusNextField(id) { 

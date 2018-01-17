@@ -7,12 +7,14 @@ import {
   Picker,
   ActivityIndicator,
   Dimensions,
-  Image
+  Image,
+  NetInfo
 } from 'react-native';
 import {Actions} from "react-native-router-flux";
 
 import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 const { width, height } = Dimensions.get('window')
 
@@ -31,9 +33,38 @@ export default class WelcomeScreen extends Component {
             deliveryarea : ''
         }
     }
+    componentwillMount(){
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
 
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ netStatus: isConnected }); }
+            );
+
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            if (isConnected)
+            {
+            }else{
+                console.log(`is connected: ${this.state.netStatus}`);
+            }
+        });
+    }
     componentDidMount(){
-        this.fetchData();
+        this.fetchData()
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            this.setState({ 
+                netStatus: isConnected 
+            }); 
+        });
+    }
+    
+    handleConnectionChange = (isConnected) => { 
+        this.setState({ netStatus: isConnected }); 
+        {this.state.netStatus ? this.fetchData() : MessageBarManager.showAlert({ 
+                message: `Internet connection not available`,
+                alertType: 'error',
+            })
+        }          
     }
     fetchData(){
         const { container_id, type} = this.state; 
@@ -75,7 +106,8 @@ export default class WelcomeScreen extends Component {
         ))
     } 
 
-    render(){ this.gotologin()
+    render(){ 
+        this.gotologin()
          const resizeMode = 'center';
         if (!this.state.loaded) {
             return this.renderLoadingView();
@@ -171,4 +203,9 @@ const styles = StyleSheet.create({
         height:40,
         padding :10
     },
+    centering : {
+        flex : 1,
+        justifyContent  :'center',
+        alignItems : 'center'
+    }
 });

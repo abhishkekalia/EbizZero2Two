@@ -124,13 +124,15 @@ export default class MarketingCompaign extends Component {
             })
             .then((responseData)=>{ 
                var getdata = JSON.parse(responseData.data);
-                    routes.myfaturah({ uri : getdata.data.url, order_id : getdata.data.ad_id})
+               if(getdata.status){
+                    routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: price })
 
-                        this.setState({
-                            visibleModal : false,
-                            amount : price
-                        })
+                    this.setState({
+                        visibleModal : false,
+                        amount : price
                     })
+                }
+            })
             .done();
 }
     }

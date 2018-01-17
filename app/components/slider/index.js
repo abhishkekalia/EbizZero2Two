@@ -149,7 +149,7 @@ export default class Slider extends Component<{}> {
 
     return (
         <View style={styles.container}>
-            <Swiper loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={false}>
+            <Swiper loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={true}>
                 {
                 this.props.imgList.map((item, i) => <Slide
                       loadHandle={this.loadHandle}

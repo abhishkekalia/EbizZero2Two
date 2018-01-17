@@ -308,13 +308,13 @@ export default class Shopingcart extends Component {
                 underlayColor ={"#fff"} 
                 style={[styles.shoping]} 
                 onPress={()=>routes.homePage()}>
-                <Text>Continoue Shoping</Text>
+                <Text style={{ color :'#fff'}}>Continoue Shoping</Text>
                 </TouchableHighlight>
                 <TouchableHighlight 
                 underlayColor ={"#fff"} 
                 style={[styles.checkout]} 
                 onPress={()=> this.procedToCheckout()}>
-                <Text>Proced to Checkout</Text>
+                <Text style={{ color : '#fff'}}>Proced to Checkout</Text>
                 </TouchableHighlight>
             </View>
         </View>

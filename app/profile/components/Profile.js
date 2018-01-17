@@ -11,8 +11,6 @@ class Profile extends Component {
 	constructor(props) {
         super(props);
 
-
-        
         this.getKey = this.getKey.bind(this);        
         this.state={
         	dataSource: [],
@@ -166,9 +164,6 @@ class Profile extends Component {
 				<TouchableOpacity onPress={()=>Actions.settings()} style={styles.setings}>
 					<Text>Settings</Text>
 					<Ionicons name="ios-arrow-forward" size={25} color="#ccc"/>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={logout} style={styles.setings}>
-				<Text>Logout</Text>
 				</TouchableOpacity>
 			</View>
 		)

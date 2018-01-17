@@ -89,7 +89,7 @@ export default class Marketingadd extends Component {
             fetch(Utils.gurl('addMarketingAd'), config) 
             .then((response) => response.json())
             .then((responseData) => {
-                routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.ad_id})
+                routes.myuserAdfaturah({ uri : responseData.data.url, ad_id : responseData.data.ad_id, amount :amount })
 
                 if(responseData.status){
                     this.setState({

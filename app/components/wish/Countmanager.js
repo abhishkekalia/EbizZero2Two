@@ -23,7 +23,6 @@ export default class Countmanager extends Component {
         this.state = { 
             Quentity : parseInt(this.props.quantity),
             loaded: true,
-
         }; 
     }
 
@@ -52,22 +51,27 @@ export default class Countmanager extends Component {
         fetch(Utils.gurl('updateQuantity'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            MessageBarManager.showAlert({ 
+            if(responseData.status){
+                MessageBarManager.showAlert({ 
                     message: responseData.data.message, 
                     alertType: 'alert', 
-                    stylesheetWarning : { backgroundColor : '#a9d5d1', strokeColor : '#fff' },
                 })
+            }else{
+                MessageBarManager.showAlert({ 
+                    message: responseData.data.message, 
+                    alertType: 'success', 
+                })
+            }
         })
         .then( ()=> this.setState({
             loaded : true
         }))
         .done();
-
         this.props.callback();
     }
     decrement () {
  	if(this.state.Quentity > 1) 
-            this.setState({Quentity : this.state.Quentity-1})  
+            this.setState({ Quentity : this.state.Quentity-1})  
             this.updateQuantity();
     } 
     increment(){
@@ -78,7 +82,6 @@ export default class Countmanager extends Component {
     renderLoadingView() {
         return (
             <ActivityIndicator  
-            style={[styles.centering]}
             color="#a9d5d1" 
             size="small"/>
             );
@@ -92,7 +95,6 @@ export default class Countmanager extends Component {
 			<TouchableOpacity 
 			style={styles.qtybutton} 
 			onPress= {()=> this.decrement()}
-            // onPress={(Quentity)=> this.setState({Quentity : this.state.Quentity-1})}
             >
 			<Text style={{color: '#a9d5d1'}}> - </Text>
 			 </TouchableOpacity>

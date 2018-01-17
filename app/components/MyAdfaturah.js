@@ -13,7 +13,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
 
-export default class Myfaturah extends Component { 
+export default class MyAdfaturah extends Component { 
     constructor(props) {
         super(props);
         this.getKey= this.getKey.bind(this);
@@ -62,24 +62,23 @@ export default class Myfaturah extends Component {
         this.setState({ 
             loading: navState.loading,
        }); 
-
         if (navState.url.indexOf(BASEURL) != -1) {
             let status = navState.url.split("?")[1];
             let statusId = navState.url.split("?")[2]; 
             let id = statusId.split("=")[1];
-            this.orderPayment(status, id)
+            this.adPayment(status, id)
         }
     }
 
-    orderPayment(status, id){
+    adPayment(status, id){
         const {u_id, country} = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));  
-        formData.append('order_id', String(this.props.order_id));  
-        formData.append('payment_id', String(country));  
+        formData.append('ad_id', String(this.props.ad_id));  
+        formData.append('payment_id', String(id));  
         formData.append('payment_status', String(status));  
-        formData.append('amount', String(5));  
+        formData.append('amount', String(this.props.amount));  
 
         const config = { 
             method: 'POST', 
@@ -89,7 +88,7 @@ export default class Myfaturah extends Component {
             },
             body: formData,
         } 
-        fetch(Utils.gurl('orderPayment'), config) 
+        fetch(Utils.gurl('adPayment'), config) 
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){

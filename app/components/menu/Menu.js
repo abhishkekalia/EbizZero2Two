@@ -84,7 +84,7 @@ class Menu extends React.Component {
                 onPress={Actions.sync}
                 style={[styles.item, styles.seprator]}> Rate us on App Store</Text>    
                 <Text
-                onPress={()=>( Utils.persistremove()),logout}
+                onPress={()=>( Utils.logout()),logout}
                 style={styles.item}> logout</Text>
             </ScrollView>
         );

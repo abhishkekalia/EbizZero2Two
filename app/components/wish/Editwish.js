@@ -70,7 +70,7 @@ export default class Editwish extends Component {
                 })
             }
         })
-        // .then(()=>this.props.updateState())
+        .then(()=>this.props.fetchData())
     .done();
 
     }
@@ -97,7 +97,7 @@ export default class Editwish extends Component {
             alertType: 'alert', 
             })
         })
-        // .then(()=>this.props.updateState())
+        .then(()=>this.props.fetchData())
         .done();
     }
 

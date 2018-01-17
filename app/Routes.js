@@ -46,6 +46,8 @@ import GetMyaddress from "./components/GetMyaddress";
 import Marketingadd from "./components/Marketingadd";
 import Editmyprofile from "./components/Editmyprofile";
 import Myfaturah from './components/Myfaturah';
+import MyAdfaturah from './components/MyAdfaturah';
+import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
 import I18n from 'react-native-i18n'
 import Filter from './components/Filter';
@@ -260,18 +262,18 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
 
                         <Stack
                         key="order"
-                        title="Order"
+                        title="order"
                         icon={TabIcon}
                         iconName="align-right"
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
 
                             <Scene 
-                            key="shopingCart"
+                            key="order"
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
                             component={Order} 
                             title="ORDERS"
-                            rightTitle={null}
+                            // rightTitle={undefined}
                             />
                         </Stack>
                         
@@ -312,7 +314,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         key="address" 
                         component={AddressBook} 
                         title="Addressbook" 
-                        hideNavBar={true}
+                        hideNavBar={false}
                         type={ActionConst.ANDROID_BACK}/> 
                     </Stack>
 
@@ -412,7 +414,31 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         key="faturah" 
                         component={Myfaturah} />                                 
                     </Stack>
+                    <Stack
+                    back
+                    backTitle="Back"
+                    hideNavBar={true}
+                    duration={0}
+                    key="myAdfaturah"
+                    titleStyle={{ color: 'black', alignSelf: 'center' }}
+                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                        <Scene 
+                        key="adfaturah" 
+                        component={MyAdfaturah} />                                 
+                    </Stack>
 
+                    <Stack
+                    back
+                    backTitle="Back"
+                    hideNavBar={true}
+                    duration={0}
+                    key="myuserAdfaturah"
+                    titleStyle={{ color: 'black', alignSelf: 'center' }}
+                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                        <Scene 
+                        key="usradfaturah" 
+                        component={Myuserfaturah} />                                 
+                    </Stack>
                     <Stack 
                     key="filterBar" 
                     hideTabBar={true} 

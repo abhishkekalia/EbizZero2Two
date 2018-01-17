@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from "react";
-import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage ,NetInfo} from "react-native";
 import { Actions} from "react-native-router-flux";
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,9 +10,6 @@ import Marketing from '../../Vendor/marketing'
 class Profile extends Component {
 	constructor(props) {
         super(props);
-
-
-        
         this.getKey = this.getKey.bind(this);        
         this.state={
         	dataSource: [],
@@ -23,13 +21,46 @@ class Profile extends Component {
             phone_no : null
         };
     }
+    componentwillMount(){
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
 
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ netStatus: isConnected }); }
+            );
+
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            if (isConnected)
+            {
+            	console.warn('hello')
+            }else{
+                console.log(`is connected: ${this.state.netStatus}`);
+            }
+        });
+    }
     componentDidMount(){
-	    this.getKey()
+    	this.getKey()
 	    .then(()=>this.getAddress())
 	    .done()
-    }
 
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            this.setState({ 
+                netStatus: isConnected 
+            }); 
+        });
+    }
+    
+    handleConnectionChange = (isConnected) => { 
+        this.setState({ netStatus: isConnected }); 
+        {this.state.netStatus ?  MessageBarManager.showAlert({ 
+                message: `Internet connection is available`,
+                alertType: 'alert',
+            }) : MessageBarManager.showAlert({ 
+                message: `Internet connection not available`,
+                alertType: 'error',
+            })
+        }          
+    }
     async getKey() {
         try { 
             const value = await AsyncStorage.getItem('data'); 
@@ -60,14 +91,24 @@ class Profile extends Component {
             }
         fetch(Utils.gurl('MyProfile'), config)  
         .then((response) => response.json())
-        .then((responseData) => { 
-        this.setState({ 
-            	status : responseData.response.status,
-            	dataSource : responseData.response.data,
-            	address : responseData.response.address
-            });
+        .then((responseData) => {
+        	if(responseData.response.status){ 
+        	    this.setState({ 
+        	       	status : responseData.response.status,
+        	       	dataSource : responseData.response.data,
+        	       	address : responseData.response.address
+        	        });
+        	}else{
+        	    this.setState({ 
+        	       	status : responseData.response.status
+        	    })
+        	}
         })
         .done();
+    }
+    signOut(){
+    const {identity, logout} = this.props;
+// ( Utils.logout()),logout
     }
 
 	render() {
@@ -115,7 +156,7 @@ class Profile extends Component {
 				</View>
 				
 				<Marketing/>
-				<TouchableOpacity onPress={logout} style={styles.setings}>
+				<TouchableOpacity onPress={()=>( Utils.logout()),logout} style={styles.setings}>
 					<Text>Logout</Text>
 				</TouchableOpacity>
 
