@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   TextInput,
   AsyncStorage,
-  Picker
+  Picker,
+  ActivityIndicator
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -40,6 +41,7 @@ export default class ProductDescription extends Component {
             size: '', 
             color: '', 
             quantity:'',
+            status : false
         }
         this.loadHandle = this.loadHandle.bind(this)
     }
@@ -108,7 +110,6 @@ export default class ProductDescription extends Component {
                     message: responseData.data.message, 
                     alertType: 'alert', 
                     stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                    // animationType: 'SlideFromLeft',
                 })
                 routes.shopingCart()
         }else{
@@ -143,13 +144,42 @@ export default class ProductDescription extends Component {
             if(responseData.status){ 
                 this.setState({ 
                     imgList: responseData.data.productImages,
-                    data : responseData.data
+                    data : responseData.data,
+                    status : true
                 });
             }
         })
         .done();
     }
+    fetchData(){ 
+        const {u_id, country, user_type } = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(user_type));
+        formData.append('country', String(country)); 
+        formData.append('product_id', String(this.props.product_id)); 
 
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        
+        fetch(Utils.gurl('productDetailView'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){ 
+                this.setState({ 
+                    imgList: responseData.data.productImages,
+                    data : responseData.data,
+                    status : true
+                });
+            }
+        })
+        .done();
+    }
     sizechart(){
         console.warn("size chart");
     }
@@ -159,12 +189,25 @@ export default class ProductDescription extends Component {
     onSubmit () {
 
     }
+    renderLoading() {
+        return (
+            <ActivityIndicator
+            style={styles.centering}  
+            color="#a9d5d1" 
+            size="small"/>
+            );
+    }
+
     
     render () { 
         const { date_in, count } = this.state;
         let color = this.state.data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
+        if (!this.state.status) {
+            return this.renderLoading();
+        } 
+
         return ( 
             <ScrollView 
                 keyboardShouldPersistTaps="always"
@@ -311,7 +354,7 @@ export default class ProductDescription extends Component {
                             </View>
                         </View>
                         <Text style={{padding:10}}>more Product by ZeroToTwo</Text>
-                        <AllItem/>
+                        <AllItem product_category={this.state.data.product_category}/>
                     </View>
                     
                 </View>
@@ -325,6 +368,13 @@ const styles = {
     description: { 
         width : width/3
     },
+    centering: {
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20
+    },
+
     qtybutton: {
         width : 40,
         height : 40,

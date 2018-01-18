@@ -1,332 +1,53 @@
 import React, { Component } from 'react';
-import { 
-    Text, 
-    View, 
-    TouchableHighlight, 
-    StyleSheet, 
-    ListView,
-    TouchableOpacity,
-    ScrollView, 
-    Dimensions, 
-    TextInput,
-    AsyncStorage,
-    Image ,
-    RefreshControl,
-    ActivityIndicator,
-    Picker,
-    Clipboard,
-    ToastAndroid,
-
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Clipboard,
+  ToastAndroid,
+  AlertIOS,
+  Platform
 } from 'react-native';
-import Swipeout from 'react-native-swipeout';
-import Utils from 'app/common/Utils';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-import { Actions } from 'react-native-router-flux';
-import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-import  Countmanager  from './Countmanager';
 import Share, {ShareSheet, Button} from 'react-native-share';
 
-const { width, height } = Dimensions.get('window');
-
-export default class WishList extends Component {
-    constructor(props) { 
-        super(props); 
-        this.getKey = this.getKey.bind(this);        
-        this.fetchData = this.fetchData.bind(this);
-        this.state = { 
-            dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}), 
-            status : false,
-            u_id: null,
-            country : null,
-            loaded: false,
-            toggle : false,
-            refreshing: false, 
-            color: '',
-            size : '',
-            visible: false
-        }; 
-    } 
-    componentDidMount(){
-        this.getKey()
-        .then( ()=>this.fetchData())
-        .done()
+export default class TestShare extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false
     }
-   
-    async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
-                u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-    }
-    refreshfromCount(){
-        this.fetchData()
-    
-    }
-    onCancel() {
-        console.log("CANCEL")
-        this.setState({visible:false});
-    }
-    
-    onOpen() {
-        console.log("OPEN")
-        this.setState({visible:true});
-    }
+  }
+  onCancel() {
+    console.log("CANCEL")
+    this.setState({visible:false});
+  }
+  onOpen() {
+    console.log("OPEN")
+    this.setState({visible:true});
+  }
+  render() {
 
-
-    fetchData(){ 
-        const {u_id, country, user_type } = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        } 
-
-        fetch(Utils.gurl('wishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            if(responseData.status){
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    status : responseData.status,
-                    refreshing : false,
-                    loaded : true
-                });
-            }else {
-                this.setState({
-                    status : responseData.status,
-                    refreshing : false,
-                    loaded : true
-                })
-            }
-        }).done();
-    }
-    validate(){
-        const { ShopingItems} = this.state; 
-
-        if (!ShopingItems.length)
-        {
-            MessageBarManager.showAlert({
-                message: "Please Select Items For Your Cart",
-                alertType: 'alert',
-            })
-            return false
-        }
-            return true;
-    }
-
-    addtoCart(count, product_id){
-        const { size, color,  } = this.state; 
-        const {u_id, country, user_type } = this.state;
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        formData.append('size', String(size)); 
-        formData.append('color', String(color)); 
-        formData.append('quantity', String(count)); 
-
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        if (this.validate()) {
-            fetch(Utils.gurl('addTocart'), config) 
-            .then((response) => response.json())
-            .then((responseData) => {
-                if(responseData.status){
-                    MessageBarManager.showAlert({ 
-                        message: responseData.data.message, 
-                        alertType: 'alert', 
-                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                    })
-                    Actions.shopingCart();
-                }else {
-                    MessageBarManager.showAlert({ 
-                        message: responseData.data.message, 
-                        alertType: 'alert', 
-                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                    })
-                }
-            })
-            .then(()=>this.removeWishlist(product_id))
-            .then(()=> this.fetchData())
-            .done();
-        }
-    }
-
-    removeWishlist(product_id){
-        const {u_id, country, user_type } = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-        formData.append('product_id', String(product_id));
-
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        } 
-
-        fetch(Utils.gurl('removeFromWishlist'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            if (responseData.status) {
-                this.fetchData()
-            }
-        })
-        .then(()=> this.fetchData())
-        .done();
-    }
-    validate(){
-        const { size, color} = this.state; 
-
-        if (!color.length)
-        {
-            MessageBarManager.showAlert({
-                message: "Please Select Color",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!size.length)
-        {
-            MessageBarManager.showAlert({
-                message: "Please Select Size",
-                alertType: 'alert',
-            })
-            return false
-        }
-            return true;
-    } 
-    editWishlist(product_id){
-        const { size, color, u_id, country, } = this.state; 
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-        formData.append('product_id', String(product_id));
-        formData.append('size', String(size)); 
-        formData.append('color', String(color)); 
-
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        } 
-        if (this.validate()) {
-            fetch(Utils.gurl('editWishlist'), config) 
-            .then((response) => response.json())
-            .then((responseData) => {
-                MessageBarManager.showAlert({ 
-                        message: responseData.data.message, 
-                        alertType: 'alert', 
-                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                    })
-            }).done();
-        }
-    }
-
-    viewNote(rowData) {
-        // this.props.navigator.push({
-        //   title: 'The Note',
-        //   component: ViewNote,
-        //   passProps: {
-        //     noteText: rowData,
-        //     noteId: this.noteId(rowData),
-        //   }
-        // });
-    } 
-   
-    updateState = () => {
-        this.setState({
-            Quentity: !this.state.Quentity
-        });
-    }
-    noItemFound(){
-        return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text> No Item added to your wishlist </Text>
-                <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load wishlist</Text></TouchableOpacity>
-               </View> );
-    }
-    getSize(size){
-        this.setState({size});
-    }    
-    getColor(color){
-        this.setState({color});
-    }
-    renderLoadingView() {
-        return (
-            <ActivityIndicator
-            style={styles.centering}  
-            color="#a9d5d1" 
-            size="small"/>
-            );
-    }
-
-    render() {
-            let shareOptions = {
+    let shareOptions = {
       title: "React Native",
       message: "Hola mundo",
       url: "http://facebook.github.io/react-native/",
       subject: "Share Link" //  for email
     };
 
-       if (!this.state.loaded) {
-            return this.renderLoadingView();
-        }
+    
 
-        if (!this.state.status) {
-            return this.noItemFound();
-        } 
-        let listView = (<View></View>);
-            listView = (
-                <ListView
-                refreshControl={ 
-                    <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.fetchData} />
-                }
-                contentContainerStyle={styles.container}
-                dataSource={this.state.dataSource}
-                renderRow={this.renderData.bind(this)}
-                enableEmptySections={true}
-                automaticallyAdjustContentInsets={false}
-                showsVerticalScrollIndicator={false}
-                />
-            );
-        return (
-        <View style={{flex :1}}>
-        <ScrollView>
-            {listView}
-                    </ScrollView>
+    return (
+      <View style={styles.container}>
 
-            <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
+        <TouchableOpacity onPress={this.onOpen.bind(this)}>
+          <View style={styles.instructions}>
+            <Text>Share UI Component</Text>
+          </View>
+        </TouchableOpacity>
+
+        <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
           <Button iconSrc={{ uri: TWITTER_ICON }}
                   onPress={()=>{
               this.onCancel();
@@ -395,220 +116,23 @@ export default class WishList extends Component {
               },300);
             }}>More</Button>
         </ShareSheet>
-        </View>
-        );
-    }
-    renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-        let color = data.special_price ? '#a9d5d1' : '#000';
-        let textDecorationLine = data.special_price ? 'line-through' : 'none';
-
-
-        let swipeBtns = [{
-            text: 'Edit',
-            backgroundColor: '#a9d5d1',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {this.editWishlist(data.product_id)}
-         },{
-            text: 'Delete',
-            backgroundColor: '#f53d3d',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {this.removeWishlist(data.product_id)}
-         }];
-
-        return (
-            <View style={{ 
-            flexDirection: 'column' ,
-            marginTop : 2, 
-            borderWidth : 0.5, 
-            borderColor : "#ccc", 
-            borderRadius : 5}}>
-            <Swipeout right={swipeBtns}
-            autoClose={true}
-            backgroundColor= 'transparent'> 
-                    
-                <View style={{ 
-                flexDirection: 'row', 
-                backgroundColor : "#fff", justifyContent : 'space-around', alignItems : 'center'}}>
-                    <Image style={[styles.thumb]} 
-                    source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
-                    />  
-                        <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
-                            <TouchableHighlight
-                                underlayColor='transparent'
-                                // onPress={this.viewNote.bind(this, data)} 
-                                style={styles.row} >
-                                <Text style={{ fontWeight: 'bold'}} > {data.product_name} </Text>
-                            </TouchableHighlight>
-                            <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
-                            <View style={{ flexDirection : "row"}}>
-                                <Text> Quantity :  </Text>
-                                <Countmanager  
-                                quantity={data.quantity} 
-                                u_id={this.state.u_id} 
-                                product_id={data.product_id} 
-                                updatetype={"0"} 
-                                country={this.state.country} 
-                                callback={this.refreshfromCount.bind(this)}
-                                />
-                            </View>
-                            <View style={{ flexDirection : "row", justifyContent:"space-between"}}>
-                            <View style={{ flexDirection : "row"}}>
-                                <Text >PRICE : </Text>
-                                <Text> {data.special_price} </Text>
-                                <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
-                            </View>
-                                <Text> KWD</Text>
-                            </View>
-                            <SelectItem size={data.size} color={data.color} getsize={this.getSize.bind(this)} getcolor={this.getColor.bind(this)} />
-                        </View>
-                    </View>                             
-                </Swipeout>
-                <View style={styles.bottom}>
-                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
-                    <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
-                        <Text style={{ left : 5}}>Share WishList</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
-                    onPress={()=>this.addtoCart(data.quantity, data.product_id)}>
-                        <FontAwesome name="opencart" size={20} color="#a9d5d1"/> 
-                        <Text style={{ left :5}}>Move to Cart</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        )
-    }
+      </View>
+    );
+  }
 }
 
-class SelectItem extends Component{
-    constructor(props) { 
-        super(props); 
-        this.state = { 
-            size: this.props.size, 
-            color: this.props.color, 
-        }; 
-    } 
-    Size(itemValue){
-        this.setState({size: itemValue}, this.props.getsize(itemValue))
-
-    }
-    Color(itemValue){
-        this.setState({color: itemValue}, this.props.getcolor(itemValue))
-
-    }
-
-    render(){
-        return(
-        <View style={{ flexDirection:'row'}}> 
-            <View style={{width: width/3,  backgroundColor: '#fff', justifyContent : 'center'}}>
-                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Size : {this.state.size}</Text>
- 
-                <Picker
-                mode="dropdown"
-                selectedValue={this.state.size}
-                onValueChange={(itemValue, itemIndex) => this.Size(itemValue)
-             }>
-                    <Picker.Item label="Select Size" value="" />
-                    <Picker.Item label="Small" value="small" />
-                    <Picker.Item label="Medium" value="medium" />
-                    <Picker.Item label="Large" value="large" />
-                </Picker>
-            </View>
-            <View style={{width: width/3, backgroundColor: '#fff' ,justifyContent : 'center'}}> 
-                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Color : {this.state.color}  </Text>
-
-                <Picker 
-                mode="dropdown"
-                selectedValue={this.state.color} 
-                onValueChange={(itemValue, itemIndex) => this.Color(itemValue) 
-             }>
-                    <Picker.Item label="Select color" value="" />
-                    <Picker.Item label="Red" value="red" />
-                    <Picker.Item label="Yellow" value="yellow" />
-                    <Picker.Item label="Pink" value="pink" />
-                </Picker>
-            </View>
-        </View>
-        )
-    }
-}
-
-const styles = StyleSheet.create ({
-    container: {
-        flexDirection: 'column',
-        padding : 10 
-    },
-
-    row: {
-        flexDirection: 'row',
-        marginTop : 1
-    },
-    qtybutton: {
-        paddingLeft: 10,
-        paddingRight: 10,
-
-        alignItems: 'center',
-        borderWidth : 1,
-        borderColor : "#ccc",
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-    },
-        countryIcon: {
-        width : 40,
-        height:40,
-        padding :10
-    },
-
-
-    wishbutton :{
-        alignItems : 'center', 
-        width : width/2-10,
-        borderWidth : 0.5, 
-        borderColor : "#ccc",
-        padding : 5
-    },
-
-    thumb: {
-        width   : width/5,
-        height  :width/4 ,
-    },
-
-    textQue :{
-        flex: 1,
-        fontSize: 18,
-        fontWeight: '400',
-        left : 5
-    },
-
-    centering: {
-        flex:1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20
-    },
-
-    bottom : {
-        borderBottomLeftRadius : 10, 
-        borderBottomRightRadius : 10, 
-        flexDirection : 'row',
-        justifyContent : 'space-around',
-        backgroundColor : "#fff"
-    },
-
-    headline: {
-        paddingTop : 10,
-        paddingBottom : 10,
-        marginLeft : 15,
-        fontSize    : 15,
-        color       : "#000",
-        fontWeight  : 'bold'
-    },
-    detail: {
-        padding : 10,
-        backgroundColor : '#fff',
-        minHeight : 500,
-        fontWeight : 'bold'
-    }
-})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  instructions: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+});
 
 //  twitter icon
 const TWITTER_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg==";

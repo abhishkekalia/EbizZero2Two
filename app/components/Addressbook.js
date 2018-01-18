@@ -29,7 +29,6 @@ export default class AddressBook extends Component {
         super(props);
         this.getKey = this.getKey.bind(this);      
         this.onSelect = this.onSelect.bind(this)
-        this.getItems = this.getItems.bind(this);
         this.state={
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
             u_id: '',
@@ -44,8 +43,9 @@ export default class AddressBook extends Component {
     onSelect(index, value){
         this.setState({
         isSelected: value,
-        // visibleModal: true
-        })
+        visibleModal: true
+        }, ()=> this.getItems(value))
+
     }
     componentDidMount(){
         this.getKey()
@@ -81,7 +81,42 @@ export default class AddressBook extends Component {
                     })                 
         }
         this.addToOrder(Select)
+        .done()
     }
+    
+    removeFromCart(value){
+        try { 
+            const { u_id, country } = this.state;
+            let formData = new FormData();
+            formData.append('u_id', String(u_id));
+            formData.append('country', String(country));
+            formData.append('order_detail', JSON.stringify(value));
+            formData.append('amount', String(this.props.totalAmount));
+            const config = { 
+                   method: 'POST', 
+                   headers: { 
+                        'Accept': 'application/json', 
+                        'Content-Type': 'multipart/form-data;',
+                   },
+                   body: formData,
+              }
+            fetch(Utils.gurl('addToOrder'), config)  
+            .then((response) => response.json())
+            .then((responseData) => { 
+            if(responseData.status){
+            // console.warn("calling my Fatureh") 
+              routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+              }else{
+                this.removeLoader
+            }
+            })
+              .done();
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+
+    }
+
     async getKey() {
         try { 
             const value = await AsyncStorage.getItem('data'); 
@@ -95,33 +130,42 @@ export default class AddressBook extends Component {
         }
     }
 
-    addToOrder(value){
-        const { u_id, country } = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        formData.append('order_detail', JSON.stringify(value));
-        formData.append('amount', String(this.props.totalAmount));
+    async addToOrder(value){
+        try { 
+            const { u_id, country } = this.state;
+            let formData = new FormData();
+            formData.append('u_id', String(u_id));
+            formData.append('country', String(country));
+            formData.append('order_detail', JSON.stringify(value));
+            formData.append('amount', String(this.props.totalAmount));
+            const config = { 
+                   method: 'POST', 
+                   headers: { 
+                        'Accept': 'application/json', 
+                        'Content-Type': 'multipart/form-data;',
+                   },
+                   body: formData,
+              }
+            fetch(Utils.gurl('addToOrder'), config)  
+            .then((response) => response.json())
+            .then((responseData) => { 
+            if(responseData.status){
+            // console.warn("calling my Fatureh") 
+              routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+              }else{
+                this.removeLoader
+            }
+            })
+              .done();
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
 
-          const config = { 
-               method: 'POST', 
-               headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-               },
-               body: formData,
-          }
-          fetch(Utils.gurl('addToOrder'), config)  
-          .then((response) => response.json())
-          .then((responseData) => {  
-            routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id})
-          })
-          // .then(()=> this.removeLoader())
-          .done();
     }
-    removeLoader() {
-        this.setState({ visibleModal : false})
-    }
+    removeLoader = () => this.setState({ 
+        visibleModal : false
+    })
+
     fetchAddress(){
         const { u_id, country } = this.state;
         
@@ -214,7 +258,7 @@ export default class AddressBook extends Component {
 
     render() {
         const { isSelected } = this.state;
-        isSelected ? this.getItems(isSelected) : undefined;
+        // isSelected ? this.getItems(isSelected) : undefined;
 
          if (!this.state.status) {
             return this.noItemFound();

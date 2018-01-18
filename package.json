@@ -27,6 +27,7 @@
     "react-native-radio-buttons": "^1.0.0",
     "react-native-router-flux": "^4.0.0-beta.25",
     "react-native-segmented-control-tab": "^3.2.1",
+    "react-native-share": "^1.0.23",
     "react-native-swipe": "^1.0.0",
     "react-native-swipeout": "^2.3.3",
     "react-native-swiper": "^1.5.13",

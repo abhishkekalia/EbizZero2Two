@@ -17,25 +17,31 @@ import Utils from 'app/common/Utils';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Editwish from './wish/Editwish';
 import { Card } from "react-native-elements";
+import {Actions as routes} from "react-native-router-flux";
 
 const { width, height } = Dimensions.get('window')
 
-export default class AllItem extends Component {
-    constructor(props) {
-        super(props);        
-        this.state={ 
-            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
-            dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
-            u_id: null,
+export default class Service extends Component {
+   constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: true,
+            dataSource : new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
+            u_id : null,
             country : null
         }
     }
-
+ 
     componentDidMount(){
         this.getKey()
         .then( ()=>this.fetchData())
     }
-
+    componentWillMount() {
+        routes.refresh({ right: this._renderRightButton });    
+    }
+    _renderRightButton = () => {
+        return null
+    };
     async getKey() {
         try { 
             const value = await AsyncStorage.getItem('data'); 
@@ -49,63 +55,83 @@ export default class AllItem extends Component {
         }
     }
 
-
     fetchData(){ 
         const {u_id, country } = this.state; 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country)); 
-        formData.append('category_id', String(this.props.product_category)); 
 
-    const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
             }
-    fetch(Utils.gurl('moreProduct'), config) 
+        fetch(Utils.gurl('serviceList'), config) 
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
                 this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                refreshing : false
+                isLoading : false
                 });
             }
             else{
                 this.setState({
-                refreshing : false
+                isLoading : false
                 })
             }
         }).done();
     }
-    moveToDesc(title, product_id, is_wishlist){
-        Actions.deascriptionPage({ 
-            title: title, 
-            product_id : product_id , 
-            is_wishlist : is_wishlist,
-        })
+
+    ListViewItemSeparator = () => {
+        return (
+            <View
+              style={{
+                height: .5,
+                width: "100%",
+                backgroundColor: "#CCC",
+              }}
+            />
+        );
+    }
+
+    Description (product_name, productImages ,short_description, detail_description, price ,special_price){
+        routes.vendordesc({ 
+                        title: product_name,
+                        product_name : product_name,
+                        productImages : productImages,
+                        short_description : short_description,
+                        detail_description : detail_description,
+                        price : price,
+                        special_price : special_price,
+                    })
     }
 
     render() {
-
+        if (this.state.isLoading) {
+            return (
+                <View style={{flex: 1, paddingTop: 20}}>
+                  <ActivityIndicator />
+                </View>
+            );
+        }
         let listView = (<View></View>);
             listView = (
-                <ListView
-                horizontal
+               <ListView
                 contentContainerStyle={styles.list}
-                dataSource={this.state.dataSource}
-                renderRow={this.renderData.bind(this)}
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
-                />
+                dataSource={this.state.dataSource}
+                renderSeparator= {this.ListViewItemSeparator} 
+                renderRow={this.renderData.bind(this)}/>
             );
         return (
-        <View>
-        {listView}
+        <View style={{paddingBottom : 53}}>
+            {listView}
         </View>
         );
     }
@@ -118,13 +144,12 @@ export default class AllItem extends Component {
             <View style={styles.row} > 
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
                     
-                            <TouchableOpacity 
-                            onPress={()=> this.moveToDesc(data.product_name, data.product_id, null) }
-                            // onPress={()=>Actions.deascriptionPage({ title: data.product_id, product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}
-                            >
-                            <Image style={styles.thumb} 
-                                source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
-                                </TouchableOpacity>
+                    <TouchableOpacity 
+                    onPress={()=> this.Description(data.service_name, data.serviceImages ,
+                    data.short_description, data.detail_description, data.price ,data.special_price)}>
+                        <Image style={styles.thumb} 
+                            source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null }}/>
+                    </TouchableOpacity>
                 </View>
                 
                 <View style={{ padding :15}}>
@@ -132,7 +157,7 @@ export default class AllItem extends Component {
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
 
-                <Text style={{fontSize : 13, color :'#000', fontFamily : 'halvetica' }}>{data.product_name}</Text>
+                <Text style={{fontSize : 13, color :'#000', fontFamily : 'halvetica' }}>{data.service_name}</Text>
                 </TouchableOpacity>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
@@ -181,7 +206,7 @@ var styles =StyleSheet.create({
         fontWeight : 'bold'
     },
     footer : {
-        width : width/3-20,
+        width : width/2-20,
         alignItems : 'center',
         padding : 10,
         borderTopWidth : 0.5, 
@@ -200,7 +225,7 @@ var styles =StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width : width/3 -6,
+        width : width/2 -6,
         // padding: 5,
         margin: 3,
         borderWidth: 1,
@@ -208,7 +233,7 @@ var styles =StyleSheet.create({
         borderRadius : 5,
     },
     button: {
-        width: width/3,
+        width: width/2,
         marginBottom: 10,
         padding: 10,
         alignItems: 'center',
@@ -217,8 +242,8 @@ var styles =StyleSheet.create({
     },
 
     thumb: {
-        width: width/4-10,
-        height: width/4+30,
+        width: width/3-10,
+        height: width/3+30,
         resizeMode : 'center',
         top : 15
     },
@@ -228,5 +253,4 @@ var styles =StyleSheet.create({
         marginTop: 5,
         fontWeight: 'bold'
     },
-     contentContainer: {  }
 });

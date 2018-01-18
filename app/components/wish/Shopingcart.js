@@ -149,6 +149,7 @@ export default class Shopingcart extends Component {
                             "product_id": organization.product_id,
                             "size": organization.size,
                             "quantity": organization.quantity,
+                            "cart_id" : organization.cart_id,
                             "delivery_address_id": "29",
                             "vendor_id":"4",
                             "price":organization.price,
@@ -337,7 +338,8 @@ export default class Shopingcart extends Component {
                 backgroundColor : "transparent"}}>
                             
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <View style={{ flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row' , backgroundColor : "#fff", justifyContent : 'space-around', alignItems : 'center'}}>
+
                             <Image style={[styles.thumb, {margin: 10}]} 
                             source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}/>
                         <View>
@@ -360,14 +362,14 @@ export default class Shopingcart extends Component {
                                     />
 
                             </View>
-                            <Text style={{paddingRight : 10}}> {data.size} </Text>
-
-                            <Text >US $ : {data.special_price} </Text>
+                            <View style={{ flexDirection : "row", justifyContent:"space-between"}}>
                             <View style={{ flexDirection : "row"}}>
-                                <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> US $ {data.price}  </Text>
-                                <Text>| {data.special_price}</Text>
+                                <Text >PRICE : </Text>
+                                <Text> {data.special_price} </Text>
+                                <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
                             </View>
-                                <Text > Total :{data.price} </Text>
+                                <Text> KWD</Text>
+                            </View>
                             <SelectItem size={data.size} color={data.color} getsize={this.getSize.bind(this)} getcolor={this.getColor.bind(this)} />
 
                         </View>

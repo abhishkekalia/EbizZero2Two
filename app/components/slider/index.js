@@ -26,7 +26,6 @@ const Slide = props => {
         <View style={[styles.slide]}>
           <Image onLoad={props.loadHandle.bind(null, props.i)} 
                 resizeMode={'stretch'}
- 
             style={styles.image} 
             source={{uri: props.uri}} />
             <Ionicons 
@@ -149,11 +148,11 @@ export default class Slider extends Component<{}> {
 
     return (
         <View style={styles.container}>
-            <Swiper loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={true}>
+            <Swiper loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={false}>
                 {
                 this.props.imgList.map((item, i) => <Slide
                       loadHandle={this.loadHandle}
-                      loaded={!!this.state.loadQueue[i]}
+                      loaded={this.state.loadQueue[i]}
                       data ={this.props.data}
                       updateState={this.props.updateState}
                       u_id ={this.props.u_id}

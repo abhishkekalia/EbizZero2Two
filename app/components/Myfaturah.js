@@ -25,6 +25,7 @@ export default class Myfaturah extends Component {
     } 
     componentDidMount(){
         this.getKey()
+        .then(()=>this.props.callback())
         .done()
      }
     

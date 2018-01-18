@@ -21,7 +21,7 @@ export default class Countmanager extends Component {
 	constructor(props) { 
         super(props); 
         this.state = { 
-            Quentity : parseInt(this.props.quantity),
+            Quentity : '',
             loaded: true,
         }; 
     }
@@ -63,20 +63,44 @@ export default class Countmanager extends Component {
                 })
             }
         })
+        .then(()=>this.props.callback())
         .then( ()=> this.setState({
             loaded : true
         }))
         .done();
-        this.props.callback();
     }
     decrement () {
- 	if(this.state.Quentity > 1) 
-            this.setState({ Quentity : this.state.Quentity-1})  
-            this.updateQuantity();
-    } 
+ 	if(this.props.quantity > 1) 
+        this.substract()
+        .then( ()=>this.updateQuantity())
+        .done()
+    }
+    async substract() {
+        try { 
+            this.setState({ 
+                Quentity : parseInt(this.props.quantity)-1 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
+
+
+    async add() {
+        try { 
+            this.setState({ 
+                Quentity : parseInt(this.props.quantity)+1 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
+
     increment(){
-        this.setState({Quentity: this.state.Quentity+1 })
-        this.updateQuantity();
+        this.add()
+        .then( ()=>this.updateQuantity())
+        .done()
+
 
     }
     renderLoadingView() {
@@ -98,7 +122,7 @@ export default class Countmanager extends Component {
             >
 			<Text style={{color: '#a9d5d1'}}> - </Text>
 			 </TouchableOpacity>
-			 <Text style={[styles.qtybutton]}> {this.state.Quentity} </Text>
+			 <Text style={[styles.qtybutton]}> {this.props.quantity} </Text>
             <TouchableOpacity 
                style={styles.qtybutton} 
             onPress= {()=> this.increment()}>
