@@ -16,7 +16,7 @@ import {
     Picker,
     Clipboard,
     ToastAndroid,
-
+    AlertIOS
 } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 import Utils from 'app/common/Utils';

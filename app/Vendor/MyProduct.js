@@ -133,6 +133,9 @@ export default class MyProduct extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
+                let color = data.special_price ? '#a9d5d1' : '#000';
+        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+
         return (
             <View style={{ 
             width : width-30,
@@ -142,7 +145,11 @@ export default class MyProduct extends Component {
             borderColor : "#ccc", 
             borderRadius : 2
         }}>
-                <Header product_category= {data.product_category}/>
+                <Header 
+                product_category= {data.product_category}
+                u_id={this.state.u_id}
+                country={this.state.country}
+                />
                 <TouchableOpacity style={{ 
                 flexDirection: 'row', 
                 backgroundColor : "#fff",
@@ -150,6 +157,7 @@ export default class MyProduct extends Component {
                 borderColor : "#ccc", 
                 }}>
                     <Image style={[styles.thumb, {margin: 10}]} 
+                    resizeMode={"stretch"} 
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />  
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
@@ -158,11 +166,14 @@ export default class MyProduct extends Component {
                         <View style={{ flexDirection : "row"}}>
                             <Text style={{color:"#a9d5d1"}}> Quantity Available : {data.quantity} </Text>
                         </View>
-                        <View style={{ flexDirection : "row", justifyContent : 'space-around'}}>
-                            <Text style={{color : '#f53d3d'}} >Special Price : </Text>
-                            <Text > {data.special_price} </Text>
-                            <Text style={{color : '#f53d3d'}}> Price :</Text>
-                            <Text > {data.price} </Text>
+                        <View style={{ flexDirection : "row", justifyContent : 'space-between'}}>
+                            <View style={{ flexDirection : "row"}}>
+                            <Text style={{color : '#f53d3d'}} >Price : </Text>
+                            <Text> {data.special_price} </Text>
+                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                            </View>
+                                <Text style={{color : '#ccc'}} >KWD</Text>
+
                         </View>
                         <View style={{ flexDirection : "row"}}>
                            <Text style={{color : '#f53d3d'}}> Status : </Text>
@@ -172,7 +183,9 @@ export default class MyProduct extends Component {
                 </TouchableOpacity>
                 <Footer calllback={()=>this.Description(data.product_name, data.productImages ,
                     data.short_description, data.detail_description, data.price ,data.special_price)}
-                    is_approved = {data.is_approved}
+                    u_id={this.state.u_id}
+                    country={this.state.country}
+                    is_active = {data.is_active}
                     product_id= {data.product_id}
                     calldata = {()=>this.fetchData()}/>
             </View>
@@ -202,10 +215,10 @@ class Header extends Component{
     }
 
     fetchData(){ 
-        // const {u_id, country } = this.state; 
+        const {u_id, country } = this.props; 
         let formData = new FormData();
-        formData.append('u_id', String(2));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
         
         const config = { 
                 method: 'POST', 
@@ -251,14 +264,14 @@ class Footer extends Component{
     constructor(props){
         super(props);
         this.state = {
-            is_approved : this.props.is_approved
+            is_active : this.props.is_active
         }
     }
     productActiveDeactive(product_id, approv_code){ 
-        const {u_id, country } = this.state; 
+        const {u_id, country } = this.props; 
         let formData = new FormData();
-        formData.append('u_id', String(2));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
         formData.append('product_id', String(product_id)); 
         formData.append('active_flag', String(approv_code)); 
 
@@ -281,22 +294,21 @@ class Footer extends Component{
             }
         }).done();
     }
-componentWillReceiveProps(){
-    this.setState({
-        is_approved : this.props.is_approved
-    })
-}
+// componentWillReceiveProps(is_approved){
+//     this.setState({
+//         is_approved : this.props.is_approved
+//     })
+// }
 
     render(){
          let approved
         let approv_code
-        if(this.state.is_approved === '1'){
+        if(this.props.is_active === '1'){
             approved = "Deactivate";
             approv_code = '0'
         }else {
             approved = "Activate";
             approv_code = '1'
-
         }
         return(
         <View style={styles.bottom}>

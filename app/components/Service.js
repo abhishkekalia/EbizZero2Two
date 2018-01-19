@@ -100,14 +100,14 @@ export default class Service extends Component {
 
     Description (product_name, productImages ,short_description, detail_description, price ,special_price){
         routes.vendordesc({ 
-                        title: product_name,
-                        product_name : product_name,
-                        productImages : productImages,
-                        short_description : short_description,
-                        detail_description : detail_description,
-                        price : price,
-                        special_price : special_price,
-                    })
+            title: product_name,
+            product_name : product_name,
+            productImages : productImages,
+            short_description : short_description,
+            detail_description : detail_description,
+            price : price,
+            special_price : special_price,
+        })
     }
 
     render() {

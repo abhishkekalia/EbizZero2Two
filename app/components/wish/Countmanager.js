@@ -100,8 +100,6 @@ export default class Countmanager extends Component {
         this.add()
         .then( ()=>this.updateQuantity())
         .done()
-
-
     }
     renderLoadingView() {
         return (

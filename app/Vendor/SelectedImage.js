@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { 
     StyleSheet, 
     ActivityIndicator, 
@@ -7,7 +6,6 @@ import {
     Text, 
     View, 
     Image, 
-    Platform,
     Dimensions,
     FlatList
 } from 'react-native';

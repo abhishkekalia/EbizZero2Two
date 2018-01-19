@@ -151,17 +151,17 @@ export default class Slider extends Component<{}> {
             <Swiper loadMinimal loadMinimalSize={1} style={styles.wrapper} loop={false}>
                 {
                 this.props.imgList.map((item, i) => <Slide
-                      loadHandle={this.loadHandle}
-                      loaded={this.state.loadQueue[i]}
-                      data ={this.props.data}
-                      updateState={this.props.updateState}
-                      u_id ={this.props.u_id}
-                      country ={this.props.country}
-                      is_wishlist= {this.state.is_wishlist}
-                      callback = {this.changeLabel.bind(this)}
-                      uri={item}
-                      i={i}
-                      key={i} />
+                    loadHandle={this.loadHandle}
+                    loaded={this.state.loadQueue[i]}
+                    data ={this.props.data}
+                    updateState={this.props.updateState}
+                    u_id ={this.props.u_id}
+                    country ={this.props.country}
+                    is_wishlist= {this.state.is_wishlist}
+                    callback = {this.changeLabel.bind(this)}
+                    uri={item}
+                    i={i}
+                    key={i} />
                     )
                 }
             </Swiper>

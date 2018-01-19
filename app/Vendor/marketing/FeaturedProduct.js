@@ -10,7 +10,7 @@ import {
     Dimensions,
     TouchableOpacity, 
     AsyncStorage, 
-
+    Switch
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
@@ -138,7 +138,7 @@ export default class FeaturedProduct extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
-        let color = data.special_price ? '#C5C8C9' : '#000';
+        let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
 
         return (
@@ -158,21 +158,24 @@ export default class FeaturedProduct extends Component {
                 borderColor : "#ccc", 
                 }}>
                     <Image style={[styles.thumb, {margin: 10}]} 
+                    resizeMode={"stretch"} 
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />  
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
                         <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.product_name} </Text>
-                        <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
+                        <Text style={{ fontSize : 12, color : '#ccc'}} > {data.short_description} </Text>
+                        <View style={{ flexDirection : "row", justifyContent : 'space-between'}}>
+                            <View style={{ flexDirection : "row"}}>
+                            <Text style={{color : '#f53d3d'}} >Price : </Text>
+                            <Text> {data.special_price} </Text>
+                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                            </View>
+                                <Text style={{color : '#ccc'}} >KWD</Text>
 
-                        <View style={{ flexDirection : "row", justifyContent : 'space-around'}}>
-                            <Text style={{color : '#f53d3d'}}> Price :</Text>
-                            <Text > {data.special_price} KWD </Text>
-                            <Text style={{color : color, textDecorationLine: textDecorationLine}}> {data.price} KWD </Text>
                         </View>
                     </View>
                 </TouchableOpacity>
-                <Footer calllback={()=>this.Description(data.product_name, data.productImages ,
-                    data.short_description, data.detail_description, data.price ,data.special_price)}
+                <Footer 
                     start_date = {data.start_date}/>
             </View>
         );
@@ -195,6 +198,7 @@ class Footer extends Component{
     constructor(props){
         super(props);
         this.state = {
+            toggled : true
         }
     }
 // componentWillReceiveProps(){
@@ -205,11 +209,12 @@ class Footer extends Component{
     render(){
         return(
         <View style={styles.bottom}>
-                    <TouchableOpacity 
-                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]} 
-                    onPress={this.props.calllback}>
-                        <Text style={{ color :'#fff', fontSize: 12}}>Preview</Text>
-                    </TouchableOpacity>
+                    <Switch 
+                      // onTintColor="#00ff00"  
+                      thumbTintColor="#fff" 
+                      tintColor="#000" 
+                    onValueChange={ () => this.setState({ toggled: !this.state.toggled })} 
+                    value={ this.state.toggled} /> 
                     <View >
                         <Text style={{ color :'#000', fontSize : 12}}>Display Date : {this.props.start_date}</Text>
                     </View>

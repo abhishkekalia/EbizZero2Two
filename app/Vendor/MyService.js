@@ -131,6 +131,9 @@ export default class MyService extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
+        let color = data.special_price ? '#a9d5d1' : '#000';
+        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+
         return (
             <View style={{ 
             width : width-30,
@@ -148,17 +151,22 @@ export default class MyService extends Component {
                 borderColor : "#ccc", 
                 }}>
                     <Image style={[styles.thumb, {margin: 10}]} 
+                    resizeMode={"stretch"} 
                     source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null}}
                     />  
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
                         <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.service_name} </Text>
                         <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
-                        <View style={{ flexDirection : "row", justifyContent : 'space-around'}}>
-                            <Text style={{color : '#f53d3d'}} >Special Price : </Text>
-                            <Text > {data.special_price} KWD</Text>
-                            <Text style={{color : '#f53d3d'}}> Price :</Text>
-                            <Text > {data.price} KWD</Text>
+                            <View style={{ flexDirection : "row", justifyContent : 'space-between'}}>
+                            <View style={{ flexDirection : "row"}}>
+                            <Text style={{color : '#f53d3d'}} >Price : </Text>
+                            <Text> {data.special_price} </Text>
+                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                            </View>
+                                <Text style={{color : '#ccc'}} >KWD</Text>
+
                         </View>
+
                         <View style={{ flexDirection : "row"}}>
                            <Text style={{color : '#f53d3d'}}> Status : </Text>
                            <Text > {data.is_approved ? 'approved' : 'pending'} </Text>

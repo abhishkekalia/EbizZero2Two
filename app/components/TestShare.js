@@ -40,7 +40,6 @@ export default class TestShare extends Component {
 
     return (
       <View style={styles.container}>
-
         <TouchableOpacity onPress={this.onOpen.bind(this)}>
           <View style={styles.instructions}>
             <Text>Share UI Component</Text>
@@ -101,7 +100,7 @@ export default class TestShare extends Component {
                 if(typeof shareOptions["url"] !== undefined) {
                   Clipboard.setString(shareOptions["url"]);
                   if (Platform.OS === "android") {
-                    ToastAndroid.show('Link copiado al portapapeles', ToastAndroid.SHORT);
+                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
                   } else if (Platform.OS === "ios") {
                     AlertIOS.alert('Link copiado al portapapeles');
                   }

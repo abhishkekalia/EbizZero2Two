@@ -87,9 +87,9 @@ export default class ProductVendor extends Component {
     
     render () { 
         const { date_in, count } = this.state;
-        let color = this.state.data.special_price ? '#C5C8C9' : '#000';
-        let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
-        let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
+        let color = this.props.special_price ? '#a9d5d1' : '#000';
+        let textDecorationLine = this.props.special_price ? 'line-through' : 'none';
+        // let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
         return ( 
             <ScrollView 
                 keyboardShouldPersistTaps="always"
@@ -106,10 +106,12 @@ export default class ProductVendor extends Component {
 
                     <View >
                         <Text style={{ padding : 10, color:"#000"}}>{this.props.product_name}</Text>
-                        <View style={{flexDirection: 'row', justifyContent  :'space-around'}}>
-                            <Text style={{color : 'skyblue', paddingLeft : 10}}>Special Price : AED {this.props.special_price}</Text>
-                            <Text style={{color: color, textDecorationLine: textDecorationLine, left : 20}}>Price : AED {this.props.price}</Text>
-                            <Text style={{color: colorOffer, left : 30}}>({this.props.discount} %OFF )</Text>
+                            <View style={{ flexDirection : "row"}}>
+                            <Text style={{color : '#f53d3d'}} >Price : </Text>
+                            <Text> {this.props.special_price} </Text>
+                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {this.props.price} </Text>
+                                <Text style={{color : '#ccc'}} >KWD</Text>
+
                         </View>
                        
                     

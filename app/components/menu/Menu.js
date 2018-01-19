@@ -35,23 +35,11 @@ class Menu extends React.Component {
                 </View>
                 
                 <View style={[styles.badge, styles.seprator]}> 
-                    <IconBadge
-                        MainElement={ 
                             <Ionicons 
                             name="ios-notifications" 
                             color="#87cefa" size={30}
                             style={{ left : 13}}
                             />
-                        }
-                        BadgeElement={
-                          <Text style={{color:'#FFFFFF'}}>1</Text>
-                        }
-                        IconBadgeStyle={{
-                            width:16,
-                            height:18,
-                            // left : 10,
-                            backgroundColor: 'orange'}}
-                    />
                     <Text 
                     onPress={Actions.notificationShow}
 

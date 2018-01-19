@@ -121,7 +121,7 @@ export default class Editwish extends Component {
                     >
                         <Ionicons  
                         name={heartType} 
-                        size={20} 
+                        size={25} 
                         color="#a9d5d1" 
                         />
                     </TouchableOpacity>

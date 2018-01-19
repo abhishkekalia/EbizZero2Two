@@ -22,16 +22,6 @@ import {Actions as routes} from "react-native-router-flux";
 
 const { width, height } = Dimensions.get('window');
 
-const ShopingcartItems = [{
-    "product_id": "47",
-    "size": "medium",
-    "quantity": "1",
-    "delivery_address_id": "31",
-    "vendor_id":"4",
-    "price":"2600",
-    "delivery_datetime": "2017-12-29 02:02:56",
-    "order_date": "2017-12-28 08:44:04"
-}]
 export default class Shopingcart extends Component {
     constructor(props) { 
         super(props); 
@@ -52,17 +42,12 @@ export default class Shopingcart extends Component {
             country : null,
             status : false
         };
-        // this.ShopingItems = [];
 
     } 
     componentDidMount(){
         this.getKey()
         .then(()=>this.fetchData())
         .done()
-        
-        // var o = {"0":"1","1":"2","2":"3","3":"abhi"};
-        // var arr = Object.keys(o).map(function(k) { return o[k] });
-        // console.warn(arr)
     }
 
     async getKey() {
@@ -97,18 +82,12 @@ export default class Shopingcart extends Component {
         fetch(Utils.gurl('addToWishlist'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            // alert(responseData.data.message);
-
             MessageBarManager.showAlert({ 
                 message: responseData.data.message, 
                 alertType: 'alert', 
-        stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
-        animationType: 'SlideFromLeft',
-    })
-
-        //     this.setState({
-        //     data: responseData.data
-        // });
+                stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
+                animationType: 'SlideFromLeft',
+            })
         }).done();
     }
 
@@ -150,8 +129,6 @@ export default class Shopingcart extends Component {
                             "size": organization.size,
                             "quantity": organization.quantity,
                             "cart_id" : organization.cart_id,
-                            "delivery_address_id": "29",
-                            "vendor_id":"4",
                             "price":organization.price,
                             "delivery_datetime": currentdate,
                             "order_date": nextdate 

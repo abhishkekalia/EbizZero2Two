@@ -103,9 +103,9 @@ export default class AddService extends Component {
             special_price,Imagepaths, Imagepath} = this.state; 
 
         let path = Imagepath.length
-        if(path < 4){
+        if(path < 1){
             MessageBarManager.showAlert({
-                message: "Plese Select At Lest Four Image",
+                message: "Plese Select At Lest Single Image",
                 alertType: 'warning',
                 })      
             return false
@@ -179,11 +179,7 @@ export default class AddService extends Component {
                 'Accept': 'application/json', 
                 'Content-Type': 'multipart/form-data;',
             },
-            [
-            { name : 'service_images[]',  filename : Imagepath[0].name, data: RNFetchBlob.wrap(Imagepath[0].uri)},
-            { name : 'service_images[]',  filename : Imagepath[1].name, data: RNFetchBlob.wrap(Imagepath[1].uri)},
-            { name : 'service_images[]',  filename : Imagepath[2].name, data: RNFetchBlob.wrap(Imagepath[2].uri)},
-            { name : 'service_images[]',  filename : Imagepath[3].name, data: RNFetchBlob.wrap(Imagepath[3].uri)},
+            [...Imagepath,
             { name : 'u_id', data: String(u_id)}, 
             { name : 'country', data: String(country)}, 
             { name : 'service_type', data: String(service_type)}, 
@@ -223,21 +219,35 @@ export default class AddService extends Component {
             else if (response.customButton) {
               console.log('User tapped custom button: ', response.customButton);
             }
-            else {
-                let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
+           else {
+    
+       let source = { 
+        name : 'service_images[]', 
+        filename : response.fileName, 
+        data: RNFetchBlob.wrap(response.uri), 
+        uri: response.uri , 
+        // name: response.fileName, 
+        type: 'image/jpg'};
+                // let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
+                
+                let uri = response.uri;
+
+              // let path = { uri , name: response.fileName, type: 'image/jpg'};
 
                 this.setState({
                     avatarSource: source,
                     imageSelect : true,
+                    videoSelect : false,
+                    // image : path,
                 });
                 var newStateArray = this.state.rows.slice(); 
                 var newPathArray = this.state.Imagepath.slice(); 
                 newStateArray.push(source); 
                 newPathArray.push(source); 
-                this.setState({ 
-                    rows: newStateArray,
-                    Imagepath: newPathArray
-                });
+                    this.setState({ 
+                        rows: newStateArray,
+                        Imagepath: newPathArray
+                    });
             }
         });
     }

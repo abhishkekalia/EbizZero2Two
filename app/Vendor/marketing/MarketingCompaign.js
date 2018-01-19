@@ -80,10 +80,11 @@ export default class MarketingCompaign extends Component {
         return true;
     }
 
-    uploadTocloud(source, name){
+    uploadTocloud(){
         const { 
             image, 
             imageSelect , 
+            imageURl , 
             avatarSource, 
             videoSelect, 
             u_id, 
@@ -97,7 +98,6 @@ export default class MarketingCompaign extends Component {
         var isImage, price 
         if(image === 'image') { 
             isImage = "1", price = 1 } else { isImage = "2", price = 1.5}
-        // if(image === 'image') { path = imageSelect} else { path = videoSelect}
 
         if(this.validate()){
             this.setState({
@@ -110,8 +110,8 @@ export default class MarketingCompaign extends Component {
                 'Content-Type': 'multipart/form-data;',
             },
             [
-            { name : 'path',  filename : "image.jpg", data: RNFetchBlob.wrap(imageSource)},
-            { name : 'thumbnail_image',  filename : "thumbline.jpg", data: RNFetchBlob.wrap(imageName)},
+            { name : 'path',  filename : imageName, data: RNFetchBlob.wrap(imageSource)},
+            { name : 'thumbnail_image',  filename : imageName, data: RNFetchBlob.wrap(imageSource)},
             { name : 'u_id', data: String(u_id)}, 
             { name : 'country', data: String(country)}, 
             { name : 'user_type', data: String(user_type)}, 
@@ -134,7 +134,7 @@ export default class MarketingCompaign extends Component {
                 }
             })
             .done();
-}
+        }
     }
     selectPhotoTapped() {
         const options = {
@@ -194,13 +194,28 @@ export default class MarketingCompaign extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
+            let source = { uri: response.uri, path : response.path }; 
+            let path = response.uri
+            let name = response.fileName
+
               this.setState({
-                  videoSource: response.uri,
-                  videoSelect : true,
-                  imageSelect : false,
-                  image : 'video'
+                videoSource: response.uri,
+                videoSelect : true,
+                imageSelect : false,
+                image : 'video',
+                imageSource: path,
+                imageName : name,
+
               });
-        }});
+
+        Alert.alert( 
+            'Select Thumbline Image', 
+            'Please Select Thumbline Image',
+            [{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'OK', onPress: () => this.selectPhotoTapped()},
+            ],
+            { cancelable: false })
+    }});
     }
 
     render() {

@@ -207,6 +207,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
             key="vendortab" 
             hideNavBar 
             initial={vendor}
+            type={ActionConst.REPLACE}
             >
                 <Tabs 
                 tabs
@@ -282,7 +283,8 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         title="Profile"
                         icon={TabIcon}
                         iconName="user-secret"
-                        navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                        navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                        lazy>
                             <Scene 
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             key="ProfileVendor" 

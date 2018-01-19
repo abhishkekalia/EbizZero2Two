@@ -165,9 +165,9 @@ export default class AddProduct extends Component {
             Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state; 
 
         let path = Imagepath.length
-        if(path < 4){
+        if(path < 1){
             MessageBarManager.showAlert({
-                message: "Plese Select At Lest four Image",
+                message: "Plese Select At Lest Single Image",
                 alertType: 'warning',
                 })      
             return false
@@ -243,7 +243,6 @@ export default class AddProduct extends Component {
             shortdescription, detaildescription, price, 
             discount,final_price, quantityRows, 
             Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, u_id, country} = this.state;
-        
         if(this.validate()) { 
             this.setState({
                 visibleModal : true
@@ -254,11 +253,7 @@ export default class AddProduct extends Component {
                 'Accept': 'application/json', 
                 'Content-Type': 'multipart/form-data;',
             },
-            [
-            { name : 'product_images[]',  filename : Imagepath[0].name, data: RNFetchBlob.wrap(Imagepath[0].uri)},
-            { name : 'product_images[]',  filename : Imagepath[1].name, data: RNFetchBlob.wrap(Imagepath[1].uri)},
-            { name : 'product_images[]',  filename : Imagepath[2].name, data: RNFetchBlob.wrap(Imagepath[2].uri)},
-            { name : 'product_images[]',  filename : Imagepath[3].name, data: RNFetchBlob.wrap(Imagepath[3].uri)},
+            [...Imagepath,
             { name : 'u_id', data: String(u_id)}, 
             { name : 'country', data: String(country)}, 
             { name : 'product_category', data: String(product_category)}, 
@@ -306,7 +301,15 @@ export default class AddProduct extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-                let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
+    
+       let source = { 
+        name : 'product_images[]', 
+        filename : response.fileName, 
+        data: RNFetchBlob.wrap(response.uri), 
+        uri: response.uri , 
+        // name: response.fileName, 
+        type: 'image/jpg'};
+                // let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
                 
                 let uri = response.uri;
 

@@ -14,7 +14,8 @@ import {
     Clipboard,
     ToastAndroid,
     RefreshControl,
-    ActivityIndicator
+    ActivityIndicator,
+    AlertIOS
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
@@ -540,9 +541,9 @@ unCheck(data){
                 if(typeof shareOptions["url"] !== undefined) {
                   Clipboard.setString(shareOptions["url"]);
                   if (Platform.OS === "android") {
-                    ToastAndroid.show('Link copiado al portapapeles', ToastAndroid.SHORT);
+                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
                   } else if (Platform.OS === "ios") {
-                    AlertIOS.alert('Link copiado al portapapeles');
+                    AlertIOS.alert('Link Copied to Clipboard');
                   }
                 }
               },300);
@@ -714,7 +715,7 @@ unCheck(data){
                     />
                     <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}} 
                         name="share-google" 
-                        size={20} 
+                        size={25} 
                         color="#a9d5d1" 
                         // onPress={()=> this.sharing(data.product_id)}
                         onPress={()=>this.onOpen(data.product_name, data.product_id , url )}/>
