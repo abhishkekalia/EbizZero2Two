@@ -150,7 +150,10 @@ export default class ProductDescription extends Component {
                 this.removeLoader
             }
             })
-              .done();
+            .catch((error) => {
+              console.log(error);
+            })       
+            .done();
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -200,7 +203,11 @@ export default class ProductDescription extends Component {
             })
         }
         })
-        .done(); }
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+    }
     }
     fetchData(){ 
         const {u_id, country, user_type } = this.state;
@@ -229,6 +236,9 @@ export default class ProductDescription extends Component {
                 });
             }
         })
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
     fetchAddress(){
@@ -259,7 +269,12 @@ export default class ProductDescription extends Component {
                 addressStatus : responseData.status, 
                 });
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+        
     }
 
     sizechart(){

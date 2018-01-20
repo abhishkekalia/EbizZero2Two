@@ -125,7 +125,11 @@ export default class Contact extends Component<{}> {
             })
            this.setState({message : '', issue : ''})
         })
+        .catch((error) => {
+            console.log(error);
+        })
         .done();
+
     }
     }
 

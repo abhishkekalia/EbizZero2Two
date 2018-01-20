@@ -79,7 +79,12 @@ export default class AllItem extends Component {
                 refreshing : false
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+
     }
     moveToDesc(title, product_id, is_wishlist){
         Actions.deascriptionPage({ 

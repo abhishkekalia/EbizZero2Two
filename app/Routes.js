@@ -46,6 +46,7 @@ import GetMyaddress from "./components/GetMyaddress";
 import Marketingadd from "./components/Marketingadd";
 import Editmyprofile from "./components/Editmyprofile";
 import Myfaturah from './components/Myfaturah';
+import BookMyService from './components/BookMyService';
 import MyAdfaturah from './components/MyAdfaturah';
 import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
@@ -140,8 +141,8 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         iconName="home"
                         // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
-                        renderRightButton={() => <Ionicons name="filter" size={20} onPress={()=> Actions.filterBar()} color="#fff" style={{ padding : 10}}/>}
-                        titleStyle={{ color: 'white', alignSelf: 'center' }}>
+                        onRight={ ()=> console.log("")}
+                        rightTitle={null}>
                             
                             <Scene 
                             key="homePage" 
@@ -415,6 +416,18 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene 
                         key="faturah" 
                         component={Myfaturah} />                                 
+                    </Stack>
+                    <Stack
+                    back
+                    backTitle="Back"
+                    hideNavBar={true}
+                    duration={0}
+                    key="bookmyservice"
+                    titleStyle={{ color: 'black', alignSelf: 'center' }}
+                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                        <Scene 
+                        key="BookService" 
+                        component={BookMyService} />                                 
                     </Stack>
                     <Stack
                     back

@@ -31,6 +31,7 @@ import Editwish from './wish/Editwish'
 import Modal from 'react-native-modal';
 import I18n from 'react-native-i18n'
 import Share, {ShareSheet, Button} from 'react-native-share';
+import Feather from 'react-native-vector-icons/Feather';
 
 const { width, height } = Dimensions.get('window')
 let index = 0;
@@ -72,12 +73,27 @@ export default class MainView extends Component {
     componentDidMount(){
         this.getKey()
         .then( ()=>this.fetchData())
+        .then( ()=> this.fetchService())
         .then( ()=>this.fetchAllShop())
         .then( ()=>this.loadData())
         .then( ()=>this.loadServiceData())
         .done();
 
     }
+        componentWillMount() {
+        Actions.refresh({ right: this._renderRightButton,});    
+    }
+   _renderLeftButton = () => {
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
+    };
+   _renderRightButton = () => {
+        return(
+            <Feather name="filter" size={20} onPress={()=> Actions.filterBar()} color="#fff" style={{ padding : 10}}/>
+        );
+    };
+
   onCancel() {
     console.log("CANCEL")
     this.setState({visible:false});
@@ -151,7 +167,11 @@ export default class MainView extends Component {
                 loaded: true, 
                 refreshing: false
             });
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
     renderLoadingView() {
         return (
@@ -192,6 +212,9 @@ export default class MainView extends Component {
             this.setState({
                 dataArray: responseData.data,
             });
+        })
+        .catch((error) => {
+            console.log(error);
         })
         .done();
     }
@@ -282,7 +305,11 @@ unCheck(data){
             this.setState({
             data: responseData.data
         });
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
 
     fetchData(){
@@ -317,8 +344,49 @@ unCheck(data){
                     refreshing: false
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+
     }
+    fetchService(){ 
+        const {u_id, country } = this.state; 
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+            }
+        fetch(Utils.gurl('serviceList'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                this.setState({
+                dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
+                isLoading : false
+                });
+            }
+            else{
+                this.setState({
+                isLoading : false
+                })
+            }
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+
+    }
+
     filterByCategory(){
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
@@ -352,8 +420,28 @@ unCheck(data){
                     refreshing: false
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+
     }
+        Description (service_id, product_name, productImages ,
+            short_description, detail_description, price ,special_price){
+        Actions.vendordesc({
+            is_user : true, 
+            service_id : service_id,
+            title: product_name,
+            product_name : product_name,
+            productImages : productImages,
+            short_description : short_description,
+            detail_description : detail_description,
+            price : price,
+            special_price : special_price,
+        })
+    }
+
     renderLoadingView() {
         return (
             <ActivityIndicator  
@@ -389,6 +477,22 @@ unCheck(data){
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource}
                 renderRow={ this.renderData.bind(this)}
+                enableEmptySections={true}
+                automaticallyAdjustContentInsets={false}
+                showsVerticalScrollIndicator={false}
+                />
+            );
+        let serviceListview = (<View></View>);
+            serviceListview = (
+                <ListView
+                refreshControl={ 
+                    <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this._onRefresh} />
+                }
+                contentContainerStyle={styles.list}
+                dataSource={this.state.dataSource2}
+                renderRow={ this.renderService.bind(this)}
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
@@ -442,6 +546,7 @@ unCheck(data){
                 <Text style={{ padding : 10, fontWeight : '100', fontFamily :"halvetica"}}>All Item</Text>
                 {listView}
                 <Text style={{ padding : 10, fontWeight : '100', fontFamily :"halvetica"}}>All Service</Text>
+                {serviceListview}
                 <Modal isVisible={this.state.isModalVisible}>
                 <View style={styles.container}>
                     <ScrollView>
@@ -560,6 +665,44 @@ unCheck(data){
             </View>
         );
     }
+    renderService(data, rowData: string, sectionID: number, rowID: number, index) {
+        let color = data.special_price ? '#C5C8C9' : '#000';
+        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        
+       return (
+            <View style={styles.row} > 
+                <View style={{flexDirection: 'row', justifyContent: "center"}}>
+                    
+                    <TouchableOpacity 
+                    onPress={()=> this.Description(data.service_id, data.service_name, data.serviceImages ,
+                    data.short_description, data.detail_description, data.price ,data.special_price)}>
+                        <Image style={styles.thumb} 
+                            source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null }}/>
+                    </TouchableOpacity>
+                </View>
+                
+                <View style={{ padding :15}}>
+                <TouchableOpacity  style={styles.name} 
+                // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
+                >
+
+                <Text style={{fontSize : 13, color :'#000', fontFamily : 'halvetica' }}>{data.service_name}</Text>
+                </TouchableOpacity>
+                <Text style={styles.description}>{data.short_description}</Text>
+                <View style={{
+                    flex: 0, 
+                    flexDirection: 'row', 
+                    justifyContent: 'space-between',
+                    top : 5
+                }}> 
+                    <Text style={styles.special_price}>{data.special_price} Aed</Text>
+                    <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} Aed</Text>
+                </View>
+                </View>
+            </View>
+        );
+    }
+
 
        // service  filter
 
@@ -587,7 +730,11 @@ unCheck(data){
                 serviceArrayStatus : responseData.status
             });
         })
+        .catch((error) => {
+            console.log(error);
+        })
         .done();
+
     }
 
     onServiceClick(data) {

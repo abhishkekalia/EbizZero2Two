@@ -87,7 +87,11 @@ export default class FeaturedProduct extends Component {
 
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
     ListViewItemSeparator = () => {
         return (

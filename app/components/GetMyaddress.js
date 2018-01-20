@@ -87,6 +87,9 @@ export default class GetMyaddress extends Component {
                 loaded : true
             });
         })
+        .catch((error) => {
+            console.log(error)
+        })
         .done();
     }
 

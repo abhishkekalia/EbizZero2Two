@@ -109,8 +109,12 @@ export default class AddressBook extends Component {
               }else{
                 this.removeLoader
             }
+            }) 
+            .catch((error) => {
+                console.log(error);
             })
-              .done();
+        .done();
+
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -156,7 +160,10 @@ export default class AddressBook extends Component {
                 this.removeLoader
             }
             })
-              .done();
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -194,7 +201,12 @@ export default class AddressBook extends Component {
                 status : responseData.status, 
                 });
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+
     }
 
     onRemove (data){
@@ -222,7 +234,11 @@ export default class AddressBook extends Component {
           })
         })
         .then(()=>this.fetchAddress())
+        .catch((error) => {
+            console.log(error);
+        })
         .done();
+
 
     }
     onEdit (data) {

@@ -25,6 +25,8 @@ import Modal from 'react-native-modal';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
+const INITIAL_STATE = {avatarSource: '', ad_category: ''};
+
 export default class MarketingCompaign extends Component { 
     constructor(props) { 
         super(props);
@@ -32,9 +34,10 @@ export default class MarketingCompaign extends Component {
             image: null,
             imageSelect : false,
             videoSelect: false,
+            thumbnail_image : null,
             avatarSource: null,
             videoSource: null ,
-            imageSource : '',
+            Source : '',
             imageName : '',
             u_id: null,
             ad_category : '',
@@ -62,10 +65,10 @@ export default class MarketingCompaign extends Component {
         }
     }
     validate(){
-        const { imageSource, imageName, ad_category} = this.state; 
-        if (!imageName.length){
+        const { Source, ad_category} = this.state; 
+        if (!Source.length){
             MessageBarManager.showAlert({
-                message: "Plese Select Image",
+                message: "Plese Select Image Or Video To Upload Advertisement",
                 alertType: 'warning',
                 })      
             return false
@@ -92,50 +95,144 @@ export default class MarketingCompaign extends Component {
             country, 
             amount, 
             ad_category,
-            imageSource,
+            thumbnail_image,
+            Source,
             imageName,
         } = this.state; 
-        var isImage, price 
+        var isImage;
+
         if(image === 'image') { 
-            isImage = "1", price = 1 } else { isImage = "2", price = 1.5}
+            isImage = "1" } else { isImage = "2"}
 
         if(this.validate()){
             this.setState({
                 visibleModal : true
             })
 
-            RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{ 
-                Authorization : "Bearer access-token", 
+            // RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{ 
+            //     Authorization : "Bearer access-token", 
+            //     'Accept': 'application/json', 
+            //     'Content-Type': 'multipart/form-data;',
+            // },
+            // [
+            // { name : 'path',  filename : imageName, data: RNFetchBlob.wrap(Source)},
+            // { name : 'thumbnail_image',  filename : imageName, data: RNFetchBlob.wrap(thumbnail_image)},
+            // { name : 'u_id', data: String(u_id)}, 
+            // { name : 'country', data: String(country)}, 
+            // { name : 'user_type', data: String(user_type)}, 
+            // { name : 'ad_type', data: String(isImage)}, 
+            // { name : 'ad_category', data: String(ad_category)}, 
+            // { name : 'amount', data: String(amount)}, 
+            // ])
+            // .uploadProgress({ interval : 250 },(written, total) => {
+            // console.warn('uploaded', Math.floor(written/total*100) + '%') 
+            // })
+            // .then((responseData)=>{ 
+            //    var getdata = JSON.parse(responseData.data);
+            //    if(getdata.status){
+            //         routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: price })
+
+            //         this.setState({...INITIAL_STATE,
+            //             visibleModal : false,
+            //         })
+            //     }
+            // })
+            // .catch((errorMessage, statusCode) => {
+            //     MessageBarManager.showAlert({
+            //     message: "error while opload add",
+            //     alertType: 'warning',
+            //     })
+            //     this.setState({
+            //             visibleModal : false,
+            //         })
+            // })
+            // .done();
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('user_type', String(user_type)); 
+        formData.append('ad_type', String(isImage)); 
+        formData.append('path', {
+            uri:  Source,
+            type: 'image/jpg', 
+            name: imageName});         
+        formData.append('thumbnail_image', {
+            uri:  thumbnail_image,
+            type: 'image/jpg', 
+            name: imageName});
+        formData.append('ad_category', String(ad_category)); 
+        formData.append('amount', String(amount)); 
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
                 'Accept': 'application/json', 
                 'Content-Type': 'multipart/form-data;',
             },
-            [
-            { name : 'path',  filename : imageName, data: RNFetchBlob.wrap(imageSource)},
-            { name : 'thumbnail_image',  filename : imageName, data: RNFetchBlob.wrap(imageSource)},
-            { name : 'u_id', data: String(u_id)}, 
-            { name : 'country', data: String(country)}, 
-            { name : 'user_type', data: String(user_type)}, 
-            { name : 'ad_type', data: String(isImage)}, 
-            { name : 'ad_category', data: String(ad_category)}, 
-            { name : 'amount', data: String(price)}, 
-            ])
-            .uploadProgress((written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%') 
-            })
-            .then((responseData)=>{ 
-               var getdata = JSON.parse(responseData.data);
-               if(getdata.status){
-                    routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: price })
+            body: formData,
+        } 
+            fetch(Utils.gurl('addMarketingAd'), config) 
+            .then((response) => response.json())
+            .then((responseData) => {
+                routes.myuserAdfaturah({ uri : responseData.data.url, ad_id : responseData.data.ad_id, amount :amount })
 
+                if(responseData.status){
                     this.setState({
-                        visibleModal : false,
-                        amount : price
-                    })
+                        visibleModal : false
+                    });
                 }
+            })
+            .catch((error) => {
+                    MessageBarManager.showAlert({
+                message: "error while opload add",
+                alertType: 'warning',
+                })
+                this.setState({...INITIAL_STATE,
+                        visibleModal : false,
+                    })
             })
             .done();
         }
     }
+
+    SelectThumbline() {
+        const options = {
+            quality: 1.0,
+            maxWidth: 500,
+            maxHeight: 500,
+            storageOptions: {
+              skipBackup: true
+            }
+        }; 
+
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response); 
+            if (response.didCancel) {
+            console.log('User cancelled photo picker');
+            }
+            else if (response.error) {
+              console.log('ImagePicker Error: ', response.error);
+            }
+            else if (response.customButton) {
+              console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+              let source = { uri: response.uri }; 
+              let path = response.uri
+              let name = response.fileName
+
+                this.setState({
+                    avatarSource: source,
+                    thumbnail_image : path,
+                    imageSelect : true,
+                    videoSelect : false,
+                    imageName : name,
+
+                });
+            }
+        });
+    }
+
     selectPhotoTapped() {
         const options = {
             quality: 1.0,
@@ -164,11 +261,13 @@ export default class MarketingCompaign extends Component {
 
                 this.setState({
                     avatarSource: source,
+                    thumbnail_image : path,
                     imageSelect : true,
                     videoSelect : false,
                     image : 'image',
-                    imageSource: path,
+                    Source: path,
                     imageName : name,
+                    amount : "1"
                 });
             }
         });
@@ -195,16 +294,16 @@ export default class MarketingCompaign extends Component {
             }
             else {
             let source = { uri: response.uri, path : response.path }; 
-            let path = response.uri
-            let name = response.fileName
+            let uri = response.uri
+            let path = response.path
 
               this.setState({
                 videoSource: response.uri,
                 videoSelect : true,
                 imageSelect : false,
                 image : 'video',
-                imageSource: path,
-                imageName : name,
+                Source: uri,
+                amount : "1.5"
 
               });
 
@@ -212,7 +311,7 @@ export default class MarketingCompaign extends Component {
             'Select Thumbline Image', 
             'Please Select Thumbline Image',
             [{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-            {text: 'OK', onPress: () => this.selectPhotoTapped()},
+            {text: 'OK', onPress: () => this.SelectThumbline()},
             ],
             { cancelable: false })
     }});

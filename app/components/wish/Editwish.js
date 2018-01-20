@@ -71,7 +71,10 @@ export default class Editwish extends Component {
             }
         })
         .then(()=>this.props.fetchData())
-    .done();
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
 
     }
     removeToWishlist (){
@@ -98,6 +101,9 @@ export default class Editwish extends Component {
             })
         })
         .then(()=>this.props.fetchData())
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
 

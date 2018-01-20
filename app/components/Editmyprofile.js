@@ -112,7 +112,12 @@ export default class Editmyprofile extends Component<{}> {
         .then((response) => response.json())
         .then((responseData) => {
             routes.pop();
-        }).done();
+        })
+       .catch((error) => {
+            console.log(error);
+        })
+        .done();
+
     }
     }  
 

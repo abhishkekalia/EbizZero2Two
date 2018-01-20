@@ -53,6 +53,15 @@ export default class WishList extends Component {
         .then( ()=>this.fetchData())
         .done()
     }
+    componentWillMount() {
+        Actions.refresh({ right: this._renderRightButton,});    
+    }
+   _renderRightButton = () => {
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
+    };
+
    
     async getKey() {
         try { 
@@ -113,7 +122,12 @@ export default class WishList extends Component {
                     loaded : true
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+
     }
     validate(){
         const { ShopingItems} = this.state; 
@@ -170,6 +184,9 @@ export default class WishList extends Component {
             })
             .then(()=>this.removeWishlist(product_id))
             .then(()=> this.fetchData())
+            .catch((error) => {
+              console.log(error);
+            })       
             .done();
         }
     }
@@ -198,6 +215,9 @@ export default class WishList extends Component {
             }
         })
         .then(()=> this.fetchData())
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
     validate(){
@@ -247,7 +267,11 @@ export default class WishList extends Component {
                         alertType: 'alert', 
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
                     })
-            }).done();
+            })
+            .catch((error) => {
+              console.log(error);
+            })       
+            .done();
         }
     }
 

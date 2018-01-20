@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Utils from 'app/common/Utils';
 import {Actions as routes} from "react-native-router-flux";
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 export default class ProductOrder extends Component<{}> {
      constructor(props) {
@@ -51,7 +52,7 @@ export default class ProductOrder extends Component<{}> {
         }
     }
         componentWillMount() {
-        routes.refresh({ right: undefined });    
+        routes.refresh({ right: undefined , left : undefined});    
     }
 
     componentDidMount() {
@@ -72,6 +73,37 @@ export default class ProductOrder extends Component<{}> {
             console.log("Error retrieving data" + error);
         }
     }
+    changeorderstatus(order_id, status){
+        let formData = new FormData();
+        formData.append('order_id', String(order_id));
+        formData.append('status', String(status)); 
+        const config = { 
+                method: 'POST', 
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+
+        fetch(Utils.gurl('changeorderstatus'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                this.fetchData()
+            }else {
+                this.fetchData()
+            }
+        })
+        .catch((errorMessage, statusCode) => {
+             this.setState({
+                loaded     : true,
+            });
+        })
+        .done();        
+
+    }
+
 
 
     fetchData () {
@@ -79,7 +111,6 @@ export default class ProductOrder extends Component<{}> {
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country)); 
-
         const config = { 
                 method: 'POST', 
                 headers: { 
@@ -89,7 +120,6 @@ export default class ProductOrder extends Component<{}> {
                 body: formData,
             }
         fetch(Utils.gurl('orderList'), config)
-     
             .then((response) => response.json())
             .then((responseData) => {
             var orders = responseData.data,
@@ -120,20 +150,25 @@ export default class ProductOrder extends Component<{}> {
             }
 
             if (responseData.status) {
-
             this.setState({
                 dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
                 loaded     : true,
                 status     : responseData.status
             });
-        }else {
-             this.setState({
+            }else {
+                this.setState({
+                    loaded     : true,
+                    status     : responseData.status
+                });
+            }
+        })
+        .catch((errorMessage, statusCode) => {
+            this.setState({
                 loaded     : true,
-                status     : responseData.status
+                status     : false
             });
-        }
-
-        }).done();        
+        })
+        .done();        
     }    
     noItemFound(){
         return (
@@ -169,7 +204,6 @@ export default class ProductOrder extends Component<{}> {
     renderListView() {
         return (
             <View style={[styles.container, {padding : 5}]}>
-               
                 <ListView
                     dataSource = {this.state.dataSource}
                     style      = {styles.listview}
@@ -196,6 +230,16 @@ export default class ProductOrder extends Component<{}> {
 Object.assign(ProductOrder.prototype, {
     bindableMethods : {
         renderRow : function (rowData, sectionID, rowID) {
+            let label,
+            ord_status;
+            if(rowID.order_status === '1'){ 
+                label = 'Pending';
+                ord_status = 0;
+            } 
+            else if(rowID.order_status === '0'){
+            label = 'Complete';
+            ord_status = 1;
+        }
             return (
                 <View style={styles.row}>
                     <View style={{ flexDirection : 'row'}}>
@@ -210,7 +254,7 @@ Object.assign(ProductOrder.prototype, {
                         <Text style={[styles.rowText, { color : '#ccc'}]}>{rowID.quantity} </Text> 
                     </View>
                     <View style={{ flexDirection : 'row'}}>
-                        <Text style={[styles.rowText, {color : '#f53d3d'}]}>Price Sold: </Text> 
+                        <Text style={[styles.rowText, {color : '#f53d3d'}]}>Price: </Text> 
                         <Text style={styles.rowText}>{rowID.price} </Text> 
                     </View>
                     <View style={{ flexDirection : 'row'}}>
@@ -219,8 +263,10 @@ Object.assign(ProductOrder.prototype, {
                     </View>
                     <View style={styles.footer}>
                         <View style={{ flexDirection : 'row'}}>
-                            <Text style={[styles.rowText, {color : '#f53d3d'} ]}>Order Status : </Text> 
-                            <Text style={[styles.rowText, { color : '#a9d5d1'}]}>{ rowID.order_status ? 'pending' : 'paid'} </Text> 
+                            <Text style={[styles.rowText, {color : '#f53d3d'} ]}>Order Status : </Text>
+                            <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status )}> 
+                            <Text style={[styles.rowText, { color : '#a9d5d1'}]}>{label} </Text>
+                            </TouchableOpacity> 
                         </View>
                         <View style={{ flexDirection : 'row'}}>
                             <Text style={[styles.rowText, , {color : '#f53d3d'}]}>Order Date : </Text> 
@@ -229,20 +275,7 @@ Object.assign(ProductOrder.prototype, {
                     </View>
                 </View>
             );
-        },
-        onPressRow : function (rowData, sectionID) {
-            var buttons = [
-                {
-                    text : 'Cancel'
-                },
-                {
-                    text    : 'OK',
-                    onPress : () => this.createCalendarEvent(rowData, sectionID)
-                }
-            ]
-            Alert.alert('User\'s Email is ' + rowData.email, null, null);
         }
-
     }
 });
 

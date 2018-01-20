@@ -98,7 +98,15 @@ export default class MyAdfaturah extends Component {
                 })
                 routes.pop();
             }
-        }).done();
+        })
+        .catch((error) => {
+                MessageBarManager.showAlert({ 
+                    message: "Error Ocurd while Payment", 
+                    alertType: 'alert', 
+                })
+        })
+        .done();
+
     }
 
     render() {

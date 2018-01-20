@@ -67,6 +67,9 @@ export default class Countmanager extends Component {
         .then( ()=> this.setState({
             loaded : true
         }))
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
     decrement () {

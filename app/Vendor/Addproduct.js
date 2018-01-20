@@ -99,8 +99,13 @@ export default class AddProduct extends Component {
         .done();
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton });    
+        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });    
     }
+   _renderLeftButton = () => {
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
+    };
    _renderRightButton = () => {
         return(
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
@@ -156,6 +161,9 @@ export default class AddProduct extends Component {
                     })
                 }
             })
+            .catch((errorMessage, statusCode) => {
+            })
+
             .done();
     }
     validate(){
@@ -272,10 +280,16 @@ export default class AddProduct extends Component {
             console.log('uploaded', Math.floor(written/total*100) + '%') 
             })
             .then((res)=>{ 
-                        this.setState({
-                            visibleModal : false
-                        })}
-                )
+                this.setState({
+                    visibleModal : false
+                })
+            })
+            .catch((errorMessage, statusCode) => {
+                MessageBarManager.showAlert({
+                message: errorMessage,
+                alertType: 'warning',
+                })      
+            })
             .done();
         }
     }
@@ -491,7 +505,7 @@ export default class AddProduct extends Component {
                         <Switch
                         value={is_feature}
                         onValueChange={(val) => 
-                            this.setState({ is_feature : val ? "2" : "0"})
+                            this.setState({ is_featuronSubmitEditinge : val ? "2" : "0"})
                         }
                         disabled={false}
                         activeText={'On'}

@@ -89,7 +89,14 @@ export default class Filter extends Component {
                 status : responseData.status
             });
         }
-        }).done();
+        })
+        .catch((error) => {
+            this.setState({
+                status : false
+            });
+        })
+        .done();
+
     }
 
     renderView() {
@@ -118,22 +125,6 @@ export default class Filter extends Component {
 
     }
     onClick(data) {
-
-        // this.state.rows.inArray = function(comparer) { 
-        //     for(var i=0; i < this.length; i++) {  
-        //         if(comparer(this[i])) return true; 
-        //     }
-        //     return false; 
-        // }; 
-        // this.state.rows.pushIfNotExist = function(element, comparer) {  
-        //     if (!this.inArray(comparer)) { 
-        //         this.push(newArray); 
-        //     }
-        // }; 
-        // this.state.rows.pushIfNotExist( function(e) { 
-        //     return e ;
-        // });
-
         data.checked = !data.checked;
         data.checked? this.check(data): this.unCheck(data)
         

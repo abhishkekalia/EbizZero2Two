@@ -84,7 +84,15 @@ export default class ServiceOrder extends Component {
 
                 })
             }
-        }).done();
+        })
+        .catch((errorMessage, statusCode) => {
+             this.setState({
+                loaded     : true,
+                status     : false
+            });
+        })
+        .done();        
+
     }
     noItemFound(){
         return (
@@ -161,9 +169,9 @@ export default class ServiceOrder extends Component {
                     <Text style={styles.bodyText}>{data.userDetail.email}</Text>
                     </View>
                     <View style={styles.row}>
-                    <Text style={styles.label}>Special Price : </Text>
-                    <Text style={styles.bodyText}> {data.serviceDetail.price} </Text>
-                    <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.special_price}</Text>
+                    <Text style={styles.label}>Price : </Text>
+                    <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
+                    <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
                     </View>
                 </View>
 

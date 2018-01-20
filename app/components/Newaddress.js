@@ -113,7 +113,11 @@ export default class Newaddress extends Component<{}> {
                     })
 
                     }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
     }  
 

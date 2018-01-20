@@ -13,6 +13,7 @@ import {
 
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Utils from 'app/common/Utils';
 
  const { width, height } = Dimensions.get('window')
@@ -79,7 +80,14 @@ export default class MyService extends Component {
                 isLoading : false
                 })
             }
-        }).done();
+        })
+        .catch((errorMessage, statusCode) => {
+            MessageBarManager.showAlert({
+            message: "error while fetching data",
+            alertType: 'warning',
+            })      
+        })
+        .done();
     }
 
     ListViewItemSeparator = () => {

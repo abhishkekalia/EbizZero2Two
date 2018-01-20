@@ -131,7 +131,12 @@ export default class OrderList extends Component<{}> {
             });
         }
 
-        }).done();        
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+             
     }    
     noItemFound(){
         return (

@@ -98,7 +98,14 @@ export default class Myuserfaturah extends Component {
                 })
             routes.pop();
         }
-        }).done();
+        })
+        .catch((error) => {
+                MessageBarManager.showAlert({ 
+                    message: "Payment Not Success", 
+                    alertType: 'alert', 
+                })
+        })
+        .done();
     }
 
     render() {

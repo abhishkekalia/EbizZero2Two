@@ -83,7 +83,12 @@ export default class Service extends Component {
                 isLoading : false
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+
     }
 
     ListViewItemSeparator = () => {

@@ -28,6 +28,14 @@ class Profile extends Component {
 	    .then(()=>this.getAddress())
 	    .done()
     }
+    componentWillMount() {
+        Actions.refresh({ right: this._renderRightButton,});    
+    }
+   _renderRightButton = () => {
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
+    };
 
     async getKey() {
         try { 

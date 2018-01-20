@@ -13,7 +13,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
 
-export default class Myfaturah extends Component { 
+export default class BookMyService extends Component { 
     constructor(props) {
         super(props);
         this.getKey= this.getKey.bind(this);
@@ -68,20 +68,19 @@ export default class Myfaturah extends Component {
             let status = navState.url.split("?")[1];
             let statusId = navState.url.split("?")[2]; 
             let id = statusId.split("=")[1];
-            this.orderPayment(status, id)
+            this.servicePayment(status, id)
         }
     }
 
-    orderPayment(status, id){
+    servicePayment(status, id){
         const {u_id, country} = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));  
-        formData.append('order_id', String(this.props.order_id));  
+        formData.append('service_id', String(this.props.service_id));  
         formData.append('payment_id', String(id));  
         formData.append('payment_status', String(status));  
-        formData.append('amount', String(5));  
-
+        formData.append('amount', String(this.props.price));  
         const config = { 
             method: 'POST', 
             headers: { 
@@ -90,7 +89,7 @@ export default class Myfaturah extends Component {
             },
             body: formData,
         } 
-        fetch(Utils.gurl('orderPayment'), config) 
+        fetch(Utils.gurl('servicePayment'), config) 
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -111,7 +110,6 @@ export default class Myfaturah extends Component {
     }
 
     render() {
-        // console.warn(this.props.uri);
         return (
             <View style={styles.container}>
                 <WebView

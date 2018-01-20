@@ -49,6 +49,14 @@ export default class Shopingcart extends Component {
         .then(()=>this.fetchData())
         .done()
     }
+    componentWillMount() {
+        routes.refresh({ right: this._renderRightButton,});    
+    }
+   _renderRightButton = () => {
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
+    };
 
     async getKey() {
         try { 
@@ -88,7 +96,11 @@ export default class Shopingcart extends Component {
                 stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
                 animationType: 'SlideFromLeft',
             })
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
 
     fetchData(){
@@ -153,6 +165,9 @@ export default class Shopingcart extends Component {
                 })
             }
         })
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
 
@@ -185,6 +200,9 @@ export default class Shopingcart extends Component {
             })
         })
         .then(()=>this.fetchData())
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
 

@@ -70,7 +70,13 @@ export default class GetMarketing extends Component {
                     status : responseData.status
                 });                
             }
-        }).done();
+        })
+        .catch((error) => {
+            this.setState({
+                status : responseData.status
+            });
+        })
+        .done();
     }
 
     render() {

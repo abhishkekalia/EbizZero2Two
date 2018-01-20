@@ -63,7 +63,12 @@ export default class Settings extends Component {
                 description: responseData.data.privacypolicy_description
             })
             }
-        }).done();
+        })
+       .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+
     }
     getlegalnotice(){
         fetch(Utils.gurl('getlegalnotice'),{
@@ -80,7 +85,11 @@ export default class Settings extends Component {
                 description: responseData.data.legalnotice_description
             })
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
     gettermandcondition(){
         fetch(Utils.gurl('gettermandcondition'),{
@@ -97,7 +106,11 @@ export default class Settings extends Component {
                 description: responseData.data.termsandcondition_description
             })
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
     getreturnpolicy(){
         fetch(Utils.gurl('getreturnpolicy'),{
@@ -114,7 +127,11 @@ export default class Settings extends Component {
                 description: responseData.data.returnpolicy_description
             })
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
     getshipmentpolicy(){
         fetch(Utils.gurl('getshipmentpolicy'),{
@@ -131,7 +148,11 @@ export default class Settings extends Component {
                 description: responseData.data.shipmentpolicy_description
             })
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
     getaboutus(){
         fetch(Utils.gurl('getaboutus'),{
@@ -148,7 +169,11 @@ export default class Settings extends Component {
                 description: responseData.data.aboutus_description
             })
             }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
     fetchData(){ 
         const { u_id,country, } = this.state; 
@@ -176,6 +201,9 @@ export default class Settings extends Component {
         //         is_notification: responseData.data.is_notification
         // });
         })
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
 
@@ -210,6 +238,9 @@ export default class Settings extends Component {
             }
 
         })
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
 

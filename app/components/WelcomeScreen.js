@@ -81,7 +81,12 @@ export default class WelcomeScreen extends Component {
                 userTypes: responseData.response.data,
                  loaded: true
         });
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+
     }
 
     renderLoadingView() {

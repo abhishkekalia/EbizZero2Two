@@ -95,7 +95,12 @@ export default class Marketingadd extends Component {
                     this.setState({
                         visibleModal : false});
                 }
-            }).done();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
+
 
 
         // console.warn(formData);
