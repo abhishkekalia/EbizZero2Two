@@ -24,7 +24,7 @@ import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-
+const videoIcon = '../../images/videoIcon.png';
 const INITIAL_STATE = {avatarSource: '', ad_category: ''};
 
 export default class MarketingCompaign extends Component { 
@@ -35,10 +35,13 @@ export default class MarketingCompaign extends Component {
             imageSelect : false,
             videoSelect: false,
             thumbnail_image : null,
+            thumblinefiletype : null,
+            fileType : null,
             avatarSource: null,
             videoSource: null ,
+            thumblinename : null,
             Source : '',
-            imageName : '',
+            uploadFileName : '',
             u_id: null,
             ad_category : '',
             user_type : null,
@@ -96,8 +99,11 @@ export default class MarketingCompaign extends Component {
             amount, 
             ad_category,
             thumbnail_image,
+            thumblinefiletype,
+            fileType,
             Source,
-            imageName,
+            uploadFileName,
+            thumblinename,
         } = this.state; 
         var isImage;
 
@@ -108,90 +114,90 @@ export default class MarketingCompaign extends Component {
             this.setState({
                 visibleModal : true
             })
-
-            // RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{ 
-            //     Authorization : "Bearer access-token", 
-            //     'Accept': 'application/json', 
-            //     'Content-Type': 'multipart/form-data;',
-            // },
-            // [
-            // { name : 'path',  filename : imageName, data: RNFetchBlob.wrap(Source)},
-            // { name : 'thumbnail_image',  filename : imageName, data: RNFetchBlob.wrap(thumbnail_image)},
-            // { name : 'u_id', data: String(u_id)}, 
-            // { name : 'country', data: String(country)}, 
-            // { name : 'user_type', data: String(user_type)}, 
-            // { name : 'ad_type', data: String(isImage)}, 
-            // { name : 'ad_category', data: String(ad_category)}, 
-            // { name : 'amount', data: String(amount)}, 
-            // ])
-            // .uploadProgress({ interval : 250 },(written, total) => {
-            // console.warn('uploaded', Math.floor(written/total*100) + '%') 
-            // })
-            // .then((responseData)=>{ 
-            //    var getdata = JSON.parse(responseData.data);
-            //    if(getdata.status){
-            //         routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: price })
-
-            //         this.setState({...INITIAL_STATE,
-            //             visibleModal : false,
-            //         })
-            //     }
-            // })
-            // .catch((errorMessage, statusCode) => {
-            //     MessageBarManager.showAlert({
-            //     message: "error while opload add",
-            //     alertType: 'warning',
-            //     })
-            //     this.setState({
-            //             visibleModal : false,
-            //         })
-            // })
-            // .done();
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('user_type', String(user_type)); 
-        formData.append('ad_type', String(isImage)); 
-        formData.append('path', {
-            uri:  Source,
-            type: 'image/jpg', 
-            name: imageName});         
-        formData.append('thumbnail_image', {
-            uri:  thumbnail_image,
-            type: 'image/jpg', 
-            name: imageName});
-        formData.append('ad_category', String(ad_category)); 
-        formData.append('amount', String(amount)); 
-
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
+// console.warn(Source);
+            RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{ 
+                Authorization : "Bearer access-token", 
+                'Accept': 'application/json',
+                'Content-Type': 'application/octet-stream',
             },
-            body: formData,
-        } 
-            fetch(Utils.gurl('addMarketingAd'), config) 
-            .then((response) => response.json())
-            .then((responseData) => {
-                routes.myuserAdfaturah({ uri : responseData.data.url, ad_id : responseData.data.ad_id, amount :amount })
-
-                if(responseData.status){
-                    this.setState({
-                        visibleModal : false
-                    });
+            [
+            { name: 'path', filename: uploadFileName, type: fileType,  data: RNFetchBlob.wrap(Source) },
+            // { name : 'path',  filename : uploadFileName, type : fileType , data: RNFetchBlob.wrap(Source)},
+            { name : 'thumbnail_image',  filename : thumblinename,  type : thumblinefiletype, data: RNFetchBlob.wrap(thumbnail_image)},
+            { name : 'u_id', data: String(u_id)}, 
+            { name : 'country', data: String(country)}, 
+            { name : 'user_type', data: String(user_type)}, 
+            { name : 'ad_type', data: String(isImage)}, 
+            { name : 'ad_category', data: String(ad_category)}, 
+            { name : 'amount', data: String(amount)}, 
+            ])
+            .uploadProgress({ interval : 250 },(written, total) => {
+            console.log('uploaded', Math.floor(written/total*100) + '%') 
+            })
+            .then((responseData)=>{ 
+               var getdata = JSON.parse(responseData.data);
+               if(getdata.status){
+                    routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: amount })
+                    this.setState({...INITIAL_STATE,
+                        visibleModal : false,
+                    })
                 }
             })
-            .catch((error) => {
-                    MessageBarManager.showAlert({
+            .catch((errorMessage, statusCode) => {
+                MessageBarManager.showAlert({
                 message: "error while opload add",
                 alertType: 'warning',
                 })
-                this.setState({...INITIAL_STATE,
+                this.setState({
                         visibleModal : false,
                     })
             })
             .done();
+        // let formData = new FormData();
+        // formData.append('u_id', String(u_id));
+        // formData.append('country', String(country)); 
+        // formData.append('user_type', String(user_type)); 
+        // formData.append('ad_type', String(isImage)); 
+        // formData.append('path', {
+        //     uri:  Source,
+        //     type: 'image/jpg', 
+        //     name: uploadFileName});         
+        // formData.append('thumbnail_image', {
+        //     uri:  thumbnail_image,
+        //     type: 'image/jpg', 
+        //     name: uploadFileName});
+        // formData.append('ad_category', String(ad_category)); 
+        // formData.append('amount', String(amount)); 
+
+        // const config = { 
+        //     method: 'POST', 
+        //     headers: { 
+        //         'Accept': 'application/json', 
+        //         'Content-Type': 'multipart/form-data;',
+        //     },
+        //     body: formData,
+        // } 
+        //     fetch(Utils.gurl('addMarketingAd'), config) 
+        //     .then((response) => response.json())
+        //     .then((responseData) => {
+        //         routes.myuserAdfaturah({ uri : responseData.data.url, ad_id : responseData.data.ad_id, amount :amount })
+
+        //         if(responseData.status){
+        //             this.setState({
+        //                 visibleModal : false
+        //             });
+        //         }
+        //     })
+        //     .catch((error) => {
+        //             MessageBarManager.showAlert({
+        //         message: "error while opload add",
+        //         alertType: 'warning',
+        //         })
+        //         this.setState({...INITIAL_STATE,
+        //                 visibleModal : false,
+        //             })
+        //     })
+        //     .done();
         }
     }
 
@@ -224,9 +230,10 @@ export default class MarketingCompaign extends Component {
                 this.setState({
                     avatarSource: source,
                     thumbnail_image : path,
+                    thumblinefiletype : 'image/jpg',
                     imageSelect : true,
                     videoSelect : false,
-                    imageName : name,
+                    thumblinename : name,
 
                 });
             }
@@ -256,8 +263,8 @@ export default class MarketingCompaign extends Component {
             }
             else {
               let source = { uri: response.uri }; 
-              let path = response.uri
-              let name = response.fileName
+              let path = response.uri;
+              let name = response.fileName;
 
                 this.setState({
                     avatarSource: source,
@@ -265,8 +272,11 @@ export default class MarketingCompaign extends Component {
                     imageSelect : true,
                     videoSelect : false,
                     image : 'image',
+                    fileType : 'image/jpg',
+                    thumblinefiletype : 'image/jpg',
                     Source: path,
-                    imageName : name,
+                    uploadFileName : name,
+                    thumblinename : name,
                     amount : "1"
                 });
             }
@@ -293,30 +303,42 @@ export default class MarketingCompaign extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-            let source = { uri: response.uri, path : response.path }; 
-            let uri = response.uri
-            let path = response.path
+           
+            var filename = Date.now().toString();
+            let name = filename + "." + response.path.split('.')[1];
 
               this.setState({
-                videoSource: response.uri,
+                videoSource: response.path ,
                 videoSelect : true,
                 imageSelect : false,
                 image : 'video',
-                Source: uri,
-                amount : "1.5"
+                fileType : 'video/mp4',
+                uploadFileName : name ,
+                Source: response.uri,
+                amount : "1.5",
 
               });
 
         Alert.alert( 
             'Select Thumbline Image', 
             'Please Select Thumbline Image',
-            [{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            [{text: 'Cancel', onPress: () => this.onCancelPress(), style: 'cancel'},
             {text: 'OK', onPress: () => this.SelectThumbline()},
             ],
             { cancelable: false })
     }});
     }
+onCancelPress(){
 
+    this.setState({
+        avatarSource: require('../../images/videoIcon.png'),
+        thumbnail_image : videoIcon,
+        thumblinefiletype : 'image/png',
+        imageSelect : true,
+        videoSelect : false,
+        thumblinename : "videoIcon.png",
+    });
+}
     render() {
         const { imageSelect , videoSelect} = this.state; 
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d'    

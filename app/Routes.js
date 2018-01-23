@@ -50,7 +50,6 @@ import BookMyService from './components/BookMyService';
 import MyAdfaturah from './components/MyAdfaturah';
 import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
-import I18n from 'react-native-i18n'
 import Filter from './components/Filter';
 import MenuIcon from './images/imgpsh.png';
 
@@ -201,7 +200,6 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                 </Scene>
                 </Drawer>
             </Stack>
-            <Scene key="addressbook" component={AddressBook} />
         </Lightbox>
 
             <Scene 
@@ -301,7 +299,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         component={Register} 
                         title="Registaration" 
                         navBar={CustomGenNavBar} 
-                        type={ActionConst.ANDROID_BACK}/>
+                        />
                     </Stack>
                     <Stack key="registerVendor" navBar={CustomGenNavBar} >
                         <Scene 
@@ -309,16 +307,16 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         component={Vendorreg} 
                         title="Vendor-Registration" 
                         navBar={CustomGenNavBar} 
-                        type={ActionConst.ANDROID_BACK}/>
+                        />
                     </Stack>
 
-                    <Stack key="AddressLists" >
+                    <Stack key="AddressLists" hideNavBar={true} >
                         <Scene 
                         key="address" 
                         component={AddressBook} 
                         title="Addressbook" 
-                        hideNavBar={false}
-                        type={ActionConst.ANDROID_BACK}/> 
+                        hideNavBar={true}
+                        /> 
                     </Stack>
 
                     <Stack key="deascriptionPage" renderTitle >
@@ -326,7 +324,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         key="deascription" 
                         component={ProductDescription} 
                         navBar={CustomGenNavBar} 
-                        type={ActionConst.ANDROID_BACK}/>
+                        />
                     </Stack>
 
                     <Stack key="contactUs">    
@@ -335,7 +333,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         component={Contact} 
                         title="Contact Us" 
                         navBar={CustomGenNavBar} 
-                        type={ActionConst.ANDROID_BACK}/>
+                        />
                     </Stack>
                     <Stack key="notificationShow">    
                         <Scene 
@@ -343,14 +341,14 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         component={Notification} 
                         title="Notifications" 
                         navBar={CustomGenNavBar} 
-                        type={ActionConst.ANDROID_BACK}/>
+                        />
                     </Stack>
                     <Stack key="profile" >
                         <Scene 
                         key="profile" 
                         component={ProfilePage} 
                         title="Profile" 
-                        type={ActionConst.ANDROID_BACK}/>
+                        />
                     </Stack> 
 
                     <Stack key="newaddress">
@@ -507,11 +505,10 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         renderTitle/>
                     </Stack>
                     <Stack 
-                    key="myorder"
-                    // onBack={ () => Actions.pop({refresh: {test:Math.random() } }) }
-                        >
+                    key="myorder">
                         <Scene 
                         key="orderList" 
+                        title="Order History" 
                         titleStyle={{alignSelf: 'center'}} 
                         component={OrderList} 
                         navBar={CustomGenNavBar}/>

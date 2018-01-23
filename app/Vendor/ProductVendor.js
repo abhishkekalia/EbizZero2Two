@@ -35,7 +35,7 @@ export default class ProductVendor extends Component {
             imgList : [] ,
             data : [],
             count : 1,
-            date_in: new Date(), 
+            date_in: '', //new Date(), 
             date_out:new Date(),
             address : '',
             u_id: null,
@@ -61,8 +61,10 @@ export default class ProductVendor extends Component {
     this.setState({visible:false});
   }
   onOpen() {
-        console.log("OPEN")
-        this.setState({visible:true});
+        if(this.validate()) { 
+            console.log("OPEN")
+            this.setState({visible:true});
+      }
   }
 
     componentDidMount(){
@@ -178,6 +180,19 @@ export default class ProductVendor extends Component {
     sizechart(){
         console.warn("size chart");
     }
+    validate(){
+        const { date_in } = this.state;
+            if (!date_in.length){
+                MessageBarManager.showAlert({
+                    message: "Plese Select Booking Date",
+                    alertType: 'warning',
+                })      
+            return false
+            } 
+            return true
+
+    } 
+
     buyNow(){
         routes.AddressLists();
     }
@@ -186,10 +201,8 @@ export default class ProductVendor extends Component {
             var Select =[];
             
         var today = new Date();
-        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
         currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
-        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
 
             this.addToOrder(delivery_address_id)
             .then(()=>this.setState({ 
@@ -200,7 +213,8 @@ export default class ProductVendor extends Component {
     }
     async addToOrder(value){
         const { u_id, country, date_in, service_provider_id} = this.state; 
-        currentdate= date_in.getFullYear() +'-'+ parseInt(date_in.getMonth()+1) + '-'+ date_in.getDate() + ' '+  date_in.toLocaleTimeString() ;
+        
+        currentdate = date_in + ' '+ new Date().toLocaleTimeString();
 
         try { 
             let formData = new FormData();
@@ -319,9 +333,8 @@ export default class ProductVendor extends Component {
                             style ={{ width : width-50}}
                             date={this.state.date_in}
                             mode="date"
-                            placeholder="hello"
                             format="YYYY-MM-DD"
-                            minDate="2016-05-01"
+                            minDate="2017-01-20"
                             showIcon={false}
                             customStyles={{
                                 dateInput: {

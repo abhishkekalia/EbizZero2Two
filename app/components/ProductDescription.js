@@ -9,6 +9,7 @@ import {
   TextInput,
   AsyncStorage,
   Picker,
+  Button,
   ListView,
   ActivityIndicator
 } from 'react-native';
@@ -19,7 +20,6 @@ import Modal from 'react-native-modal';
 
 import { BubblesLoader } from 'react-native-indicator';
 import Ionicons from 'react-native-vector-icons/MaterialIcons';
-import {Button} from "app/common/components";
 import Utils from 'app/common/Utils';
 import Slider from './slider'
 import DatePicker from 'react-native-datepicker';
@@ -29,6 +29,17 @@ import {CirclesLoader} from 'react-native-indicator';
 
 const {width,height} = Dimensions.get('window');
 
+const buttons = [
+    {
+      text: 'button one',
+      action: () => console.log('pressed button one'),
+    }, 
+    {
+      text: 'button two',
+      action: () => console.log('pressed button two')            
+    }
+];
+
 export default class ProductDescription extends Component {
     constructor (props) { 
         super(props); 
@@ -37,8 +48,6 @@ export default class ProductDescription extends Component {
             imgList : [] ,
             data : [],
             count : '1',
-            date_in: new Date(), 
-            date_out:new Date(),
             address : '',
             u_id: null,
             country : null,
@@ -49,8 +58,9 @@ export default class ProductDescription extends Component {
             status : false,
             visible: false,
             visibleModal: false,
-            addressStatus :false
-
+            addressStatus :false,
+            Size : [],
+            sizeindex : null
         }
         this.loadHandle = this.loadHandle.bind(this)
     }
@@ -225,13 +235,25 @@ export default class ProductDescription extends Component {
             body: formData,
         }
         
-        fetch(Utils.gurl('productDetailView'), config) 
+        fetch(Utils.gurl('productDetail'), config) 
         .then((response) => response.json())
         .then((responseData) => {
+            var Items = responseData.data.productImages,
+            length = Items.length,
+            organization,
+            Select =[],
+            user,
+            i;
+
+        for (i = 0; i < length; i++) {
+            organization = Items[i];
+            Select.push (organization.image)                 
+        }
             if(responseData.status){ 
                 this.setState({ 
-                    imgList: responseData.data.productImages,
+                    imgList : Select,
                     data : responseData.data,
+                    Size : responseData.data.size,
                     status : true
                 });
             }
@@ -338,6 +360,8 @@ export default class ProductDescription extends Component {
 
     render () {
         const { date_in, count } = this.state;
+       let titleColor = this.state.size ? '#a9d5d1' : '#ccc';
+
         let color = this.state.data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
@@ -346,7 +370,17 @@ export default class ProductDescription extends Component {
         }
         if (!this.state.addressStatus) {
             return this.noItemFound();
-        }  
+        }
+        const renderedButtons =  this.state.Size.map((b, i) => {
+            return <Button 
+            color = {this.state.sizeindex === i ? '#a9d5d1' : '#ccc'} 
+            key={b.size} 
+            title={b.size} 
+            onPress={()=>this.setState({ 
+                size: b.size,
+                sizeindex : i
+            })}/>;
+        });  
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -397,30 +431,20 @@ export default class ProductDescription extends Component {
                             </TouchableOpacity>
                         </View>
                         <View>
-                            <Picker 
-                            style={{
-                                borderWidth : 1,
-                                borderColor : '#ccc',
-                                alignSelf: 'stretch',
-                                color: 'black',
-                                padding : 10
-                            }}
-                            mode="dropdown"
-                            selectedValue={this.state.size}
-                            onValueChange={(itemValue, itemIndex) => this.setState({size: itemValue})}>
-                                <Picker.Item label="Select Size" value="" />
-                                <Picker.Item label="Small" value="small" />
-                                <Picker.Item label="Medium" value="medium" />
-                                <Picker.Item label="Large" value="large" />
-                            </Picker>
+                        <View style={{flexDirection : 'row', justifyContent: 'space-around'}}>
+                        <Text>Select Size</Text>
+                        <View style={{flexDirection : 'row', justifyContent: 'space-around'}}>
+                             {renderedButtons}
+                             </View>
+                             </View>
+                        <View style={{flexDirection : 'row', justifyContent: 'space-around'}}>
+                            <Text>Select Color</Text>
                             <Picker 
                             mode="dropdown"
                             style={{
-                                borderWidth : 1,
-                                borderColor : '#ccc',
+                                width : width/2,
                                 alignSelf: 'stretch',
                                 color: 'black',
-                                padding : 10
                             }}
                             selectedValue={this.state.color}
                             onValueChange={(itemValue, itemIndex) => this.setState({color: itemValue})}>
@@ -429,12 +453,13 @@ export default class ProductDescription extends Component {
                                 <Picker.Item label="Yellow" value="yellow" />
                                 <Picker.Item label="Pink" value="pink" />
                             </Picker>
+                            </View>
                         </View>
 
                         <View style={{
                             flexDirection: 'row', 
                             justifyContent: 'center', 
-                            alignItems: 'center',
+                            // alignItems: 'center',
                             padding :10
                         }}>
                         <TouchableOpacity  style={styles.qtybutton} onPress= {()=> this.decrement()}> 
@@ -445,35 +470,7 @@ export default class ProductDescription extends Component {
                             <Text style={styles.text}>+</Text>
                         </TouchableOpacity>
                         </View>
-                    <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
-                        <Ionicons name ="date-range" size={25} style={{ padding :5}} color="#87cefa"/>
-                        <DatePicker
-                            style ={{ width : width-50}}
-                            date={this.state.date_in}
-                            mode="date"
-                            placeholder="hello"
-                            format="YYYY-MM-DD"
-                            minDate="2016-05-01"
-                            maxDate={date_in}
-                            showIcon={false}
-                            customStyles={{
-                                dateInput: {
-                                    width : width, 
-                                    borderWidth : 0.5, 
-                                    borderColor: "#ccc", 
-                                    alignItems : 'flex-start',
-                                },
-                            }}
-                        onDateChange={(date_in) => {this.setState({date_in: date_in});}}/>
-                        </View>
-                        
-                        <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
-                            <Ionicons name ="place" size={25} style={{ padding :5}} color="#87cefa"/>
-                            <TextInput style={{ height: 40 ,  width : width-50 ,borderWidth : 0.5, borderColor: "#ccc"}}
-                                placeholder="Delivery Address"
-                                underlineColorAndroid = 'transparent'
-                                value={this.state.address} />
-                        </View>
+                   
                         <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20}}>
                             <Text style={{ height : 30 , textAlign : 'center'}}> Product info & care</Text>
                             <Text> {this.state.data.short_description}
@@ -554,14 +551,11 @@ export default class ProductDescription extends Component {
 
 }
 const styles = {
-      container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-
-    contentContainer: { 
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
     },
     description: { 
         width : width/3
@@ -572,7 +566,6 @@ const styles = {
         justifyContent: 'center',
         padding: 20
     },
-
     qtybutton: {
         width : 40,
         height : 40,
@@ -591,27 +584,25 @@ const styles = {
 
     
     slide: {
-      flex: 1,
-      justifyContent: 'center',
-      backgroundColor: 'transparent'
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'transparent'
     },
     image: {
-      width,
-      flex: 1,
-      backgroundColor: 'transparent'
+        width,
+        flex: 1,
+        backgroundColor: 'transparent'
     },
-    
     loadingView: {
-      position: 'absolute',
-      justifyContent: 'center',
-      alignItems: 'center',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0,0,0,.5)'
+        position: 'absolute',
+        justifyContent: 'center',
+        alignItems: 'center',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,.5)'
     },
-    
     loadingImage: {
         width: 60,
         height: 60
@@ -623,7 +614,6 @@ const styles = {
         backgroundColor: 'orange',
         alignItems: 'center',
     },
-
     buttonCart: {
         width: width/2,
         marginBottom: 10,

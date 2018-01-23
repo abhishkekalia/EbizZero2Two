@@ -461,7 +461,7 @@ export default class WishList extends Component {
                                 underlayColor='transparent'
                                 // onPress={this.viewNote.bind(this, data)} 
                                 style={styles.row} >
-                                <Text style={{ fontWeight: 'bold'}} > {data.product_name} </Text>
+                                <Text style={{ fontWeight: 'bold', color: '#000'}} > {data.product_name} </Text>
                             </TouchableHighlight>
                             <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
                             <View style={{ flexDirection : "row"}}>
@@ -538,7 +538,10 @@ class SelectItem extends Component{
                 </Picker>
             </View>
             <View style={{width: width/3, backgroundColor: '#fff' ,justifyContent : 'center'}}> 
-                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Color : {this.state.color}  </Text>
+            <View style={{flexDirection : 'row'}}> 
+                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Color : </Text>
+                        <Text style={{ fontSize : 13, color: this.state.color ? this.state.color.toString() : undefined }}>{this.state.color}  </Text>
+                        </View>
 
                 <Picker 
                 mode="dropdown"

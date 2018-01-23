@@ -252,7 +252,7 @@ export default class Shopingcart extends Component {
                         padding : 5, 
                         flex : 0}}> 
                 <Text>Items({itemcount})</Text>
-                <Text> $ {totalamount}</Text>
+                <Text> KWD {totalamount}</Text>
                 </View>
                 <View 
                     style={{ 
@@ -262,7 +262,7 @@ export default class Shopingcart extends Component {
                         padding : 5, 
                         flex : 0}}> 
                 <Text style={{ color : "#87cefa"}} >Cart SubTotal</Text>
-                <Text style={{ color : "#87cefa"}}> $ {subtotalamount}</Text>
+                <Text style={{ color : "#87cefa"}}> KWD {subtotalamount}</Text>
                 </View>
             </View>
 

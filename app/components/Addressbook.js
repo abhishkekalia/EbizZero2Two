@@ -317,13 +317,19 @@ export default class AddressBook extends Component {
                 <RadioButton value={data.address_id} >
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flexDirection: 'column' }}>
-                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>    
-                            <Text style={{ fontSize: 15}}>{data.full_name}</Text>
+                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: 'row'}}>
+                            <Text style={{ fontSize : 15, color : '#a9d5d1'}}>Name: </Text>
+                            <Text style={{ fontSize: 15, color: '#000'}}>{data.full_name}</Text>
+                            </View>
                             <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} />
                         </View>
+                        <View style={{ flexDirection: 'row'}}>
+                        <Text style={{ fontSize : 10, color : '#a9d5d1'}}>M: </Text>
                         <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
+                        </View>
                         <Text style={{fontSize:12}}>
-                        {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]}
+                        {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " \n",data.city, " ", data.state, "(", data.pincode ,")"]}
                         </Text>
                     </View>
                 </View>
