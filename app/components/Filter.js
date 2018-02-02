@@ -8,6 +8,7 @@ import {
     View,
     Button ,
     TextInput,
+    AsyncStorage,
     ScrollView
 } from 'react-native';
 import SelectMultiple from './src/SelectMultiple';
@@ -29,7 +30,11 @@ export default class Filter extends Component {
             button : false,
             search : '',
             category : [],
-            rows : []
+            rows : [],
+            status : false,
+            u_id: null,
+            user_type : null,
+            country : null,
         }
     } 
     setModalVisible(visible) { 
@@ -40,13 +45,28 @@ export default class Filter extends Component {
     }
 
     componentDidMount(){
-        this.fetchData()
+        this.getKey()
+        .then( ()=>this.fetchData())
+        .done();
+    }
+    async getKey() {
+        try { 
+            const value = await AsyncStorage.getItem('data'); 
+            var response = JSON.parse(value);  
+            this.setState({ 
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country ,
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
     }
 
-    fetchData(){ 
+    fetchData(){
+        const {u_id, country, } = this.state; 
         let formData = new FormData();
-        formData.append('u_id', String(1));
-        formData.append('country', String(1)); 
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
 
     const config = { 
                 method: 'POST', 
@@ -59,10 +79,24 @@ export default class Filter extends Component {
     fetch(Utils.gurl('getFilterMenu'), config) 
         .then((response) => response.json())
         .then((responseData) => {
+        if(responseData.status){
             this.setState({
                 category:responseData.data.category,
-        });
-        }).done();
+                status : responseData.status
+            });
+        }else{
+            this.setState({
+                status : responseData.status
+            });
+        }
+        })
+        .catch((error) => {
+            this.setState({
+                status : false
+            });
+        })
+        .done();
+
     }
 
     renderView() {
@@ -91,18 +125,27 @@ export default class Filter extends Component {
 
     }
     onClick(data) {
-        var newArray = this.state.rows.slice(); 
-        newArray.push(data.category_id); 
-        this.setState({
-            rows: newArray
-        });
-
         data.checked = !data.checked;
-        let msg=data.checked? 'you checked ':'you unchecked '
-        // this.toast.show(msg+data.name);
+        data.checked? this.check(data): this.unCheck(data)
+        
+    }
+    check (data){
+        var newStateArray = this.state.rows.slice(); 
+        newStateArray.push(data.category_id); 
+        this.setState({
+            rows: newStateArray
+        });
     }
 
-
+unCheck(data){
+        var index = this.state.rows.indexOf(data.category_id); 
+        if (index > -1) {
+           var newArray =  this.state.rows.splice(index, 1);
+            this.setState({
+                rows: newArray
+            });
+        }
+}
     renderCheckBox(data) {
         var leftText = data.category_name;
         var sum = data.count;
@@ -112,17 +155,13 @@ export default class Filter extends Component {
                 style={{flex: 1, padding: 5, borderTopWidth : 1, borderColor : '#ccc'}}
                 onClick={()=>this.onClick(data)}
                 isChecked={data.checked}
-                leftText={leftText}AllShop
+                leftText={leftText}
                 countingItem= {sum}
                 icon_name={icon_name}
             />);
     }
 
-
-
-
     render() {
-        // console.warn(JSON.stringify(this.state.row));
         let border = this.state.button ? 1 : undefined;
         let borderleft = this.state.button ? 2 : 5;
         let bcolor = this.state.button ? "#ccc" : "orange";
@@ -164,7 +203,7 @@ export default class Filter extends Component {
                     <TouchableHighlight 
                     underlayColor ={"#fff"} 
                     style={[styles.apply]} 
-                    onPress={()=>Actions.filterdBy({ filterdBy : this.state.rows})}>
+                    onPress={()=>Actions.homePage({ filterdBy : this.state.rows})}>
                         <MaterialIcons name="done" size={20} color="#fff"/>
                     </TouchableHighlight>
                 </View>       

@@ -59,7 +59,11 @@ export default class Notification extends Component {
                 loaded: true, 
                 refreshing: false
         });
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
 
     render() {

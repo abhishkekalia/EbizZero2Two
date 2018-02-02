@@ -61,8 +61,9 @@ export const login = (username, password, os) => {
 	           		"user_type" : responseData.response.data.user_type 
             	}
         	}));
-    	 	dispatch(successHome(username, password));
-    	 	// routes.homePage();
+        	let usr_type = responseData.response.data.user_type
+    	 	dispatch(successHome(username, password, usr_type));
+
          } else {
             MessageBarManager.showAlert({
             message: "invalid username and password",
@@ -80,12 +81,16 @@ export const login = (username, password, os) => {
 };
 };
 
-const successHome = (username, password, os) => {
- 	routes.homePage();
- 	return {
+const successHome = (username, password ,usr_type) => {
+ 	if(usr_type === "3"){
+ 	routes.vendortab()
+ 	}else{
+ 	 	routes.homePage();
+ 	 }	return {
 		type: AUTH_LOGIN_SUCCESS,
 		payload: {
 			token: Math.random().toString(),
+			user_type : usr_type,
 			username,
 			password
 		}

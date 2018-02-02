@@ -5,16 +5,19 @@ const { width, height } = Dimensions.get('window');
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: HEADER_HEIGHT + 150
+		// paddingTop: HEADER_HEIGHT + 150
 	},
 	content: {
 		flex: 1,
-		padding: 20
+		paddingLeft: 20,
+		paddingRight: 20,
+		marginBottom: 20,
+		marginTop: 20
 	},
 	iconusername : {
     	flexDirection: 'row', 
     	borderBottomWidth: 0.5,
-		borderColor: 'red',
+		borderColor: '#ccc',
 		backgroundColor : 'transparent'
     },
 
@@ -24,7 +27,7 @@ export default StyleSheet.create({
     },
 
 	inputcontent : { 
-		borderColor: 'red',
+		borderColor: '#ccc',
 		borderWidth: 1,
 		borderStyle: 'solid',
 		borderRadius: 5,
@@ -69,14 +72,28 @@ export default StyleSheet.create({
     alignItems: 'center',
     padding: 10,
    	borderBottomWidth: 0.5,
-	borderColor: 'red',
+	borderColor: '#ccc',
 
 	},
 	registerContent : { 
-		borderColor: 'red',
+		borderColor: '#ccc',
 		borderWidth: 0.5,
 		borderStyle: 'solid',
 		borderRadius: 5,
 	},
+	social : {
+		left : 10,
+		// borderColor:"#3b5998" , 
+		height :25, 
+		width :25,
+		justifyContent:'center', 
+	},
+	socialInput : {
+		width : width/1.5, 
+		color: '#424242',
+		left : 10,
+		justifyContent : 'center'
+
+	}
 
 });

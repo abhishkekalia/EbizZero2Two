@@ -35,23 +35,11 @@ class Menu extends React.Component {
                 </View>
                 
                 <View style={[styles.badge, styles.seprator]}> 
-                    <IconBadge
-                        MainElement={ 
                             <Ionicons 
                             name="ios-notifications" 
                             color="#87cefa" size={30}
                             style={{ left : 13}}
                             />
-                        }
-                        BadgeElement={
-                          <Text style={{color:'#FFFFFF'}}>1</Text>
-                        }
-                        IconBadgeStyle={{
-                            width:16,
-                            height:18,
-                            // left : 10,
-                            backgroundColor: 'orange'}}
-                    />
                     <Text 
                     onPress={Actions.notificationShow}
 
@@ -59,7 +47,7 @@ class Menu extends React.Component {
                         fontSize: 12, 
                         padding: 10, 
                         marginTop : 1,
-                        left :15,
+                        left :5,
                     }}>Notification</Text>
                </View>
 
@@ -73,17 +61,18 @@ class Menu extends React.Component {
 
 
                 <Text
-                onPress={Actions.intro}
+                onPress={Actions.myorder}
                 style={[styles.item, styles.seprator]}>My Order</Text>
+
+                <Text
+                onPress={Actions.postad}
+                style={[styles.item, styles.seprator]}> Marketing</Text>
 
                 <Text
                 onPress={Actions.sync}
                 style={[styles.item, styles.seprator]}> Rate us on App Store</Text>    
                 <Text
-                onPress={Actions.marketing}
-                style={[styles.item, styles.seprator]}> Marketing</Text>
-                <Text
-                onPress={()=>( Utils.persistremove()),logout}
+                onPress={()=>( Utils.logout()),logout}
                 style={styles.item}> logout</Text>
             </ScrollView>
         );

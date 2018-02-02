@@ -51,7 +51,6 @@ export default class CustomGenNavBar extends React.Component {
     render() {
         let dinamicStyle = { backgroundColor: '#a9d5d1'}
         let renderRight = this.props.renderRightButton ? this.props.renderRightButton() : this._renderRight() 
-
         return (
             <View style={[styles.container, dinamicStyle]}>
                 { this._renderLeft() }

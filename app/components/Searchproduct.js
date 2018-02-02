@@ -93,7 +93,11 @@ export default class Searchproduct extends Component {
         } else {
             console.warn(responseData.data.message)
         }
-        }).done();
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
     }
 
     render() {
