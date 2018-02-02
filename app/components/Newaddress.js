@@ -14,6 +14,7 @@ import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Picker } from 'react-native-picker-dropdown';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -503,7 +504,7 @@ export default class Newaddress extends Component<{}> {
             <Picker.Item label="United States" value="1" /> 
             <Picker.Item label="India" value="2" /> 
         </Picker>
-        
+        <KeyboardSpacer/>
         </ScrollView>
         </View>
     );

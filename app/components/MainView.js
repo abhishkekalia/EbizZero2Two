@@ -24,8 +24,7 @@ import ModalPicker from './modalpicker';
 import AllItem from './AllItem';
 import CheckBox from 'app/common/CheckBox';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-
-
+import Edittwish from './wish/Edittwish'
 import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get('window')
@@ -143,8 +142,6 @@ export default class MainView extends Component {
 
         data.checked = !data.checked;
         let msg=data.checked? 'you checked ':'you unchecked '
-
-        // this.toast.show(msg+data.name);
     }
     
     renderView() {
@@ -170,7 +167,6 @@ export default class MainView extends Component {
             </View>
         )
         return views;
-
     }
 
     renderCheckBox(data) {
@@ -298,7 +294,7 @@ export default class MainView extends Component {
         return (
             <ActivityIndicator  
             style={[styles.centering]}
-            color="#1e90ff" 
+            color="#a9d5d1" 
             size="large"/>
             );
     }
@@ -349,7 +345,7 @@ export default class MainView extends Component {
                             <Ionicons 
                             name="md-arrow-dropdown" 
                             size={20} 
-                            color="#87cefa" 
+                            color="#a9d5d1" 
                             />
                         </TouchableOpacity>
                     </View>
@@ -364,7 +360,7 @@ export default class MainView extends Component {
                             <Ionicons 
                             name="md-arrow-dropdown" 
                             size={20} 
-                            color="#87cefa" 
+                            color="#a9d5d1" 
                             />
                         </TouchableOpacity>
                     </View>
@@ -530,7 +526,6 @@ export default class MainView extends Component {
 // Service filter complete here
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-       
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         
@@ -541,8 +536,8 @@ export default class MainView extends Component {
         } else {
             heartType = 'ios-heart' ;
         }
-      let toggleWidhlist  
-      if(data.is_wishlist === '0') { toggleWidhlist = ()=> this.addtoWishlist(data.product_id)} else { toggleWidhlist = ()=> this.removeToWishlist(data.product_id)}
+      let toggleWishList  
+      if(data.is_wishlist === '0') { toggleWishList = ()=> this.addtoWishlist(data.product_id)} else { toggleWishList = ()=> this.removeToWishlist(data.product_id)}
 
        return (
             <View style={styles.row} > 
@@ -550,7 +545,7 @@ export default class MainView extends Component {
                     <IconBadge
                         MainElement={ 
                             <TouchableOpacity 
-                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id})}>
+                            onPress={()=>Actions.deascriptionPage({product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}>
                             <Image style={styles.thumb} 
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
                                 </TouchableOpacity>
@@ -561,40 +556,26 @@ export default class MainView extends Component {
                         IconBadgeStyle={{
                             width:50,
                             height:16,
-                            top : width/3-10,
+                            marginTop : width/3,
                             left: 0,
                             position : 'absolute',
-                            backgroundColor: '#87cefa'}}
+                            backgroundColor: '#a9d5d1'}}
                     />
                     <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}} 
                         name="share-google" 
                         size={20} 
-                        color="#ccc" 
+                        color="#a9d5d1" 
                         onPress={()=> this.sharing(data.product_id)}/>
 
-                    <TouchableOpacity 
-                    onPress={toggleWidhlist }
-                    // onPress= { ()=> this.addtoWishlist(data.product_id)}
-                    style={{ 
-                        left : width/3-35, 
-                        position : 'absolute',
-                        width : 50,
-                        height :50,
-                        backgroundColor : 'transparent'
-                    }}
-                    >
-                        <Ionicons  
-                        name={heartType} 
-                        size={20} 
-                        color="#87cefa" 
-                        />
-                    </TouchableOpacity>
+                        <Edittwish heartType={heartType} toggleWishList={toggleWishList}/>
                 </View>
                 
-                <View style={{ padding :5}}>
-                <TouchableOpacity  style={styles.name} onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}>
+                <View style={{ padding :15}}>
+                <TouchableOpacity  style={styles.name} 
+                // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
+                >
 
-                <Text style={{fontSize : 13, color :'#000'}}>{data.product_name}</Text>
+                <Text style={{fontSize : 13, color :'#000', fontFamily : 'Georgia' }}>{data.product_name}</Text>
                 </TouchableOpacity>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
@@ -662,7 +643,7 @@ var styles =StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'space-between',
-        width : width/3 -7,
+        width : width/2 -6,
         // padding: 5,
         margin: 3,
         borderWidth: 1,
@@ -681,8 +662,9 @@ var styles =StyleSheet.create({
     thumb: {
         width: width/3-10,
         height: width/3,
-        borderTopLeftRadius : 5,
-        borderTopRightRadius : 5
+        top : 15
+        // borderTopLeftRadius : 5,
+        // borderTopRightRadius : 5
 
         // position : "absolute"
     },
