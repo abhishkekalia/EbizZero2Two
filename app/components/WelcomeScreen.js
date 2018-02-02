@@ -14,6 +14,7 @@ import {Actions} from "react-native-router-flux";
 
 import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 const { width, height } = Dimensions.get('window')
@@ -135,7 +136,7 @@ export default class WelcomeScreen extends Component {
                 }}
                 source={require('../images/bg_img.jpg')}
                 />
-                    <View style={{ flex:1, justifyContent : 'center'}}> 
+                    <View style={{ flex:1, justifyContent : 'center', alignItems:'center'}}> 
                         <Image 
                         style={{ 
                             resizeMode,
@@ -147,9 +148,13 @@ export default class WelcomeScreen extends Component {
     
                     <View style={styles.container}>
                         <View style={styles.row}>
-                            <Image style={{ width:21, height:21, marginRight : 15}} source={require('../images/_Select_Country-128.png')} />
-                            
-                            <Picker style={{ width: width-100, height: 40}}
+                        <FontAwesome 
+                            name="globe" 
+                            size={30} 
+                            color="#FFCC7D" 
+                            style={styles.countryIcon}/>                            
+                            <Picker 
+                            style={{width: width-100, height: 40, color: '#a9d5d1'}} 
                             mode="dropdown"
                             selectedValue={this.state.selectCountry}
                             onValueChange={(itemValue, itemIndex) => 
@@ -161,13 +166,14 @@ export default class WelcomeScreen extends Component {
                     
                         <View style={styles.row}>
                             <Ionicons 
-                            name="truck-delivery" 
-                            size={21} 
-                            color="#ff8c00" 
+                            name="truck-fast" 
+                            size={30} 
+                            color="#FFCC7D" 
                             style={styles.countryIcon}/>
-                            <Picker 
+                            <Picker
+                            Header="Select one" 
                             mode="dropdown"
-                            style={{width: width-100, height: 40 }} 
+                            style={{width: width-100, height: 40, color: '#a9d5d1'}} 
                             selectedValue={this.state.deliveryarea} 
                             onValueChange={(deliveryarea) => this.setState({deliveryarea})}> 
                                 <Picker.Item label="Select Delivery Area" value="" /> 
@@ -194,7 +200,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderWidth: 1, 
         borderRadius: 5, 
-        borderColor: '#f53d3d',
+        borderColor: '#fbcdc5',
         justifyContent: 'center',
         alignItems: 'center' ,
         backgroundColor: '#F6F6F6',
@@ -202,11 +208,13 @@ const styles = StyleSheet.create({
     }, 
 
     countryIcon: {
-        // borderRightWidth: 1, 
-        // borderColor: '#CCC',
+        borderRightWidth: 1, 
+        borderColor: '#fbcdc5',
         width : 40,
         height:40,
-        padding :10
+        marginLeft :10,
+        marginRight :10,
+        paddingTop :5
     },
     centering : {
         flex : 1,

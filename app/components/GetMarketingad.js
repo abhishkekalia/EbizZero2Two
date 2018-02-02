@@ -59,7 +59,6 @@ export default class GetMarketing extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-            console.warn(responseData)
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                     refreshing : false,
@@ -98,7 +97,9 @@ export default class GetMarketing extends Component {
                 );
         if ( !this.state.status) {
             return (
-                <Text style={{ fontSize: 13, left :10}}>No Advertise For You</Text>
+            <View style={{ height:59}}>
+                <Text style={{ fontSize: 15, fontWeight:'bold' }}> ! No Advertise For You</Text>
+                </View>
             );
         }
 

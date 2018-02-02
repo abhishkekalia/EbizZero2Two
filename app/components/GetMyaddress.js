@@ -142,7 +142,8 @@ export default class GetMyaddress extends Component {
                     M:{data.mobile_number}
                     </Text>
                     <Text style={{fontSize:12}}>
-                    {[data.address_line1, ' ', data.address_line2, ' ', data.landmark ,' ', data.town,' ',data.city, ' ', data.state, '(', data.pincode, ')']}
+                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                        data.jadda,"\n",data.city," ",data.direction]}
                     </Text>
             </TouchableOpacity>
             );

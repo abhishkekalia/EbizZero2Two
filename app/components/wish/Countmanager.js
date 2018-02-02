@@ -121,13 +121,13 @@ export default class Countmanager extends Component {
 			style={styles.qtybutton} 
 			onPress= {()=> this.decrement()}
             >
-			<Text style={{color: '#a9d5d1'}}> - </Text>
+			<Text style={{color: '#a9d5d1', fontWeight: 'bold' }}> - </Text>
 			 </TouchableOpacity>
 			 <Text style={[styles.qtybutton]}> {this.props.quantity} </Text>
             <TouchableOpacity 
                style={styles.qtybutton} 
             onPress= {()=> this.increment()}>
-            <Text style={{color: '#a9d5d1'}}> +</Text>
+            <Text style={{color: '#a9d5d1'}}> + </Text>
             </TouchableOpacity>			
             </View>
 		)

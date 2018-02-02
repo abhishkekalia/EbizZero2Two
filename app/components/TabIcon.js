@@ -17,11 +17,11 @@ export default class TabIcon extends Component {
 		super(props);
 	}
   render() {
-    var color = this.props.selected ? '#f53d3d' : '#a9d5d1';
+    var color = this.props.selected ? '#fbcdc5' : '#a9d5d1';
 
     return (
       <View style={{flex:1, flexDirection:'column', alignItems:'center', alignSelf:'center', justifyContent: 'center', position:'absolute'}}>
-        <Icon style={{color: this.props.focused ? '#f53d3d' : '#a9d5d1'}} name={this.props.iconName || "circle"} size={18}/>
+        <Icon style={{color: this.props.focused ? '#fbcdc5' : '#a9d5d1'}} name={this.props.iconName || "circle"} size={18}/>
         <Text style={{color: '#000' ,fontSize: this.props.focused ? 13 : 10}}>{this.props.title}</Text>
       </View>
     );

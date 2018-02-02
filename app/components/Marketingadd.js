@@ -26,7 +26,9 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const videoIcon = '../images/videoIcon.png';
 const INITIAL_STATE = {avatarSource: ''};
-
+const textstring = "Upload your image into the External Circle \n" +
+                    "Upload your 10 sec video into the External Circle \n" +
+                    "Price: 1 KD per picture  / 1.5 KD per video"
 export default class Marketingadd extends Component { 
     constructor(props) { 
         super(props);
@@ -279,9 +281,10 @@ onCancelPress(){
 
         return (
             <View style={[styles.container, { padding : 10}]}>
-                <View style={{ flex:1, 
-                    borderColor : '#ccc', 
-                    borderWidth : 1, 
+                <View style={{ 
+                    flex:0.8, 
+                    borderColor : '#bbb', 
+                    borderWidth : StyleSheet.hairlineWidth, 
                     flexDirection: 'column',
                     justifyContent: 'space-around',
                     padding : 10
@@ -292,31 +295,26 @@ onCancelPress(){
                             <Image style={styles.avatar} source={this.state.avatarSource} />
                         }
                         </View>
+                    <Text style={{ width: width-50 ,textAlign: 'center', fontSize: 10, }}>
+                    {textstring}
+                    </Text>
+
                     <View style={{justifyContent : "space-around",flexDirection: 'row',}}>
                         <Entypo  
                             name="image" 
                             size= {30}
                             color={borderColorImage}
                             onPress={this.selectPhotoTapped.bind(this)}
-                            style={{padding :20 , borderColor : "#ccc", borderWidth : 0.5, borderRadius : 40}} /> 
+                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 40}} /> 
                         <Feather 
                         name="play-circle" onPress={this.selectVideoTapped.bind(this)}
                         color={borderColorVideo}
                         size= {30} 
-                        style={{padding :20 , borderColor : '#ccc', borderWidth : 0.5, borderRadius : 40}} />
+                        style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 40}} />
                     </View>
 
-                    <Text style={{ width: width-50 ,textAlign: 'center', fontSize: 14, }}>
-                    Raise your awareness about your brand by promoting video and images 
-                    that show behind the scene footage, product lounches or customer Stories
-
-                    </Text>
-
                 </View>
-                <Text style={{ fontSize : 20, textAlign : 'center', color : '#a9d5d1', padding : 10}}>Help And Suggestion</Text>
-                <Text style={{ fontSize : 10, textAlign : 'center'}}>
-                want to upload videos longer than 15 Secounds
-                </Text>
+
                 <View style={styles.cost}>
                 <Text >Cost Per Advertisement</Text>
                 <Text style={{color : '#a9d5d1',}}>{this.state.amount} KWD</Text>

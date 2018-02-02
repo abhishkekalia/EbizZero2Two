@@ -182,7 +182,7 @@ export default class Editmyprofile extends Component<{}> {
     return (
         <View style={{ flex : 1}}>
         <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
-     
+        <View style={{ borderColor : '#ccc', borderWidth:1, borderRadius:5, margin: 10}}>
         <TextInput style={ styles.input}
         placeholder='Full Name'
         autoCapitalize='none'
@@ -228,12 +228,14 @@ export default class Editmyprofile extends Component<{}> {
             this.inputs['three'] = input;
         }}
         onChangeText={(text) => this.setState({ phone_no: text })} />
-        </ScrollView>
-        <Button 
+        </View>
+                <Button 
           onPress = {this.submit.bind(this)}
             title="Submit"
             color="orange"
             />
+
+        </ScrollView>
 
         </View>
     );
@@ -253,10 +255,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     height : 40,
     borderColor : "#ccc",
-    borderBottomWidth :1,
+    borderBottomWidth :StyleSheet.hairlineWidth,
     width :width,
     // textAlign: 'center',
-    margin: 10,
   },
   instructions: {
     textAlign: 'center',

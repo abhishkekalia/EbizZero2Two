@@ -329,8 +329,9 @@ export default class AddressBook extends Component {
                         <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
                         </View>
                         <Text style={{fontSize:12}}>
-                        {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " \n",data.city, " ", data.state, "(", data.pincode ,")"]}
-                        </Text>
+                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                    data.jadda,"\n",data.city," ",data.direction]}
+                    </Text>
                     </View>
                 </View>
                 </RadioButton>

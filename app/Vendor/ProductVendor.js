@@ -10,7 +10,9 @@ import {
   AsyncStorage,
   ListView,
   Picker,
-  Button
+  StyleSheet,
+  Button,
+  TouchableNativeFeedback
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -37,14 +39,16 @@ export default class ProductVendor extends Component {
             count : 1,
             date_in: '', //new Date(), 
             date_out:new Date(),
-            address : '',
+            addressStatus : false,
             u_id: null,
             country : null,
             user_type: null,
             size: '', 
             color: '', 
             quantity:'',
-            service_provider_id : ''
+            service_provider_id : '',
+            address_id : '',
+            selectedAddress : "Select Address"
         }
         this.loadHandle = this.loadHandle.bind(this)
     }
@@ -196,18 +200,17 @@ export default class ProductVendor extends Component {
     buyNow(){
         routes.AddressLists();
     }
-    order (delivery_address_id){
-        const{ data , size, color, count  } = this.state;
+    order (){
+        const{ data , size, color, count , address_id } = this.state;
             var Select =[];
             
         var today = new Date();
 
         currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
 
-            this.addToOrder(delivery_address_id)
+            this.addToOrder(address_id)
             .then(()=>this.setState({ 
-                visible:false,
-                visibleModal: true,
+                // visibleModal: true,
             }))
             .done()
     }
@@ -225,7 +228,6 @@ export default class ProductVendor extends Component {
             formData.append('address_id', String(value));
             formData.append('service_provider_id', String(service_provider_id));
             formData.append('amount', String(this.props.special_price));
-
             const config = { 
                    method: 'POST', 
                    headers: { 
@@ -313,22 +315,22 @@ export default class ProductVendor extends Component {
                     }}>
 
                     <View >
-                        <Text style={{ padding : 10, color:"#000"}}>{this.props.product_name}</Text>
-                            <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#f53d3d'}} >Price : </Text>
-                            <Text> {this.props.special_price} </Text>
-                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {this.props.price} </Text>
-                                <Text style={{color : '#ccc'}} >KWD</Text>
+                        <Text style={{ padding : 10, color : '#696969', fontSize:15}}>{this.props.product_name}</Text>
+                        <View style={{flexDirection: 'row', justifyContent:'space-between', marginBottom : 10}}>
+                            <Text style={{color : '#a9d5d1', fontWeight:'bold' }}>  {this.props.special_price} KWD</Text>
+                            <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold'}}>{this.props.price} KWD</Text>
                         </View>
 
                 {this.props.is_user ?  
                     <View style={{ borderColor :"#ccc", borderWidth:1, paddingTop : 10}}>
-                        <Button onPress={this.onOpen.bind(this)}
+                        <Button
+                        onPress= {()=>this.order()}
+                        // onPress={this.onOpen.bind(this)}
                         title= "Book Now"
-                        color="#a9d5d1"
+                        color="#fbcdc5"
                         />                      
                     <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
-                        <Ionicons name ="date-range" size={25} style={{ padding :5}} color="#87cefa"/>
+                        <Ionicons name ="date-range" size={25} style={{ padding :5}} color="#a9d5d1"/>
                         <DatePicker
                             style ={{ width : width-50}}
                             date={this.state.date_in}
@@ -346,46 +348,37 @@ export default class ProductVendor extends Component {
                             }}
                         onDateChange={(date_in) => {this.setState({date_in: date_in});}}/>
                         </View>
+                        <TouchableNativeFeedback         
+                        onPress={this.onOpen.bind(this)}
+                        background={TouchableNativeFeedback.SelectableBackground()}>
+                        <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
+                            <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
+                            <TextInput
+                            style ={{
+                                height:40, 
+                                width : width-50,
+                                borderWidth : StyleSheet.hairlineWidth, 
+                                borderColor: "#ccc"}}
+                            value={this.state.selectedAddress}
+                            editable={false}
+                            underlineColorAndroid={'transparent'}
+                            />
+                        </View>
+                        </TouchableNativeFeedback>
                         </View>
 
                         : undefined }
                         
                         <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20}}>
-                            <Text style={{ height : 40 }}> Product info & care</Text>
-                            <Text> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
+                            <Text style={{ height : 30 }}> Product Information</Text>
+                            <View style={{ width : width/4, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
+                            <Text> {this.props.short_description}
                             </Text>
-                            <View style={{ flexDirection: 'column', paddingTop : 10}}>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Fabric</Text><Text>Cotton</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Length</Text><Text>Cotton</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Sleeves</Text><Text>Cotton</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Neck</Text><Text>Cotton</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Fit</Text><Text>Cotton</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Wash</Text><Text>Cotton</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Color</Text><Text>Cotton</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={ styles.description}>Sku</Text><Text>Cotton</Text>
-                                </View>
-                            </View>
+                            <Text> {this.props.detail_description}
+                            </Text>
+                            
                         </View>
+
                     </View>
                     
                 </View>
@@ -402,19 +395,29 @@ export default class ProductVendor extends Component {
                 </View>
         )
     }
-            renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+    renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
-                <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}} onPress= {()=>this.order(data.address_id)}>
-                    <View style={{ flexDirection: 'column' }}>
-                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>    
-                            <Text style={{ fontSize: 15}}>{data.full_name}</Text>
-                        </View>
-                        <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
-                        <Text style={{fontSize:12}}>
-                        {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]}
-                        </Text>
+            <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}} 
+            onPress= {()=>this.setState({ 
+                address_id: data.address_id,
+                selectedAddress : data.full_name,
+                visible:false
+            })}
+            >
+                <View style={{ flexDirection: 'column' }}>
+                    <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>    
+                        <Text style={{ fontSize: 15, color:'#696969'}}>{data.full_name}</Text>
                     </View>
-                </TouchableOpacity>
+                    <View style={{flexDirection:'row', alignItems : 'center'}}>
+                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>M : </Text>                     
+                        <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
+                    </View>
+                    <Text style={{fontSize:12, color:'#696969'}}>
+                    {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                    data.jadda,"\n",data.city," ",data.direction]}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         );
     }
 

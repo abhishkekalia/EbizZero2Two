@@ -101,7 +101,8 @@ class Profile extends Component {
 							M:{address.mobile_number}
 							</Text>
 							<Text style={{fontSize:12}}>
-							{[address.address_line1, ' ', address.address_line2, ' ', address.landmark ,' ', address.town,' ',address.city, ' ', address.state, '(', address.pincode, ')']}
+							{[address.block_no ," ", address.street , " ", address.houseno,"\n", address.appartment, " ",address.floor, " ", 
+                    address.jadda,"\n",address.city," ",address.direction]}
 							</Text>
 						</View>);
 		}
@@ -155,11 +156,13 @@ class Profile extends Component {
 					<View style={{ padding : 20, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
 						<TouchableOpacity style={{ 
 							flexDirection : 'row', 
-							justifyContent: 'space-between', 
+							justifyContent: 'space-between',
+							alignItems : 'center', 
 							paddingRight:10, 
 							paddingLeft:10,
 							borderBottomWidth : 1, 
-							borderColor : '#ccc'  
+							borderColor : '#ccc',
+							height :40  
 						}}  onPress={()=>Actions.getmyaddress()} >
 							<Text style={{ fontSize : 10, color:"#900"}}>My Address Book</Text>
 								

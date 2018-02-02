@@ -110,9 +110,9 @@ export default class Editwish extends Component {
     render(){ 
           let heartType
     if (this.state.is_wishlist === '0') 
-        heartType = 'ios-heart-outline'; 
+        heartType = 'md-heart-outline'; 
     else 
-        heartType = 'ios-heart' ;        
+        heartType = 'md-heart' ;        
   
         return(
             <TouchableOpacity 
@@ -120,7 +120,7 @@ export default class Editwish extends Component {
                     style={{ 
                         left : width/2-33, 
                         position : 'absolute',
-                        width : 50,
+                        width : 25,
                         height :50,
                         backgroundColor : 'transparent'
                     }}

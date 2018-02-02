@@ -26,9 +26,15 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import  Countmanager  from './Countmanager';
+import {
+  SinglePickerMaterialDialog,
+} from 'react-native-material-dialog';
+import { material } from 'react-native-typography';
+
 import Share, {ShareSheet, Button} from 'react-native-share';
 
 const { width, height } = Dimensions.get('window');
+const SHORT_LIST = ['Small', 'Medium', 'Large'];
 
 export default class WishList extends Component {
     constructor(props) { 
@@ -43,9 +49,8 @@ export default class WishList extends Component {
             loaded: false,
             toggle : false,
             refreshing: false, 
-            color: '',
-            size : '',
-            visible: false
+            color: 'blue',
+            visible: false,
         }; 
     } 
     componentDidMount(){
@@ -129,10 +134,9 @@ export default class WishList extends Component {
         .done();
 
     }
-    validate(){
-        const { ShopingItems} = this.state; 
+    validate(size){
 
-        if (!ShopingItems.length)
+        if (!size.length)
         {
             MessageBarManager.showAlert({
                 message: "Please Select Items For Your Cart",
@@ -143,9 +147,8 @@ export default class WishList extends Component {
             return true;
     }
 
-    addtoCart(count, product_id){
-        const { size, color,  } = this.state; 
-        const {u_id, country, user_type } = this.state;
+    addtoCart(count, product_id, size){
+        const { color, u_id, country, user_type  } = this.state; 
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -163,7 +166,7 @@ export default class WishList extends Component {
             },
             body: formData,
         }
-        if (this.validate()) {
+        if (this.validate(size)) {
             fetch(Utils.gurl('addTocart'), config) 
             .then((response) => response.json())
             .then((responseData) => {
@@ -190,9 +193,8 @@ export default class WishList extends Component {
             .done();
         }
     }
-
     removeWishlist(product_id){
-        const {u_id, country, user_type } = this.state;
+        const {u_id, country} = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));  
@@ -211,81 +213,14 @@ export default class WishList extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if (responseData.status) {
-                this.fetchData()
+                console.log(responseData);
             }
         })
-        .then(()=> this.fetchData())
         .catch((error) => {
           console.log(error);
         })       
         .done();
     }
-    validate(){
-        const { size, color} = this.state; 
-
-        if (!color.length)
-        {
-            MessageBarManager.showAlert({
-                message: "Please Select Color",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!size.length)
-        {
-            MessageBarManager.showAlert({
-                message: "Please Select Size",
-                alertType: 'alert',
-            })
-            return false
-        }
-            return true;
-    } 
-    editWishlist(product_id){
-        const { size, color, u_id, country, } = this.state; 
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-        formData.append('product_id', String(product_id));
-        formData.append('size', String(size)); 
-        formData.append('color', String(color)); 
-
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        } 
-        if (this.validate()) {
-            fetch(Utils.gurl('editWishlist'), config) 
-            .then((response) => response.json())
-            .then((responseData) => {
-                MessageBarManager.showAlert({ 
-                        message: responseData.data.message, 
-                        alertType: 'alert', 
-                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                    })
-            })
-            .catch((error) => {
-              console.log(error);
-            })       
-            .done();
-        }
-    }
-
-    viewNote(rowData) {
-        // this.props.navigator.push({
-        //   title: 'The Note',
-        //   component: ViewNote,
-        //   passProps: {
-        //     noteText: rowData,
-        //     noteId: this.noteId(rowData),
-        //   }
-        // });
-    } 
-   
     updateState = () => {
         this.setState({
             Quentity: !this.state.Quentity
@@ -314,12 +249,12 @@ export default class WishList extends Component {
     }
 
     render() {
-            let shareOptions = {
-      title: "React Native",
-      message: "Hola mundo",
-      url: "http://facebook.github.io/react-native/",
-      subject: "Share Link" //  for email
-    };
+        let shareOptions = {
+            title: "React Native",
+            message: "Hola mundo",
+            url: "http://facebook.github.io/react-native/",
+            subject: "Share Link" //  for email
+        };
 
        if (!this.state.loaded) {
             return this.renderLoadingView();
@@ -419,6 +354,7 @@ export default class WishList extends Component {
               },300);
             }}>More</Button>
         </ShareSheet>
+
         </View>
         );
     }
@@ -427,17 +363,6 @@ export default class WishList extends Component {
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
 
 
-        let swipeBtns = [{
-            text: 'Edit',
-            backgroundColor: '#a9d5d1',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {this.editWishlist(data.product_id)}
-         },{
-            text: 'Delete',
-            backgroundColor: '#f53d3d',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {this.removeWishlist(data.product_id)}
-         }];
 
         return (
             <View style={{ 
@@ -446,26 +371,22 @@ export default class WishList extends Component {
             borderWidth : 0.5, 
             borderColor : "#ccc", 
             borderRadius : 5}}>
-            <Swipeout right={swipeBtns}
-            autoClose={true}
-            backgroundColor= 'transparent'> 
-                    
+
+            <SelectItem product_id={data.product_id} u_id={this.state.u_id} country={this.state.country} callback={this.refreshfromCount.bind(this)} >
+
                 <View style={{ 
                 flexDirection: 'row', 
-                backgroundColor : "#fff", justifyContent : 'space-around', alignItems : 'center'}}>
-                    <Image style={[styles.thumb]} 
+                backgroundColor : "#fff", alignItems : 'center'}}>
+                    <Image style={[styles.thumb]}
+                    resizemode="center" 
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />  
-                        <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
-                            <TouchableHighlight
-                                underlayColor='transparent'
-                                // onPress={this.viewNote.bind(this, data)} 
-                                style={styles.row} >
-                                <Text style={{ fontWeight: 'bold', color: '#000'}} > {data.product_name} </Text>
-                            </TouchableHighlight>
-                            <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
+                        <View style={{flexDirection: 'column', justifyContent : 'space-between', marginLeft: 10}}>  
+                          
+                                <Text style={{fontSize: 13, color: '#696969', marginTop: 10, marginBottom:5}} > {data.product_name} </Text>
+                            <Text style={{ fontSize : 10, color : '#696969',bottom:5}} > {data.short_description} </Text>
                             <View style={{ flexDirection : "row"}}>
-                                <Text> Quantity :  </Text>
+                                <Text style={{fontSize: 13 }}> Quantity :  </Text>
                                 <Countmanager  
                                 quantity={data.quantity} 
                                 u_id={this.state.u_id} 
@@ -475,29 +396,30 @@ export default class WishList extends Component {
                                 callback={this.refreshfromCount.bind(this)}
                                 />
                             </View>
+                            <View style={{ flexDirection : "row"}}>
+                                <Text style={{fontSize :12}}>Size </Text>
+                                <Text style={{fontSize:12}}> {data.size}</Text>
+                            </View>
                             <View style={{ flexDirection : "row", justifyContent:"space-between"}}>
                             <View style={{ flexDirection : "row"}}>
-                                <Text >PRICE : </Text>
-                                <Text> {data.special_price} </Text>
-                                <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                                <Text style={{fontWeight :'bold'}}> {data.special_price} </Text>
+                                <Text style={{fontWeight:'bold'}}> KWD</Text>
                             </View>
-                                <Text> KWD</Text>
                             </View>
-                            <SelectItem size={data.size} color={data.color} getsize={this.getSize.bind(this)} getcolor={this.getColor.bind(this)} />
                         </View>
                     </View>                             
-                </Swipeout>
                 <View style={styles.bottom}>
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
                     <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
                         <Text style={{ left : 5}}>Share WishList</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
-                    onPress={()=>this.addtoCart(data.quantity, data.product_id)}>
-                        <FontAwesome name="opencart" size={20} color="#a9d5d1"/> 
+                    onPress={()=>this.addtoCart(data.quantity, data.product_id, data.size)}>
+                    <Image source={require('../../images/cart_icon.png')} style={{ width:"10%", height : "100%"}}/>
                         <Text style={{ left :5}}>Move to Cart</Text>
                     </TouchableOpacity>
                 </View>
+                </SelectItem>
             </View>
         )
     }
@@ -507,54 +429,133 @@ class SelectItem extends Component{
     constructor(props) { 
         super(props); 
         this.state = { 
-            size: this.props.size, 
-            color: this.props.color, 
+            size : '',
+            color : 'blue',
+            selectSize : false
         }; 
-    } 
-    Size(itemValue){
-        this.setState({size: itemValue}, this.props.getsize(itemValue))
-
     }
-    Color(itemValue){
-        this.setState({color: itemValue}, this.props.getcolor(itemValue))
+        validate(){
+        const { color} = this.state; 
 
+        if (!color.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Select Color",
+                alertType: 'alert',
+            })
+            return false
+        }
+            return true;
+    } 
+ 
+    editWishlist(size){
+        const { color, } = this.state; 
+        const {u_id, country, product_id } = this.props;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('product_id', String(product_id));
+        formData.append('size', String(size)); 
+        formData.append('color', String(color)); 
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+        if (this.validate()) {
+            fetch(Utils.gurl('editWishlist'), config) 
+            .then((response) => response.json())
+            .then((responseData) => {
+                MessageBarManager.showAlert({ 
+                        message: responseData.data.message, 
+                        alertType: 'alert', 
+                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                    })
+            })
+            .then(()=>this.props.callback())
+            .catch((error) => {
+              console.log(error);
+            })       
+            .done();
+        }
+    }
+
+    removeWishlist(){
+        const {u_id, country, product_id } = this.props;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('product_id', String(product_id));
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+
+        fetch(Utils.gurl('removeFromWishlist'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            if (responseData.status) {
+                this.props.callback()
+            }
+        })
+        .then(()=>this.props.callback())
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+    }
+    changeSize(result){
+        this.setState({ 
+            selectSize: false,
+            size: result.selectedItem.label
+        });
+        this.editWishlist(result.selectedItem.label)
     }
 
     render(){
-        return(
-        <View style={{ flexDirection:'row'}}> 
-            <View style={{width: width/3,  backgroundColor: '#fff', justifyContent : 'center'}}>
-                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Size : {this.state.size}</Text>
- 
-                <Picker
-                mode="dropdown"
-                selectedValue={this.state.size}
-                onValueChange={(itemValue, itemIndex) => this.Size(itemValue)
-             }>
-                    <Picker.Item label="Select Size" value="" />
-                    <Picker.Item label="Small" value="small" />
-                    <Picker.Item label="Medium" value="medium" />
-                    <Picker.Item label="Large" value="large" />
-                </Picker>
-            </View>
-            <View style={{width: width/3, backgroundColor: '#fff' ,justifyContent : 'center'}}> 
-            <View style={{flexDirection : 'row'}}> 
-                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>Color : </Text>
-                        <Text style={{ fontSize : 13, color: this.state.color ? this.state.color.toString() : undefined }}>{this.state.color}  </Text>
-                        </View>
+            let swipeBtns = [{
+            text: 'Edit',
+            backgroundColor: '#a9d5d1',
+            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+            onPress: () => {
+                this.setState({
+                selectSize : true
+            })}
+           // onPress: () => {this.editWishlist(data.product_id)}
+         },{
+            text: 'Delete',
+            backgroundColor: '#f53d3d',
+            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+            onPress: () => {this.removeWishlist()}
+         }];
 
-                <Picker 
-                mode="dropdown"
-                selectedValue={this.state.color} 
-                onValueChange={(itemValue, itemIndex) => this.Color(itemValue) 
-             }>
-                    <Picker.Item label="Select color" value="" />
-                    <Picker.Item label="Red" value="red" />
-                    <Picker.Item label="Yellow" value="yellow" />
-                    <Picker.Item label="Pink" value="pink" />
-                </Picker>
-            </View>
-        </View>
+        return(
+            <Swipeout 
+                right={swipeBtns}
+                autoClose={true}
+                backgroundColor= 'transparent'> 
+                {this.props.children}
+                
+                <SinglePickerMaterialDialog
+                  title={'Select Size'}
+                  items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
+                  visible={this.state.selectSize}
+                  selectedItem={this.state.singlePickerSelectedItem}
+                  onCancel={() => this.setState({ selectSize: false })}
+                  onOk={result => this.changeSize(result)
+                  }
+                />
+            </Swipeout>
         )
     }
 }
@@ -595,8 +596,9 @@ const styles = StyleSheet.create ({
     },
 
     thumb: {
-        width   : width/5,
-        height  :width/4 ,
+        width   : width/6,
+        height  :width/5 ,
+        marginLeft : 10
     },
 
     textQue :{

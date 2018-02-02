@@ -22,6 +22,7 @@ export default class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            countryList:[],
             toggled : false,
             is_notification : '',
             u_id: null,
@@ -32,6 +33,7 @@ export default class Settings extends Component {
     componentDidMount(){
         this.getKey()
         .then(()=>this.fetchData())
+        .then(()=>this.fetchcountryList())
         .done();
  
     }
@@ -244,6 +246,31 @@ export default class Settings extends Component {
         .done();
     }
 
+    fetchcountryList(){
+        fetch(Utils.gurl('countryList'),{
+             method: "GET", headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }   
+        })
+        .then((response) => response.json())
+        .then((responseData) => { 
+                    // console.warn(JSON.stringify(responseData))
+            this.setState({
+                countryList: responseData.response.data,
+                 loaded: true
+        });
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+    }
+    loadCountry() {
+        return this.state.countryList.map(user => ( 
+            <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} /> 
+        ))
+    } 
 
     render() {
         // console.warn(this.state.is_notification);
@@ -261,16 +288,15 @@ export default class Settings extends Component {
 
                 <View style={{ flexDirection : 'column'}}>
                     <View style={{
-                                borderTopWidth : 1,
-        borderBottomWidth : 1,
-        borderColor : '#ccc',
-        // padding : 10, 
-        justifyContent:"space-between", 
-        // top : 10,  
-        flexDirection: 'row',  
-        backgroundColor: '#fff', 
-        alignItems: 'center'
-
+                        borderTopWidth : 1,
+                        borderBottomWidth : 1,
+                        borderColor : '#ccc',
+                        // padding : 10, 
+                        justifyContent:"space-between", 
+                        // top : 10,  
+                        flexDirection: 'row',  
+                        backgroundColor: '#fff', 
+                        alignItems: 'center'
                     }}>
                         <Text>Country</Text>
                         <Picker 
@@ -279,9 +305,7 @@ export default class Settings extends Component {
                         selectedValue={this.state.country}
                         onValueChange={(itemValue, itemIndex) => this.setState({country: itemValue})}>
                             <Picker.Item label="Select Country" value="" />
-                            <Picker.Item label="India" value="1" />
-                            <Picker.Item label="Us" value="2" />
-                            <Picker.Item label="Uk" value="3" />
+                            {this.loadCountry()}
                         </Picker> 
                     </View>
                     <TouchableOpacity style={styles.locact} onPress={()=>this.clearOrderHistory()}>

@@ -87,7 +87,8 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
     <Loader/> :
     <Router 
     createReducer={reducerCreate}
-    getSceneStyle={getSceneStyle}>
+    getSceneStyle={getSceneStyle}
+    headerMode='screen'>
 
         <Overlay key="overlay">
             <Modal 
@@ -98,7 +99,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     <Scene key='landingpage' component={WelcomeScreen} hideNavBar={true} initial={needSignIn}/>
                     <Scene key='loginPage' 
                     component={LoginPage} 
-                    title='login' 
+                    title='Login into ZeroToTwo' 
                     hideNavBar={false}  
                     type={ActionConst.REPLACE} 
                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
@@ -125,11 +126,13 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     initial={!needSignIn}
                     showLabel={false}
                     tabBarStyle={styles.tabBarStyle}
+                    // tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
                     tabBarPosition={'bottom'}
                     gestureEnabled={false} 
-                    // activeBackgroundColor='#a9d5d1' 
+                    activeBackgroundColor='#fff' 
                     inactiveBackgroundColor='#fff'
                     lazy
+                    duration={0}
                     // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
                     >
 
@@ -323,7 +326,8 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene 
                         key="deascription" 
                         component={ProductDescription} 
-                        navBar={CustomGenNavBar} 
+                        navBar={CustomGenNavBar}
+                        type={ActionConst.REPLACE}
                         />
                     </Stack>
 

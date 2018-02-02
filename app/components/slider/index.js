@@ -25,7 +25,7 @@ const Slide = props => {
     return ( 
         <View style={[styles.slide]}>
           <Image onLoad={props.loadHandle.bind(null, props.i)} 
-                resizeMode={'stretch'}
+                resizeMode={'center'}
             style={styles.image} 
             source={{uri: props.uri}} />
             <Ionicons 
@@ -42,7 +42,7 @@ const Slide = props => {
             {
               !props.loaded && <View style={styles.loadingView}> 
               <BubblesLoader 
-                color= {'#6a5acd'} 
+                color= {'#a9d5d1'} 
                 size={40} 
                 dotRadius={10} />
             </View>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
       right: 0,
       top: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0,0,0,.5)'
+      // backgroundColor: 'rgba(0,0,0,.5)'
     },
     
     loadingImage: {

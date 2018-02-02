@@ -19,8 +19,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBarManager } from 'react-native-message-bar';
 import  Countmanager  from './Countmanager';
 import {Actions as routes} from "react-native-router-flux";
+import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
+import { material } from 'react-native-typography';
 
 const { width, height } = Dimensions.get('window');
+
+const SHORT_LIST = ['Small', 'Medium', 'Large'];
 
 export default class Shopingcart extends Component {
     constructor(props) { 
@@ -36,9 +40,11 @@ export default class Shopingcart extends Component {
             totalamount : '',
             subtotalamount : '', 
             Quentity : 0,
-            color: '', 
+            color: 'blue', 
             u_id: null,
+            product_id : '',
             user_type : null,
+            selectSize : false,
             country : null,
             status : false
         };
@@ -206,8 +212,6 @@ export default class Shopingcart extends Component {
         .done();
     }
 
-    viewNote(rowData) {
-    } 
     validate(){
         const { ShopingItems} = this.state; 
 
@@ -275,6 +279,49 @@ export default class Shopingcart extends Component {
                 <Text> No Item added to your cart </Text>
                </View> );
     }
+    changeSize(result){
+        this.setState({ 
+            selectSize: false,
+            size: result.selectedItem.label
+        });
+        this.editWishlist(result.selectedItem.label)
+    }
+    editWishlist(size){
+        const {u_id, country, product_id, color } = this.state;
+
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('product_id', String(product_id));
+        formData.append('size', String(size)); 
+        formData.append('color', String(color)); 
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+        if (this.validate()) {
+            fetch(Utils.gurl('editWishlist'), config) 
+            .then((response) => response.json())
+            .then((responseData) => {
+                MessageBarManager.showAlert({ 
+                        message: responseData.data.message, 
+                        alertType: 'alert', 
+                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                    })
+            })
+            .then(()=>this.props.callback())
+            .catch((error) => {
+              console.log(error);
+            })       
+            .done();
+        }
+    }
+
 
     render() {
         const { itemcount, totalamount, subtotalamount } = this.state;
@@ -313,6 +360,15 @@ export default class Shopingcart extends Component {
                 <Text style={{ color : '#fff'}}>Proced to Checkout</Text>
                 </TouchableHighlight>
             </View>
+            <SinglePickerMaterialDialog
+                  title={'Select Size'}
+                  items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
+                  visible={this.state.selectSize}
+                  selectedItem={this.state.singlePickerSelectedItem}
+                  onCancel={() => this.setState({ selectSize: false })}
+                  onOk={result => this.changeSize(result)
+                  }
+                />
         </View>
         );
     }
@@ -333,19 +389,19 @@ export default class Shopingcart extends Component {
                 backgroundColor : "transparent"}}>
                             
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <View style={{ flexDirection: 'row' , backgroundColor : "#fff", justifyContent : 'space-around', alignItems : 'center'}}>
+                        <View style={{ flexDirection: 'row' , backgroundColor : "#fff", justifyContent : 'space-between', alignItems : 'center'}}>
 
                             <Image style={[styles.thumb, {margin: 10}]} 
                             source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}/>
-                        <View>
+                        <View style={{flexDirection : 'column'}}>
                             <TouchableHighlight
                             underlayColor='transparent'
-                            onPress={this.viewNote.bind(this, data)} 
                             style={styles.row} >        
-                                <Text > {data.product_name} </Text>
+                                <Text style={{ fontSize:15, color:'#696969', marginBottom:5}}> {data.product_name} </Text>
                             </TouchableHighlight>
+                                <Text style={{ fontSize:10, color:'#696969', marginBottom:5}}> {data.short_description} </Text>
 
-                            <View style={{ flexDirection : "row"}}>
+                            <View style={{ flexDirection : "row",  width:width/1.5}}>
                                 <Text style={{paddingRight : 10}}> Quentity : </Text>
                                     <Countmanager  
                                     quantity={data.quantity} 
@@ -357,16 +413,18 @@ export default class Shopingcart extends Component {
                                     />
 
                             </View>
-                            <View style={{ flexDirection : "row", justifyContent:"space-between"}}>
                             <View style={{ flexDirection : "row"}}>
-                                <Text >PRICE : </Text>
-                                <Text> {data.special_price} </Text>
-                                <Text style={{fontSize:15, color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>Size : </Text>
+                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>{data.size}</Text>
                             </View>
-                                <Text> KWD</Text>
+                            <View style={{ flexDirection : "row", justifyContent:"space-between"}}>
+                                <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5}}> {data.special_price} KWD</Text>
+                                <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine}}> {data.price} KWD</Text>
                             </View>
-                            <SelectItem size={data.size} color={data.color} getsize={this.getSize.bind(this)} getcolor={this.getColor.bind(this)} />
-
+                            <View style={{ flexDirection : "row"}}>
+                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>SubTotal : </Text>
+                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>{ data.quantity*data.special_price}</Text>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -381,14 +439,19 @@ export default class Shopingcart extends Component {
                         <Text style={{ left : 5}}>Remove</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
-                        onPress={()=> this.addtoWishlist(data.product_id)}
-                        >
-                        <Entypo name="heart-outlined" size={20} color="#a9d5d1"/> 
-                        <Text style={{ left :5}}>Add To wishlist</Text>
+                        onPress={()=>this.openDialog(data.product_id)}>
+                        <Entypo name="edit" size={20} color="#a9d5d1"/> 
+                        <Text style={{ left :5}}>EditCart</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         )
+    }
+    openDialog(product_id){
+        this.setState({ 
+            selectSize : true,
+            product_id : product_id
+        })        
     }
 }
 class SelectItem extends Component{
@@ -517,7 +580,7 @@ const styles = StyleSheet.create ({
     },
     shoping : {
         width : width/2,
-        backgroundColor : "#f53d3d",
+        backgroundColor : "#fbcdc5",
         alignItems : 'center',
         padding : 10
     },

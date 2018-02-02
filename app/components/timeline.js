@@ -21,12 +21,6 @@ export default class Timeline extends Component{
         };
     }
     componentDidMount(){
-        // let i = 0;
-        // let start = Date.now();
-        // for (let j = 0; j < 1e9; j++) { 
-            // i++;
-        // }
-        // alert("Done in " + (Date.now() - start) + 'ms');
         setTimeout(()=>{
             Actions.pop()
         }, 5000);
@@ -46,7 +40,6 @@ export default class Timeline extends Component{
                     style={{ width: width}}
                     progress={this.state.progress}
                 />
-                <Text>{this.state.progress}</Text>
                 <Image
                 source={{uri: this.props.uri ,width: width, height: 500}}
                 style={{  
