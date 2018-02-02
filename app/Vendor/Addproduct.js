@@ -147,7 +147,6 @@ export default class AddProduct extends Component {
                     var data = responseData.response.data,
                     length = data.length,
                     optionsList= []
-
                     optionsList.push('Cancel');
 
                     for(var i=0; i < length; i++) {  
@@ -162,8 +161,8 @@ export default class AddProduct extends Component {
                 }
             })
             .catch((errorMessage, statusCode) => {
+                console.log(errorMessage);
             })
-
             .done();
     }
     validate(){
@@ -279,16 +278,34 @@ export default class AddProduct extends Component {
             .uploadProgress((written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%') 
             })
-            .then((res)=>{ 
-                this.setState({
-                    visibleModal : false
-                })
+            .then((res)=>{
+                var getdata = JSON.parse(responseData.data);
+               if(getdata.status){
+                    MessageBarManager.showAlert({
+                        message: "Product Added Successfully",
+                        alertType: 'warning',
+                    }) 
+                    this.setState({
+                        visibleModal : false
+                    })
+                }else{
+                    MessageBarManager.showAlert({
+                        message: "Product Upload Failed",
+                        alertType: 'warning',
+                    }) 
+                    this.setState({
+                        visibleModal : false
+                    })
+                }
             })
             .catch((errorMessage, statusCode) => {
                 MessageBarManager.showAlert({
-                message: errorMessage,
+                message: "Failed Due to Some communication Error",
                 alertType: 'warning',
-                })      
+                })
+                this.setState({
+                        visibleModal : false
+                    })      
             })
             .done();
         }
@@ -321,14 +338,8 @@ export default class AddProduct extends Component {
         filename : response.fileName, 
         data: RNFetchBlob.wrap(response.uri), 
         uri: response.uri , 
-        // name: response.fileName, 
         type: 'image/jpg'};
-                // let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
-                
                 let uri = response.uri;
-
-              // let path = { uri , name: response.fileName, type: 'image/jpg'};
-
                 this.setState({
                     avatarSource: source,
                     imageSelect : true,
@@ -375,14 +386,14 @@ export default class AddProduct extends Component {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'handled'}>
                 <View style={commonStyles.ImageAdd}>
-                    <Text style={{color: borderColorImage}}>Select Product Image</Text>  
-                    <View style={{ borderWidth: 1, borderColor: 'transparent', borderRadius : 40}}>
+                    <Text style={{color: borderColorImage, marginBottom : 10}}>Select Product Image</Text>  
+                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Product Picture</Text>  
+                    <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
                         <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="upload-cloud" size= {30} style={{padding :20 }} /> 
+                            name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} /> 
                     </View>
                     <View style={{  top: 10, flexDirection:'row'}}>
-                        { this.state.avatarSource === null ? <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="image" size= {30} style={{padding :20, borderWidth: 1, borderColor: '#ccc', }} /> :
+                        { this.state.avatarSource === null ? undefined :
                             <SelectedImage 
                             productImages={this.state.rows} 
                             />
