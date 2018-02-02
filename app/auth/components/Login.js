@@ -185,7 +185,7 @@ class Login extends Component {
 				<Text style={{ padding : 20 }}>Forgot password</Text>
 				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
-				<Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/>
+				<Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="FFCC7D"/>
   					<Modal isVisible={this.state.visibleModal}>
   					<View style={{alignItems : 'center', padding:10}}>
 				    {errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }

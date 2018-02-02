@@ -549,9 +549,11 @@ unCheck(data){
                 <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
                 {listView}
                 <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                <View>
                 { 
-                    // serviceListview
+                    serviceListview
                 }
+                </View>
                 <Modal isVisible={this.state.isModalVisible}>
                 <View style={styles.container}>
                     <ScrollView>

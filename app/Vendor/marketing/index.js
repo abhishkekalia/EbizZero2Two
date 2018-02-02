@@ -63,8 +63,8 @@ class Marketing extends Component {
                     borderRadius={0}
                     tabsContainerStyle={{ height: 50, backgroundColor: '#a9d5d1' }}
                     tabStyle={{ backgroundColor: '#fff', borderWidth: 0 }}
-                    activeTabStyle={{ backgroundColor: '#f53d3d' }}
-                    tabTextStyle={{ color: '#ccc', fontWeight: 'bold' }}
+                    activeTabStyle={{ backgroundColor: '#fbcdc5' }}
+                    tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
                     <FeaturedProduct/>}
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
     upload : {
         padding : 10,
-        backgroundColor : '#f53d3d',
+        backgroundColor : '#fbcdc5',
         left : 70,
         top : 10,
         flexDirection : 'row',

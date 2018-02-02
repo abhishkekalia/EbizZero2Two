@@ -83,8 +83,6 @@ export default StyleSheet.create({
         padding : 5,
         alignItems : 'center',
         borderRadius : 5,
-        borderColor : '#fff',
-        borderWidth : 1
     }
 
 });

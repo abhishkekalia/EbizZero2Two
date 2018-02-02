@@ -341,8 +341,8 @@ onCancelPress(){
 }
     render() {
         const { imageSelect , videoSelect} = this.state; 
-        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d'    
-        borderColorVideo= videoSelect ? "#a9d5d1" : '#f53d3d'    
+        borderColorImage= imageSelect ? "#a9d5d1" : '#fbcdc5'    
+        borderColorVideo= videoSelect ? "#a9d5d1" : '#fbcdc5'    
 
         return (
             <View style={[styles.container, { padding : 10}]}>
