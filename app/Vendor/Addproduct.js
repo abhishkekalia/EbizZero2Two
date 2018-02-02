@@ -16,6 +16,7 @@ import {
     Switch
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -47,7 +48,7 @@ export default class AddProduct extends Component {
             imageSelect : false,
             avatarSource: null,
             product_category: '',
-            options : [],
+            options : ['0'],
             u_id: null,
             user_type : null,
             country : null,

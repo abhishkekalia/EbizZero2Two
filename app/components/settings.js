@@ -5,7 +5,6 @@ import {
   Text,
   Switch,
   View,
-  Picker,
   AsyncStorage,
   TouchableOpacity,
   Dimensions
@@ -15,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const { width, height } = Dimensions.get('window');
+import { Picker } from 'react-native-picker-dropdown';
 
 const is_notification = '0'
 
@@ -291,7 +291,8 @@ export default class Settings extends Component {
                         borderTopWidth : 1,
                         borderBottomWidth : 1,
                         borderColor : '#ccc',
-                        // padding : 10, 
+                        height:40,
+                        padding : 10, 
                         justifyContent:"space-between", 
                         // top : 10,  
                         flexDirection: 'row',  
@@ -304,7 +305,6 @@ export default class Settings extends Component {
                         style={{width : width/3}} 
                         selectedValue={this.state.country}
                         onValueChange={(itemValue, itemIndex) => this.setState({country: itemValue})}>
-                            <Picker.Item label="Select Country" value="" />
                             {this.loadCountry()}
                         </Picker> 
                     </View>

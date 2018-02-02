@@ -161,10 +161,11 @@ export default class Marketingadd extends Component {
               let source = { uri: response.uri }; 
               let path = response.uri
               let name = response.fileName
+              tempImg = path.replace(/^file:\/\//, '');
 
                 this.setState({
                     avatarSource: source,
-                    thumbnail_image : path,
+                    thumbnail_image : tempImg,
                     thumblinefiletype : 'image/jpg',
                     imageSelect : true,
                     videoSelect : false,
@@ -201,15 +202,16 @@ export default class Marketingadd extends Component {
               let path = response.uri;
               let name = response.fileName;
 
+              tempImg = path.replace(/^file:\/\//, '');
                 this.setState({
-                    avatarSource: source,
-                    thumbnail_image : path,
+                    avatarSource: source,   
+                    thumbnail_image : tempImg,
                     imageSelect : true,
                     videoSelect : false,
                     image : 'image',
                     fileType : 'image/jpg',
                     thumblinefiletype : 'image/jpg',
-                    Source: path,
+                    Source: tempImg,
                     uploadFileName : name,
                     thumblinename : name,
                     amount : "1"
@@ -240,16 +242,19 @@ export default class Marketingadd extends Component {
             else {
            
             var filename = Date.now().toString();
-            let name = filename + "." + response.path.split('.')[1];
+            let name = filename + "." + response.uri.split('.')[1];
+              let path = response.uri;
+
+                tempvideo = path.replace(/^file:\/\//, '');
 
               this.setState({
-                videoSource: response.path ,
+                videoSource: tempvideo ,
                 videoSelect : true,
                 imageSelect : false,
                 image : 'video',
                 fileType : 'video/mp4',
                 uploadFileName : name ,
-                Source: response.uri,
+                Source: tempvideo,
                 amount : "1.5",
 
               });
@@ -305,12 +310,12 @@ onCancelPress(){
                             size= {30}
                             color={borderColorImage}
                             onPress={this.selectPhotoTapped.bind(this)}
-                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 40}} /> 
+                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} /> 
                         <Feather 
                         name="play-circle" onPress={this.selectVideoTapped.bind(this)}
                         color={borderColorVideo}
                         size= {30} 
-                        style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 40}} />
+                        style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
                     </View>
 
                 </View>
@@ -345,7 +350,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     avatar: {
-        borderRadius: 50,
         width: 70,
         height: 70
     },

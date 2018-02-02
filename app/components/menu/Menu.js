@@ -38,7 +38,7 @@ class Menu extends React.Component {
                             <Ionicons 
                             name="ios-notifications" 
                             color="#87cefa" size={30}
-                            style={{ left : 13}}
+                            style={{ left : 5}}
                             />
                     <Text 
                     onPress={Actions.notificationShow}

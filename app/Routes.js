@@ -470,7 +470,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     key="getmyaddress" 
                     hideTabBar={true} 
                     titleStyle={{alignSelf: 'center'}}
-                    renderRightButton={() => <Ionicons name="plus" size={20} onPress={()=> Actions.newaddress()} color="#fff" style={{  alignItems:'center',padding:15}}/>}
+                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress()} color="#fff" style={{  alignItems:'center',padding:15, paddingTop:35}}/>}
                     >
                         <Scene
                         key="getmyaddress"

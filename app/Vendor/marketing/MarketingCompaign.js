@@ -226,16 +226,17 @@ export default class MarketingCompaign extends Component {
               let source = { uri: response.uri }; 
               let path = response.uri
               let name = response.fileName
+              tempImg = path.replace(/^file:\/\//, '');
 
                 this.setState({
                     avatarSource: source,
-                    thumbnail_image : path,
+                    thumbnail_image : tempImg,
                     thumblinefiletype : 'image/jpg',
                     imageSelect : true,
                     videoSelect : false,
                     thumblinename : name,
 
-                });
+                },()=>this.uploadTocloud());
             }
         });
     }
@@ -266,19 +267,20 @@ export default class MarketingCompaign extends Component {
               let path = response.uri;
               let name = response.fileName;
 
+              tempImg = path.replace(/^file:\/\//, '');
                 this.setState({
-                    avatarSource: source,
-                    thumbnail_image : path,
+                    avatarSource: source,   
+                    thumbnail_image : tempImg,
                     imageSelect : true,
                     videoSelect : false,
                     image : 'image',
                     fileType : 'image/jpg',
                     thumblinefiletype : 'image/jpg',
-                    Source: path,
+                    Source: tempImg,
                     uploadFileName : name,
                     thumblinename : name,
                     amount : "1"
-                });
+                },()=>this.uploadTocloud());
             }
         });
     }
@@ -305,16 +307,19 @@ export default class MarketingCompaign extends Component {
             else {
            
             var filename = Date.now().toString();
-            let name = filename + "." + response.path.split('.')[1];
+            let name = filename + "." + response.uri.split('.')[1];
+              let path = response.uri;
+
+                tempvideo = path.replace(/^file:\/\//, '');
 
               this.setState({
-                videoSource: response.path ,
+                videoSource: tempvideo ,
                 videoSelect : true,
                 imageSelect : false,
                 image : 'video',
                 fileType : 'video/mp4',
                 uploadFileName : name ,
-                Source: response.uri,
+                Source: tempvideo,
                 amount : "1.5",
 
               });

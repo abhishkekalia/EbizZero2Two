@@ -137,7 +137,7 @@ export default class AllItem extends Component {
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
 
-                <Text style={{fontSize : 13, color :'#000', fontFamily : 'halvetica' }}>{data.product_name}</Text>
+                <Text style={{fontSize : 13, color :'#000'}}>{data.product_name}</Text>
                 </TouchableOpacity>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{

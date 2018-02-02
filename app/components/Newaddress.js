@@ -286,15 +286,15 @@ export default class Newaddress extends Component<{}> {
     return (
         <View style={{ flex : 1}}>
         <View style={ { 
-            height : 54, 
+            height : 59, 
             backgroundColor : '#a9d5d1', 
             flexDirection : 'row', 
             justifyContent:"space-between", 
             alignItems : 'center',
         }}>
-        <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10}} onPress={()=> routes.pop()}/>
+        <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10, top : 10}} onPress={()=> routes.pop()}/>
         
-        <Text style={{color:'#fff' }}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
+        <Text style={{color:'#fff' ,top:10}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
         
         <TouchableOpacity style={{ backgroundColor:'transparent', top : 15, marginBottom : 10 ,padding: 10}}onPress={()=> this.submit()}>
         <Text style={{ color:'#fff',padding:5, borderColor:'#fff', borderWidth:1, borderRadius : 10}}>Save</Text>
@@ -340,7 +340,6 @@ export default class Newaddress extends Component<{}> {
         style={{height: 40, width: 100 }} 
         selectedValue={this.state.country} 
         onValueChange={(country) => this.setState({country})}> 
-            <Picker.Item label="Select Country" value="" /> 
             {this.loadCountry()}
         </Picker>
         </View>

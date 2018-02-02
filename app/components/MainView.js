@@ -550,7 +550,7 @@ unCheck(data){
                 {listView}
                 <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
                 { 
-                    // serviceListview
+                    serviceListview
                 }
                 <Modal isVisible={this.state.isModalVisible}>
                 <View style={styles.container}>

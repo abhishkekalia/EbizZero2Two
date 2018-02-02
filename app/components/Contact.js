@@ -9,7 +9,6 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
-    Picker,
     Keyboard,
     AsyncStorage
 } from "react-native";
@@ -18,6 +17,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import { Picker } from 'react-native-picker-dropdown';
 
 export default class Contact extends Component<{}> {
     constructor(props) {
@@ -171,6 +171,9 @@ export default class Contact extends Component<{}> {
                     borderColor : "#ccc", 
                     borderRadius : 5,
                     margin: 5,
+                    height:40,
+                    alignItems :'center',
+                    justifyContent:'center'
                 }}>
                     <Picker
                     mode="dropdown"
@@ -198,14 +201,22 @@ export default class Contact extends Component<{}> {
                             }}
                     onChangeText={(message) => this.setState({message})}
                     />
-                <Button title="Send Request" onPress={()=> this.contactUS()}/>
+                {/* <Button title="Send Request" onPress={()=> this.contactUS()}/> */}
+
+                <TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.contactUS()}>
+                    <View style={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+                             <Text style = {{color:"#FFFFFF"}}>Submit</Text>
+                    </View>
+                </TouchableOpacity>
+
+
                 <Text style={{ padding : 10, fontSize :15, borderBottomWidth:0.5, borderColor : '#ccc'}}>Customer Service</Text>
                 <Text style={{ color : '#87cefa' , fontSize : 15}}>Contact Us 24/7</Text>
-                <View style={{ flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row', alignItems:'center'}}>
                     <Feather name="phone-call" size={25} color="#900"/>
                     <Text>+971 55 123456789</Text>
                 </View>
-                <View style={{ flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row', alignItems :'center'}}>
                     <Ionicons name="ios-stopwatch-outline" size={25} color="#900"/>
                     <Text>Daily 8 Am to 12 Pm</Text>
                 </View>
@@ -227,7 +238,7 @@ const styles = StyleSheet.create({
       borderColor : "#ccc",
       borderRadius : 5,
       // width : width,
-      // height : 40,
+      height : 40,
       fontSize: 20,
       textAlign: 'left',
       margin: 5,
