@@ -200,6 +200,19 @@ export default class ProductOrder extends Component<{}> {
             </View>
         );
     }
+<<<<<<< HEAD
+=======
+    _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+        return (
+        <View
+        key={`${sectionID}-${rowID}`}
+        style={{
+          height: adjacentRowHighlighted ? 4 : StyleSheet.hairlineWidth,
+          backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
+        }}/>
+        );
+    }
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
 
     renderListView() {
         return (
@@ -211,6 +224,10 @@ export default class ProductOrder extends Component<{}> {
                     renderSectionHeader = {this.renderSectionHeader}
                     enableEmptySections = {true} 
                     automaticallyAdjustContentInsets={false} 
+<<<<<<< HEAD
+=======
+                    renderSeparator={this._renderSeparator}
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
                     showsVerticalScrollIndicator={false}
                 />
             </View>
@@ -244,32 +261,55 @@ Object.assign(ProductOrder.prototype, {
                 <View style={styles.row}>
                     <View style={{ flexDirection : 'row'}}>
                         <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Product ID : </Text>
+<<<<<<< HEAD
                         <Text style={styles.rowText}>{rowID.product_id} </Text>
                     </View>
                     <View style={{ flexDirection : 'row'}}>
                         <Text style={[styles.rowText, {color : '#000'} ]}>{rowID.product_name} </Text>
+=======
+                        <Text style={styles.rowText}># {rowID.product_id} </Text>
+                    </View>
+                    <View style={{ flexDirection : 'row'}}>
+                        <Text style={[styles.rowText, {color : '#222'} ]}>{rowID.product_name} </Text>
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
                     </View> 
                     <View style={{ flexDirection : 'row'}}>
                         <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Qty :</Text> 
                         <Text style={[styles.rowText, { color : '#ccc'}]}>{rowID.quantity} </Text> 
                     </View>
                     <View style={{ flexDirection : 'row'}}>
+<<<<<<< HEAD
                         <Text style={[styles.rowText, {color : '#f53d3d'}]}>Price: </Text> 
                         <Text style={styles.rowText}>{rowID.price} </Text> 
                     </View>
                     <View style={{ flexDirection : 'row'}}>
                         <Text style={[styles.rowText, {color : '#f53d3d'}]}>Special Price: </Text> 
+=======
+                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Price: </Text> 
+                        <Text style={styles.rowText}>{rowID.price} </Text> 
+                    </View>
+                    <View style={{ flexDirection : 'row'}}>
+                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Special Price: </Text> 
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
                         <Text style={styles.rowText}>{rowID.special_price} </Text> 
                     </View>
                     <View style={styles.footer}>
                         <View style={{ flexDirection : 'row'}}>
+<<<<<<< HEAD
                             <Text style={[styles.rowText, {color : '#f53d3d'} ]}>Order Status : </Text>
+=======
+                            <Text style={[styles.rowText, {color : '#fbcdc5'} ]}>Order Status : </Text>
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
                             <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status )}> 
                             <Text style={[styles.rowText, { color : '#a9d5d1'}]}>{label} </Text>
                             </TouchableOpacity> 
                         </View>
                         <View style={{ flexDirection : 'row'}}>
+<<<<<<< HEAD
                             <Text style={[styles.rowText, , {color : '#f53d3d'}]}>Order Date : </Text> 
+=======
+                            <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>Order Date : </Text> 
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
                             <Text style={styles.rowText}>{ rowID.order_date} </Text> 
                         </View>
                     </View>
@@ -314,12 +354,21 @@ var styles = StyleSheet.create({
     footer : { 
         flexDirection : 'row', 
         justifyContent : 'space-around', 
+<<<<<<< HEAD
         borderWidth : 1, 
+=======
+        borderWidth : StyleSheet.hairlineWidth, 
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
         borderColor : '#ccc',
         borderRadius : 2
     },
     rowText: {
+<<<<<<< HEAD
         fontSize: 12
+=======
+        fontSize: 12,
+        color: '#696969'
+>>>>>>> 991f3287bc1758cf11bf5675ccbf360aae7bd4a1
     },
     subText: {
         fontSize: 14,

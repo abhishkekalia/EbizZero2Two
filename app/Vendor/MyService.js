@@ -162,23 +162,25 @@ export default class MyService extends Component {
                     resizeMode={"stretch"} 
                     source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null}}
                     />  
-                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
-                        <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.service_name} </Text>
-                        <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
-                            <View style={{ flexDirection : "row", justifyContent : 'space-between'}}>
+
+                    <View style={{flexDirection: 'column', alignItems: 'center'}}>  
+                        <Text style={[styles.row, { color:'#222',fontWeight :'bold', marginTop: 10}]} > {data.service_name} </Text>
+                            <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>
                             <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#f53d3d'}} >Price : </Text>
-                            <Text> {data.special_price} </Text>
-                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                            <Text style={{color : '#696969', fontSize: 10}} >Price : </Text>
+                            <Text style={{ color: '#696969', fontSize: 10}}> {data.price} KWD</Text>
                             </View>
-                                <Text style={{color : '#ccc'}} >KWD</Text>
+                            <View style={{ flexDirection : "row"}}>
+                            <Text style={{color : '#696969', fontSize: 10}} >Special Price : </Text>
+                            <Text style={{color : '#696969', fontSize: 10}} >{data.special_price} KWD</Text>
+                            </View>
+                            <View style={{ flexDirection : "row"}}>
+                               <Text style={{color : '#696969', fontSize: 10}} >Status : </Text>
+                               <Text style={{color : '#696969', fontSize: 10}} > {data.is_approved ? 'approved' : 'pending'} </Text>
+                            </View>
 
                         </View>
 
-                        <View style={{ flexDirection : "row"}}>
-                           <Text style={{color : '#f53d3d'}}> Status : </Text>
-                           <Text > {data.is_approved ? 'approved' : 'pending'} </Text>
-                        </View>
                     </View>
                 </TouchableOpacity>
                 <Footer calllback={()=>this.Description(data.service_name, data.serviceImages ,
@@ -202,8 +204,8 @@ class Header extends Component{
   render() {
     return (
       <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc'}]}>
-      <Text style={{ color : '#f53d3d', paddingLeft: 10}}>Category : </Text>
-        <Text style={styles.welcome}>{ this.props.service_type ? this.props.service_type: undefined}
+      <Text style={{ color : '#fbcdc5', padding: 10}}>Categories : </Text>
+        <Text style={{padding: 10, color:"#222"}}>{ this.props.service_type ? this.props.service_type: undefined}
         </Text>
       </View>
     );

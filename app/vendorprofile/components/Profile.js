@@ -135,9 +135,9 @@ class Profile extends Component {
 						</View>
 
 						<View style={{flexDirection : 'column'}}>
-							<Text style={[styles.label, { color : '#ccc'}]}>{dataSource.fullname}</Text>
-							<Text style={[styles.label, { color : '#ccc'}]}>{this.state.email}</Text>
-							<Text style={[styles.label, { color : '#ff6347'}]}>Contact: {dataSource.mobile}</Text>
+							<Text style={[styles.label, { color : '#696969'}]}>{dataSource.fullname}</Text>
+							<Text style={[styles.label, { color : '#696969'}]}>{this.state.email}</Text>
+							<Text style={[styles.label, { color : '#fbcdc5'}]}>Contact: {dataSource.mobile}</Text>
 						</View>
 					</View>
 

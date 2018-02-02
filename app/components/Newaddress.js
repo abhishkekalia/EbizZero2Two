@@ -180,62 +180,6 @@ export default class Newaddress extends Component<{}> {
             })
             return false
         }
-        if (!block_no.length )
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter  Five Digit Postal code",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!houseno.length )
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter  Houseno",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!alternate_number.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter Your Alternate Contact Number",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!appartment.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter Your Address First Line",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!street.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter Your Address Secound Line",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!floor.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter floor",
-                alertType: 'alert',
-            })
-            return false
-        }
-        if (!jadda.length)
-        { 
-            MessageBarManager.showAlert({
-                message: "Please Enter Your jadda",
-                alertType: 'alert',
-            })
-            return false
-        }
         if (!city.length)
         { 
             MessageBarManager.showAlert({
@@ -244,10 +188,26 @@ export default class Newaddress extends Component<{}> {
             })
             return false
         }
-        if (!state.length)
+        if (!block_no.length )
         { 
             MessageBarManager.showAlert({
-                message: "Please Enter State",
+                message: "Please Enter Block No",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!street.length)
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter Street Name",
+                alertType: 'alert',
+            })
+            return false
+        }
+        if (!houseno.length )
+        { 
+            MessageBarManager.showAlert({
+                message: "Please Enter  Houseno",
                 alertType: 'alert',
             })
             return false
