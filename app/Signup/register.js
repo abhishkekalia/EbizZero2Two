@@ -8,8 +8,8 @@ import {
 	Switch,
 	ScrollView,
 	Platform,
-	Dimensions,
-	KeyboardAvoidingView
+	Keyboard,
+	Dimensions
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -21,7 +21,6 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Picker } from 'react-native-picker-dropdown';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const { width, height } = Dimensions.get('window')
 
@@ -45,7 +44,9 @@ class Register extends Component {
 		this.toggleSwitch = this.toggleSwitch.bind(this);
 	    this.focusNextField = this.focusNextField.bind(this);
     	this.state = {
-            userTypes: [], 
+            userTypes: [],
+            termsandcondition_title:'',
+			termsandcondition_description:'', 
             selectCountry: '',
 			fullname: '', 
 			email: '', 
@@ -57,7 +58,7 @@ class Register extends Component {
 			gender : '',
 			hidden : true,
 			userType : null,
-			type : '',
+			type : '2',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 		};
 	    this.inputs = {};
@@ -65,6 +66,7 @@ class Register extends Component {
 	}
 	componentDidMount(){
         this.fetchData();
+        this.gettermandcondition()
 
     }
 
@@ -77,6 +79,25 @@ class Register extends Component {
     		hidden : !this.state.hidden
     	})
     }
+    gettermandcondition(){
+        fetch(Utils.gurl('gettermandcondition'),{
+             method: "GET", headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }   
+        })
+        .then((response) => response.json())
+        .then((responseData) => { 
+        	if (responseData.status) {
+            	this.setState({
+            	    termsandcondition_title: responseData.data.termsandcondition_title,
+            	    termsandcondition_description: responseData.data.termsandcondition_description,
+            	     loaded: true
+        		});
+        	}
+        }).done();
+    }
+
 
     fetchData(){
         fetch(Utils.gurl('countryList'),{
@@ -115,17 +136,12 @@ class Register extends Component {
 
 		const {errorStatus, loading} = this.props;
 		return (
-			<ScrollView testID="Login">
-						<KeyboardAvoidingView 
-			 style={[ commonStyles.content,{ justifyContent: "flex-end"}]} 
-			 behavior="padding" 
-			>
-
+			<ScrollView style={[ commonStyles.content]} testID="Login" keyboardShouldPersistTaps={'handled'}>
 				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
-					<View style ={[commonStyles.iconusername , { padding : 10}]}>
+					<View style ={commonStyles.iconusername}>
 		
 						<TextInput 
-							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10}]}
+							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10, height:40}]}
 							value={this.state.fullname}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -146,12 +162,11 @@ class Register extends Component {
 					<View style ={commonStyles.iconusername}>
 						
 						<TextInput
-							style={[commonStyles.inputpassword , { padding : 10}]}
+							style={[commonStyles.inputpassword,{ height:40}]}
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
 							placeholder="Email Address"
-							keyboardType={'email-address'}
 							maxLength={140}
           					onSubmitEditing={() => { 
           						this.focusNextField('three');
@@ -166,7 +181,7 @@ class Register extends Component {
 					<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
 						
 						<TextInput
-							style={[commonStyles.inputpassword , { padding : 10}]}
+							style={[commonStyles.inputpassword,{height:40}]}
                            	secureTextEntry={this.state.hidden}
                            	value={this.state.password}
 							underlineColorAndroid = 'transparent'
@@ -189,14 +204,14 @@ class Register extends Component {
 							<Text>Show Password </Text>
 					</TouchableOpacity>
 
- 				<View style={{borderBottomWidth: 0.5, borderColor: 'red'}}>
+ 				<View style={{borderBottomWidth: 0.5, borderColor: '#ccc'}}>
  				        			<Text/>
 
         			<SegmentedControls
-        			  tint= {'#87cefa'}
-        			  selectedTint= {'white'}
-        			  backTint= {'#fff'}
-        			  optionStyle= {{
+        			  	tint= {'#a9d5d1'}
+        			  	selectedTint= {'white'}
+        			  	backTint= {'#fff'}
+        			  	optionStyle= {{
         			    fontSize: 12,
         			    fontWeight: 'bold',
         			    fontFamily: 'Snell Roundhand'
@@ -222,7 +237,7 @@ class Register extends Component {
 				<View style ={commonStyles.iconusername}>
 						
 						<TextInput
-							style={[commonStyles.inputusername , { padding : 10}]}
+							style={[commonStyles.inputusername,{height:40}]}
 							value={this.state.contact}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -240,26 +255,40 @@ class Register extends Component {
 						/>
 					</View>
 
-					<View style={{ borderBottomWidth: 0.5, borderColor: 'red'}}>						
-						<Picker
-            selectedValue={this.state.selectCountry}
-            onValueChange={(selectCountry) => this.setState({selectCountry})}
-            mode="dropdown"
-            style={{
-                borderColor : '#ccc',
-                alignSelf: 'stretch',
-                color: 'black',
-                padding:10
-            }}
-          >
-            <Picker.Item label="India" value="1" />
-            <Picker.Item label="UK" value="2" />
-            <Picker.Item label="United States" value="3" />
-          </Picker>
-					</View>
-					<View style ={commonStyles.iconusername}>
+					<TouchableOpacity style={[commonStyles.iconusername, {
+					        				flexDirection: 'row',
+					        				justifyContent: 'space-between',
+					        				alignItems: 'center' ,
+					        				marginBottom : 5
+					        					}]}>	
+					{/* <View style={{flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center' ,
+		marginLeft: 5,
+	}}
+		>					 */}
+						<Picker 
+                            style={{width: width-50, height: 40}} 
+                            mode="dropdown"
+                            selectedValue={this.state.selectCountry}
+                            onValueChange={(itemValue, itemIndex) => 
+                            this.setState({selectCountry: itemValue})}>
+                                {this.loadUserTypes()}
+                            
+                            </Picker>
+
+							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
+							
+						</TouchableOpacity>
+						{/* </View> */}
+
+					<View style={[{
+					flexDirection: 'row',
+					// justifyContent: 'center',
+					// alignItems: 'center' ,
+						}]}>		
 						<TextInput
-							style={[commonStyles.inputpassword , { padding : 10}] }
+    						style={[commonStyles.inputpassword,{height:40}] }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -272,34 +301,37 @@ class Register extends Component {
 							onChangeText={(address) => this.setState({address})}
 						/>
 					</View>
-						<Picker style={{height: 40, backgroundColor: 'transparent'}}
-                        mode="dropdown"
-                        selectedValue={this.state.type}
-						onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})}>
-							<Picker.Item label="Select Type"/>
-							<Picker.Item label="USER" value="2" />
-							<Picker.Item label="VENDOR" value="3" />
-						</Picker>
+
 				</View>
-				<TouchableOpacity  onPress = {this.onSubmit.bind(this)}  style={[commonStyles.button , {backgroundColor : 'orange'}]}>
-					<Text style={{ color : '#fff'}}>Create Acount</Text>
+				{/* <Button 
+				onPress = {this.onSubmit.bind(this)}
+  				title="Create Acount"
+  				color="orange"
+  				/> */}
+				  <TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
+					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+							 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
+					</View>
 				</TouchableOpacity>
-	    </KeyboardAvoidingView>
-        <KeyboardSpacer/>
+  				<View style={{flexDirection : 'column', alignItems : 'center', flex: 1}}>
+  					<TouchableOpacity style={{padding :20}}
+  					onPress={()=> routes.registerVendor()}>
+  					<Text >If you are vendor ? Register Here</Text>
+  					</TouchableOpacity>
+  					<Text style={{ padding : 20}}>By Signing in You are agreeing to Our </Text>
 
+  					<TouchableOpacity 
+  					onPress={()=> routes.terms({ 
+  						title: this.state.termsandcondition_title,
+  						description: this.state.termsandcondition_description
+  					})}>
+  					<Text> Terms and 
+  					Conditions of Use and Privacy Policy</Text>
+  					</TouchableOpacity>
+  				</View>
 			</ScrollView>
-
 		);
 	}
-
-	alert = (msg) => { MessageBarManager.showAlert({ 
-		message: "please enter "+ msg, 
-		alertType: 'warning', 
-		// stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
-		animationType: 'SlideFromLeft',})}
-
-
-
 
 validate(){
 	const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
@@ -321,7 +353,7 @@ validate(){
 		return false;
 	}
 
-	if (!password.length){ //? null : this.alert("Fullname")
+	if (!password.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Password",
             alertType: 'alert',
@@ -335,28 +367,28 @@ validate(){
          })
 		return false;
 	}
-	if (!contact.length){ //? null : this.alert("Fullname")
+	if (!contact.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Contact Number",
             alertType: 'alert',
         	})
 		return false
 	}
-	if (!selectCountry.length){ //? null : this.alert("Fullname")
+	if (!selectCountry.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select Country",
             alertType: 'alert',
         	})
 		return false
 	} 
-	if (!address.length){ //? null : this.alert("Fullname")
+	if (!address.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Address",
             alertType: 'alert',
         	})
 		return false
 	}
-	if (!type.length){ //? null : this.alert("Fullname")
+	if (!type.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select User Type",
             alertType: 'alert',
@@ -366,7 +398,9 @@ validate(){
 		return true;
 }
 
-	onSubmit() {
+onSubmit() {
+		Keyboard.dismiss();
+
 		const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
 
 			let formData = new FormData();
@@ -385,12 +419,10 @@ validate(){
 			formData.append('twitter_id', String('fsdfsd')); 
 			formData.append('instagram_id', String('sdfsdf')); 
 			formData.append('snapchat_id', String('dfdsf')); 
-			formData.append('card_number', String('343454645664')); 
-			formData.append('expiry_month', String('3')); 
-			formData.append('expiry_year', String('20')); 
-			formData.append('cvv', String('456')); 
-			// console.warn(JSON.stringify(formData));
-			// console.warn(this.state.os);
+			// formData.append('card_number', String('343454645664')); 
+			// formData.append('expiry_month', String('3')); 
+			// formData.append('expiry_year', String('20')); 
+			// formData.append('cvv', String('456')); 
 		if(this.validate()) { 
 		this.setState({...INITIAL_STATE, loading: true});
 
@@ -413,16 +445,6 @@ validate(){
             message: "Congratulations You Are Successfully Registered ",
             alertType: 'alert',
         	})
-	    		// console.warn(JSON.stringify(responseData.response));
-	
-	    	 // if (responseData.response.status) { 
-	    	 	// routes.homePage();
-	         // } else {
-	            // MessageBarManager.showAlert({
-	            // message: "invalid username and password",
-	            // alertType: 'error',
-	            // })
-	    	// }
 	    }) 
 	    .catch(err => { 
 	    	console.log(err); 

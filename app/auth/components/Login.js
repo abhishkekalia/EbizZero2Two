@@ -2,15 +2,17 @@ import React, {
 	Component, 
 	PropTypes
 } from 'react';
-
 import { 
 	View, 
-	Text,
-	ScrollView, 
+	Text, 
 	TextInput, 
 	TouchableOpacity, 
 	Button,
-	Platform
+	Platform,
+	Image,
+	Keyboard,
+	Dimensions,
+	NetInfo
 } from "react-native";
 import {Actions as routes} from "react-native-router-flux";
 import {Loader} from "app/common/components";
@@ -19,7 +21,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+const { width, height } = Dimensions.get('window')
+import Utils from 'app/common/Utils';
 
 const INITIAL_STATE = {email: '', password: ''};
 
@@ -27,19 +30,71 @@ class Login extends Component {
 	constructor() {
 		super();
 		this.state = {
+            termsandcondition_title:'',
+			termsandcondition_description:'', 
 			email: '', 
 			password: '',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			loading: false,
 			visibleModal: false
-
 		};
 	    this.inputs = {};
 	}
+	componentwillMount(){
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
+
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({ netStatus: isConnected }); }
+            );
+
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            if (isConnected)
+            {
+            	this.gettermandcondition()
+            }else{
+                console.log(`is connected: ${this.state.netStatus}`);
+            }
+        });
+    }
+	componentDidMount(){
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+        NetInfo.isConnected.fetch().done((isConnected) => { 
+            this.setState({ 
+                netStatus: isConnected 
+            }); 
+        });
+    }
+    handleConnectionChange = (isConnected) => { 
+        this.setState({ netStatus: isConnected }); 
+        {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({ 
+                message: `Internet connection not available`,
+                alertType: 'error',
+            })
+        }
+    }
 
 	focusNextField(id) { 
     	this.inputs[id].focus();
     }
+    gettermandcondition(){
+        fetch(Utils.gurl('gettermandcondition'),{
+             method: "GET", headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }   
+        })
+        .then((response) => response.json())
+        .then((responseData) => { 
+        	if (responseData.status) {
+            	this.setState({
+            	    termsandcondition_title: responseData.data.termsandcondition_title,
+            	    termsandcondition_description: responseData.data.termsandcondition_description,
+            	    loaded: true
+        		});
+        	}
+        }).done();
+    }
+
 	onBlurUser() { 
 		const { email } = this.state;
 		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
@@ -57,9 +112,22 @@ class Login extends Component {
 	render() {
 		const {errorStatus, loading} = this.props;
 		return (
-			<ScrollView style={[commonStyles.container, commonStyles.content]} testID="Login">
-				
-				<View style ={commonStyles.inputcontent}>
+			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
+			<View style={{ flex : 1, 
+				flexDirection: 'column',
+                justifyContent: 'center', 
+                alignItems : 'center'}}>
+			<Image 
+			source={require('../../images/login_img.png')}
+			style={{ width : '25%', height : '50%' }}
+			/>	
+			<Text style={{color: '#f53d3d' , fontSize : 10, width : width/2}}> 
+			Use the email address and password used when you created your acount
+			</Text>
+			</View>	
+
+			<View style={{ padding : 20, top : 30}}>		
+				<View style ={[commonStyles.inputcontent,]}>
 					<View style ={commonStyles.iconusername}>
 						<Ionicons name="ios-mail-outline" 
 						size={30} 
@@ -72,6 +140,7 @@ class Login extends Component {
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
+							keyboardType={'email-address'}
 							placeholder="Email Address"
 							maxLength={140}
 							onSubmitEditing={() => { 
@@ -109,17 +178,24 @@ class Login extends Component {
 						/>
 					</View>
 				</View>
-				<TouchableOpacity onPress={() => this.onSubmit()} style={[commonStyles.button , {backgroundColor : '#a9d5d1'}]}>
-				<Text style={{ color : '#fff'}}>Login</Text>
+
+				{/* <Button title ="Login" onPress={() => this.onSubmit()}  color="#a9d5d1"/> */}
+				<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.onSubmit()}>
+					<View style={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+							 <Text style = {{color:"#FFFFFF"}}>Login</Text>
+					</View>
 				</TouchableOpacity>
 
 				<View style={{alignItems: 'center'}}>
 				<Text style={{ padding : 20 }}>Forgot password</Text>
-				<Text style={{color : '#87cefa' }}>New Customer ?</Text>
+				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
-				<TouchableOpacity  onPress = {this.createAcount.bind(this)}  style={[commonStyles.button , {backgroundColor : 'orange'}]}>
-				<Text style={{ color : '#fff'}}>Create An Acount</Text>
 
+				{/* <Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/> */}
+				<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.createAcount.bind(this)}>
+					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+							 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
+					</View>
 				</TouchableOpacity>
 
   					<Modal isVisible={this.state.visibleModal}>
@@ -130,11 +206,31 @@ class Login extends Component {
 					onPress = {()=> this.setState({ visibleModal : false})} 
 					style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
 					
-					</View>
-        </Modal>
-                <KeyboardSpacer/>
+				</View>
+        	</Modal>
+		</View>
+		<View style={{ 
+			flex: 1,
+        	flexDirection: 'column',
+        	justifyContent: 'center',
+        	alignItems: 'center'
+        }}>
+        	<Text style={{ fontSize : 10, width : width/2,}}> 
+			By Signing in you are agreeing to our 
+			</Text>
+			<TouchableOpacity 
+			onPress={()=> routes.terms({ 
+  				title: this.state.termsandcondition_title,
+  				description: this.state.termsandcondition_description
+  			})}>
 
-			</ScrollView>
+			<Text style={{color :'#a9d5d1', fontSize : 10, }}>
+			terms and conditions of use and Privacy Policy
+			</Text>
+			</TouchableOpacity>
+		</View>
+	
+			</View>
 		);
 	}
 	createAcount () { 
@@ -163,6 +259,7 @@ class Login extends Component {
 			return true;
 	} 
 	onSubmit() {
+	Keyboard.dismiss();
 		const {email, password, os} = this.state;
 		if (this.validate()) {
 			this.setState({...INITIAL_STATE, visibleModal: true});

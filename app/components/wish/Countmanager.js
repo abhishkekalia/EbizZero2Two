@@ -17,13 +17,11 @@ const { width, height } = Dimensions.get('window');
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
-
-
 export default class Countmanager extends Component {
-	constructor(props) { 
+    constructor(props) { 
         super(props); 
         this.state = { 
-            Quentity : parseInt(this.props.quantity),
+            Quentity : '',
             loaded: true,
         }; 
     }
@@ -53,57 +51,87 @@ export default class Countmanager extends Component {
         fetch(Utils.gurl('updateQuantity'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            MessageBarManager.showAlert({ 
+            if(responseData.status){
+                MessageBarManager.showAlert({ 
                     message: responseData.data.message, 
                     alertType: 'alert', 
-                    stylesheetWarning : { backgroundColor : '#a9d5d1', strokeColor : '#fff' },
                 })
+            }else{
+                MessageBarManager.showAlert({ 
+                    message: responseData.data.message, 
+                    alertType: 'success', 
+                })
+            }
         })
+        .then(()=>this.props.callback())
         .then( ()=> this.setState({
             loaded : true
         }))
+        .catch((error) => {
+          console.log(error);
+        })       
         .done();
     }
     decrement () {
- 	if(this.state.Quentity > 1) 
-            this.setState({Quentity : this.state.Quentity-1})  
-            this.updateQuantity();
-    } 
-    increment(){
-        this.setState({Quentity: this.state.Quentity+1 })
-        this.updateQuantity();
+    if(this.props.quantity > 1) 
+        this.substract()
+        .then( ()=>this.updateQuantity())
+        .done()
+    }
+    async substract() {
+        try { 
+            this.setState({ 
+                Quentity : parseInt(this.props.quantity)-1 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
 
+
+    async add() {
+        try { 
+            this.setState({ 
+                Quentity : parseInt(this.props.quantity)+1 
+            }); 
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
+
+    increment(){
+        this.add()
+        .then( ()=>this.updateQuantity())
+        .done()
     }
     renderLoadingView() {
         return (
             <ActivityIndicator  
-            style={[styles.centering]}
             color="#a9d5d1" 
             size="small"/>
             );
     }
-	render(){ 
+    render(){ 
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
-		return(
-			<View style={{ flexDirection: 'row'}}>
-			<TouchableOpacity 
-			style={styles.qtybutton} 
-			onPress= {()=> this.decrement()}
-            // onPress={(Quentity)=> this.setState({Quentity : this.state.Quentity-1})}
+        return(
+            <View style={{ flexDirection: 'row'}}>
+            <TouchableOpacity 
+            style={styles.qtybutton} 
+            onPress= {()=> this.decrement()}
             >
-			<Text style={{color: '#a9d5d1'}}> - </Text>
-			 </TouchableOpacity>
-			 <Text style={[styles.qtybutton]}> {this.state.Quentity} </Text>
+            <Text style={{color: '#a9d5d1', fontWeight: 'bold' }}> - </Text>
+             </TouchableOpacity>
+             <Text style={[styles.qtybutton]}> {this.props.quantity} </Text>
             <TouchableOpacity 
                style={styles.qtybutton} 
             onPress= {()=> this.increment()}>
-            <Text style={{color: '#a9d5d1'}}> +</Text>
-            </TouchableOpacity>			
+            <Text style={{color: '#a9d5d1'}}> + </Text>
+            </TouchableOpacity>         
             </View>
-		)
-	}
+        )
+    }
 }
 
 const styles = StyleSheet.create ({
