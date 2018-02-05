@@ -361,9 +361,6 @@ export default class WishList extends Component {
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-
-
-
         return (
             <View style={{ 
             flexDirection: 'column' ,
@@ -381,9 +378,12 @@ export default class WishList extends Component {
                     resizemode="center" 
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />  
-                        <View style={{flexDirection: 'column', justifyContent : 'space-between', marginLeft: 10}}>  
-                          
+                        <View style={{flexDirection: 'column', justifyContent : 'space-between', marginLeft: 10}}>
+                        <TouchableOpacity onPress={()=>Actions.deascriptionPage({ 
+                            title: data.product_name, 
+                            product_id : data.product_id})}>                            
                                 <Text style={{fontSize: 13, color: '#696969', marginTop: 10, marginBottom:5}} > {data.product_name} </Text>
+                        </TouchableOpacity>
                             <Text style={{ fontSize : 10, color : '#696969',bottom:5}} > {data.short_description} </Text>
                             <View style={{ flexDirection : "row"}}>
                                 <Text style={{fontSize: 13 }}> Quantity :  </Text>

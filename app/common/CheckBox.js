@@ -85,7 +85,7 @@ export default class CheckBox extends Component {
         }   
 
         return (
-            <Icon style={{ paddingRight : 5}} name={source} size={25}   />
+            <Icon style={{ marginRight : 10}} name={source} size={25}   />
         );
     }
 
