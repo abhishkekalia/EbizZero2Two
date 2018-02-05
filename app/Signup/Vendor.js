@@ -38,11 +38,11 @@ const INITIAL_STATE = {
 	twitter_id : '',
 	instagram_id : '',
 	snapchat_id	: '',		
-
 };
 const options = [
 	{ label:'Male', value: 'male' },
-    { label:'Female', value: 'female'}];
+    { label:'Female', value: 'female'},
+    { label:'Other', value: 'other' }];
 
 class Vendorreg extends Component {
 
