@@ -190,7 +190,6 @@ class Login extends Component {
 				<Text style={{ padding : 20 }}>Forgot password</Text>
 				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
-
 				{/* <Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/> */}
 				<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.createAcount.bind(this)}>
 					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>

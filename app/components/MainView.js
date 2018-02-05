@@ -31,6 +31,7 @@ import Editwish from './wish/Editwish'
 import Modal from 'react-native-modal';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Feather from 'react-native-vector-icons/Feather';
+import ModalWrapper from 'react-native-modal-wrapper';
 // import Image from 'react-native-image-progress';
 // import ProgressBar from 'react-native-progress/Circle';
 
@@ -40,7 +41,6 @@ let index = 0;
 export default class MainView extends Component {
     constructor(props) {
         super(props); 
-        this.fetchAllShop = this.fetchAllShop.bind(this); 
         this.fetchData = this.fetchData.bind(this);
         this.getKey= this.getKey.bind(this);
         this.state={ 
@@ -75,7 +75,7 @@ export default class MainView extends Component {
         this.getKey()
         .then( ()=>this.fetchData())
         .then( ()=> this.fetchService())
-        .then( ()=>this.fetchAllShop())
+        // .then( ()=>this.fetchAllShop())
         .then( ()=>this.loadData())
         .then( ()=>this.loadServiceData())
         .done();
@@ -313,11 +313,11 @@ unCheck(data){
         var icon_name = data.icon_name;
         return (
             <CheckBox
-                style={{flex: 1, padding: 5, borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc'}}
+                style={{borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc', width : width-50}}
+                leftTextStyle = {{padding:10}}
                 onClick={()=>this.onClick(data)}
                 isChecked={data.checked}
                 leftText={leftText}
-                icon_name={icon_name}
             />
         );
     }
@@ -326,33 +326,33 @@ unCheck(data){
         console.warn(product_id);
     }
 
-    fetchAllShop(){
-        const {u_id, country, user_type } = this.state;
+    // fetchAllShop(){
+    //     const {u_id, country, user_type } = this.state;
 
-        let formData = new FormData();
-        formData.append('u_id', String(user_type));
-        formData.append('country', String(country)); 
+    //     let formData = new FormData();
+    //     formData.append('u_id', String(user_type));
+    //     formData.append('country', String(country)); 
 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('listOfAllShop'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            this.setState({
-            data: responseData.data
-        });
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
+    //     const config = { 
+    //             method: 'POST', 
+    //             headers: { 
+    //                 'Accept': 'application/json', 
+    //                 'Content-Type': 'multipart/form-data;',
+    //             },
+    //             body: formData,
+    //         }
+    //     fetch(Utils.gurl('listOfAllShop'), config) 
+    //     .then((response) => response.json())
+    //     .then((responseData) => {
+    //         this.setState({
+    //         data: responseData.data
+    //     });
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     })
+    //     .done();
+    // }
 
     fetchData(){
         const {u_id, country, user_type } = this.state;
@@ -543,15 +543,7 @@ unCheck(data){
 
         return (
         <View>
-            <ScrollView 
-            contentContainerStyle={{backgroundColor : 'transparent'}} 
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="always">
-                <StatusBar 
-                hidden={false} 
-                backgroundColor="#a9d5d1" 
-                barStyle="light-content"/>
-                <View style={{ flexDirection : 'row'}}>
+                        <View style={{ flexDirection : 'row'}}>
                     <View style={ styles.button,[{ 
                         flex : 0.5,
                         // width : width/2,
@@ -560,7 +552,8 @@ unCheck(data){
                         backgroundColor : '#fff',
                         padding : 2}]}> 
                         
-                        <TouchableOpacity onPress={this.modal} style={styles.allshop}> 
+                        <TouchableOpacity 
+                        onPress={this.modal} style={styles.allshop}> 
                             <Text>All Shop</Text>
                             <Ionicons 
                             name="md-arrow-dropdown" 
@@ -586,59 +579,94 @@ unCheck(data){
                         </TouchableOpacity>
                     </View>
                 </View>
+
+            <ScrollView 
+            contentContainerStyle={{backgroundColor : 'transparent'}} 
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="always">
+                <StatusBar 
+                hidden={false} 
+                backgroundColor="#a9d5d1" 
+                barStyle="light-content"/>
                 <GetMarketing/>
-                <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
-                {listView}
-                <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+
+                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                <View>
+                {
+                    listView
+                }
+                </View>
+                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
                 <View>
                 { 
                     serviceListview
                 }
                 </View>
-                <Modal isVisible={this.state.isModalVisible}>
-                <View style={styles.container}>
-                    <ScrollView>
-                        {this.renderView()}
-                    </ScrollView>
-                    <View style={{ flexDirection : 'row', justifyContent : 'space-around'}}>
+                <ModalWrapper
+                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
+                onRequestClose={() => this.setState({ isModalVisible: false })}
+                position="right"
+                style={styles.sidebar}
+                shouldAnimateOnRequestClose={true}
+                visible={this.state.isModalVisible}>
+                <View style={{ 
+                    height:54, 
+                    flexDirection : 'row', 
+                    alignItems:'center', 
+                    justifyContent : 'space-around', 
+                    backgroundColor:'#a9d5d1'
+                }}>
+                        <Text>{null}</Text>
+                        <Text style={{fontSize:15, color:'#fff'}}>All Shop</Text>
                         <TouchableOpacity 
                         underlayColor ={"#fff"} 
-                        style={[styles.footer]} 
-                        onPress={()=>this.filterbyShop()}>
+                        onPress={()=>this.filterbyShop()}
+                        >
                             <Text>Done</Text>
                         </TouchableOpacity>
                         
+                    </View>
+                    <ScrollView contentContainerStyle={styles.contentContainer}
+                    showsVerticalScrollIndicator={false}>
+                    <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                    <Text style={{ padding : 10}}>All Shop</Text>
+                    <Ionicons name="ios-checkmark" size={30} color="green"  style={{ padding : 10}}/>
+                    </TouchableOpacity>
+                        {this.renderView()}
+                    </ScrollView>
+                    
+                </ModalWrapper>
+                
+                 <ModalWrapper
+                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
+                onRequestClose={() => this.setState({ isService: false })}
+                position="right"
+                style={styles.sidebar}
+                shouldAnimateOnRequestClose={true}
+                visible={this.state.isService}>
+
+                <View style={{ 
+                    height:54, 
+                    flexDirection : 'row', 
+                    alignItems:'center', 
+                    justifyContent : 'space-around', 
+                    backgroundColor:'#a9d5d1'
+                }}>
+                        <Text>{null}</Text>
+                        <Text style={{fontSize:15, color:'#fff'}}>All Service</Text>
                         <TouchableOpacity 
                         underlayColor ={"#fff"} 
-                        style={[styles.footer]} 
-                        onPress={()=> this.modal()}>
-                            <Text>Cancel</Text>
+                        onPress={()=>this.Service()}
+                        >
+                            <Text>Done</Text>
                         </TouchableOpacity>
+                        
                     </View>
-                </View>
-            </Modal>
-
-            <Modal isVisible={this.state.isService}>
-                <View style={styles.container}>
-                <ScrollView>
-                    {this.renderServiceView()}
-                </ScrollView>
-                 <View style={{ flexDirection : 'row', justifyContent : 'space-around'}}>
-                <TouchableOpacity 
-                underlayColor ={"#fff"} 
-                style={[styles.footer]} 
-                onPress={()=>this.Service()}>
-                <Text>Done</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                underlayColor ={"#fff"} 
-                style={[styles.footer]} 
-                onPress={()=> this.cancelService()}>
-                <Text>Cancel</Text>
-                </TouchableOpacity>
-            </View>
-                </View>
-            </Modal>
+                    <ScrollView>
+                        {this.renderServiceView()}
+                    </ScrollView>
+                    
+            </ModalWrapper>
             </ScrollView>
                     <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
           <Button iconSrc={{ uri: TWITTER_ICON }}
@@ -846,7 +874,8 @@ unCheck(data){
         var leftText = data.service_name;
         return (
             <CheckBox
-                style={{flex: 1, padding: 5, borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc'}}
+                style={{borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc', width : width-50}}
+                leftTextStyle = {{padding:10}}
                 onClick={()=>this.onServiceClick(data)}
                 isChecked={data.checked}
                 leftText={leftText}
@@ -991,6 +1020,9 @@ class Header extends Component{
 }
 
 var styles = StyleSheet.create({
+    contentContainer: { 
+        paddingVertical: 10
+    },
     container: {
         // flex: 1,
         justifyContent: 'center',
@@ -1071,7 +1103,8 @@ var styles = StyleSheet.create({
     category:{
         color :'#000',
         fontSize : 10
-    }
+    },
+    sidebar :{}
 });
 
 const TWITTER_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg==";
@@ -1112,7 +1145,6 @@ class LoadImage extends Component {
         var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
 
         return ( 
-
             imgUrl == "null" ? 
                 
                 <Image style={styles.thumb} 
@@ -1128,6 +1160,7 @@ class LoadImage extends Component {
                 source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
                 onLoadEnd={() => { this.setState({ loaded: true }); }}
                 />
+
         )
     }
 }

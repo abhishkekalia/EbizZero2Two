@@ -310,11 +310,13 @@ export default class AddressBook extends Component {
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
+        <View 
+            style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff',flexDirection:'row' }} 
+        >
             <RadioGroup 
-            style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff' }} 
+            style={{justifyContent: 'flex-end'}}
             onSelect = {(sectionID, value) => this.onSelect(sectionID, value)}
             >
-                <RadioButton value={data.address_id} >
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flexDirection: 'column' }}>
                         <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
@@ -322,7 +324,6 @@ export default class AddressBook extends Component {
                             <Text style={{ fontSize : 15, color : '#a9d5d1'}}>Name: </Text>
                             <Text style={{ fontSize: 15, color: '#000'}}>{data.full_name}</Text>
                             </View>
-                            <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} />
                         </View>
                         <View style={{ flexDirection: 'row'}}>
                         <Text style={{ fontSize : 10, color : '#a9d5d1'}}>M: </Text>
@@ -334,8 +335,8 @@ export default class AddressBook extends Component {
                     </Text>
                     </View>
                 </View>
-                </RadioButton>
             </RadioGroup>
+            </View>
         );
     }
 }

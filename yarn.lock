@@ -3834,6 +3834,12 @@ react-native-message-bar@^2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/react-native-message-bar/-/react-native-message-bar-2.0.7.tgz#a6e6419ac4ef9ff8364da454cf13629fe4bcc6a3"
 
+react-native-modal-wrapper@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-modal-wrapper/-/react-native-modal-wrapper-3.1.0.tgz#707811c7095a6536d2f47f836afd0749c455c788"
+  dependencies:
+    react-native-keyboard-spacer "^0.4.1"
+
 react-native-modal@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-4.1.1.tgz#4c1055dc045106542a8e3bb3fd656a6d3bc319d9"
