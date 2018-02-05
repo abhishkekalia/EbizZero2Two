@@ -1111,8 +1111,6 @@ class LoadImage extends Component {
         console.log(this.props.productImages[0])
         var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
 
-
-
         return ( 
 
             imgUrl == "null" ? 
@@ -1130,13 +1128,6 @@ class LoadImage extends Component {
                 source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
                 onLoadEnd={() => { this.setState({ loaded: true }); }}
                 />
-
-            // <Image style={styles.thumb} 
-            // resizeMode = 'center'
-            // resizeMethod = 'resize'            
-            // source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
-            // onLoadEnd={() => { this.setState({ loaded: true }); }}
-            // />
         )
     }
 }
