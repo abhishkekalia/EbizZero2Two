@@ -84,7 +84,7 @@ export default class AddService extends Component {
    _renderRightButton = () => {
         return(
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-            <Text style={{color : '#fff'}}>ADD</Text>
+            <Text style={{color : '#fff'}}>Upload</Text>
             </TouchableOpacity>
         );
     };
@@ -231,20 +231,19 @@ export default class AddService extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
            else {
-    
+            let path = response.uri
+              let name = response.fileName
+              tempImg = path.replace(/^file:\/\//, '');
+
        let source = { 
         name : 'service_images[]', 
         filename : response.fileName, 
-        data: RNFetchBlob.wrap(response.uri), 
+        data: RNFetchBlob.wrap(tempImg), 
         uri: response.uri , 
         // name: response.fileName, 
         type: 'image/jpg'};
-                // let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
-                
+              
                 let uri = response.uri;
-
-              // let path = { uri , name: response.fileName, type: 'image/jpg'};
-
                 this.setState({
                     avatarSource: source,
                     imageSelect : true,
@@ -273,14 +272,14 @@ export default class AddService extends Component {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'handled'}>
                 <View style={commonStyles.ImageAdd}>
-                    <Text style={{color: borderColorImage}}>Select Service Image</Text>  
-                    <View style={{ borderWidth: 1, borderColor: 'transparent', borderRadius : 40}}>
+                    <Text style={{color: borderColorImage, marginBottom : 10}}>Select Service Image</Text>  
+                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Service Picture</Text>  
+                    <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
                         <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="upload-cloud" size= {30} style={{padding :20 }} /> 
+                            name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} /> 
                     </View>
                     <View style={{  top: 10, flexDirection:'row', marginBottom :20}}>
-                        { this.state.avatarSource === null ? <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="image" size= {30} style={{padding :20, borderWidth: 1, borderColor: '#ccc', }} /> :
+                        { this.state.avatarSource === null ? undefined :
                             <SelectedImage 
                             productImages={this.state.rows} 
                             />

@@ -16,7 +16,6 @@ import {
     Switch
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -29,6 +28,7 @@ import ActionSheet from 'react-native-actionsheet';
 import GetImage from './imageSlider';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import RNFetchBlob from 'react-native-fetch-blob';
 const CANCEL_INDEX = 0
@@ -48,7 +48,7 @@ export default class AddProduct extends Component {
             imageSelect : false,
             avatarSource: null,
             product_category: '',
-            options : ['0'],
+            options : ['0','1'],
             u_id: null,
             user_type : null,
             country : null,
@@ -316,26 +316,24 @@ export default class AddProduct extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-    
-       let source = { 
-        name : 'product_images[]', 
-        filename : response.fileName, 
-        data: RNFetchBlob.wrap(response.uri), 
-        uri: response.uri , 
-        // name: response.fileName, 
-        type: 'image/jpg'};
-                // let source = { uri: response.uri , name: response.fileName, type: 'image/jpg'}; 
-                
+                let path = response.uri
+                tempImg = path.replace(/^file:\/\//, '');
+
+                let source = { 
+                    name : 'product_images[]', 
+                    filename : response.fileName, 
+                    data: RNFetchBlob.wrap(tempImg), 
+                    uri: response.uri , 
+                    // name: response.fileName, 
+                    type: 'image/jpg'};
+                            
                 let uri = response.uri;
-
-              // let path = { uri , name: response.fileName, type: 'image/jpg'};
-
-                this.setState({
-                    avatarSource: source,
-                    imageSelect : true,
-                    videoSelect : false,
-                    // image : path,
-                });
+                    this.setState({
+                        avatarSource: source,
+                        imageSelect : true,
+                        videoSelect : false,
+                        // image : path,
+                    });
                 var newStateArray = this.state.rows.slice(); 
                 var newPathArray = this.state.Imagepath.slice(); 
                 newStateArray.push(source); 
@@ -344,7 +342,7 @@ export default class AddProduct extends Component {
                         rows: newStateArray,
                         Imagepath: newPathArray
                     });
-            }
+                }
         });
     }
     productCont(){
@@ -376,14 +374,14 @@ export default class AddProduct extends Component {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'handled'}>
                 <View style={commonStyles.ImageAdd}>
-                    <Text style={{color: borderColorImage}}>Select Product Image</Text>  
-                    <View style={{ borderWidth: 1, borderColor: 'transparent', borderRadius : 40}}>
+                    <Text style={{color: borderColorImage, marginBottom : 10}}>Select Product Image</Text>  
+                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Product Picture</Text>  
+                    <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
                         <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="upload-cloud" size= {30} style={{padding :20 }} /> 
+                            name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} /> 
                     </View>
                     <View style={{  top: 10, flexDirection:'row'}}>
-                        { this.state.avatarSource === null ? <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="image" size= {30} style={{padding :20, borderWidth: 1, borderColor: '#ccc', }} /> :
+                        { this.state.avatarSource === null ? undefined :
                             <SelectedImage 
                             productImages={this.state.rows} 
                             />
@@ -591,6 +589,7 @@ export default class AddProduct extends Component {
                     
                 </View>
             </Modal>
+            <KeyboardSpacer/>
 
             </ScrollView>
         )

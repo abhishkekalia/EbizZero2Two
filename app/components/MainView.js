@@ -184,6 +184,47 @@ export default class MainView extends Component {
     }
 
 
+    fetchDataByShop(){
+        const {u_id, country, rows } = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));  
+        formData.append('vendor_id', String(rows));  
+
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        } 
+
+        fetch(Utils.gurl('filterByShop'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status : responseData.status,
+                loaded: true, 
+                refreshing: false
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+    }
+    renderLoadingView() {
+        return (
+            <ActivityIndicator  
+            style={[styles.centering]}
+            color="#a9d5d1" 
+            size="large"/>
+        );
+    }
+
+
     blur() {
         const {dataSource } = this.state;
         dataSource && dataSource.blur();
@@ -549,9 +590,11 @@ unCheck(data){
                 <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
                 {listView}
                 <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                <View>
                 { 
                     serviceListview
                 }
+                </View>
                 <Modal isVisible={this.state.isModalVisible}>
                 <View style={styles.container}>
                     <ScrollView>
@@ -1065,12 +1108,35 @@ class LoadImage extends Component {
     }
 
     render(){
+        console.log(this.props.productImages[0])
+        var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
+
+
+
         return ( 
-            <Image style={styles.thumb} 
-            resizeMode = 'center'
-            source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : null }: require('../images/marketing_img_active.png')}
-            onLoadEnd={() => { this.setState({ loaded: true }); }}
-            />
+
+            imgUrl == "null" ? 
+                
+                <Image style={styles.thumb} 
+                resizeMode = 'center'
+                resizeMethod = 'resize'            
+                source={require('../images/no-image.jpg')}
+                onLoadEnd={() => { this.setState({ loaded: true }); }}
+                />  
+            :
+                <Image style={styles.thumb} 
+                resizeMode = 'center'
+                resizeMethod = 'resize'            
+                source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
+                onLoadEnd={() => { this.setState({ loaded: true }); }}
+                />
+
+            // <Image style={styles.thumb} 
+            // resizeMode = 'center'
+            // resizeMethod = 'resize'            
+            // source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
+            // onLoadEnd={() => { this.setState({ loaded: true }); }}
+            // />
         )
     }
 }

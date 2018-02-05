@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
     View,
     Text,
-    Picker,
     Platform,
     StyleSheet,
     TouchableOpacity,
@@ -26,6 +25,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const videoIcon = '../../images/videoIcon.png';
 const INITIAL_STATE = {avatarSource: '', ad_category: ''};
+import { Picker } from 'react-native-picker-dropdown';
 
 export default class MarketingCompaign extends Component { 
     constructor(props) { 
@@ -346,8 +346,8 @@ onCancelPress(){
 }
     render() {
         const { imageSelect , videoSelect} = this.state; 
-        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d'    
-        borderColorVideo= videoSelect ? "#a9d5d1" : '#f53d3d'    
+        borderColorImage= imageSelect ? "#a9d5d1" : '#fbcdc5'    
+        borderColorVideo= videoSelect ? "#a9d5d1" : '#fbcdc5'    
 
         return (
             <View style={[styles.container, { padding : 10}]}>
@@ -373,15 +373,15 @@ onCancelPress(){
                             size= {30}
                             color={borderColorImage}
                             onPress={this.selectPhotoTapped.bind(this)}
-                            style={{padding :20 , borderColor : "#ccc", borderWidth : 0.5, borderRadius : 40}} /> 
+                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} /> 
                         <Feather 
                         name="play-circle" onPress={this.selectVideoTapped.bind(this)}
                         color={borderColorVideo}
                         size= {30} 
-                        style={{padding :20 , borderColor : '#ccc', borderWidth : 0.5, borderRadius : 40}} />
+                        style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
                     </View>
 
-                    <View style={{ borderWidth : 1, borderColor : '#ccc', margin : 10, borderRadius : 5}}>
+                    <View style={{ borderWidth : 1, borderColor : '#ccc', margin : 10, borderRadius : 5, height:40, justifyContent:'center'}}>
                     <Picker 
                     mode={"dropdown"}
                     selectedValue={this.state.ad_category} 

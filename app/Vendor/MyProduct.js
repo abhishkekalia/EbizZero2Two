@@ -169,23 +169,25 @@ export default class MyProduct extends Component {
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />  
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
-                        <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.product_name} </Text>
-                        <Text style={{ fontSize : 10, color : '#ccc'}} > {data.short_description} </Text>
+                        <Text style={[styles.row, { color:'#222',fontWeight :'bold', marginTop: 10}]} >  {data.product_name} </Text>
+                        <Text style={{ fontSize : 12, color : '#222'}} > {data.short_description} </Text>
                         <View style={{ flexDirection : "row"}}>
-                            <Text style={{color:"#a9d5d1"}}> Quantity Available : {data.quantity} </Text>
+                            <Text style={{color:"#a9d5d1", fontSize: 12}}> Quantity Available : {data.quantity} </Text>
                         </View>
-                        <View style={{ flexDirection : "row", justifyContent : 'space-between'}}>
+                        <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>
                             <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#f53d3d'}} >Price : </Text>
-                            <Text> {data.special_price} </Text>
-                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                            <Text style={{color : '#fbcdc5', fontSize:12}} >Price : </Text>
+                            <Text style={{ color: '#222', fontSize:12}}> {data.price} KWD</Text>
                             </View>
-                                <Text style={{color : '#ccc'}} >KWD</Text>
 
+                            <View style={{ flexDirection : "row"}}>
+                            <Text style={{color : '#fbcdc5', fontSize:12}} >Special Price : </Text>
+                            <Text style={{ color: '#222', fontSize:12}}> {data.special_price} KWD</Text>
+                            </View>
                         </View>
                         <View style={{ flexDirection : "row"}}>
-                           <Text style={{color : '#f53d3d'}}> Status : </Text>
-                           <Text > {data.is_approved ? 'approved' : 'pending'} </Text>
+                           <Text style={{color : '#fbcdc5', fontSize:12}}> Status : </Text>
+                           <Text style={{color: '#222',fontSize:12}}> {data.is_approved ? 'Approved' : 'Pending'} </Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -260,8 +262,8 @@ class Header extends Component{
 
     return (
       <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc'}]}>
-      <Text style={{ color : '#f53d3d', paddingLeft: 10}}>Category : </Text>
-        <Text style={styles.welcome}>{ this.state.product_category ? resultObject: undefined}
+      <Text style={{ color : '#fbcdc5', padding: 10}}>Categories : </Text>
+        <Text style={{padding: 10, color:"#222"}}>{ this.state.product_category ? resultObject: undefined}
         </Text>
       </View>
     );
@@ -325,7 +327,7 @@ class Footer extends Component{
                     onPress={this.props.calllback}>
                         <Text style={{ color :'#fff', fontSize: 12}}>Preview</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#f53d3d'}]} 
+                    <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]} 
                     onPress={()=>this.productActiveDeactive(this.props.product_id, approv_code)}>
                         <Text style={{ color :'#fff', fontSize : 12}}>{approved}</Text>
                     </TouchableOpacity>

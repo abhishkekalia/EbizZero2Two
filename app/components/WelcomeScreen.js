@@ -49,6 +49,7 @@ export default class WelcomeScreen extends Component {
         });
     }
     componentDidMount(){
+
         this.fetchData()
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
         NetInfo.isConnected.fetch().done((isConnected) => { 
@@ -67,7 +68,8 @@ export default class WelcomeScreen extends Component {
         }          
     }
     fetchData(){
-        const { container_id, type} = this.state; 
+        console.log("fetchData call")
+        // const { container_id, type} = this.state; 
         fetch(Utils.gurl('countryList'),{
              method: "GET", headers: {
                 'Accept': 'application/json',
@@ -77,6 +79,7 @@ export default class WelcomeScreen extends Component {
         .then((response) => response.json())
         .then((responseData) => { 
                     // console.warn(JSON.stringify(responseData))
+                    console.log("response:=",JSON.stringify(responseData))
             this.setState({
                 userTypes: responseData.response.data,
                  loaded: true
