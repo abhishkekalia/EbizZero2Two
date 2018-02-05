@@ -21,6 +21,7 @@ const { width, height } = Dimensions.get('window')
 
 export default class WelcomeScreen extends Component {
     constructor(props) { 
+
         super(props); 
         this.gotologin = this.gotologin.bind(this);
 
@@ -33,6 +34,7 @@ export default class WelcomeScreen extends Component {
             deliveryarea : ''
         }
     }
+
     componentwillMount(){
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
 
@@ -190,6 +192,7 @@ export default class WelcomeScreen extends Component {
                 </View>
             </View>
         );
+
     }
 }
 

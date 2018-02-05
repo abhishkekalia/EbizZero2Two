@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
@@ -418,9 +419,9 @@ export default class Newaddress extends Component<{}> {
             this.inputs['ten'] = input;
         }}
         onChangeText={(text) => this.setState({ direction: text })} />
-
         <KeyboardSpacer/>
         </View>
+
         </ScrollView>
         </View>
     );

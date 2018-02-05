@@ -1,4 +1,3 @@
-
 import React, {Component, PropTypes} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
 import { Actions} from "react-native-router-flux";
@@ -110,6 +109,7 @@ class Profile extends Component {
 	render() {
 		const {identity, logout} = this.props;
 		const {data, u_id, address, dataSource} = this.state;
+
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>

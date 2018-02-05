@@ -15,7 +15,8 @@ import {
     RefreshControl,
     ActivityIndicator,
     AlertIOS,
-    Image
+    Image,
+    Platform
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
@@ -271,6 +272,8 @@ export default class MainView extends Component {
         this.setState({
             rows: newStateArray
         });
+        data.checked = !data.checked;
+        let msg=data.checked? 'you checked ':'you unchecked '
     }
 
 unCheck(data){
@@ -589,14 +592,23 @@ unCheck(data){
                 backgroundColor="#a9d5d1" 
                 barStyle="light-content"/>
                 <GetMarketing/>
-
-                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                        {
+                            Platform.OS === 'ios' ?
+                            <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                            :
+                            <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                        }
                 <View>
                 {
                     listView
                 }
                 </View>
-                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                {
+                    Platform.OS === 'ios' ?
+                        <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                    :
+                        <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                }
                 <View>
                 { 
                     serviceListview
@@ -929,6 +941,7 @@ unCheck(data){
                 >
 
                 <Text style={{fontSize : 10, color :'#989898' }}>{data.product_name}</Text>
+
                 </TouchableOpacity>
                 <View style={styles.description}><Header 
                 product_category= {data.product_category}

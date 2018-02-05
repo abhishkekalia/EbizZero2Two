@@ -139,6 +139,7 @@ export default class AllItem extends Component {
 
                 <Text style={{fontSize : 13, color :'#000'}}>{data.product_name}</Text>
                 </TouchableOpacity>
+
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
                     flex: 0, 

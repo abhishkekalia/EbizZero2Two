@@ -18,7 +18,7 @@ import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 export default class Countmanager extends Component {
-    constructor(props) { 
+	constructor(props) { 
         super(props); 
         this.state = { 
             Quentity : '',
@@ -73,7 +73,7 @@ export default class Countmanager extends Component {
         .done();
     }
     decrement () {
-    if(this.props.quantity > 1) 
+ 	if(this.props.quantity > 1) 
         this.substract()
         .then( ()=>this.updateQuantity())
         .done()
@@ -111,27 +111,27 @@ export default class Countmanager extends Component {
             size="small"/>
             );
     }
-    render(){ 
+	render(){ 
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
-        return(
-            <View style={{ flexDirection: 'row'}}>
-            <TouchableOpacity 
-            style={styles.qtybutton} 
-            onPress= {()=> this.decrement()}
+		return(
+			<View style={{ flexDirection: 'row'}}>
+			<TouchableOpacity 
+			style={styles.qtybutton} 
+			onPress= {()=> this.decrement()}
             >
-            <Text style={{color: '#a9d5d1', fontWeight: 'bold' }}> - </Text>
-             </TouchableOpacity>
-             <Text style={[styles.qtybutton]}> {this.props.quantity} </Text>
+			<Text style={{color: '#a9d5d1', fontWeight: 'bold' }}> - </Text>
+			 </TouchableOpacity>
+			 <Text style={[styles.qtybutton]}> {this.props.quantity} </Text>
             <TouchableOpacity 
                style={styles.qtybutton} 
             onPress= {()=> this.increment()}>
             <Text style={{color: '#a9d5d1'}}> + </Text>
-            </TouchableOpacity>         
+            </TouchableOpacity>			
             </View>
-        )
-    }
+		)
+	}
 }
 
 const styles = StyleSheet.create ({

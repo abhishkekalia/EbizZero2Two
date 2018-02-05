@@ -50,6 +50,7 @@ import BookMyService from './components/BookMyService';
 import MyAdfaturah from './components/MyAdfaturah';
 import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
+
 import Filter from './components/Filter';
 import MenuIcon from './images/imgpsh.png';
 
@@ -128,11 +129,10 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     tabBarStyle={styles.tabBarStyle}
                     // tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
                     tabBarPosition={'bottom'}
-                    gestureEnabled={false} 
-                    activeBackgroundColor='#fff' 
+
+                    activeBackgroundColor='#a9d5d1' 
                     inactiveBackgroundColor='#fff'
                     lazy
-                    duration={0}
                     // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
                     >
 
@@ -313,6 +313,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         />
                     </Stack>
                     <Stack key="AddressLists" hideNavBar={true} >
+
                         <Scene 
                         key="address" 
                         component={AddressBook} 
@@ -489,8 +490,10 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         navBar={CustomGenNavBar}/>
                     </Stack>
                     <Stack 
+
                     key="editProfile"
                     renderTitle>
+
                         <Scene 
                         key="profileEdit" 
                         titleStyle={{alignSelf: 'center'}} 

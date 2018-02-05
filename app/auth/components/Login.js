@@ -4,7 +4,8 @@ import React, {
 } from 'react';
 import { 
 	View, 
-	Text, 
+	Text,
+	ScrollView, 
 	TextInput, 
 	TouchableOpacity, 
 	Button,
@@ -128,6 +129,7 @@ class Login extends Component {
 
 			<View style={{ padding : 20, top : 30}}>		
 				<View style ={[commonStyles.inputcontent,]}>
+
 					<View style ={commonStyles.iconusername}>
 						<Ionicons name="ios-mail-outline" 
 						size={30} 
@@ -222,7 +224,6 @@ class Login extends Component {
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
-
 			<Text style={{color :'#a9d5d1', fontSize : 10, }}>
 			terms and conditions of use and Privacy Policy
 			</Text>
@@ -230,6 +231,7 @@ class Login extends Component {
 		</View>
 	
 			</View>
+
 		);
 	}
 	createAcount () { 

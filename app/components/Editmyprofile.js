@@ -90,6 +90,7 @@ export default class Editmyprofile extends Component<{}> {
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
+
         formData.append('fullname', String(fullname)); 
         formData.append('representative_name', String(representative_name)); 
         formData.append('device_type', String(device_type)); 
@@ -265,3 +266,4 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
