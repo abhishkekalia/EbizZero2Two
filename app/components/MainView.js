@@ -36,6 +36,9 @@ import ModalWrapper from 'react-native-modal-wrapper';
 // import Image from 'react-native-image-progress';
 // import ProgressBar from 'react-native-progress/Circle';
 
+import EventEmitter from "react-native-eventemitter";
+// import { arrayOf } from '../../../../../../Library/Caches/typescript/2.6/node_modules/@types/prop-types';
+
 const { width, height } = Dimensions.get('window')
 let index = 0;
 
@@ -68,7 +71,8 @@ export default class MainView extends Component {
             visible: false,
             product_id : '',
             product_name : '', 
-            url : ''
+            url : '',
+            arrSelectedCategory : []
         }
     }
 
@@ -81,6 +85,18 @@ export default class MainView extends Component {
         .then( ()=>this.loadServiceData())
         .done();
 
+        EventEmitter.removeAllListeners("applyCategoryFilter");
+        EventEmitter.on("applyCategoryFilter", (value)=>{
+            console.log("applyCategoryFilter", value);
+            if (value.length > 0) {
+                this.setState({
+                    loaded:false,
+                    arrSelectedCategory:value
+                })
+                this.filterByCategory(value)
+            }
+        });
+
     }
         componentWillMount() {
         Actions.refresh({ right: this._renderRightButton,});    
@@ -92,7 +108,7 @@ export default class MainView extends Component {
     };
    _renderRightButton = () => {
         return(
-            <Feather name="filter" size={20} onPress={()=> Actions.filterBar()} color="#fff" style={{ padding : 10}}/>
+            <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory})} color="#fff" style={{ padding : 10}}/>
         );
     };
 
@@ -138,6 +154,11 @@ export default class MainView extends Component {
     })
 
     filterbyShop = () => {
+        if (this.state.rows.length == 0) {
+            this.state.isModalVisible = !this.state.isModalVisible,
+            this.fetchData()
+            return
+        }
         this.setState({ 
             isModalVisible: !this.state.isModalVisible,
             loaded : false,
@@ -150,7 +171,7 @@ export default class MainView extends Component {
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));  
         formData.append('vendor_id', String(rows));  
-
+        console.log("request:=",formData)
         const config = { 
             method: 'POST', 
             headers: { 
@@ -182,39 +203,6 @@ export default class MainView extends Component {
             color="#a9d5d1" 
             size="large"/>
         );
-    }
-
-
-    fetchDataByShop(){
-        const {u_id, country, rows } = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-        formData.append('vendor_id', String(rows));  
-
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        } 
-
-        fetch(Utils.gurl('filterByShop'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                status : responseData.status,
-                loaded: true, 
-                refreshing: false
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
     }
     renderLoadingView() {
         return (
@@ -262,29 +250,83 @@ export default class MainView extends Component {
         .done();
     }
     onClick(data) {
+        // console.log("before onClick:=",this.state.rows)
         data.checked = !data.checked;
-        data.checked? this.check(data): this.unCheck(data)
-        
-    }
-    check (data){
-        var newStateArray = this.state.rows.slice(); 
-        newStateArray.push(data.u_id); 
-        this.setState({
-            rows: newStateArray
-        });
-        data.checked = !data.checked;
-        let msg=data.checked? 'you checked ':'you unchecked '
+        data.checked ? this.check(data) : this.unCheck(data)
+        // console.log("after onClick:=",this.state.rows)
     }
 
-unCheck(data){
-        var index = this.state.rows.indexOf(data.u_id); 
-        if (index > -1) {
-           var newArray =  this.state.rows.splice(index, 1);
-            this.setState({
-                rows: newArray
-            });
-        }
-}
+    check (data){
+        console.log("this.state.rows:=",this.state.rows)
+        var newStateArray = this.state.rows.slice(); 
+        console.log("newStateArray:=",newStateArray)
+
+        // var indexOfObj = -1
+        // for (var i = 0; i < newStateArray.length; i++) {
+        //     if (newStateArray[i] == data.u_id) {
+        //         indexOfObj = i
+        //     }
+        // }
+        // console.log("indexOfObj:=",indexOfObj)
+        // if (indexOfObj == -1) {
+        //     newStateArray.push(data.u_id); 
+        // }
+        
+        newStateArray.push(data.u_id); 
+
+        // data.checked = !data.checked;
+        // console.log("data.checked:=",data.checked)
+        // let msg=data.checked? 'you checked ':'you unchecked '
+        // // console.log("check rows:=",this.state.rows)
+        // var arrData = this.state.dataArray
+        // for (var i = 0; i < arrData.length; i++) {
+        //     if (arrData[i].u_id == data.u_id) {
+        //         // console.log("Equal")
+        //         arrData[i] = data
+        //     }
+        // }
+
+        this.setState({
+            rows: newStateArray,
+            // dataArray: arrData
+        });
+    }
+
+    unCheck(data){
+            // var index = this.state.rows.indexOf(data.u_id); 
+            // if (index > -1) {
+            //     var newArray =  this.state.rows.splice(index, 1);
+            //     this.setState({
+            //         rows: newArray
+            //     });
+                
+            // }
+
+            var newStateArray = this.state.rows.slice();
+            var index = newStateArray.indexOf(data.u_id); 
+            console.log("index:=",index)
+            if (index > -1) {
+                newStateArray.splice(index, 1);
+                // this.setState({
+                //     rows: newStateArray
+                // });
+            }
+
+            // data.checked = !data.checked;
+            // console.log("unCheck rows:=",this.state.rows)
+
+        // var arrData = this.state.dataArray            
+        // for (var i = 0; i < arrData.length; i++) {
+        //     if (arrData[i].u_id == data.u_id) {
+        //         // console.log("Equal")
+        //         arrData[i] = data
+        //     }
+        // }
+        this.setState({
+            // dataArray: arrData,
+            rows: newStateArray
+        });
+    }
     
     renderView() {
         if (!this.state.dataArray || this.state.dataArray.length === 0)return;
@@ -432,13 +474,29 @@ unCheck(data){
 
     }
 
-    filterByCategory(){
-        const {u_id, country, user_type } = this.state;
+    filterByCategory(selectedCategory){
+        const {u_id, country, user_type,rows } = this.state;
+        var venderIds = this.state.rows.slice();
+
+        if(venderIds.length == 0) {
+            for (var i = 0; i < this.state.dataArray.length; i++) {
+                venderIds.push(parseInt(this.state.dataArray[i].u_id,10))
+            }
+        }
+
+        console.log("venderIds:=",venderIds)
+        var selCat = [];
+        for (var i = 0; i < selectedCategory.length; i++) {
+            selCat.push(parseInt(selectedCategory[i],10))
+        }
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));  
-        formData.append('categoty_id', String(this.props.filterdBy));  
-
+        // formData.append('categoty_id', String(this.props.filterdBy));  
+        formData.append('category_id', String(selCat)); 
+        formData.append('vendor_id', String(venderIds));
+        console.log("request:=",formData);
         const config = { 
             method: 'POST', 
             headers: { 
@@ -448,7 +506,7 @@ unCheck(data){
             body: formData,
         } 
 
-        fetch(Utils.gurl('filterByCategory'), config) 
+        fetch(Utils.gurl('filterProducts'), config) 
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -614,6 +672,7 @@ unCheck(data){
                     serviceListview
                 }
                 </View>
+                
                 <ModalWrapper
                 containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
                 onRequestClose={() => this.setState({ isModalVisible: false })}
@@ -642,7 +701,12 @@ unCheck(data){
                     showsVerticalScrollIndicator={false}>
                     <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                     <Text style={{ padding : 10}}>All Shop</Text>
-                    <Ionicons name="ios-checkmark" size={30} color="green"  style={{ padding : 10}}/>
+                    {this.state.rows.length == 0 ? 
+                        <Ionicons name="ios-checkmark" size={30} color="green"  style={{ padding : 10}}/>
+                    :
+                        undefined
+                    }
+                    
                     </TouchableOpacity>
                         {this.renderView()}
                     </ScrollView>
@@ -668,7 +732,7 @@ unCheck(data){
                         <Text style={{fontSize:15, color:'#fff'}}>All Service</Text>
                         <TouchableOpacity 
                         underlayColor ={"#fff"} 
-                        onPress={()=>this.Service()}
+                        onPress={()=>this.filterbyService()}
                         >
                             <Text>Done</Text>
                         </TouchableOpacity>
@@ -803,7 +867,7 @@ unCheck(data){
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));   
-        formData.append('u_id', String(user_type));   
+        // formData.append('u_id', String(user_type));   
         const config = { 
             method: 'POST', 
             headers: { 
@@ -812,7 +876,7 @@ unCheck(data){
             },
             body: formData,
         }
-        fetch(Utils.gurl('filterByService'), config) 
+        fetch(Utils.gurl('serviceList'), config) 
         .then((response) => response.json())
         .then((responseData) => {
             this.setState({
@@ -827,15 +891,105 @@ unCheck(data){
 
     }
 
+    filterbyService () {
+        // this.setState({ isService: !this.state.isService }, fetchDataByService())
+        // this.fetchDataByShop()
+
+        if (this.state.servicerows.length == 0) {
+            this.state.isService = !this.state.isService,
+            this.fetchService()
+            return
+        }
+
+        this.setState({ 
+            isService: !this.state.isService,
+            loaded : false,
+        },this.fetchDataByService() )
+
+        // this.fetchDataByService()
+    }
+
+    fetchDataByService (){
+        const {u_id, country, user_type, servicerows } = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(servicerows));
+        formData.append('country', String(country));   
+        // formData.append('u_id', String(user_type));   
+        console.log("request:=",formData)
+        const config = { 
+            method: 'POST', 
+            headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+            }
+        fetch(Utils.gurl('filterByService'), config) 
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                console.log("status true")
+                this.setState({
+                dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
+                status : responseData.status,
+                loaded: true, 
+                refreshing: false
+
+
+
+                });
+            }
+            else{
+                console.log("status false")
+                this.setState({
+                isLoading : false,
+                status : responseData.status,
+                loaded: true, 
+                refreshing: false
+                })
+            }
+        })
+        .catch((error) => {
+          console.log(error);
+        })       
+        .done();
+    }
+
     onServiceClick(data) {
-        var newStateArray = this.state.servicerows.slice();
+        // var newStateArray = this.state.servicerows.slice();
+        // newStateArray.push(data.service_id); 
+        // this.setState({
+        //     servicerows: newStateArray
+        // });
+
+        data.checked = !data.checked;
+        data.checked ? this.checkService(data) : this.unCheckService(data)
+        let msg=data.checked? 'you checked ':'you unchecked '
+    }
+
+    checkService (data){
+        console.log("this.state.rows:=",this.state.servicerows)
+        var newStateArray = this.state.servicerows.slice(); 
+        console.log("newStateArray:=",newStateArray)
+        
         newStateArray.push(data.service_id); 
+
+        this.setState({
+            servicerows: newStateArray,
+        });
+    }
+
+    unCheckService(data){
+        var newStateArray = this.state.servicerows.slice();
+        var index = newStateArray.indexOf(data.service_id); 
+        console.log("index:=",index)
+        if (index > -1) {
+            newStateArray.splice(index, 1);
+        }
+            
         this.setState({
             servicerows: newStateArray
         });
-
-        data.checked = !data.checked;
-        let msg=data.checked? 'you checked ':'you unchecked '
     }
 
 

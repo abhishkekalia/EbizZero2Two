@@ -45,13 +45,11 @@
 		71A7E118B7E5467887B619F3 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D4A703C90F24126AA32D48F /* Entypo.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8718492D32AA4685A38E2098 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E98EDB426B3430085B4DD74 /* libRNImagePicker.a */; };
-
 		8D5FCEADF06041339DD7F938 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 569042268F394D81B768B285 /* EvilIcons.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		AF61F739CC0A4C3ABFC6335B /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AAF9EEE48394943BD9E7DD2 /* FontAwesome.ttf */; };
 		C888D1491FF0C5830061B0D0 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C888D1451FF0C5760061B0D0 /* libART.a */; };
 		C8EB675620246FA4000A9C16 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C8EB675420246FA4000A9C16 /* LaunchScreen.xib */; };
-
 		CD098FFB3ECF40349FF0CC5A /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2A4B4A03B23B4741B42F97BB /* Foundation.ttf */; };
 		D0AC0FEA83D64DB2844A8A04 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 689772489B4B45B1A1ACD46E /* Zocial.ttf */; };
 		F5B762A7A2624EBA9B91CECD /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A6A7871D9E64EC792254A25 /* Feather.ttf */; };
@@ -380,7 +378,6 @@
 		00E356F21AD99517003FC87E /* EbizZero2TwoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EbizZero2TwoTests.m; sourceTree = "<group>"; };
 		0AAF9EEE48394943BD9E7DD2 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		0E98EDB426B3430085B4DD74 /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
-
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* EbizZero2Two.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EbizZero2Two.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -400,7 +397,6 @@
 		2D02E4901E0B4A5D006451C7 /* EbizZero2Two-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "EbizZero2Two-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		31020D8F52024D3A808B79CF /* RNShare.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
 		49858B5F693540B0A533712A /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
-
 		569042268F394D81B768B285 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6262EFDB4D024C1DB9E5A517 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -415,7 +411,6 @@
 		C8EB675520246FA4000A9C16 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = EbizZero2Two/Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		CA131D91C0464995972C6151 /* libRNShare.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShare.a; sourceTree = "<group>"; };
 		DCDC61653A204394865173FC /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
-
 		F686AC44C916445B89D0B9B0 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -705,7 +700,6 @@
 				DCDC61653A204394865173FC /* libRNFetchBlob.a */,
 				CA131D91C0464995972C6151 /* libRNShare.a */,
 				3DAD3EA31DF850E9000B6D8A /* libReact.a */,
-
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1306,7 +1300,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "#if [ \"${CONFIGURATION}\" = \"Release\" ]; then\n# # https://github.com/facebook/react-native/issues/4289\n#echo \"DELETING CACHED DATA FOR RELEASE\"\n#rm -rf $TMPDIR/react-*\n#fi\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1487,7 +1481,6 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = EbizZero2Two;
-				TARGETED_DEVICE_FAMILY = 1;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

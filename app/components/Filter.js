@@ -18,19 +18,23 @@ import CheckBox from 'app/common/CheckBox';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import Utils from 'app/common/Utils';
+import EventEmitter from "react-native-eventemitter";
 
 const { width } = Dimensions.get('window')
 
 export default class Filter extends Component {
     constructor(props) {
         super(props);
+        console.log("this.props.selectedRows:=")
+        console.log("this.props.selectedRows:=",this.props.selectedRows)
+
         this.state = { 
             modalVisible: true, 
             selected: [],
             button : false,
             search : '',
             category : [],
-            rows : [],
+            rows : this.props.selectedRows,
             status : false,
             u_id: null,
             user_type : null,
@@ -41,7 +45,7 @@ export default class Filter extends Component {
         this.setState({modalVisible: visible}); 
     }
     onSelectionsChange = (selected) => {
-    this.setState({ selected })
+        this.setState({ selected })
     }
 
     componentDidMount(){
@@ -68,7 +72,7 @@ export default class Filter extends Component {
         formData.append('u_id', String(u_id));
         formData.append('country', String(country)); 
 
-    const config = { 
+        const config = { 
                 method: 'POST', 
                 headers: { 
                     'Accept': 'application/json', 
@@ -76,12 +80,27 @@ export default class Filter extends Component {
                 },
                 body: formData,
             }
-    fetch(Utils.gurl('getFilterMenu'), config) 
+        fetch(Utils.gurl('getFilterMenu'), config) 
         .then((response) => response.json())
         .then((responseData) => {
         if(responseData.status){
+            var arrData = responseData.data.category
+            if (this.state.rows.length > 0) {
+                for (var i = 0; i < arrData.length; i++) {
+                    let indexOfObj = this.state.rows.indexOf(arrData[i].category_id)
+                    console.log("indexOfObj:=",indexOfObj)
+                    if (indexOfObj > -1) {
+                        arrData[i].checked = true
+                    }
+                    else {
+                        arrData[i].checked = false
+                    }
+                }
+            }
+
             this.setState({
-                category:responseData.data.category,
+                // category:responseData.data.category,
+                category : arrData,
                 status : responseData.status
             });
         }else{
@@ -127,7 +146,6 @@ export default class Filter extends Component {
     onClick(data) {
         data.checked = !data.checked;
         data.checked? this.check(data): this.unCheck(data)
-        
     }
     check (data){
         var newStateArray = this.state.rows.slice(); 
@@ -137,7 +155,7 @@ export default class Filter extends Component {
         });
     }
 
-unCheck(data){
+    unCheck(data){
         var index = this.state.rows.indexOf(data.category_id); 
         if (index > -1) {
            var newArray =  this.state.rows.splice(index, 1);
@@ -145,7 +163,7 @@ unCheck(data){
                 rows: newArray
             });
         }
-}
+    }
     renderCheckBox(data) {
         var leftText = data.category_name;
         var sum = data.count;
@@ -203,12 +221,19 @@ unCheck(data){
                     <TouchableHighlight 
                     underlayColor ={"#fff"} 
                     style={[styles.apply]} 
-                    onPress={()=>Actions.homePage({ filterdBy : this.state.rows})}>
+                    // onPress={()=>Actions.homePage({ filterdBy : this.state.rows})}>
+                    onPress={this.applyCategory.bind(this)}>
                         <MaterialIcons name="done" size={20} color="#fff"/>
                     </TouchableHighlight>
                 </View>       
             </View>
         );
+    }
+
+    applyCategory() {
+        console.log("applyCategory call")
+        EventEmitter.emit("applyCategoryFilter",this.state.rows)
+        Actions.pop()
     }
 }
 

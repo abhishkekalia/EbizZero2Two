@@ -3769,6 +3769,10 @@ react-native-elements@^0.18.5:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
+react-native-eventemitter@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-eventemitter/-/react-native-eventemitter-0.0.1.tgz#c9250a1ae2c61a44fe731ffe1463f506294b80be"
+
 react-native-fetch-blob@^0.10.8:
   version "0.10.8"
   resolved "https://registry.yarnpkg.com/react-native-fetch-blob/-/react-native-fetch-blob-0.10.8.tgz#4fc256abae0cb5f10e7c41f28c11b3ff330d72a9"
@@ -3810,7 +3814,6 @@ react-native-keyboard-aware-scroll-view@^0.4.1:
   dependencies:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
-
 
 react-native-keyboard-spacer@^0.4.1:
   version "0.4.1"

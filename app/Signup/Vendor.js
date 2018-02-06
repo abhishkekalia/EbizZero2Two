@@ -42,7 +42,8 @@ const INITIAL_STATE = {
 };
 const options = [
 	{ label:'Male', value: 'male' },
-    { label:'Female', value: 'female'}];
+	{ label:'Female', value: 'female'},
+	{ label:'Other', value: 'other'}];
 
 class Vendorreg extends Component {
 

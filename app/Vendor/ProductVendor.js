@@ -12,7 +12,8 @@ import {
   Picker,
   StyleSheet,
   Button,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
+  Platform
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -348,23 +349,47 @@ export default class ProductVendor extends Component {
                             }}
                         onDateChange={(date_in) => {this.setState({date_in: date_in});}}/>
                         </View>
-                        <TouchableNativeFeedback         
-                        onPress={this.onOpen.bind(this)}
-                        background={TouchableNativeFeedback.SelectableBackground()}>
-                        <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
-                            <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
-                            <TextInput
-                            style ={{
-                                height:40, 
-                                width : width-50,
-                                borderWidth : StyleSheet.hairlineWidth, 
-                                borderColor: "#ccc"}}
-                            value={this.state.selectedAddress}
-                            editable={false}
-                            underlineColorAndroid={'transparent'}
-                            />
-                        </View>
-                        </TouchableNativeFeedback>
+
+                            {Platform.OS === 'ios' ?
+                                <TouchableOpacity         
+                                onPress={this.onOpen.bind(this)}
+                                >
+                                <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
+                                    <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
+                                    <TextInput
+                                    style ={{
+                                        height:40, 
+                                        width : width-50,
+                                        borderWidth : StyleSheet.hairlineWidth, 
+                                        borderColor: "#ccc"}}
+                                    value={this.state.selectedAddress}
+                                    editable={false}
+                                    underlineColorAndroid={'transparent'}
+                                    />
+                                </View>
+                                </TouchableOpacity>
+                            :
+                            <TouchableNativeFeedback         
+                            onPress={this.onOpen.bind(this)}
+                            background={TouchableNativeFeedback.SelectableBackground()}
+                            >
+                            <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
+                                <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
+                                <TextInput
+                                style ={{
+                                    height:40, 
+                                    width : width-50,
+                                    borderWidth : StyleSheet.hairlineWidth, 
+                                    borderColor: "#ccc"}}
+                                value={this.state.selectedAddress}
+                                editable={false}
+                                underlineColorAndroid={'transparent'}
+                                />
+                            </View>
+                            </TouchableNativeFeedback>
+                        }
+
+                        
                         </View>
 
                         : undefined }
