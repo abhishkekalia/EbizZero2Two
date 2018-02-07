@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 export default StyleSheet.create({
     container: {
         // flex: 1,
-        backgroundColor: 'transparent',
+        backgroundColor: '#f9f9f9',
         padding :10
     },
     inputs : {
@@ -43,7 +43,7 @@ export default StyleSheet.create({
         flex: 1,
       	borderColor : '#ccc',
     	borderWidth :1,
-        backgroundColor: 'transparent',
+        backgroundColor: '#fff',
         top : 10,
         padding :10,
         borderRadius : 5

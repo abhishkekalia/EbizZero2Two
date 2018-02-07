@@ -55,6 +55,8 @@ import MenuIcon from './images/imgpsh.png';
 
 // -------------vendor ----------
 import Product from './Vendor/Product';
+import EditProduct from './Vendor/EditProduct';
+import EditService from './Vendor/EditService';
 import Service from './Vendor/Service';
 import Order from './Vendor/Order';
 import ProductVendor from './Vendor/ProductVendor';
@@ -209,7 +211,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
             key="vendortab" 
             hideNavBar 
             initial={vendor}
-            type={ActionConst.REPLACE}
+            // type={ActionConst.REPLACE}
             >
                 <Tabs 
                 tabs
@@ -312,7 +314,20 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         navBar={CustomGenNavBar} 
                         />
                     </Stack>
-
+                    <Stack key="editproduct" navBar={CustomGenNavBar} >
+                        <Scene 
+                        key="editproduct" 
+                        component={EditProduct} 
+                        title="EditProduct" 
+                        />
+                    </Stack>
+                    <Stack key="editservice" navBar={CustomGenNavBar} >
+                        <Scene 
+                        key="editservice" 
+                        component={EditService} 
+                        title="EditService" 
+                        />
+                    </Stack>
                     <Stack key="AddressLists" hideNavBar={true} >
                         <Scene 
                         key="address" 

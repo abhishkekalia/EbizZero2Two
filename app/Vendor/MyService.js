@@ -157,7 +157,20 @@ export default class MyService extends Component {
                 backgroundColor : "#fff",
                 borderBottomWidth : 1, 
                 borderColor : "#ccc", 
-                }}>
+                }}
+                onPress={()=>routes.editservice({
+                    u_id : this.state.u_id,
+                    country : this.state.country,
+                    service_id: data.service_id,
+                    service_type:data.service_type,
+                    service_name: data.service_name,
+                    detail_description: data.detail_description,
+                    short_description: data.short_description,
+                    price: data.price,
+                    special_price: data.special_price,
+                    is_active: data.is_active,
+                    serviceImages: data.serviceImages
+                })}>
                     <Image style={[styles.thumb, {margin: 10}]} 
                     resizeMode={"stretch"} 
                     source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null}}

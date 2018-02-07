@@ -70,20 +70,20 @@ export default class FeaturedProduct extends Component {
             },
             body: formData,
             }
-        fetch(Utils.gurl('featureItemList'), config) 
+        fetch(Utils.gurl('MyProfile'), config) 
         .then((response) => response.json())
         .then((responseData) => {
-            if(responseData.status){
+            if(responseData.response.status){
                 this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                dataSource: this.state.dataSource.cloneWithRows(responseData.response.feature_product),
                 isLoading : false,
-                status : responseData.status
+                status : responseData.response.status
                 });
             }
             else{
                 this.setState({
                 isLoading : false,
-                status : responseData.status
+                status : responseData.response.status
 
                 })
             }

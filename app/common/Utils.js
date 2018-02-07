@@ -28,7 +28,6 @@ let Utils = {
     logout(){
         AsyncStorage.removeItem('data', (err, result) => {
             return result; 
-            console.warn(result); 
         }); 
     }
 };

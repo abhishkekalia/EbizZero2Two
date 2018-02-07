@@ -57,7 +57,7 @@ class Product extends Component {
           
 
                 <SegmentedControlTab
-                    values={['Add Product', 'My Product']}
+                    values={[ 'My Product','Add Product']}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -67,9 +67,9 @@ class Product extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <AddProduct/>}
-                {this.state.customStyleIndex === 1 &&
                     <MyProduct/>}
+                {this.state.customStyleIndex === 1 &&
+                    <AddProduct/>}
 
             </View>
         );

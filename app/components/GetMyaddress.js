@@ -307,7 +307,7 @@ export default class AddressBook extends Component {
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
-                <View             style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff' }} >
+                <View style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff' }} >
                     <View style={{ flexDirection: 'column' }}>
                         <View style={{ width: width-50, flexDirection: 'row' , justifyContent: 'space-between'}}>
                             <View style={{ flexDirection: 'row'}}>
