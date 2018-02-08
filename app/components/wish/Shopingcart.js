@@ -21,6 +21,7 @@ import  Countmanager  from './Countmanager';
 import {Actions as routes} from "react-native-router-flux";
 import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
 import { material } from 'react-native-typography';
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window');
 
@@ -54,6 +55,12 @@ export default class Shopingcart extends Component {
         this.getKey()
         .then(()=>this.fetchData())
         .done()
+
+        EventEmitter.removeAllListeners("reloadCartlist");
+        EventEmitter.on("reloadCartlist", (value)=>{
+            console.log("reloadCartlist", value);
+            this.fetchData()
+        });
     }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton,});    

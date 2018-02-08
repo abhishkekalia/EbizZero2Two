@@ -370,9 +370,14 @@ export default class AddProduct extends Component {
 
         return (
             <ScrollView 
-            contentContainerStyle={commonStyles.container} 
+            contentContainerStyle={{backgroundColor: 'transparent',
+            margin :10,paddingBottom:30}}//commonStyles.container} 
             showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'handled'}>
+            keyboardShouldPersistTaps={'handled'}
+            automaticallyAdjustContentInsets={false}
+            directionalLockEnabled = {true}
+            horizontal = {false}
+            >
                 <View style={commonStyles.ImageAdd}>
                     <Text style={{color: borderColorImage, marginBottom : 10}}>Select Product Image</Text>  
                     <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Product Picture</Text>  
@@ -499,7 +504,8 @@ export default class AddProduct extends Component {
                         onChangeText={(special) => this.setState({special})}
                         />
                     </View>
-                    <View style={commonStyles.feature}>
+                    <View style={[commonStyles.feature,{paddingTop:10,paddingRight:10}]}
+                    >
                         <Text style={commonStyles.label}>Product Is Feature *</Text>
                         <Switch
                         value={is_feature}

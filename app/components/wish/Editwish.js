@@ -17,6 +17,7 @@ const { width, height } = Dimensions.get('window');
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import EventEmitter from "react-native-eventemitter";
 
 export default class Editwish extends Component {
     constructor(props) { 
@@ -64,6 +65,7 @@ export default class Editwish extends Component {
         .then((response) => response.json())
         .then((responseData) => {
            if(responseData.status){
+            //    EventEmitter.emit("reloadWishlist");
                 MessageBarManager.showAlert({ 
                     message: responseData.data.message, 
                     alertType: 'alert', 
@@ -95,6 +97,7 @@ export default class Editwish extends Component {
         fetch(Utils.gurl('removeFromWishlist'), config) 
         .then((response) => response.json())
         .then((responseData) => {
+            // EventEmitter.emit("reloadWishlist");
             MessageBarManager.showAlert({ 
             message: responseData.data.message, 
             alertType: 'alert', 

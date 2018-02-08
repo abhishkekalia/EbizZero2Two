@@ -32,6 +32,7 @@ import {
 import { material } from 'react-native-typography';
 
 import Share, {ShareSheet, Button} from 'react-native-share';
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window');
 const SHORT_LIST = ['Small', 'Medium', 'Large'];
@@ -57,9 +58,17 @@ export default class WishList extends Component {
         this.getKey()
         .then( ()=>this.fetchData())
         .done()
+
+        EventEmitter.removeAllListeners("reloadWishlist");
+        EventEmitter.on("reloadWishlist", (value)=>{
+            console.log("reloadWishlist")
+            this.fetchData()
+        });
+        console.log("componentDidMount")
     }
     componentWillMount() {
         Actions.refresh({ right: this._renderRightButton,});    
+        console.log("componentWillMount")
     }
    _renderRightButton = () => {
         return(
@@ -228,9 +237,9 @@ export default class WishList extends Component {
     }
     noItemFound(){
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
                 <Text> No Item added to your wishlist </Text>
-                <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load wishlist</Text></TouchableOpacity>
+                {/* <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load wishlist</Text></TouchableOpacity> */}
                </View> );
     }
     getSize(size){

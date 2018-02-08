@@ -72,7 +72,8 @@ export default class MainView extends Component {
             product_id : '',
             product_name : '', 
             url : '',
-            arrSelectedCategory : []
+            arrSelectedCategory : [],
+            isFilterProduct : true
         }
     }
 
@@ -91,14 +92,21 @@ export default class MainView extends Component {
             if (value.length > 0) {
                 this.setState({
                     loaded:false,
-                    arrSelectedCategory:value
+                    arrSelectedCategory:value,
+                    isFilterProduct : true
                 })
                 this.filterByCategory(value)
             }
         });
 
+        EventEmitter.removeAllListeners("reloadProducts");
+        EventEmitter.on("reloadProducts", (value)=>{
+            console.log("reloadProducts", value);
+            this.fetchData()
+        });
+
     }
-        componentWillMount() {
+    componentWillMount() {
         Actions.refresh({ right: this._renderRightButton,});    
     }
    _renderLeftButton = () => {
@@ -155,13 +163,15 @@ export default class MainView extends Component {
 
     filterbyShop = () => {
         if (this.state.rows.length == 0) {
-            this.state.isModalVisible = !this.state.isModalVisible,
+            this.state.isModalVisible = !this.state.isModalVisible
+            this.state.isFilterProduct = true
             this.fetchData()
             return
         }
         this.setState({ 
             isModalVisible: !this.state.isModalVisible,
             loaded : false,
+            isFilterProduct : true
         },this.fetchDataByShop() )
     }
 
@@ -555,12 +565,6 @@ export default class MainView extends Component {
     }
 
     render() {
-    let shareOptions = {
-      title: this.state.product_name,
-      message: this.state.product_id,
-      url: this.state.url,
-      subject: "Share Link" //  for email
-    };
 
         this.fetchData = this.fetchData.bind(this);
         if (!this.state.loaded) {
@@ -569,80 +573,13 @@ export default class MainView extends Component {
         if (!this.state.status) {
             return this.noItemFound();
         }
-        let listView = (<View></View>);
-            listView = (
-                <ListView
-                refreshControl={ 
-                    <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh} />
-                }
-                contentContainerStyle={styles.list}
-                dataSource={this.state.dataSource}
-                renderRow={ this.renderData.bind(this)}
-                enableEmptySections={true}
-                automaticallyAdjustContentInsets={false}
-                showsVerticalScrollIndicator={false}
-                />
-            );
-        let serviceListview = (<View></View>);
-            serviceListview = (
-                <ListView
-                refreshControl={ 
-                    <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh} />
-                }
-                contentContainerStyle={styles.list}
-                dataSource={this.state.dataSource2}
-                renderRow={ this.renderService.bind(this)}
-                enableEmptySections={true}
-                automaticallyAdjustContentInsets={false}
-                showsVerticalScrollIndicator={false}
-                />
-            );
+        
 
         return (
         <View>
-                        <View style={{ flexDirection : 'row'}}>
-                    <View style={ styles.button,[{ 
-                        flex : 0.5,
-                        // width : width/2,
-                        height : 40, 
-                        justifyContent : "space-around", 
-                        backgroundColor : '#fff',
-                        padding : 2}]}> 
-                        
-                        <TouchableOpacity 
-                        onPress={this.modal} style={styles.allshop}> 
-                            <Text>All Shop</Text>
-                            <Ionicons 
-                            name="md-arrow-dropdown" 
-                            size={20} 
-                            color="#a9d5d1" 
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={ styles.button,[{
-                    flex : 0.5, 
-                        // width : width/2, 
-                        height : 40, 
-                        justifyContent : "space-around", 
-                        backgroundColor : '#fff', 
-                        padding : 2}]}> 
-                        <TouchableOpacity onPress={this.Service} style={styles.allshop}> 
-                            <Text>Services</Text>
-                            <Ionicons 
-                            name="md-arrow-dropdown" 
-                            size={20} 
-                            color="#a9d5d1" 
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
+            {this.renderFilterOptions()}
             <ScrollView 
-            contentContainerStyle={{backgroundColor : 'transparent'}} 
+            contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 50}} 
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="always">
                 <StatusBar 
@@ -650,101 +587,26 @@ export default class MainView extends Component {
                 backgroundColor="#a9d5d1" 
                 barStyle="light-content"/>
                 <GetMarketing/>
-                        {
-                            Platform.OS === 'ios' ?
-                            <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
-                            :
-                            <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
-                        }
-                <View>
-                {
-                    listView
-                }
-                </View>
-                {
-                    Platform.OS === 'ios' ?
-                        <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
-                    :
-                        <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
-                }
-                <View>
-                { 
-                    serviceListview
-                }
-                </View>
-                
-                <ModalWrapper
-                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
-                onRequestClose={() => this.setState({ isModalVisible: false })}
-                position="right"
-                style={styles.sidebar}
-                shouldAnimateOnRequestClose={true}
-                visible={this.state.isModalVisible}>
-                <View style={{ 
-                    height:54, 
-                    flexDirection : 'row', 
-                    alignItems:'center', 
-                    justifyContent : 'space-around', 
-                    backgroundColor:'#a9d5d1'
-                }}>
-                        <Text>{null}</Text>
-                        <Text style={{fontSize:15, color:'#fff'}}>All Shop</Text>
-                        <TouchableOpacity 
-                        underlayColor ={"#fff"} 
-                        onPress={()=>this.filterbyShop()}
-                        >
-                            <Text>Done</Text>
-                        </TouchableOpacity>
-                        
-                    </View>
-                    <ScrollView contentContainerStyle={styles.contentContainer}
-                    showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Text style={{ padding : 10}}>All Shop</Text>
-                    {this.state.rows.length == 0 ? 
-                        <Ionicons name="ios-checkmark" size={30} color="green"  style={{ padding : 10}}/>
-                    :
-                        undefined
-                    }
-                    
-                    </TouchableOpacity>
-                        {this.renderView()}
-                    </ScrollView>
-                    
-                </ModalWrapper>
-                
-                 <ModalWrapper
-                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
-                onRequestClose={() => this.setState({ isService: false })}
-                position="right"
-                style={styles.sidebar}
-                shouldAnimateOnRequestClose={true}
-                visible={this.state.isService}>
 
-                <View style={{ 
-                    height:54, 
-                    flexDirection : 'row', 
-                    alignItems:'center', 
-                    justifyContent : 'space-around', 
-                    backgroundColor:'#a9d5d1'
-                }}>
-                        <Text>{null}</Text>
-                        <Text style={{fontSize:15, color:'#fff'}}>All Service</Text>
-                        <TouchableOpacity 
-                        underlayColor ={"#fff"} 
-                        onPress={()=>this.filterbyService()}
-                        >
-                            <Text>Done</Text>
-                        </TouchableOpacity>
-                        
-                    </View>
-                    <ScrollView>
-                        {this.renderServiceView()}
-                    </ScrollView>
-                    
-            </ModalWrapper>
+                {this.renderListData()}
+                {this.renderAllShopViews()}
+                {this.renderAllServiceViews()}
+                
             </ScrollView>
-                    <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
+            {this.renderShareSheet()}
+            </View>
+        );
+    }
+
+    renderShareSheet() {
+        let shareOptions = {
+            title: this.state.product_name,
+            message: this.state.product_id,
+            url: this.state.url,
+            subject: "Share Link" //  for email
+          };
+        return(
+            <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
           <Button iconSrc={{ uri: TWITTER_ICON }}
                   onPress={()=>{
               this.onCancel();
@@ -812,11 +674,105 @@ export default class MainView extends Component {
                 Share.open(shareOptions)
               },300);
             }}>More</Button>
+            <View style={{paddingBottom:40}}/>
         </ShareSheet>
-
-            </View>
         );
     }
+
+    renderListData(){
+        let listView = (<View></View>);
+            listView = (
+                <ListView
+                refreshControl={ 
+                    <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this._onRefresh} />
+                }
+                contentContainerStyle={styles.list}
+                dataSource={this.state.dataSource}
+                renderRow={ this.renderData.bind(this)}
+                enableEmptySections={true}
+                automaticallyAdjustContentInsets={false}
+                showsVerticalScrollIndicator={false}
+                />
+            );
+        let serviceListview = (<View></View>);
+            serviceListview = (
+                <ListView
+                refreshControl={ 
+                    <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this._onRefresh} />
+                }
+                contentContainerStyle={styles.list}
+                dataSource={this.state.dataSource2}
+                renderRow={ this.renderService.bind(this)}
+                enableEmptySections={true}
+                automaticallyAdjustContentInsets={false}
+                showsVerticalScrollIndicator={false}
+                />
+            );
+        return(
+
+            this.state.isFilterProduct ?
+
+            <View>
+                    {
+                        Platform.OS === 'ios' ?
+                        <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                        :
+                        <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                    }
+                    <View>
+                    {
+                        listView
+                    }
+                    </View>
+                    {
+                        Platform.OS === 'ios' ?
+                            <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                        :
+                            <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                    }
+                    <View>
+                    { 
+                        serviceListview
+                    }
+                    </View>
+            </View> 
+            
+            :
+
+            <View>
+                {
+                    Platform.OS === 'ios' ?
+                        <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                    :
+                        <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                }
+                <View>
+                { 
+                    serviceListview
+                }
+                </View>
+
+                {
+                    Platform.OS === 'ios' ?
+                    <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                    :
+                    <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                }
+                <View>
+                {
+                    listView
+                }
+                </View>
+                
+            </View>
+
+        );
+    }
+
     renderService(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
@@ -857,6 +813,126 @@ export default class MainView extends Component {
         );
     }
 
+    renderFilterOptions() {
+        return(
+        <View style={{ flexDirection : 'row'}}>
+                    <View style={ { 
+                        flex : 0.5,
+                        // width : width/2,
+                        height : 40, 
+                        justifyContent : "space-around", 
+                        backgroundColor : '#fff',
+                        padding : 2}}> 
+                        
+                        <TouchableOpacity 
+                        onPress={this.modal} style={styles.allshop}
+                        > 
+                            <Text>All Shop</Text>
+                            <Ionicons 
+                            name="md-arrow-dropdown" 
+                            size={20} 
+                            color="#a9d5d1" 
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={ {
+                    flex : 0.5, 
+                        // width : width/2, 
+                        height : 40, 
+                        justifyContent : "space-around", 
+                        backgroundColor : '#fff', 
+                        padding : 2}}> 
+                        <TouchableOpacity onPress={this.Service} style={styles.allshop}> 
+                            <Text>Services</Text>
+                            <Ionicons 
+                            name="md-arrow-dropdown" 
+                            size={20} 
+                            color="#a9d5d1" 
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+        );
+    }
+
+    renderAllShopViews() {
+        return(
+            <ModalWrapper
+                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
+                onRequestClose={() => this.setState({ isModalVisible: false })}
+                position="right"
+                style={styles.sidebar}
+                shouldAnimateOnRequestClose={true}
+                visible={this.state.isModalVisible}>
+                <View style={{ 
+                    height:54, 
+                    flexDirection : 'row', 
+                    alignItems:'center', 
+                    justifyContent : 'space-between',
+                    backgroundColor:'#a9d5d1'
+                }}>
+                        <Text>{null}</Text>
+                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>All Shop</Text>
+                        <TouchableOpacity 
+                        underlayColor ={"#fff"} 
+                        onPress={()=>this.filterbyShop()}
+                        >
+                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff'}}>Done</Text>
+                        </TouchableOpacity>
+                        
+                    </View>
+                    <ScrollView contentContainerStyle={styles.contentContainer}
+                    showsVerticalScrollIndicator={false}>
+                    <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                    <Text style={{ padding : 10}}>All Shop</Text>
+                    {this.state.rows.length == 0 ? 
+                        <Ionicons name="ios-checkmark" size={30} color="green"  style={{ paddingRight : 10}}/>
+                    :
+                        undefined
+                    }
+                    
+                    </TouchableOpacity>
+                        {this.renderView()}
+                    </ScrollView>
+                    
+                </ModalWrapper>
+        );
+    }
+
+    renderAllServiceViews() {
+        return(
+            <ModalWrapper
+                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
+                onRequestClose={() => this.setState({ isService: false })}
+                position="right"
+                style={styles.sidebar}
+                shouldAnimateOnRequestClose={true}
+                visible={this.state.isService}>
+
+                <View style={{ 
+                    height:54, 
+                    flexDirection : 'row', 
+                    alignItems:'center', 
+                    justifyContent : 'space-between', 
+                    backgroundColor:'#a9d5d1'
+                }}>
+                        <Text>{null}</Text>
+                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>All Service</Text>
+                        <TouchableOpacity 
+                        underlayColor ={"#fff"} 
+                        onPress={()=>this.filterbyService()}
+                        >
+                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff'}}>Done</Text>
+                        </TouchableOpacity>
+                        
+                    </View>
+                    <ScrollView>
+                        {this.renderServiceView()}
+                    </ScrollView>
+                    
+            </ModalWrapper>
+        )
+    }
 
        // service  filter
 
@@ -896,7 +972,8 @@ export default class MainView extends Component {
         // this.fetchDataByShop()
 
         if (this.state.servicerows.length == 0) {
-            this.state.isService = !this.state.isService,
+            this.state.isService = !this.state.isService
+            this.state.isFilterProduct = false
             this.fetchService()
             return
         }
@@ -904,6 +981,7 @@ export default class MainView extends Component {
         this.setState({ 
             isService: !this.state.isService,
             loaded : false,
+            isFilterProduct : false
         },this.fetchDataByService() )
 
         // this.fetchDataByService()
@@ -1059,7 +1137,10 @@ export default class MainView extends Component {
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text> No Item Found </Text>
+                {this.renderFilterOptions()}
+                {this.renderAllShopViews()}
+                {this.renderAllServiceViews()}
+                <Text style={{marginTop:10}}> No Item Found </Text>
             </View> 
         );
     }
@@ -1069,6 +1150,7 @@ export default class MainView extends Component {
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#696969' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';  
+        let url =  data.productImages[0] ? data.productImages[0].image : "null"
        return (
             <View style={styles.row} > 
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>

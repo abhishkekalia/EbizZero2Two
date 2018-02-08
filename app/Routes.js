@@ -63,6 +63,8 @@ import ServiceCustomer from './Vendor/Order/ServiceCustomer'
 import ProfileVendor from "./vendorprofile/ProfileVendor";
 import MarketingCompaign from "./Vendor/marketing/MarketingCompaign";
 
+import EventEmitter from "react-native-eventemitter";
+
 // import AddProduct from "./app/Vendor/Addproduct";
 
 // -------------vendor ----------
@@ -153,7 +155,9 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                             title="Home"
                             // navigationBarStyle={{backgroundColor: '#1e2226'}}  
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
-                            type="replace"/>
+                            type="replace"
+                            onEnter={()=> EventEmitter.emit("reloadProducts")}
+                             />
 
                         </Stack>
                         
@@ -168,7 +172,9 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
                             component={wishList} 
-                            title="WishList"/>
+                            title="WishList"
+                            onEnter={()=> EventEmitter.emit("reloadWishlist")}
+                            />
                         </Stack>
 
                         <Stack
@@ -183,7 +189,9 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                             titleStyle={{color : "#FFF", alignSelf: 'center'}}
                             navigationBarStyle={{ backgroundColor: '#a9d5d1' }} 
                             component={Shopingcart} 
-                            title="Cart"/>
+                            title="Cart"
+                            onEnter={()=> EventEmitter.emit("reloadCartlist")}
+                            />
                         </Stack>
                         
                         <Stack
@@ -471,7 +479,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     key="getmyaddress" 
                     hideTabBar={true} 
                     titleStyle={{alignSelf: 'center'}}
-                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress()} color="#fff" style={{  alignItems:'center',padding:15, paddingTop:35}}/>}
+                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{  alignItems:'center',padding:15, paddingTop:35}}/>}
                     >
                         <Scene
                         key="getmyaddress"

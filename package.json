@@ -23,6 +23,7 @@
     "react-native-indicator": "^0.7.0",
     "react-native-keyboard-aware-scroll-view": "^0.4.1",
     "react-native-keyboard-spacer": "^0.4.1",
+    "react-native-linear-gradient": "^2.4.0",
     "react-native-material-dialog": "^0.7.4",
     "react-native-material-selectize": "^1.6.0",
     "react-native-message-bar": "^2.0.7",

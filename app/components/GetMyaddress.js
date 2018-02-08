@@ -20,6 +20,8 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 import {CirclesLoader} from 'react-native-indicator';
+import Swipeout from 'react-native-swipeout';
+import EventEmitter from "react-native-eventemitter";
 
 const { width } = Dimensions.get('window')
 const ICON_SIZE = 24
@@ -52,6 +54,11 @@ export default class AddressBook extends Component {
         .then( ()=>this.fetchAddress())
         .done();
 
+        EventEmitter.removeAllListeners("reloadAddressList");
+        EventEmitter.on("reloadAddressList", (value)=>{
+            console.log("reloadAddressList", value);
+            this.fetchAddress()    
+        });
     }
     getItems (delivery_address_id){
         var Items = this.props.SetToList,
@@ -307,29 +314,145 @@ export default class AddressBook extends Component {
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
-                <View             style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff' }} >
-                    <View style={{ flexDirection: 'column' }}>
-                        <View style={{ width: width-50, flexDirection: 'row' , justifyContent: 'space-between'}}>
-                            <View style={{ flexDirection: 'row'}}>
-                            <Text style={{ fontSize : 15, color : '#a9d5d1'}}>Name: </Text>
-                            <Text style={{ fontSize: 15, color: '#000'}}>{data.full_name}</Text>
+                <View style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff' }} >
+                    <SelectItem data={data} u_id={this.state.u_id} country={this.state.country} callback={this.fetchAddress.bind(this)}>
+                        <View style={{ flexDirection: 'column' }}>
+                            <View style={{ width: width-50, flexDirection: 'row' , justifyContent: 'space-between'}}>
+                                <View style={{ flexDirection: 'row'}}>
+                                <Text style={{ fontSize : 15, color : '#a9d5d1'}}>Name: </Text>
+                                <Text style={{ fontSize: 15, color: '#000'}}>{data.full_name}</Text>
+                                </View>
+                                {/* <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} /> */}
                             </View>
-                            <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} />
+                            <View style={{ flexDirection: 'row'}}>
+                            <Text style={{ fontSize : 10, color : '#a9d5d1'}}>M: </Text>
+                            <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
+                            </View>
+                            <Text style={{fontSize:12}}>
+                            {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                        data.jadda,"\n",data.city," ",data.direction]}
+                        </Text>
                         </View>
-                        <View style={{ flexDirection: 'row'}}>
-                        <Text style={{ fontSize : 10, color : '#a9d5d1'}}>M: </Text>
-                        <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
-                        </View>
-                        <Text style={{fontSize:12}}>
-                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
-                    data.jadda,"\n",data.city," ",data.direction]}
-                    </Text>
-                    </View>
+                    </SelectItem>
                 </View>
         );
     }
 }
 
+class SelectItem extends Component{
+    constructor(props) { 
+        super(props); 
+        this.state = { 
+            size : '',
+            color : 'blue',
+            selectSize : false
+        }; 
+    }
+        validate(){
+        const { color} = this.state; 
+
+        if (!color.length)
+        {
+            MessageBarManager.showAlert({
+                message: "Please Select Color",
+                alertType: 'alert',
+            })
+            return false
+        }
+            return true;
+    } 
+    
+    changeSize(result){
+        this.setState({ 
+            selectSize: false,
+            size: result.selectedItem.label
+        });
+        this.editWishlist(result.selectedItem.label)
+    }
+
+    onRemove (data){
+        const { u_id, country } = this.state;
+          
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country)); 
+        formData.append('address_id', String(data.address_id)); 
+
+        const config = { 
+             method: 'POST', 
+             headers: { 
+                  'Accept': 'application/json', 
+                  'Content-Type': 'multipart/form-data;',
+             },
+             body: formData,
+        }
+        fetch(Utils.gurl('deleteAddress'), config)  
+        .then((response) => response.json())
+        .then((responseData) => {
+          MessageBarManager.showAlert({ 
+          message: responseData.data.message, 
+          alertType: 'alert', 
+          })
+        })
+        .then(()=>this.props.callback())
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+    }
+
+    onEdit (data) {
+        console.log("edit Data:=",data)
+        routes.newaddress({ 
+            isFromEdit:true,
+            address_id : data.address_id, 
+            full_name : data.full_name,
+            alternate_number : data.alternate_number, 
+            mobile_number : data.mobile_number, 
+            address_line1 : data.address_line1, 
+            address_line2 : data.address_line2, 
+            landmark : data.landmark, 
+            town : data.town, 
+            city : data.city, 
+            state : data.state, 
+            country : data.country, 
+            pincode : data.pincode, 
+            address_type : data.address_type, 
+            block_no: data.block_no,
+            houseno: data.houseno,
+            street: data.street,
+            appartment: data.appartment,
+            floor: data.floor,
+            jadda: data.jadda,
+            direction: data.direction
+        });
+    }
+
+    render() {
+            let swipeBtns = [{
+            text: 'Edit',
+            backgroundColor: '#a9d5d1',
+            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+            onPress: () => {
+                this.onEdit(this.props.data)}
+           // onPress: () => {this.editWishlist(data.product_id)}
+         },{
+            text: 'Delete',
+            backgroundColor: '#f53d3d',
+            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+            onPress: () => {this.onRemove(this.props.data)}
+         }];
+
+        return(
+            <Swipeout 
+                right={swipeBtns}
+                autoClose={true}
+                backgroundColor= 'transparent'> 
+                {this.props.children}
+            </Swipeout>
+        )
+    }
+}
 
 
 class PopupMenu extends Component {

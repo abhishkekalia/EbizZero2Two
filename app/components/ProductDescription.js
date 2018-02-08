@@ -12,7 +12,8 @@ import {
   Button,
   ListView,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  Actions
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -212,7 +213,7 @@ export default class ProductDescription extends Component {
                     alertType: 'alert', 
                     stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
                 })
-                routes.shopingCart()
+                // routes.shopingCart()
         }else{
             MessageBarManager.showAlert({ 
                 message: responseData.data.message, 
@@ -364,7 +365,7 @@ export default class ProductDescription extends Component {
 
     render () {
         const { date_in, count } = this.state;
-       let titleColor = this.state.size ? '#a9d5d1' : '#ccc';
+        let titleColor = this.state.size ? '#a9d5d1' : '#ccc';
 
         let color = this.state.data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
@@ -428,7 +429,7 @@ export default class ProductDescription extends Component {
                             <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold'}}>{this.state.data.price} KWD</Text>
                         </View>
                         <View style={{ flexDirection : 'row'}}>
-                            <TouchableOpacity style={styles.button} onPress={this.onOpen.bind(this)}>
+                            <TouchableOpacity style={[styles.button,{}]} onPress={this.onOpen.bind(this)}>
                             <Text style={{ color:'#fff'}}>Buy It Now</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.buttonCart,{ flexDirection:'row', justifyContent:'center'}]} onPress={()=> this.addtoCart()}>
@@ -498,6 +499,9 @@ export default class ProductDescription extends Component {
         />
             </ScrollView>
                  <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
+                 <TouchableOpacity onPress={()=> Actions.newaddress({isFromEdit:false})}>
+                 <Text>Add Address</Text>
+                 </TouchableOpacity>
                 {listView}
                 </ShareSheet>
                         <Modal isVisible={this.state.visibleModal}>
@@ -506,7 +510,7 @@ export default class ProductDescription extends Component {
                 </View>
             </Modal>
 
-                </View>
+            </View>
         )
     }
 
@@ -671,6 +675,7 @@ const styles = {
         padding: 10,
         backgroundColor: '#fbcdc5',
         alignItems: 'center',
+        justifyContent:'center'
     },
     buttonCart: {
         width: width/2,
