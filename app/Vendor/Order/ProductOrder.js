@@ -131,7 +131,7 @@ export default class ProductOrder extends Component<{}> {
                 orderLength,
                 i,
                 j;
-
+// console.warn('hello');
             for (i = 0; i < length; i++) {
                 order = orders[i];
                 sectionIDs.push(order.order_id);
@@ -231,8 +231,15 @@ export default class ProductOrder extends Component<{}> {
     renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.section}>
-                <Text style={styles.text}>Vendor Id :{sectionData}</Text>
-                <Text style={styles.text}>order_id :#{sectionID}</Text>
+                <View style={{flexDirection :'row'}}>
+                <Text style={styles.label}>Vendor Id :</Text>
+                <Text style={styles.text}>{sectionData}</Text>
+                </View>
+                <View style={{flexDirection :'row'}}>
+                <Text style={styles.label}>Order Id :</Text>
+
+                <Text style={styles.text}>{sectionID}</Text>
+                </View>
             </View>
         ); 
     }
@@ -252,10 +259,10 @@ Object.assign(ProductOrder.prototype, {
             ord_status = 1;
         }
             return (
-                <View style={styles.row}>
-                    <View style={{ flexDirection : 'row'}}>
+                <TouchableOpacity style={styles.row} onPress={()=>console.warn()}>
+                    <View style={{ flexDirection : 'row', backgroundColor:'#fff'}}>
                         <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Product ID : </Text>
-                        <Text style={styles.rowText}># {rowID.product_id} </Text>
+                        <Text style={styles.rowText}>{rowID.product_id} </Text>
                     </View>
                     <View style={{ flexDirection : 'row'}}>
                         <Text style={[styles.rowText, {color : '#222'} ]}>{rowID.product_name} </Text>
@@ -284,7 +291,7 @@ Object.assign(ProductOrder.prototype, {
                             <Text style={styles.rowText}>{ rowID.order_date} </Text> 
                         </View>
                     </View>
-                </View>
+                </TouchableOpacity>
             );
         }
     }
@@ -308,8 +315,13 @@ var styles = StyleSheet.create({
         fontSize: 20,
         color: 'white'
     },
+    label : {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#fbcdc5'
+    },
     text: {
-        color: 'white',
+        color: '#696969',
         paddingHorizontal: 8,
         fontSize: 16
     },
@@ -324,10 +336,10 @@ var styles = StyleSheet.create({
     },
     footer : { 
         flexDirection : 'row', 
-        justifyContent : 'space-around', 
+        justifyContent : 'space-between', 
         borderWidth : StyleSheet.hairlineWidth, 
         borderColor : '#ccc',
-        borderRadius : 2
+        // borderRadius : 2
     },
     rowText: {
         fontSize: 12,
@@ -342,7 +354,9 @@ var styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         padding: 5,
-        backgroundColor: '#a9d5d1'
+        backgroundColor: '#fff',
+        borderWidth :StyleSheet.hairlineWidth,
+        borderColor : '#fbcdc5'
     },
      container: {
         flex: 1,
@@ -355,7 +369,7 @@ var styles = StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: 10,
+        // padding: 10,
         backgroundColor: '#F6F6F6'
     },
 

@@ -18,7 +18,9 @@ class Profile extends Component {
             address : [],
             country : null,
             email : null,
-            phone_no : null
+            phone_no : null,
+            data : [],
+            marketing_campaign : []
         };
     }
     componentwillMount(){
@@ -96,7 +98,9 @@ class Profile extends Component {
         	    this.setState({ 
         	       	status : responseData.response.status,
         	       	dataSource : responseData.response.data,
-        	       	address : responseData.response.address
+        	       	address : responseData.response.address,
+                    data : responseData.response.feature_product,
+                    marketing_campaign : responseData.response.marketing_campaign
         	        });
         	}else{
         	    this.setState({ 
@@ -104,11 +108,11 @@ class Profile extends Component {
         	    })
         	}
         })
+        .catch((error) => {
+          console.log(error);
+        })       
+
         .done();
-    }
-    signOut(){
-    const {identity, logout} = this.props;
-// ( Utils.logout()),logout
     }
 
 	render() {
@@ -147,12 +151,12 @@ class Profile extends Component {
 						</View>
 					</View>
 				</View>
-				
-				<Marketing/>
+				<Text>Marketing</Text>
+				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign}/>
 				<TouchableOpacity 
                 onPress={()=>( Utils.logout()),logout}
-                style={styles.setings}>
-					<Text>Logout</Text>
+                style={styles.logout}>
+					<Text style={{ color: "#fbcdc5"}}>Logout</Text>
 				</TouchableOpacity>
 
 			</View>
@@ -170,15 +174,16 @@ const styles = StyleSheet.create({
 		borderWidth : 1,
 		borderColor :'#ccc',
 	},
-	setings : { 
-		top : 5, 
-		backgroundColor : '#ccc', 
+	logout : { 
+		backgroundColor : '#fff', 
 		padding : 10, 
 		flexDirection: "row", 
-		justifyContent: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        borderTopWidth :StyleSheet.hairlineWidth,
+        borderColor : '#ccc'
 	},
 	label: {
-		color: '#ccc',
 		fontSize: 12,
 		fontStyle: 'italic'
 	}

@@ -22,7 +22,7 @@ export default class FeaturedProduct extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            dataSource : new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
+            dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2 }),
             u_id : null,
             country : null,
             status : false
@@ -32,11 +32,18 @@ export default class FeaturedProduct extends Component {
     GetItem (flower_name) {
         alert(flower_name); 
     }
+  componentWillReceiveProps(nextProps){
+    this.setState({
+        status : nextProps.status,
+        isLoading : !nextProps.status,
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
+    })
+  }
 
-    componentDidMount(){
-        this.getKey()
-        .then( ()=>this.fetchData())
-    }
+    // componentDidMount(){
+    //     this.getKey()
+    //     .then( ()=>this.fetchData())
+    // }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton });    
     }
@@ -56,43 +63,43 @@ export default class FeaturedProduct extends Component {
         }
     }
 
-    fetchData(){ 
-        const {u_id, country } = this.state; 
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+    // fetchData(){ 
+    //     const {u_id, country } = this.state; 
+    //     let formData = new FormData();
+    //     formData.append('u_id', String(u_id));
+    //     formData.append('country', String(country)); 
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-            }
-        fetch(Utils.gurl('MyProfile'), config) 
-        .then((response) => response.json())
-        .then((responseData) => {
-            if(responseData.response.status){
-                this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.response.feature_product),
-                isLoading : false,
-                status : responseData.response.status
-                });
-            }
-            else{
-                this.setState({
-                isLoading : false,
-                status : responseData.response.status
+    //     const config = { 
+    //         method: 'POST', 
+    //         headers: { 
+    //             'Accept': 'application/json', 
+    //             'Content-Type': 'multipart/form-data;',
+    //         },
+    //         body: formData,
+    //         }
+    //     fetch(Utils.gurl('MyProfile'), config) 
+    //     .then((response) => response.json())
+    //     .then((responseData) => {
+    //         if(responseData.response.status){
+    //             this.setState({
+    //             dataSource: this.state.dataSource.cloneWithRows(responseData.response.feature_product),
+    //             isLoading : false,
+    //             status : responseData.response.status
+    //             });
+    //         }
+    //         else{
+    //             this.setState({
+    //             isLoading : false,
+    //             status : responseData.response.status
 
-                })
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
+    //             })
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     })
+    //     .done();
+    // }
     ListViewItemSeparator = () => {
         return (
             <View
@@ -121,7 +128,7 @@ export default class FeaturedProduct extends Component {
                 </View>
             );
         }
-        if (!this.state.status) {
+        if (this.state.dataSource.getRowCount() === 0 ) {
             return this.noItemFound();
         }
 
@@ -144,7 +151,7 @@ export default class FeaturedProduct extends Component {
     renderData(data: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-
+        
         return (
             <View style={{ 
             width : width-30,
@@ -153,7 +160,7 @@ export default class FeaturedProduct extends Component {
             borderWidth : 1, 
             borderColor : "#ccc", 
             borderRadius : 2
-        }}>
+            }}>
                 <Header product_id= {data.product_id}/>
                 <TouchableOpacity style={{ 
                 flexDirection: 'row', 
@@ -167,10 +174,14 @@ export default class FeaturedProduct extends Component {
                     />  
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
                         <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.product_name} </Text>
+                        <View style={{ flexDirection:'row'}}>
+                        <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >Quantity: </Text>
+                        <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} > {data.quantity} </Text>
+                        </View>
                         <Text style={{ fontSize : 12, color : '#ccc'}} > {data.short_description} </Text>
                         <View style={{ flexDirection : "row", justifyContent : 'space-between'}}>
                             <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#f53d3d'}} >Price : </Text>
+                            <Text style={{color : '#fbcdc5'}} >Price : </Text>
                             <Text> {data.special_price} </Text>
                             <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
                             </View>
@@ -180,7 +191,7 @@ export default class FeaturedProduct extends Component {
                     </View>
                 </TouchableOpacity>
                 <Footer 
-                    start_date = {data.start_date}/>
+                    inserted_date = {data.inserted_date}/>
             </View>
         );
     }
@@ -191,7 +202,7 @@ class Header extends Component{
 
     return (
       <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc'}]}>
-      <Text style={{ color : '#f53d3d', paddingLeft: 10}}>Product Id : </Text>
+      <Text style={{ color : '#fbcdc5', paddingLeft: 10}}>Product Id : </Text>
         <Text style={styles.welcome}>{this.props.product_id }</Text>
       </View>
     );
@@ -202,14 +213,12 @@ class Footer extends Component{
     constructor(props){
         super(props);
         this.state = {
-            toggled : true
+            toggled : false
         }
     }
-// componentWillReceiveProps(){
-    // this.setState({
-    // })
-// }
-
+  // componentWillReceiveProps(nextProps){
+  //   // this.setState({user: nextProps.user})
+  // }
     render(){
         return(
         <View style={styles.bottom}>
@@ -220,7 +229,7 @@ class Footer extends Component{
                     onValueChange={ () => this.setState({ toggled: !this.state.toggled })} 
                     value={ this.state.toggled} /> 
                     <View >
-                        <Text style={{ color :'#000', fontSize : 12}}>Display Date : {this.props.start_date}</Text>
+                        <Text style={{ color :'#000', fontSize : 12}}>Display Date : {this.props.inserted_date}</Text>
                     </View>
                 </View>
         )

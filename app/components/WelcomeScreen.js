@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Picker,
+  TouchableOpacity,
   ActivityIndicator,
   Dimensions,
   Image,
@@ -16,6 +16,12 @@ import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import ActionSheet from 'react-native-actionsheet';
+const CANCEL_INDEX = 0;
+const DESTRUCTIVE_INDEX = 0
+
+const countryTitle = 'Select Country'
+const deliveryTitle = 'Select Deliveryarea'
 
 const { width, height } = Dimensions.get('window')
 
@@ -26,14 +32,49 @@ export default class WelcomeScreen extends Component {
         this.gotologin = this.gotologin.bind(this);
 
         this.state = { 
-            userTypes: '', 
+            countries: ["0"], 
+            deliveryareas: ["cancel","Ahmedabad","Gandhinagar"], 
             selectCountry: '',
             animating: true, 
             refreshing: false,
             loaded: false,
-            deliveryarea : ''
-        }
+            deliveryarea : '',
+
+        }    
+        this.handlePress = this.handlePress.bind(this)
+        this.handleDeliveryPress = this.handleDeliveryPress.bind(this)
+        this.showCountrysheet = this.showCountrysheet.bind(this)
+        this.showDelivery = this.showDelivery.bind(this)
     }
+  showCountrysheet() {
+    this.countrySheet.show()
+  }
+  handlePress(i) {
+    if(i === 0){    
+        this.setState({
+            selectCountry: ''
+    })
+    }else{
+    this.setState({
+      selectCountry: i.toString()
+    })}
+  }
+  showDelivery() {
+    this.deliverySheet.show()
+  }
+  handleDeliveryPress(i) {
+    if(i === 0){    
+        this.setState({
+            deliveryarea : ''
+        })
+    }else {
+        this.setState({
+            deliveryarea: i.toString()
+        })
+
+    }
+  }
+
     componentwillMount(){
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
 
@@ -77,11 +118,23 @@ export default class WelcomeScreen extends Component {
         })
         .then((response) => response.json())
         .then((responseData) => { 
-                    // console.warn(JSON.stringify(responseData))
-            this.setState({
-                userTypes: responseData.response.data,
+            var data = responseData.response.data,
+                    length = data.length,
+                    optionsList= []
+                    optionsList.push('Cancel');
+
+                    for(var i=0; i < length; i++) {  
+                        order = data[i]; 
+                        // console.warn(order);
+                        country_name = order.country_name;
+                        optionsList.push(country_name);
+                    }
+
+                    this.setState({
+                countries: optionsList,
                  loaded: true
-        });
+                    })
+
         })
         .catch((error) => {
           console.log(error);
@@ -91,12 +144,40 @@ export default class WelcomeScreen extends Component {
     }
 
     renderLoadingView() {
-        return (
-            <ActivityIndicator  
+        return (<View 
+            style={{ 
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems : 'center', 
+            }}> 
+                <Image
+                style={{
+                    flex: 1,
+                    position: 'absolute',
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                }}
+                source={require('../images/bg_img.jpg')}
+                />
+                    <View style={{ flex:1, justifyContent : 'center', alignItems:'center'}}> 
+                        <Image 
+                        style={{ 
+                            resizeMode : 'center',
+                            width : 200,
+                            height : 200,
+                        }}
+                        source={require('../images/logo.png')} /> 
+                    </View>
+                    <ActivityIndicator  
             style={[styles.centering]} 
             color="#1e90ff" 
             size="large"/>
-            );
+
+    
+            </View>
+                        );
     }
 
     gotologin(){
@@ -105,12 +186,6 @@ export default class WelcomeScreen extends Component {
             Actions.loginPage();
         }
     }
-
-    loadUserTypes() {
-        return this.state.userTypes.map(user => ( 
-            <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} /> 
-        ))
-    } 
 
     render(){ 
         this.gotologin()
@@ -140,48 +215,66 @@ export default class WelcomeScreen extends Component {
                         <Image 
                         style={{ 
                             resizeMode,
-                            // width : 50,
-                            height : '50%'
+                            width : 200,
+                            height : 200,
                         }}
                         source={require('../images/logo.png')} /> 
                     </View>
     
                     <View style={styles.container}>
-                        <View style={styles.row}>
+                        <TouchableOpacity onPress={this.showCountrysheet} style={styles.row}>
+                        <View style={styles.countryIcon}>
+                        <Image 
+                        style={{ 
+                            resizeMode,
+                            width : 25,
+                            height : 25,
+                        }}
+                        source={require('../images/country_icon.png')} />
+                        </View> 
+                        <Text style={{width: width/3}}>{ this.state.selectCountry ? this.state.countries[this.state.selectCountry] : countryTitle}</Text>
                         <FontAwesome 
-                            name="globe" 
-                            size={30} 
+                            name="chevron-down" 
+                            size={20} 
                             color="#FFCC7D" 
-                            style={styles.countryIcon}/>                            
-                            <Picker 
-                            style={{width: width-100, height: 40, color: '#a9d5d1'}} 
-                            mode="dropdown"
-                            selectedValue={this.state.selectCountry}
-                            onValueChange={(itemValue, itemIndex) => 
-                            this.setState({selectCountry: itemValue})}>
-                                <Picker.Item label="Select country" value="" /> 
-                                {this.loadUserTypes()}
-                            </Picker>
-                        </View>
+                            style={{padding:5}}/>
+
+                        </TouchableOpacity>
                     
-                        <View style={styles.row}>
-                            <Ionicons 
-                            name="truck-fast" 
-                            size={30} 
-                            color="#FFCC7D" 
-                            style={styles.countryIcon}/>
-                            <Picker
-                            Header="Select one" 
-                            mode="dropdown"
-                            style={{width: width-100, height: 40, color: '#a9d5d1'}} 
-                            selectedValue={this.state.deliveryarea} 
-                            onValueChange={(deliveryarea) => this.setState({deliveryarea})}> 
-                                <Picker.Item label="Select Delivery Area" value="" /> 
-                                <Picker.Item label="Ahmedabad" value="1" /> 
-                                <Picker.Item label="Gandhinagar" value="2" /> 
-                            </Picker>
+                        <TouchableOpacity onPress={this.showDelivery} style={styles.row}>
+                            <View style={styles.countryIcon}>
+                        <Image 
+                        style={{ 
+                            resizeMode,
+                            width : 25,
+                            height : 25,
+                        }}
+                        source={require('../images/area_icon.png')} />
                         </View>
+                            <Text style={{width: width/3}}>{ this.state.deliveryarea ? this.state.deliveryareas [this.state.deliveryarea] : deliveryTitle}</Text>
+                        <FontAwesome 
+                            name="chevron-down" 
+                            size={20} 
+                            color="#FFCC7D"
+                            style={{padding:5}} 
+                            />
+
+                        </TouchableOpacity>
                 </View>
+                <ActionSheet
+                        ref={o => this.countrySheet = o}
+                        // title={countryTitle}
+                        options={this.state.countries}
+                        cancelButtonIndex={CANCEL_INDEX}
+                        destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                        onPress={this.handlePress}/>
+                <ActionSheet
+                        ref={o => this.deliverySheet = o}
+                        title={deliveryTitle}
+                        options={this.state.deliveryareas}
+                        cancelButtonIndex={CANCEL_INDEX}
+                        destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                        onPress={this.handleDeliveryPress}/>
             </View>
         );
     }
@@ -189,11 +282,9 @@ export default class WelcomeScreen extends Component {
 
 const styles = StyleSheet.create({ 
     container: {
-        flex: 1,
-        top : 20,
-        // justifyContent: 'center',
-        backgroundColor: 'transparent',
-        padding: 20
+        flex:1, 
+        justifyContent : 'center', 
+        alignItems:'center',backgroundColor:'transparent'
     }, 
 
     row: {
@@ -214,7 +305,9 @@ const styles = StyleSheet.create({
         height:40,
         marginLeft :10,
         marginRight :10,
-        paddingTop :5
+        paddingTop :5,
+        justifyContent :'center',
+        alignItems : 'center'
     },
     centering : {
         flex : 1,

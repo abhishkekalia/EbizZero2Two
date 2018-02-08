@@ -122,7 +122,7 @@ export default class ServiceOrder extends Component {
                 renderRow={this.renderData.bind(this)}/>
             );
         return (
-        <View>
+        <View style={{marginBottom : 60}}>
             {listView}
         </View>
  
@@ -206,9 +206,13 @@ var styles = StyleSheet.create({
         backgroundColor: '#F6F6F6'
     },
     header: {
+        height : 40,
         flexDirection: 'row',
         justifyContent: 'space-around',
-        backgroundColor: '#a9d5d1'
+        alignItems : 'center',
+        backgroundColor: '#fff',
+        borderWidth :StyleSheet.hairlineWidth,
+        borderColor : '#fbcdc5'
     },
 
     thumb: {
@@ -222,7 +226,7 @@ var styles = StyleSheet.create({
 
     headerText :{
         fontSize: 12,
-        color : '#fff'
+        color : '#696969'
     },
     bodyText :{
         fontSize: 11,

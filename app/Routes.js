@@ -302,7 +302,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene 
                         key="register" 
                         component={Register} 
-                        title="Registaration" 
+                        title="Create an Acount" 
                         navBar={CustomGenNavBar} 
                         />
                     </Stack>
@@ -310,7 +310,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene 
                         key="vendorRegister" 
                         component={Vendorreg} 
-                        title="Vendor-Registration" 
+                        title="Create an Acount" 
                         navBar={CustomGenNavBar} 
                         />
                     </Stack>

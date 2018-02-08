@@ -256,7 +256,11 @@ class Footer extends Component{
             else{
                 this.props.calldata();
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
 componentWillReceiveProps(){
     this.setState({

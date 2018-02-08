@@ -663,37 +663,7 @@ unCheck(data){
                 }));
               },300);
             }}>Google +</Button>
-          <Button iconSrc={{ uri: EMAIL_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "email"
-                }));
-              },300);
-            }}>Email</Button>
-          <Button
-            iconSrc={{ uri: CLIPBOARD_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                if(typeof shareOptions["url"] !== undefined) {
-                  Clipboard.setString(shareOptions["url"]);
-                  if (Platform.OS === "android") {
-                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
-                  } else if (Platform.OS === "ios") {
-                    AlertIOS.alert('Link Copied to Clipboard');
-                  }
-                }
-              },300);
-            }}>Copy Link</Button>
-          <Button iconSrc={{ uri: MORE_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.open(shareOptions)
-              },300);
-            }}>More</Button>
+                <View  style={{paddingTop:40}} />
         </ShareSheet>
 
             </View>
@@ -860,7 +830,8 @@ unCheck(data){
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#696969' : '#000';
-        let textDecorationLine = data.special_price ? 'line-through' : 'none';  
+        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        let url = '';  
        return (
             <View style={styles.row} > 
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>

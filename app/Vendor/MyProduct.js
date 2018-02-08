@@ -84,11 +84,8 @@ export default class MyProduct extends Component {
                 })
             }
         })
-        .catch((errorMessage, statusCode) => {
-            MessageBarManager.showAlert({
-            message: "error while fetching data",
-            alertType: 'warning',
-            })      
+        .catch((error) => {
+            console.log(error);
         })
         .done();
     }
@@ -269,7 +266,11 @@ class Header extends Component{
                 isLoading : false
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
 
   render() {
@@ -320,7 +321,14 @@ class Footer extends Component{
             else{
                 this.props.calldata();
             }
-        }).done();
+        })
+        .catch((error) => {
+            MessageBarManager.showAlert({
+            message: "error while update data",
+            alertType: 'warning',
+            })      
+        })
+        .done();
     }
 // componentWillReceiveProps(is_approved){
 //     this.setState({

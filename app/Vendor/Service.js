@@ -57,7 +57,7 @@ class Service extends Component {
           
 
                 <SegmentedControlTab
-                    values={['Add Service', 'My Services']}
+                    values={['My Services', 'Add Service']}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -67,9 +67,9 @@ class Service extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <AddService/>}
-                {this.state.customStyleIndex === 1 &&
                     <MyService/>}
+                {this.state.customStyleIndex === 1 &&
+                    <AddService/>}
 
             </View>
         );
