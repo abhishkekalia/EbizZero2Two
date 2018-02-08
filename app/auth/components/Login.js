@@ -93,6 +93,9 @@ class Login extends Component {
             	    loaded: true
         		});
         	}
+		})
+		.catch((error) => {
+            console.log(error);
         }).done();
     }
 
@@ -122,22 +125,22 @@ class Login extends Component {
 			source={require('../../images/login_img.png')}
 			style={{ width : '25%', height : '50%' }}
 			/>	
-			<Text style={{color: '#f53d3d' , fontSize : 10, width : width/2}}> 
+			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '70%', marginTop:20}}> 
 			Use the email address and password used when you created your acount
 			</Text>
 			</View>	
 
-			<View style={{ padding : 20, top : 30}}>		
-				<View style ={[commonStyles.inputcontent,]}>
+			<View style={{ padding : 20, top : 20}}>		
+				<View style ={[commonStyles.inputcontent,{borderColor:'#fbcdc5',borderWidth:0.5}]}>
 
-					<View style ={commonStyles.iconusername}>
+					<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
 						<Ionicons name="ios-mail-outline" 
 						size={30} 
 						color="#900"
 						style= {{ padding: 10}}
 						/>
 						<TextInput
-							style={commonStyles.inputusername}
+							style={[commonStyles.inputusername,{left:6.5}]}
 							onBlur={ () => this.onBlurUser() }
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
@@ -162,7 +165,7 @@ class Login extends Component {
 						style= {{ padding: 10}}
 						/>
 						<TextInput
-							style={commonStyles.inputpassword}
+							style={[commonStyles.inputpassword,{}]}
 							value={this.state.password}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -182,18 +185,18 @@ class Login extends Component {
 				</View>
 
 				{/* <Button title ="Login" onPress={() => this.onSubmit()}  color="#a9d5d1"/> */}
-				<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.onSubmit()}>
+				<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.onSubmit()}>
 					<View style={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
 							 <Text style = {{color:"#FFFFFF"}}>Login</Text>
 					</View>
 				</TouchableOpacity>
 
 				<View style={{alignItems: 'center'}}>
-				<Text style={{ padding : 20 }}>Forgot password</Text>
+				<Text style={{top:10, padding : 20 }}>Forgot your password</Text>
 				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
 				{/* <Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/> */}
-				<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.createAcount.bind(this)}>
+				<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.createAcount.bind(this)}>
 					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
 							 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
 					</View>
@@ -219,15 +222,27 @@ class Login extends Component {
         	<Text style={{ fontSize : 10, width : width/2,}}> 
 			By Signing in you are agreeing to our 
 			</Text>
+			<View style={{flexDirection:'row'}}>
 			<TouchableOpacity 
 			onPress={()=> routes.terms({ 
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
 			<Text style={{color :'#a9d5d1', fontSize : 10, }}>
-			terms and conditions of use and Privacy Policy
+			terms and conditions
 			</Text>
 			</TouchableOpacity>
+			<Text style={{color :'black', fontSize : 10, }}> of use and </Text>
+			<TouchableOpacity 
+			onPress={()=> routes.terms({ 
+  				title: this.state.termsandcondition_title,
+  				description: this.state.termsandcondition_description
+  			})}>
+			<Text style={{color :'#fbcdc5', fontSize : 10, }}>
+			 Privacy Policy
+			</Text>
+			</TouchableOpacity>
+			</View>
 		</View>
 	
 			</View>

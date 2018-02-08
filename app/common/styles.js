@@ -18,7 +18,8 @@ export default StyleSheet.create({
     	flexDirection: 'row', 
     	borderBottomWidth: 0.5,
 		borderColor: '#ccc',
-		backgroundColor : 'transparent'
+		backgroundColor : 'transparent',
+		borderColor:'#fbcdc5'
     },
 
 	iconpassword : {

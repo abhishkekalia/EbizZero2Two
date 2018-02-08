@@ -114,6 +114,9 @@ export default class Slider extends Component<{}> {
             }
         })
         .then(()=>this.props.updateState())
+        .catch((error) => {
+            console.log(error);
+        })
     .done();
 
     }
@@ -141,6 +144,9 @@ export default class Slider extends Component<{}> {
             })
         })
         .then(()=>this.props.updateState())
+        .catch((error) => {
+            console.log(error);
+        })
         .done();
     }
 

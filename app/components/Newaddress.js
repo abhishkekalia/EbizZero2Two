@@ -134,6 +134,7 @@ export default class Newaddress extends Component<{}> {
         .then((responseData) => {
             if(responseData.response.status){
                     EventEmitter.emit("reloadAddressList")
+                    EventEmitter.emit("reloadAddress")
                     routes.pop();
                     
                     MessageBarManager.showAlert({ 

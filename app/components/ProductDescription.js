@@ -13,7 +13,6 @@ import {
   ListView,
   StyleSheet,
   ActivityIndicator,
-  Actions
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -34,6 +33,7 @@ import {
   SinglePickerMaterialDialog,
 } from 'react-native-material-dialog';
 import { material } from 'react-native-typography';
+import EventEmitter from "react-native-eventemitter";
 
 const {width,height} = Dimensions.get('window');
 
@@ -86,6 +86,12 @@ export default class ProductDescription extends Component {
         .then( ()=>this.fetchData())
         .then( ()=>this.fetchAddress())
         .done()
+
+        EventEmitter.removeAllListeners("reloadAddress");
+        EventEmitter.on("reloadAddress", (value)=>{
+            console.log("reloadAddress", value);
+            this.fetchAddress()    
+        });
     }
     onCancel() {
     console.log("CANCEL")
@@ -499,9 +505,17 @@ export default class ProductDescription extends Component {
         />
             </ScrollView>
                  <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-                 <TouchableOpacity onPress={()=> Actions.newaddress({isFromEdit:false})}>
-                 <Text>Add Address</Text>
+                 <View style={{flexDirection:'row', justifyContent:'center', width:'100%'}}>
+                 <View style={{flexDirection:'row', justifyContent:'center', width:'50%', alignItems:'center'}}>
+                 <Text>Select Address</Text>
+                 </View>
+                 <View style={{flexDirection:'row', justifyContent:'center', width:'50%'}}>
+                 <TouchableOpacity style={{padding:10, backgroundColor:'#a9d5d1', alignItems:'center', width:'80%'}} onPress={()=> routes.newaddress({isFromEdit:false})}>
+                 <Text style={{color:'#fff'}}>Add New Address</Text>
                  </TouchableOpacity>
+                 </View>
+                 </View>
+                 
                 {listView}
                 </ShareSheet>
                         <Modal isVisible={this.state.visibleModal}>
@@ -535,7 +549,9 @@ export default class ProductDescription extends Component {
                         </View>
                         <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
                         <Text style={{fontSize:12}}>
-                        {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]}
+                        {/* {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]} */}
+                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                    data.jadda,"\n",data.city," ",data.direction]}
                         </Text>
                     </View>
                 </TouchableOpacity>

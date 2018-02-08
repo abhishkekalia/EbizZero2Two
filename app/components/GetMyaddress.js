@@ -275,7 +275,7 @@ export default class AddressBook extends Component {
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text>You have no Added Address </Text>
-                <TouchableOpacity onPress={()=>routes.newaddress()}><Text>Add From here</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=>routes.newaddress({isFromEdit:false})}><Text>Add From here</Text></TouchableOpacity>
                </View> );
     }
 
@@ -324,6 +324,7 @@ export default class AddressBook extends Component {
                                 </View>
                                 {/* <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} /> */}
                             </View>
+
                             <View style={{ flexDirection: 'row'}}>
                             <Text style={{ fontSize : 10, color : '#a9d5d1'}}>M: </Text>
                             <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>

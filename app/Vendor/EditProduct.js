@@ -5,11 +5,11 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
+    TouchableNativeFeedback,
     Dimensions,
     Button,
     Keyboard,
     ScrollView,
-    AsyncStorage,
     TextInput,
     Image,
     Alert,
@@ -24,70 +24,48 @@ import Utils from 'app/common/Utils';
 import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
 import commonStyles from "./styles";
-import ActionSheet from 'react-native-actionsheet';
 import GetImage from './imageSlider';
-import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import RNFetchBlob from 'react-native-fetch-blob';
-const CANCEL_INDEX = 0
-const DESTRUCTIVE_INDEX = 4
-const title = 'Select Category'
-
-import SelectedImage from './SelectedImage';
-
+import Editimage from './Editimage';
 const { width, height } = Dimensions.get('window');
 
-const INITIAL_STATE = { quantity: '',  Size: ''}
-export default class AddProduct extends Component { 
+export default class EditProduct extends Component { 
     constructor(props) { 
         super(props);
         this.state={
             image: null,
             imageSelect : false,
             avatarSource: null,
-            product_category: '',
-            options : ['0','1'],
-            u_id: null,
-            user_type : null,
-            country : null,
+            product_category: this.props.product_category,
+            u_id: this.props.u_id,
+            country : this.props.country,
             visibleModal: false,
-            additional: false,
             height : '',
-            productname : '',
-            detaildescription : '',
-            shortdescription : '',
-            price : '',
-            special : '',
-            quantity : '',
-            Size : '',
-            quantityRows : [],
-            sizeRows : [],
+            productname : this.props.product_name,
+            detaildescription : this.props.detail_description,
+            shortdescription : this.props.short_description,
+            price : this.props.price,
+            special : this.props.special_price,
+            Size : this.props.size,
+            quantityRows : this.props.quantity,
+            sizeRows : this.props.size,
             rows : [] ,
             Imagepath : [],
-            is_feature : 0      
+            is_feature : this.props.is_feature ,
+            removed_images : []     
         }
     this.inputs = {};
-    this.chips = {};
 
 
     this.handlePress = this.handlePress.bind(this)
-    this.showActionSheet = this.showActionSheet.bind(this)
   }
 
     focusNextField(id) { 
         this.inputs[id].focus();
     }
-        focuschipField(id) { 
-        this.chips[id].focus();
-    }
 
-
-  showActionSheet() {
-    this.ActionSheet.show()
-  }
- 
   handlePress(i) {
     this.setState({
       product_category: i
@@ -95,12 +73,24 @@ export default class AddProduct extends Component {
   }
 
   componentDidMount(){
-        this.getKey()
-        .then(()=>this.getCategory())
-        .done();
+    var Items = this.props.productImages,
+            length = Items.length,
+            organization,
+            Select =[],
+            user,
+            i;
+
+        for (i = 0; i < length; i++) {
+            organization = Items[i];
+            Select.push ({uri:organization.image});                 
+        }
+        this.setState({
+            rows : Select
+        })
+
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });    
+        // routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });    
     }
    _renderLeftButton = () => {
         return(
@@ -110,70 +100,18 @@ export default class AddProduct extends Component {
    _renderRightButton = () => {
         return(
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-            <Text style={{color : '#fff'}}>ADD</Text>
+            <Text style={{color : '#fff'}}>Upload</Text>
             </TouchableOpacity>
         );
     };
 
-    async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
-                u_id: response.userdetail.u_id ,
-                country: response.userdetail.country ,
-            }); 
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-    }
-
-    getCategory(){
-        const { u_id, country,} = this.state; 
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        } 
-            fetch(Utils.gurl('categoryList'), config) 
-            .then((response) => response.json())
-            .then((responseData) => {
-                if(responseData.response.status){
-                    var data = responseData.response.data,
-                    length = data.length,
-                    optionsList= []
-
-                    optionsList.push('Cancel');
-
-                    for(var i=0; i < length; i++) {  
-                        order = data[i]; 
-                        category_name = order.category_name;
-                        optionsList.push(category_name);
-                    }
-
-                    this.setState({
-                        options : optionsList
-                    })
-                }
-            })
-            .catch((errorMessage, statusCode) => {
-            })
-
-            .done();
-    }
     validate(){
-        const { product_category , productname, 
+        const { productname, 
             shortdescription, detaildescription, price, 
             discount,final_price, quantityRows, 
             Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state; 
 
-        let path = Imagepath.length
+        let path = rows.length
         if(path < 1){
             MessageBarManager.showAlert({
                 message: "Plese Select At Lest Single Image",
@@ -181,8 +119,6 @@ export default class AddProduct extends Component {
                 })      
             return false
             }
-        if (!product_category){
-        } 
         if (!productname.length){
             MessageBarManager.showAlert({
                 message: "Plese Insert Product Name",
@@ -226,23 +162,7 @@ export default class AddProduct extends Component {
                 })      
             return false
         }
-        if (!quantityRows.length > 0){
-            MessageBarManager.showAlert({
-                message: "Plese Enter Quantity of Items",
-                alertType: 'warning',
-                })      
-            return false
-             
-        } 
-        if (!sizeRows.length > 0){
-            MessageBarManager.showAlert({
-                message: "Plese Enter Size of Items",
-                alertType: 'warning',
-                })      
-            return false
-             
-        } 
-       
+      
         return true;
     }
 
@@ -251,13 +171,14 @@ export default class AddProduct extends Component {
             product_category , productname, 
             shortdescription, detaildescription, price, 
             discount,final_price, quantityRows, 
-            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, u_id, country} = this.state;
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images} = this.state;
+        const { u_id, country } = this.props;
         if(this.validate()) { 
             this.setState({
                 visibleModal : true
             });
         
-            RNFetchBlob.fetch('POST', Utils.gurl('productAdd'),{ 
+            RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{ 
                 Authorization : "Bearer access-token", 
                 'Accept': 'application/json', 
                 'Content-Type': 'multipart/form-data;',
@@ -273,23 +194,46 @@ export default class AddProduct extends Component {
             { name : 'special_price', data: String(special)}, 
             { name : 'discount', data: String(10)}, 
             { name : 'final_price', data: String(special)}, 
+            { name : 'product_id', data: String(this.props.product_id)}, 
+            { name : 'removed_images', data: removed_images.toString()}, 
             { name : 'quantity', data: quantityRows.toString()}, 
+            { name : 'size_id', data: sizeRows.toString()}, 
             { name : 'size', data: sizeRows.toString()}, 
+            { name : 'quantity', data: sizeRows.toString()}, 
             { name : 'is_feature', data: String(is_feature)}, 
             ])
             .uploadProgress((written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%') 
             })
-            .then((res)=>{ 
-                this.setState({
-                    visibleModal : false
-                })
+            .then((res)=>{
+                var getdata = JSON.parse(responseData.data);
+               if(getdata.status){
+                    MessageBarManager.showAlert({
+                        message: "Product Update Successfully",
+                        alertType: 'warning',
+                    }) 
+                    this.setState({
+                        visibleModal : false
+                    })
+                }else{
+                    MessageBarManager.showAlert({
+                        message: "Product Upload Failed",
+                        alertType: 'warning',
+                    }) 
+                    this.setState({
+                        visibleModal : false
+                    })
+                }
             })
             .catch((errorMessage, statusCode) => {
-                MessageBarManager.showAlert({
-                message: errorMessage,
-                alertType: 'warning',
-                })      
+                routes.product();
+                // message: "Failed Due to Some communication Error",
+                // MessageBarManager.showAlert({
+                // alertType: 'warning',
+                // })
+                this.setState({
+                        visibleModal : false
+                    })      
             })
             .done();
         }
@@ -316,24 +260,20 @@ export default class AddProduct extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-                let path = response.uri
-                tempImg = path.replace(/^file:\/\//, '');
-
-                let source = { 
-                    name : 'product_images[]', 
-                    filename : response.fileName, 
-                    data: RNFetchBlob.wrap(tempImg), 
-                    uri: response.uri , 
-                    // name: response.fileName, 
-                    type: 'image/jpg'};
-                            
+    
+       let source = { 
+        name : 'product_images[]', 
+        filename : response.fileName, 
+        data: RNFetchBlob.wrap(response.uri), 
+        uri: response.uri , 
+        type: 'image/jpg'};
                 let uri = response.uri;
-                    this.setState({
-                        avatarSource: source,
-                        imageSelect : true,
-                        videoSelect : false,
-                        // image : path,
-                    });
+                this.setState({
+                    avatarSource: source,
+                    imageSelect : true,
+                    videoSelect : false,
+                    // image : path,
+                });
                 var newStateArray = this.state.rows.slice(); 
                 var newPathArray = this.state.Imagepath.slice(); 
                 newStateArray.push(source); 
@@ -342,7 +282,7 @@ export default class AddProduct extends Component {
                         rows: newStateArray,
                         Imagepath: newPathArray
                     });
-                }
+            }
         });
     }
     productCont(){
@@ -361,58 +301,29 @@ export default class AddProduct extends Component {
             additional : false
         });
     }
+    getResponse(rows){
+        this.setState({rows});
+    }
+    getRemoveresponse(result){
+        var arrayvar = this.state.removed_images.slice()
+        arrayvar.push(result)
+        this.setState({ removed_images: arrayvar })
+    }
+
     render() {
         const { imageSelect, quantityRows, sizeRows} = this.state; 
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
         
         let is_feature;
-        if(this.state.is_feature === '0' ){ is_feature = false} else { is_feature = true}
+        if(this.state.is_feature === '0' ){ 
+            is_feature = false} else { is_feature = true}
 
         return (
             <ScrollView 
-            contentContainerStyle={{backgroundColor: 'transparent',
-            margin :10,paddingBottom:30}}//commonStyles.container} 
+            contentContainerStyle={commonStyles.container} 
             showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'handled'}
-            automaticallyAdjustContentInsets={false}
-            directionalLockEnabled = {true}
-            horizontal = {false}
-            >
-                <View style={commonStyles.ImageAdd}>
-                    <Text style={{color: borderColorImage, marginBottom : 10}}>Select Product Image</Text>  
-                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Product Picture</Text>  
-                    <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
-                        <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} /> 
-                    </View>
-                    <View style={{  top: 10, flexDirection:'row'}}>
-                        { this.state.avatarSource === null ? undefined :
-                            <SelectedImage 
-                            productImages={this.state.rows} 
-                            />
-                        }
-                    </View>
-                    <TouchableOpacity style={commonStyles.addCat} onPress={this.showActionSheet}>
-                        <Text>{ this.state.product_category ? this.state.options[this.state.product_category] : "Add Product category"}</Text>
-                        {/* <ActionSheet
-                        ref={o => this.ActionSheet = o}
-                        title={title}
-                        options={this.state.options}
-                        cancelButtonIndex={CANCEL_INDEX}
-                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                        onPress={this.handlePress}/> */}
-
-
-<ActionSheet
-                        ref={o => this.ActionSheet = o}
-                        title={title}
-                        options={this.state.options}
-                        cancelButtonIndex={CANCEL_INDEX}
-                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                        onPress={this.handlePress}/>
-
-                    </TouchableOpacity>
-                </View>
+            keyboardShouldPersistTaps={'handled'}>
+                
                 <View style={commonStyles.formItems}> 
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Name *</Text>
@@ -514,8 +425,7 @@ export default class AddProduct extends Component {
                         onChangeText={(special) => this.setState({special})}
                         />
                     </View>
-                    <View style={[commonStyles.feature,{paddingTop:10,paddingRight:10}]}
-                    >
+                    <View style={commonStyles.feature}>
                         <Text style={commonStyles.label}>Product Is Feature *</Text>
                         <Switch
                         value={is_feature}
@@ -529,83 +439,41 @@ export default class AddProduct extends Component {
                         backgroundInactive={'gray'}
                         circleActiveColor={'#30a566'}
                         circleInActiveColor={'#000000'}/>
-
                     </View>
-                    <Text style={commonStyles.label}>
-                        Please enter size,quantity inputs respectively.ex Size: 8yr,10yr,12yr Quantity: 50,120,100
-                    </Text>
-                    <View style={commonStyles.chip}> 
-                        <View>
-                            <View style={commonStyles.textField}>
-                                <Text style={commonStyles.label}>Quantity *</Text>
-                                <Text style={{ color : '#000', left : 20 }}>{quantityRows.toString()}</Text>
-                            </View>
-                            <View style={commonStyles.textField}>
-                                <Text style={commonStyles.label}>Size *</Text>
-                                <Text style={{ color : '#000',left : 20}}>{sizeRows.toString()}</Text>
-                            </View>
-                        </View>
-                        <TouchableOpacity style={{
-                            backgroundColor : '#ccc',
-                            padding : 10,
-                            borderRadius : 3,
-                            top : 5
-                        }}
-                        onPress={() => this.setState({ additional: true,})}>
-                            <Text style={{fontSize : 12}}>Add Quantity & Size</Text>
-                        </TouchableOpacity> 
+                   
+                    <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
+                    <TouchableNativeFeedback
+                    onPress={this.selectPhotoTapped.bind(this)}
+                    background={TouchableNativeFeedback.SelectableBackground()}>
+                    
+                    <View style={{ }}>
+                        <Feather  
+                            name="upload-cloud" size= {30} style={{ padding:20 }}/>
+                            <Text>Click here</Text> 
+                    </View>
+                    </TouchableNativeFeedback>
+                        <Editimage 
+                            productImages={this.state.rows} 
+                            callback={this.getResponse.bind(this)}
+                            getremovedata= {this.getRemoveresponse.bind(this)}
+                            />
                     </View>
                 </View>
-
-                    <Modal isVisible={this.state.additional}>
-                    <View style={{alignItems : 'center', padding:10, backgroundColor : '#fff'}}>
-                        <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10}}>Please Enter Quantity and Size Of Items</Text> 
-                        <Text style={{color :"#a9d5d1" , width : width/2,bottom : 10}}>Quantity :</Text> 
-                        <TextInput
-                            style={[commonStyles.inputs, { bottom : 20}]}
-                            value={this.state.quantity}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            keyboardType={'numeric'}
-                            placeholder="Quantity"
-                            maxLength={3}
-                            onSubmitEditing={() => { 
-                                this.focusNextField('two');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => { 
-                                this.inputs['one'] = input;
-                            }}
-                            onChangeText={(quantity) => this.setState({quantity})}
-                        />
-                        <Text style={{color :"#a9d5d1", width : width/2, bottom : 10}}>Size :</Text> 
-                        <TextInput
-                            style={[commonStyles.inputs, {bottom : 20}]}
-                            value={this.state.Size}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            keyboardType={'default'}
-                            placeholder="Size"
-                            maxLength={15}
-                            onSubmitEditing={() => { 
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => { 
-                                this.inputs['two'] = input;
-                            }}
-                            onChangeText={(Size) => this.setState({Size})}
-                        />
-                        
-                        <Button title="submit" onPress={()=>this.productCont()} color="#a9d5d1"/>                    
-                </View>
-            </Modal>
+            <TouchableOpacity onPress={() => this.uploadTocloud() } style={{ 
+                height:54,
+                marginTop : 20,
+                justifyContent :'center',
+                alignItems :'center', 
+                backgroundColor:'#a9d5d1'
+            }} >
+            <Text style={{color : '#fff', fontWeight:'bold'}}>Edit Product</Text>
+            </TouchableOpacity>
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                     <CirclesLoader />
                     
                 </View>
             </Modal>
-            <KeyboardSpacer/>
 
             </ScrollView>
         )

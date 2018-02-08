@@ -21,6 +21,7 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Picker } from 'react-native-picker-dropdown';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const { width, height } = Dimensions.get('window')
 
@@ -38,12 +39,11 @@ const INITIAL_STATE = {
 	twitter_id : '',
 	instagram_id : '',
 	snapchat_id	: '',		
-
 };
 const options = [
 	{ label:'Male', value: 'male' },
-	{ label:'Female', value: 'female'},
-	{ label:'Other', value: 'other'}];
+    { label:'Female', value: 'female'},
+    { label:'Other', value: 'other' }];
 
 class Vendorreg extends Component {
 
@@ -101,6 +101,9 @@ class Vendorreg extends Component {
                 userTypes: responseData.response.data,
                  loaded: true
         });
+		})
+		.catch((error) => {
+            console.log(error);
         }).done();
     }
 
@@ -128,7 +131,7 @@ class Vendorreg extends Component {
 			testID="Login" 
 			keyboardShouldPersistTaps={'handled'}>
 			<View>
-				<View style ={[commonStyles.registerContent]}>
+				<View style ={[commonStyles.registerContent,{borderColor:'#fbcdc5'}]}>
 					<View style ={commonStyles.iconusername}>
 		
 						<TextInput 
@@ -249,12 +252,12 @@ class Vendorreg extends Component {
 						/>
 
 					</View>
-					<TouchableOpacity style ={[commonStyles.show, { flexDirection: 'row'}]} onPress={()=> this.eye()}>
+					<TouchableOpacity style ={[commonStyles.show, { flexDirection: 'row',borderColor:'#fbcdc5'}]} onPress={()=> this.eye()}>
 							<Icon name= {icon} size={25} style={{ right : 20}}/>
 							<Text>Show Password </Text>
 					</TouchableOpacity>
 
- 					<View style={{borderBottomWidth: 0.5, borderColor: '#ccc'}}>
+ 					<View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
  				       	<Text/>
         				<SegmentedControls
         				  tint= {'#a9d5d1'}
@@ -307,7 +310,7 @@ class Vendorreg extends Component {
                     </View>
 				</View>
 				<Text style={{ paddingTop:5,paddingBottom:5}}>Add Social Media Acount</Text>
-				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
+				<View style ={[commonStyles.registerContent, {marginBottom : 10,borderColor: '#fbcdc5'}]}>
 					<View style ={[commonStyles.iconusername, { alignItems : 'center'}]}>
 							<Ionicons name="sc-facebook" size={25} color="#3b5998"  style={commonStyles.social}/>
 						<TextInput
@@ -403,6 +406,7 @@ class Vendorreg extends Component {
 							 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
 					</View>
 				</TouchableOpacity>
+				<KeyboardSpacer/>
 			</ScrollView>
 		);
 	}

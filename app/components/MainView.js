@@ -1151,6 +1151,7 @@ export default class MainView extends Component {
         let color = data.special_price ? '#696969' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';  
         let url =  data.productImages[0] ? data.productImages[0].image : "null"
+
        return (
             <View style={styles.row} > 
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>

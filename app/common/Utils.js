@@ -2,8 +2,8 @@ import { AsyncStorage } from 'react-native';
 
 let Utils = {
     gurl: (usersPath)=> {
-        // return `http://solutiontrackers.com/dev-a/zerototwo/index.php/Webservice/${usersPath}`;
-        return `http://192.168.0.123/zerototwo/index.php/Webservice/${usersPath}`;
+        return `http://solutiontrackers.com/dev-a/zerototwo/index.php/Webservice/${usersPath}`;
+        // return `http://192.168.0.123/zerototwo/index.php/Webservice/${usersPath}`;
 
     },
 
@@ -23,6 +23,7 @@ let Utils = {
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
+
     },
 
 
@@ -47,7 +48,6 @@ let Utils = {
     logout(){
         AsyncStorage.removeItem('data', (err, result) => {
             return result; 
-            console.warn(result); 
         }); 
     }
 };

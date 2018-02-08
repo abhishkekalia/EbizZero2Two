@@ -18,6 +18,7 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window')
 const options = [
@@ -112,6 +113,7 @@ export default class Editmyprofile extends Component<{}> {
         fetch(Utils.gurl('editProfile'), config) 
         .then((response) => response.json())
         .then((responseData) => {
+            EventEmitter.emit("reloadAddressProfile")
             routes.pop();
         })
        .catch((error) => {
@@ -222,7 +224,7 @@ export default class Editmyprofile extends Component<{}> {
         value={this.state.phone_no} 
         keyboardType={'numeric'}
         onSubmitEditing={() => { 
-                                this.submit();
+            this.submit();
         }}
         returnKeyType={ "done" } 
         ref={ input => { 
@@ -230,12 +232,13 @@ export default class Editmyprofile extends Component<{}> {
         }}
         onChangeText={(text) => this.setState({ phone_no: text })} />
         </View>
-                <Button 
-          onPress = {this.submit.bind(this)}
-            title="Submit"
-            color="orange"
-            />
-
+        <View style={{justifyContent:'center', alignItems:'center'}}>
+        <TouchableOpacity style={{justifyContent:'center', alignItems:'center',backgroundColor:'#a9d5d1', height:40, width:'90%', borderRadius:5}} 
+        onPress = {this.submit.bind(this)}
+        >
+            <Text style={{color:'#fff', fontSize:18}}>Submit</Text>
+        </TouchableOpacity>
+        </View>
         </ScrollView>
 
         </View>
@@ -257,7 +260,9 @@ const styles = StyleSheet.create({
     height : 40,
     borderColor : "#ccc",
     borderBottomWidth :StyleSheet.hairlineWidth,
-    width :width,
+    width :width-60,
+    paddingLeft: 5,
+    paddingRight: 5
     // textAlign: 'center',
   },
   instructions: {

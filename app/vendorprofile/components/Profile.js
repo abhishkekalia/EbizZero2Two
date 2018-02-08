@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage ,NetInfo} from "r
 import { Actions} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
-import Entypo from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
 import Marketing from '../../Vendor/marketing'
@@ -18,7 +18,9 @@ class Profile extends Component {
             address : [],
             country : null,
             email : null,
-            phone_no : null
+            phone_no : null,
+            data : [],
+            marketing_campaign : []
         };
     }
     componentwillMount(){
@@ -96,7 +98,9 @@ class Profile extends Component {
         	    this.setState({ 
         	       	status : responseData.response.status,
         	       	dataSource : responseData.response.data,
-        	       	address : responseData.response.address
+        	       	address : responseData.response.address,
+                    data : responseData.response.feature_product,
+                    marketing_campaign : responseData.response.marketing_campaign
         	        });
         	}else{
         	    this.setState({ 
@@ -108,10 +112,6 @@ class Profile extends Component {
           console.log(error);
         })       
         .done();
-    }
-    signOut(){
-    const {identity, logout} = this.props;
-// ( Utils.logout()),logout
     }
 
 	render() {
@@ -128,39 +128,34 @@ class Profile extends Component {
 							size={25} 
 							style={{ 
 								padding :5, 
-								width: 30,
-								height :30,
+								width: 35,
+								height :35,
 								backgroundColor : '#ccc',
 								alignItems : 'center', 
-								borderRadius : 30 ,
-								// borderWidth:1
+								borderRadius : 17 ,
 							}}/>
 						</View>
 
 						<View style={{flexDirection : 'column'}}>
-							<Text style={[styles.label, { color : '#696969'}]}>{dataSource.fullname}</Text>
-							<Text style={[styles.label, { color : '#696969'}]}>{this.state.email}</Text>
-							<Text style={[styles.label, { color : '#fbcdc5'}]}>Contact: {dataSource.mobile}</Text>
+                            <Text style={[styles.label, { color : '#696969'}]}>{dataSource.fullname}</Text>
+                            <Text style={[styles.label, { color : '#a9d5d1'}]}>Product Manager</Text>
+                            <View style={{flexDirection:'row'}}>
+                            <Text style={[styles.label, { color : '#fbcdc5'}]}> E: </Text>
+                            <Text style={[styles.label, { color : '#696969'}]}>{this.state.email}</Text>
+							</View>
+                            <View style={{flexDirection:'row'}}>
+                            <Text style={[styles.label, { color : '#fbcdc5'}]}> P: </Text>
+                            <Text style={[styles.label, { color : '#a9d5d1'}]}>{dataSource.mobile}</Text>
+                            </View>
 						</View>
 					</View>
-
-					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} 
-					onPress={()=> Actions.editProfile({
-						title : this.state.dataSource.fullname,
-						fullname : this.state.dataSource.fullname ,
-						representative_name : this.state.dataSource.representative_name,
-						address : this.state.dataSource.address,
-						gender : this.state.dataSource.gender,
-						mobile : this.state.dataSource.mobile,
-						email : this.state.dataSource.email
-					})} >
-						<Entypo name="edit" size={25} color="#87cefa"/>
-					</TouchableOpacity >
 				</View>
-				
-				<Marketing/>
-				<TouchableOpacity onPress={()=>( Utils.logout()),logout} style={styles.setings}>
-					<Text>Logout</Text>
+				<Text>Marketing</Text>
+				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign}/>
+				<TouchableOpacity 
+                onPress={()=>( Utils.logout()),logout}
+                style={styles.logout}>
+					<Text style={{ color: "#fbcdc5"}}>Logout</Text>
 				</TouchableOpacity>
 
 			</View>
@@ -178,15 +173,16 @@ const styles = StyleSheet.create({
 		borderWidth : 1,
 		borderColor :'#ccc',
 	},
-	setings : { 
-		top : 5, 
-		backgroundColor : '#ccc', 
+	logout : { 
+		backgroundColor : '#fff', 
 		padding : 10, 
 		flexDirection: "row", 
-		justifyContent: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        borderTopWidth :StyleSheet.hairlineWidth,
+        borderColor : '#ccc'
 	},
 	label: {
-		color: '#ccc',
 		fontSize: 12,
 		fontStyle: 'italic'
 	}

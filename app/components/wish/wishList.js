@@ -350,7 +350,7 @@ export default class WishList extends Component {
                   if (Platform.OS === "android") {
                     ToastAndroid.show('Link copiado al portapapeles', ToastAndroid.SHORT);
                   } else if (Platform.OS === "ios") {
-                    AlertIOS.alert('Link copiado al portapapeles');
+                    AlertIOS.alert('Link Copied');
                   }
                 }
               },300);

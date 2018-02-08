@@ -5,6 +5,7 @@ import { Actions} from "react-native-router-flux";
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
+import EventEmitter from "react-native-eventemitter";
 
 class Profile extends Component {
 	constructor(props) {
@@ -25,7 +26,13 @@ class Profile extends Component {
     componentDidMount(){
 	    this.getKey()
 	    .then(()=>this.getAddress())
-	    .done()
+		.done()
+		
+		EventEmitter.removeAllListeners("reloadAddressProfile");
+        EventEmitter.on("reloadAddressProfile", (value)=>{
+            console.log("reloadAddressProfile", value);
+            this.getAddress()    
+        });
     }
     componentWillMount() {
         Actions.refresh({ right: this._renderRightButton,});    
@@ -72,6 +79,9 @@ class Profile extends Component {
             	dataSource : responseData.response.data,
             	address : responseData.response.address
             });
+		})
+		.catch((error) => {
+            console.log(error);
         })
         .done();
     }
@@ -81,12 +91,7 @@ class Profile extends Component {
 			return (
 				<View>
 					<Text  style={{ fontSize :8}}> 
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum 
+					There is no address. 
 					</Text>
 				</View>
 			)
@@ -114,23 +119,21 @@ class Profile extends Component {
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 					<View style={{ flexDirection : 'row', }}>
-						<View style={{ width :60, height:60, justifyContent: 'center', alignItems : 'center'}}>
+						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'green'}}>
 							<Entypo 
 							name="user" 
-							size={25} 
+							size={15} 
 							style={{ 
 								padding :5, 
-								width: 30,
-								height :30,
-								backgroundColor : '#ccc',
+								backgroundColor : 'transparent',
 								alignItems : 'center', 
 								borderRadius : 30 ,
 								// borderWidth:1
 							}}/>
 						</View>
 
-						<View style={{flexDirection : 'column'}}>
-							<Text style={[styles.label, { color : '#ccc'}]}>{dataSource.fullname}</Text>
+						<View style={{flexDirection : 'column',marginTop:3}}>
+							<Text style={[styles.label, { color : '#ccc', fontSize:17}]}>{dataSource.fullname}</Text>
 							<Text style={[styles.label, { color : '#ccc'}]}>{this.state.email}</Text>
 							<Text style={[styles.label, { color : '#ff6347'}]}>Contact: {dataSource.mobile}</Text>
 						</View>
@@ -146,7 +149,7 @@ class Profile extends Component {
 						mobile : this.state.dataSource.mobile,
 						email : this.state.dataSource.email
 					})} >
-						<Entypo name="edit" size={25} color="#87cefa"/>
+						<Entypo name="edit" size={25} color="#a9d5d1"/>
 					</TouchableOpacity >
 				</View>
 				

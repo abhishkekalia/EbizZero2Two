@@ -61,7 +61,7 @@ class OrderList extends Component {
                     borderRadius={0}
                     tabsContainerStyle={{ height: 50, backgroundColor: '#a9d5d1' }}
                     tabStyle={{ backgroundColor: '#fff', borderWidth: 0 }}
-                    activeTabStyle={{ backgroundColor: '#f53d3d' }}
+                    activeTabStyle={{ backgroundColor: '#fbcdc5' }}
                     tabTextStyle={{ color: '#ccc', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
@@ -111,7 +111,5 @@ const styles = StyleSheet.create({
         marginTop: 24
     }
 })
-
-
 
 export default OrderList

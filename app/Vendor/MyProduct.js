@@ -84,11 +84,8 @@ export default class MyProduct extends Component {
                 })
             }
         })
-        .catch((errorMessage, statusCode) => {
-            MessageBarManager.showAlert({
-            message: "error while fetching data",
-            alertType: 'warning',
-            })      
+        .catch((error) => {
+            console.log(error);
         })
         .done();
     }
@@ -163,7 +160,25 @@ export default class MyProduct extends Component {
                 backgroundColor : "#fff",
                 borderBottomWidth : 1, 
                 borderColor : "#ccc", 
-                }}>
+                }}
+                onPress={()=>routes.editproduct({
+                    u_id : this.state.u_id,
+                    country : this.state.country,
+                    product_id: data.product_id,
+                    product_category:data.product_category,
+                    product_name: data.product_name,
+                    detail_description: data.detail_description,
+                    short_description: data.short_description,
+                    price: data.price,
+                    special_price: data.special_price,
+                    quantity: data.quantity,
+                    size: data.size,
+                    discount: data.discount,
+                    final_price: data.final_price,
+                    is_feature: data.is_feature,
+                    productImages: data.productImages
+                })}
+                >
                     <Image style={[styles.thumb, {margin: 10}]} 
                     resizeMode={"stretch"} 
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
@@ -251,7 +266,11 @@ class Header extends Component{
                 isLoading : false
                 })
             }
-        }).done();
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
 
   render() {
@@ -302,7 +321,14 @@ class Footer extends Component{
             else{
                 this.props.calldata();
             }
-        }).done();
+        })
+        .catch((error) => {
+            MessageBarManager.showAlert({
+            message: "error while update data",
+            alertType: 'warning',
+            })      
+        })
+        .done();
     }
 // componentWillReceiveProps(is_approved){
 //     this.setState({

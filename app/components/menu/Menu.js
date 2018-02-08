@@ -9,7 +9,8 @@ import {
     ViewPropTypes,
     // Button,
     AsyncStorage,
-    TouchableHighlight
+    TouchableHighlight,
+    TouchableOpacity
 } from 'react-native';
 import * as authActions from '../../auth/auth.actions';
 import { Actions } from 'react-native-router-flux';
@@ -18,6 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
 import LinearGradient from 'react-native-linear-gradient';
+
 import Share, {ShareSheet, Button} from 'react-native-share';
 
 const { width, height } = Dimensions.get('window')
@@ -35,6 +37,8 @@ class Menu extends React.Component {
         const {identity, logout} = this.props;
         return ( 
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}> 
+                <TouchableOpacity 
+						onPress={Actions.profile}>
                 <View style={styles.avatarContainer}> 
                     <View style={styles.username}>
                     <View style= {styles.guest}>
@@ -43,7 +47,7 @@ class Menu extends React.Component {
                     </View>
                     <Text style={{ position: 'absolute' , paddingLeft : width/3, paddingTop : 75, color:"#fff", marginTop:10}}>{identity.username}</Text>
                 </View>
-                
+                </TouchableOpacity>
                 <View style={[styles.badge, styles.seprator]}> 
                             <Ionicons 
                             name="ios-notifications" 
@@ -97,7 +101,6 @@ class Menu extends React.Component {
                 <Text
                 onPress={Actions.sync}
                 style={[styles.item, styles.seprator]}> Rate us on App Store</Text>    
-
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={()=>( Utils.logout()),logout}
@@ -292,7 +295,6 @@ const styles = StyleSheet.create({
     },
     guest : {
         backgroundColor : '#a9d5d1',
-        fontSize : 15,
         width : 50,
         height : 50,
         borderRadius : 50,

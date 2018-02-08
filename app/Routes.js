@@ -56,6 +56,8 @@ import MenuIcon from './images/imgpsh.png';
 
 // -------------vendor ----------
 import Product from './Vendor/Product';
+import EditProduct from './Vendor/EditProduct';
+import EditService from './Vendor/EditService';
 import Service from './Vendor/Service';
 import Order from './Vendor/Order';
 import ProductVendor from './Vendor/ProductVendor';
@@ -132,7 +134,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     // tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
                     tabBarPosition={'bottom'}
 
-                    activeBackgroundColor='#a9d5d1' 
+                    activeBackgroundColor='#fff' 
                     inactiveBackgroundColor='#fff'
                     lazy
                     // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
@@ -217,7 +219,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
             key="vendortab" 
             hideNavBar 
             initial={vendor}
-            type={ActionConst.REPLACE}
+            // type={ActionConst.REPLACE}
             >
                 <Tabs 
                 tabs
@@ -308,7 +310,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene 
                         key="register" 
                         component={Register} 
-                        title="Registaration" 
+                        title="Create an Acount" 
                         navBar={CustomGenNavBar} 
                         />
                     </Stack>
@@ -316,8 +318,23 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene 
                         key="vendorRegister" 
                         component={Vendorreg} 
-                        title="Vendor-Registration" 
+                        title="Create an Acount" 
                         navBar={CustomGenNavBar} 
+                        />
+                    </Stack>
+
+                    <Stack key="editproduct" navBar={CustomGenNavBar} >
+                        <Scene 
+                        key="editproduct" 
+                        component={EditProduct} 
+                        title="EditProduct" 
+                        />
+                    </Stack>
+                    <Stack key="editservice" navBar={CustomGenNavBar} >
+                        <Scene 
+                        key="editservice" 
+                        component={EditService} 
+                        title="EditService" 
                         />
                     </Stack>
                     <Stack key="AddressLists" hideNavBar={true} >
