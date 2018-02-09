@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-import { 
-    StyleSheet, 
-    ActivityIndicator, 
-    ListView, 
-    Text, 
-    View, 
-    Image, 
+import {
+    StyleSheet,
+    ActivityIndicator,
+    ListView,
+    Text,
+    View,
+    Image,
     Platform,
     Dimensions,
-    TouchableOpacity, 
-    AsyncStorage, 
+    TouchableOpacity,
+    AsyncStorage,
     Switch
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
-
- const { width, height } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 
 export default class FeaturedProduct extends Component {
    constructor(props) {
@@ -28,9 +27,8 @@ export default class FeaturedProduct extends Component {
             status : false
         }
     }
- 
     GetItem (flower_name) {
-        alert(flower_name); 
+        alert(flower_name);
     }
   componentWillReceiveProps(nextProps){
     this.setState({
@@ -45,39 +43,39 @@ export default class FeaturedProduct extends Component {
     //     .then( ()=>this.fetchData())
     // }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton });    
+        routes.refresh({ right: this._renderRightButton });
     }
     _renderRightButton = () => {
         return null
-    }; 
+    };
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
-    // fetchData(){ 
-    //     const {u_id, country } = this.state; 
+    // fetchData(){
+    //     const {u_id, country } = this.state;
     //     let formData = new FormData();
     //     formData.append('u_id', String(u_id));
-    //     formData.append('country', String(country)); 
+    //     formData.append('country', String(country));
 
-    //     const config = { 
-    //         method: 'POST', 
-    //         headers: { 
-    //             'Accept': 'application/json', 
+    //     const config = {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
     //             'Content-Type': 'multipart/form-data;',
     //         },
     //         body: formData,
     //         }
-    //     fetch(Utils.gurl('MyProfile'), config) 
+    //     fetch(Utils.gurl('MyProfile'), config)
     //     .then((response) => response.json())
     //     .then((responseData) => {
     //         if(responseData.response.status){
@@ -115,7 +113,7 @@ export default class FeaturedProduct extends Component {
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
                 <Text>You Have No Featured Product</Text>
-            </View> 
+            </View>
         );
     }
 
@@ -139,7 +137,7 @@ export default class FeaturedProduct extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
-                renderSeparator= {this.ListViewItemSeparator} 
+                renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
         return (
@@ -151,28 +149,45 @@ export default class FeaturedProduct extends Component {
     renderData(data: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-        
+
         return (
-            <View style={{ 
+            <View style={{
             width : width-30,
             flexDirection: 'column' ,
-            marginTop : 2, 
-            borderWidth : 1, 
-            borderColor : "#ccc", 
+            marginTop : 2,
+            borderWidth : 1,
+            borderColor : "#ccc",
             borderRadius : 2
             }}>
                 <Header product_id= {data.product_id}/>
-                <TouchableOpacity style={{ 
-                flexDirection: 'row', 
+                <TouchableOpacity style={{
+                flexDirection: 'row',
                 backgroundColor : "#fff",
-                borderBottomWidth : 1, 
-                borderColor : "#ccc", 
-                }}>
-                    <Image style={[styles.thumb, {margin: 10}]} 
-                    resizeMode={"stretch"} 
+                borderBottomWidth : 1,
+                borderColor : "#ccc",
+                }}
+                onPress={()=>routes.editproduct({
+                    u_id : this.state.u_id,
+                    country : this.state.country,
+                    product_id: data.product_id,
+                    product_category:data.product_category,
+                    product_name: data.product_name,
+                    detail_description: data.detail_description,
+                    short_description: data.short_description,
+                    price: data.price,
+                    special_price: data.special_price,
+                    quantity: data.quantity,
+                    size: data.size,
+                    discount: data.discount,
+                    final_price: data.final_price,
+                    is_feature: data.is_feature,
+                    productImages: data.productImages
+                })}>
+                    <Image style={[styles.thumb, {margin: 10}]}
+                    resizeMode={"stretch"}
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
-                    />  
-                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
+                    />
+                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
                         <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.product_name} </Text>
                         <View style={{ flexDirection:'row'}}>
                         <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >Quantity: </Text>
@@ -190,7 +205,7 @@ export default class FeaturedProduct extends Component {
                         </View>
                     </View>
                 </TouchableOpacity>
-                <Footer 
+                <Footer
                     inserted_date = {data.inserted_date}/>
             </View>
         );
@@ -222,12 +237,12 @@ class Footer extends Component{
     render(){
         return(
         <View style={styles.bottom}>
-                    <Switch 
-                      // onTintColor="#00ff00"  
-                      thumbTintColor="#fff" 
-                      tintColor="#000" 
-                    onValueChange={ () => this.setState({ toggled: !this.state.toggled })} 
-                    value={ this.state.toggled} /> 
+                    <Switch
+                      // onTintColor="#00ff00"
+                      thumbTintColor="#fff"
+                      tintColor="#000"
+                    onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
+                    value={ this.state.toggled} />
                     <View >
                         <Text style={{ color :'#000', fontSize : 12}}>Display Date : {this.props.inserted_date}</Text>
                     </View>
@@ -235,10 +250,10 @@ class Footer extends Component{
         )
     }
 }
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        padding : 10 
+        padding : 10
     },
 
     row: {
@@ -263,8 +278,8 @@ const styles = StyleSheet.create({
 
 
     lowerButton :{
-        // alignItems : 'center', 
-        borderWidth : 0.5, 
+        // alignItems : 'center',
+        borderWidth : 0.5,
         borderColor : "#ccc",
         padding : 5,
         borderRadius : 5

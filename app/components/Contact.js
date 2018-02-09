@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { 
-    View, 
-    Text, 
-    TextInput, 
+import {
+    View,
+    Text,
+    TextInput,
     TouchableOpacity,
-    Dimensions, 
+    Dimensions,
     Button ,
     Platform,
     StyleSheet,
@@ -17,15 +17,15 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-import { Picker } from 'react-native-picker-dropdown';
+// import { Picker } from 'react-native-picker-dropdown';
 
 export default class Contact extends Component<{}> {
     constructor(props) {
-        super(props);        
-        this.state={ 
-            name: '', 
-            email: '', 
-            issue: '', 
+        super(props);
+        this.state={
+            name: '',
+            email: '',
+            issue: '',
             message: '',
             u_id: '',
             country : '',
@@ -33,29 +33,29 @@ export default class Contact extends Component<{}> {
         this.inputs = {};
 
     }
-    focusNextField(id) { 
+    focusNextField(id) {
         this.inputs[id].focus();
     }
 
     componentDidMount(){
         this.getKey()
         .done()
-        
+
         // var o = {"0":"1","1":"2","2":"3","3":"abhi"};
         // var arr = Object.keys(o).map(function(k) { return o[k] });
         // console.warn(arr)
     }
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
                 user_type: response.userdetail.user_type ,
                 name: response.userdetail.fullname ,
-                email: response.userdetail.email 
-            }); 
+                email: response.userdetail.email
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -95,28 +95,28 @@ export default class Contact extends Component<{}> {
             return false
         }
             return true;
-    } 
+    }
     contactUS(){
             Keyboard.dismiss();
 
         const { u_id,country, name, email , issue, message } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('name', String(name)); 
-        formData.append('email', String(email)); 
-        formData.append('issue_type', String(issue)); 
-        formData.append('message', String(message)); 
-            const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;' 
+        formData.append('country', String(country));
+        formData.append('name', String(name));
+        formData.append('email', String(email));
+        formData.append('issue_type', String(issue));
+        formData.append('message', String(message));
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;'
                 },
                 body: formData,
             }
-        if (this.validate()) {            
-        fetch(Utils.gurl('contactUs'), config)  
+        if (this.validate()) {
+        fetch(Utils.gurl('contactUs'), config)
         .then((response) => response.json())
         .then((responseData) => {
            MessageBarManager.showAlert({
@@ -143,11 +143,11 @@ export default class Contact extends Component<{}> {
                     autoCorrect={false}
                     placeholder="Name"
                     maxLength={140}
-                            onSubmitEditing={() => { 
+                            onSubmitEditing={() => {
                                 this.focusNextField('two');
                             }}
                             returnKeyType={ "next" }
-                            ref={ input => { 
+                            ref={ input => {
                                 this.inputs['one'] = input;
                             }}
                     onChangeText={(name) => this.setState({name})}/>
@@ -158,17 +158,17 @@ export default class Contact extends Component<{}> {
                     autoCorrect={false}
                     placeholder="Email Address"
                     maxLength={140}
-                            onSubmitEditing={() => { 
+                            onSubmitEditing={() => {
                                 this.focusNextField('three');
                             }}
                             returnKeyType={ "next" }
-                            ref={ input => { 
+                            ref={ input => {
                                 this.inputs['two'] = input;
                             }}
                     onChangeText={(email) => this.setState({email})}/>
                 <View style={{
-                    borderWidth : 1, 
-                    borderColor : "#ccc", 
+                    borderWidth : 1,
+                    borderColor : "#ccc",
                     borderRadius : 5,
                     margin: 5,
                     height:40,
@@ -178,9 +178,8 @@ export default class Contact extends Component<{}> {
                     <Picker
                     mode="dropdown"
                     selectedValue={this.state.issue}
-                    onValueChange={(itemValue, itemIndex) => this.setState({issue: itemValue})}
-                    style={{fontSize:15}}
-                    >
+                    onValueChange={(itemValue, itemIndex) => this.setState({issue: itemValue})
+                    }>
                         <Picker.Item label="Select Issue" value="" />
                         <Picker.Item label="Damage" value="1" />
                         <Picker.Item label="Poor Quality" value="2" />
@@ -188,17 +187,16 @@ export default class Contact extends Component<{}> {
                     </Picker>
                 </View>
                 <TextInput
-                    style={[styles.input,{height:100}]}
+                    style={styles.input}
                     numberOfLines={4}
                     value={this.state.message}
                     underlineColorAndroid = 'transparent'
                     autoCorrect={false}
                     placeholder="Message"
-                    multiline={true}
                     maxLength={140}
 
                             returnKeyType={ "done" }
-                            ref={ input => { 
+                            ref={ input => {
                                 this.inputs['three'] = input;
                             }}
                     onChangeText={(message) => this.setState({message})}
@@ -206,21 +204,21 @@ export default class Contact extends Component<{}> {
                 {/* <Button title="Send Request" onPress={()=> this.contactUS()}/> */}
 
                 <TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.contactUS()}>
-                    <View style={{backgroundColor:"#a9d5d1", width:'95%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+                    <View style={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
                              <Text style = {{color:"#FFFFFF"}}>Submit</Text>
                     </View>
                 </TouchableOpacity>
 
 
-                <Text style={{ padding : 10, fontSize :15, borderBottomWidth:0.5, borderColor : '#ccc'}}>CUSTOMER SERVICE</Text>
-                <Text style={{ paddingLeft : 10, color : '#a9d5d1' , fontSize : 15}}>Contact Us 24/7</Text>
-                <View style={{ flexDirection: 'row', alignItems:'center', paddingLeft:10,marginTop:10}}>
-                    <Feather name="phone-call" size={13} color="#900"/>
-                    <Text style={{paddingLeft:10}}>+971 55 123456789</Text>
+                <Text style={{ padding : 10, fontSize :15, borderBottomWidth:0.5, borderColor : '#ccc'}}>Customer Service</Text>
+                <Text style={{ color : '#87cefa' , fontSize : 15}}>Contact Us 24/7</Text>
+                <View style={{ flexDirection: 'row', alignItems:'center'}}>
+                    <Feather name="phone-call" size={25} color="#900"/>
+                    <Text>+971 55 123456789</Text>
                 </View>
-                <View style={{ flexDirection: 'row', alignItems :'center', paddingLeft:10, marginTop:5}}>
-                    <Ionicons name="ios-stopwatch-outline" size={15} color="#900"/>
-                    <Text style={{paddingLeft:10}}>Daily 8 Am to 12 PM</Text>
+                <View style={{ flexDirection: 'row', alignItems :'center'}}>
+                    <Ionicons name="ios-stopwatch-outline" size={25} color="#900"/>
+                    <Text>Daily 8 Am to 12 Pm</Text>
                 </View>
             </ScrollView>
         );
@@ -241,10 +239,9 @@ const styles = StyleSheet.create({
       borderRadius : 5,
       // width : width,
       height : 40,
-      fontSize: 15,
+      fontSize: 20,
       textAlign: 'left',
       margin: 5,
-      padding:5
     },
     instructions: {
       textAlign: 'center',

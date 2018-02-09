@@ -41,18 +41,18 @@ const buttons = [
     {
       text: 'button one',
       action: () => console.log('pressed button one'),
-    }, 
+    },
     {
       text: 'button two',
-      action: () => console.log('pressed button two')            
+      action: () => console.log('pressed button two')
     }
 ];
 
 export default class ProductDescription extends Component {
-    constructor (props) { 
-        super(props); 
-        this.state = { 
-            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }), 
+    constructor (props) {
+        super(props);
+        this.state = {
+            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             imgList : [] ,
             data : [],
             count : '1',
@@ -60,8 +60,8 @@ export default class ProductDescription extends Component {
             u_id: null,
             country : null,
             user_type: null,
-            size: '', 
-            color: '', 
+            size: '',
+            color: '',
             quantity:'',
             status : false,
             visible: false,
@@ -74,11 +74,11 @@ export default class ProductDescription extends Component {
         this.loadHandle = this.loadHandle.bind(this)
     }
 
-    loadHandle (i) { 
-        let loadQueue = this.state.loadQueue 
+    loadHandle (i) {
+        let loadQueue = this.state.loadQueue
         loadQueue[i] = 1
-        this.setState({ 
-            loadQueue 
+        this.setState({
+            loadQueue
         })
     }
     componentDidMount(){
@@ -90,7 +90,7 @@ export default class ProductDescription extends Component {
         EventEmitter.removeAllListeners("reloadAddress");
         EventEmitter.on("reloadAddress", (value)=>{
             console.log("reloadAddress", value);
-            this.fetchAddress()    
+            this.fetchAddress()
         });
     }
     onCancel() {
@@ -105,11 +105,12 @@ export default class ProductDescription extends Component {
   }
 
     validate(){
-        const { size, count, color} = this.state; 
+        const { size, count, color} = this.state;
 
         if (!size.length)
         {
             MessageBarManager.showAlert({
+              title:'',
                 message: "Please Select Size",
                 alertType: 'alert',
             })
@@ -127,49 +128,49 @@ export default class ProductDescription extends Component {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-                user_type: response.userdetail.user_type 
-            }); 
+                user_type: response.userdetail.user_type
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
-    async openAndroidDatePicker() { 
-        try { 
-            const {action, year, month, day} = await DatePickerAndroid.open({ 
-                date: new Date() 
-            }); 
-        } catch ({code, message}) { 
-            console.warn('Cannot open date picker', message); 
+    async openAndroidDatePicker() {
+        try {
+            const {action, year, month, day} = await DatePickerAndroid.open({
+                date: new Date()
+            });
+        } catch ({code, message}) {
+            console.warn('Cannot open date picker', message);
         }
     }
         async addToOrder(value){
-        try { 
+        try {
             const { u_id, country,data ,count} = this.state;
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('order_detail', JSON.stringify(value));
             formData.append('amount', String(data.special_price*count));
-            const config = { 
-                   method: 'POST', 
-                   headers: { 
-                        'Accept': 'application/json', 
+            const config = {
+                   method: 'POST',
+                   headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data;',
                    },
                    body: formData,
               }
-            fetch(Utils.gurl('addToOrder'), config)  
+            fetch(Utils.gurl('addToOrder'), config)
             .then((response) => response.json())
-            .then((responseData) => { 
+            .then((responseData) => {
             if(responseData.status){
-            // console.warn("calling my Fatureh") 
+            // console.warn("calling my Fatureh")
               routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
               }else{
                 this.removeLoader
@@ -177,80 +178,80 @@ export default class ProductDescription extends Component {
             })
             .catch((error) => {
               console.log(error);
-            })       
+            })
             .done();
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
 
     }
-    removeLoader = () => this.setState({ 
+    removeLoader = () => this.setState({
         visibleModal : false
     })
 
     addtoCart(){
-    const { size, color, count } = this.state; 
+    const { size, color, count } = this.state;
         const {u_id, country, user_type } = this.state;
         if (this.validate()) {
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(this.props.product_id)); 
-        formData.append('size', String(size)); 
-        formData.append('color', String(color)); 
-        formData.append('quantity', String(count)); 
+        formData.append('country', String(country));
+        formData.append('product_id', String(this.props.product_id));
+        formData.append('size', String(size));
+        formData.append('color', String(color));
+        formData.append('quantity', String(count));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        
-        fetch(Utils.gurl('addTocart'), config) 
+
+        fetch(Utils.gurl('addTocart'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                MessageBarManager.showAlert({ 
-                    message: responseData.data.message, 
-                    alertType: 'alert', 
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    alertType: 'alert',
                     stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
                 })
                 // routes.shopingCart()
         }else{
-            MessageBarManager.showAlert({ 
-                message: responseData.data.message, 
-                alertType: 'alert', 
+            MessageBarManager.showAlert({
+                message: responseData.data.message,
+                alertType: 'alert',
                 stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
             })
         }
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
     }
-    fetchData(){ 
+    fetchData(){
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(user_type));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(this.props.product_id)); 
+        formData.append('country', String(country));
+        formData.append('product_id', String(this.props.product_id));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        
-        fetch(Utils.gurl('productDetail'), config) 
+
+        fetch(Utils.gurl('productDetail'), config)
         .then((response) => response.json())
         .then((responseData) => {
             var Items = responseData.data.productImages,
@@ -262,10 +263,10 @@ export default class ProductDescription extends Component {
 
         for (i = 0; i < length; i++) {
             organization = Items[i];
-            Select.push (organization.image)                 
+            Select.push (organization.image)
         }
-            if(responseData.status){ 
-                this.setState({ 
+            if(responseData.status){
+                this.setState({
                     imgList : Select,
                     data : responseData.data,
                     Size : responseData.data.size,
@@ -275,49 +276,49 @@ export default class ProductDescription extends Component {
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
     fetchAddress(){
         const { u_id, country } = this.state;
-        
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        fetch(Utils.gurl('addressList'), config)  
+        fetch(Utils.gurl('addressList'), config)
         .then((response) => response.json())
-        .then((responseData) => { 
+        .then((responseData) => {
             if(responseData.status){
                 this.setState({
-                addressStatus : responseData.status, 
+                addressStatus : responseData.status,
                  dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 });
             }else{
                 this.setState({
-                addressStatus : responseData.status, 
+                addressStatus : responseData.status,
                 });
             }
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
-        
+
     }
 
     order (delivery_address_id){
         const{ data , size, color, count  } = this.state;
             var Select =[];
-            
+
         var today = new Date();
         var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
@@ -332,10 +333,10 @@ export default class ProductDescription extends Component {
                         "vendor_id":data.vendor_id,
                         "price":(data.special_price*count),
                         "delivery_datetime": currentdate,
-                        "order_date": nextdate 
+                        "order_date": nextdate
                     })
             this.addToOrder(Select)
-            .then(()=>this.setState({ 
+            .then(()=>this.setState({
                 visible:false,
                 visibleModal: true,
             }))
@@ -345,8 +346,8 @@ export default class ProductDescription extends Component {
     renderLoading() {
         return (
             <ActivityIndicator
-            style={styles.centering}  
-            color="#a9d5d1" 
+            style={styles.centering}
+            color="#a9d5d1"
             size="small"/>
             );
     }
@@ -383,15 +384,15 @@ export default class ProductDescription extends Component {
         //     return this.noItemFound();
         // }
         const renderedButtons =  this.state.Size.map((b, i) => {
-            return <Button  
-            color = {this.state.sizeindex === i ? '#a9d5d1' : '#ccc'} 
-            key={b.size} 
-            title={b.size} 
-            onPress={()=>this.setState({ 
+            return <Button
+            color = {this.state.sizeindex === i ? '#a9d5d1' : '#ccc'}
+            key={b.size}
+            title={b.size}
+            onPress={()=>this.setState({
                 size: b.size,
                 sizeindex : i
             })}/>;
-        });  
+        });
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -406,26 +407,26 @@ export default class ProductDescription extends Component {
             );
         return (
             <View style={styles.container}>
-                <ScrollView 
+                <ScrollView
                 keyboardShouldPersistTaps="always"
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/2}}>
-                <Slider imgList={this.state.imgList} 
-                updateState={this.props.updateState}  
-                wishlist= {this.props.is_wishlist } 
-                u_id= {this.state.u_id } 
+                <Slider imgList={this.state.imgList}
+                updateState={this.props.updateState}
+                wishlist= {this.props.is_wishlist }
+                u_id= {this.state.u_id }
                 country= {this.state.country }
                 product_id={this.props.product_id}/>
                 </View>
 
-                <View style={{ 
+                <View style={{
                     flex: 1,
                     flexDirection: 'column',
                     justifyContent: 'space-between'}}>
 
                     <View>
                         <Text style={{ padding : 10, color : '#696969', fontSize:15}}>{this.state.data.product_name}</Text>
-                        <Vendor 
+                        <Vendor
                         vendor_id= {this.state.data.vendor_id}
                         u_id={this.state.u_id}
                         country={this.state.country}
@@ -445,10 +446,10 @@ export default class ProductDescription extends Component {
                         </View>
                         <View>
                         <View style={{flexDirection:"row", padding : 10, alignItems:'center',height:40}}>
-                        <Icon 
+                        <Icon
                         name="select-all"
                         size={25}
-                        color="#FFCC7D" 
+                        color="#FFCC7D"
                         />
                         <Text style={{color:'#a9d5d1'}}>Select Size </Text>
                         </View>
@@ -456,23 +457,23 @@ export default class ProductDescription extends Component {
                              {renderedButtons}
                         </View>
                         <View style={{flexDirection : 'row',alignItems:'center', justifyContent:'space-around'}}>
-                            <TouchableOpacity 
+                            <TouchableOpacity
                             style={{ borderWidth: StyleSheet.hairlineWidth, borderColor:'#a9d5d1', padding : 10, borderRadius: 10}}
                             onPress={() => this.setState({ selectColor: true })}>
                                 <Text>Select Color</Text>
                             </TouchableOpacity>
                             <View style={{backgroundColor: this.state.color ? this.state.color.toString() : '#fff', width:25, height:25}} />
                             <View style={{
-                            flexDirection: 'row', 
-                            justifyContent: 'center', 
+                            flexDirection: 'row',
+                            justifyContent: 'center',
                             // alignItems: 'center',
                             padding :10
                         }}>
-                        <TouchableOpacity  style={styles.qtybutton} onPress= {()=> this.decrement()}> 
+                        <TouchableOpacity  style={styles.qtybutton} onPress= {()=> this.decrement()}>
                             <Text style={styles.text}>-</Text>
                         </TouchableOpacity>
                         <Text style={styles.qtybutton}>{count}</Text>
-                        <TouchableOpacity  style={styles.qtybutton} onPress={()=> this.setState({count: parseInt(this.state.count)+1})}> 
+                        <TouchableOpacity  style={styles.qtybutton} onPress={()=> this.setState({count: parseInt(this.state.count)+1})}>
                             <Text style={styles.text}>+</Text>
                         </TouchableOpacity>
                         </View>
@@ -485,7 +486,7 @@ export default class ProductDescription extends Component {
                             </Text>
                             <Text> {this.state.data.detail_description}
                             </Text>
-                            
+
                         </View>
                         <Text style={{padding:10}}>more Product by ZeroToTwo</Text>
                         <AllItem product_category={this.state.data.product_category}/>
@@ -515,7 +516,7 @@ export default class ProductDescription extends Component {
                  </TouchableOpacity>
                  </View>
                  </View>
-                 
+
                 {listView}
                 </ShareSheet>
                         <Modal isVisible={this.state.visibleModal}>
@@ -530,9 +531,9 @@ export default class ProductDescription extends Component {
 
     decrement () {
         if(this.state.count > 1) {
-            this.setState({ 
-                count : parseInt(this.state.count)-1 
-            }); 
+            this.setState({
+                count : parseInt(this.state.count)-1
+            });
         }
     }
 
@@ -544,13 +545,13 @@ export default class ProductDescription extends Component {
         return (
                 <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}} onPress= {()=>this.order(data.address_id)}>
                     <View style={{ flexDirection: 'column' }}>
-                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>    
+                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
                             <Text style={{ fontSize: 15}}>{data.full_name}</Text>
                         </View>
                         <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
                         <Text style={{fontSize:12}}>
                         {/* {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]} */}
-                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
                     data.jadda,"\n",data.city," ",data.direction]}
                         </Text>
                     </View>
@@ -574,29 +575,29 @@ class Vendor extends Component{
         this.fetchData();
     }
 
-    search = (nameKey, myArray)=>{ 
-        for (var i = 0; i < myArray.length; i++) { 
-            if (myArray[i].u_id === nameKey) { 
+    search = (nameKey, myArray)=>{
+        for (var i = 0; i < myArray.length; i++) {
+            if (myArray[i].u_id === nameKey) {
                 return myArray[i].ShopName;
             }
         }
     }
 
-    fetchData(){ 
-        const {u_id, country } = this.props; 
+    fetchData(){
+        const {u_id, country } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('country', String(country));
+
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
-        fetch(Utils.gurl('listOfAllShop'), config) 
+        fetch(Utils.gurl('listOfAllShop'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -612,7 +613,7 @@ class Vendor extends Component{
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
 
     }
@@ -637,7 +638,7 @@ const styles = {
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
-    description: { 
+    description: {
         width : width/3
     },
     centering: {
@@ -660,7 +661,7 @@ const styles = {
         fontSize: 12
     },
 
-    
+
     slide: {
         flex: 1,
         justifyContent: 'center',

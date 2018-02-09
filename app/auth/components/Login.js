@@ -1,13 +1,13 @@
-import React, { 
-	Component, 
+import React, {
+	Component,
 	PropTypes
 } from 'react';
-import { 
-	View, 
+import {
+	View,
 	Text,
-	ScrollView, 
-	TextInput, 
-	TouchableOpacity, 
+	ScrollView,
+	TextInput,
+	TouchableOpacity,
 	Button,
 	Platform,
 	Image,
@@ -31,9 +31,9 @@ class Login extends Component {
 	constructor() {
 		super();
 		this.state = {
-            termsandcondition_title:'',
-			termsandcondition_description:'', 
-			email: '', 
+      termsandcondition_title:'',
+			termsandcondition_description:'',
+			email: '',
 			password: '',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			loading: false,
@@ -42,13 +42,13 @@ class Login extends Component {
 	    this.inputs = {};
 	}
 	componentwillMount(){
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
 
         NetInfo.isConnected.fetch().done(
             (isConnected) => { this.setState({ netStatus: isConnected }); }
             );
 
-        NetInfo.isConnected.fetch().done((isConnected) => { 
+        NetInfo.isConnected.fetch().done((isConnected) => {
             if (isConnected)
             {
             	this.gettermandcondition()
@@ -58,23 +58,24 @@ class Login extends Component {
         });
     }
 	componentDidMount(){
+		this.gettermandcondition()
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
-        NetInfo.isConnected.fetch().done((isConnected) => { 
-            this.setState({ 
-                netStatus: isConnected 
-            }); 
+        NetInfo.isConnected.fetch().done((isConnected) => {
+            this.setState({
+                netStatus: isConnected
+            });
         });
     }
-    handleConnectionChange = (isConnected) => { 
-        this.setState({ netStatus: isConnected }); 
-        {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({ 
+    handleConnectionChange = (isConnected) => {
+        this.setState({ netStatus: isConnected });
+        {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({
                 message: `Internet connection not available`,
                 alertType: 'error',
             })
         }
     }
 
-	focusNextField(id) { 
+	focusNextField(id) {
     	this.inputs[id].focus();
     }
     gettermandcondition(){
@@ -82,10 +83,10 @@ class Login extends Component {
              method: "GET", headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }   
+            }
         })
         .then((response) => response.json())
-        .then((responseData) => { 
+        .then((responseData) => {
         	if (responseData.status) {
             	this.setState({
             	    termsandcondition_title: responseData.data.termsandcondition_title,
@@ -99,12 +100,12 @@ class Login extends Component {
         }).done();
     }
 
-	onBlurUser() { 
+	onBlurUser() {
 		const { email } = this.state;
-		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
+		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
 
-		if(reg.test(email) === false) 
-			{ 
+		if(reg.test(email) === false)
+			{
 			MessageBarManager.showAlert({
             message: "Plese Enter Valid Email",
             alertType: 'alert',
@@ -117,25 +118,25 @@ class Login extends Component {
 		const {errorStatus, loading} = this.props;
 		return (
 			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
-			<View style={{ flex : 1, 
+			<View style={{ flex : 1,
 				flexDirection: 'column',
-                justifyContent: 'center', 
+                justifyContent: 'center',
                 alignItems : 'center'}}>
-			<Image 
+			<Image
 			source={require('../../images/login_img.png')}
 			style={{ width : '25%', height : '50%' }}
-			/>	
-			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '70%', marginTop:20}}> 
+			/>
+			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '70%', marginTop:20}}>
 			Use the email address and password used when you created your acount
 			</Text>
-			</View>	
+			</View>
 
-			<View style={{ padding : 20, top : 20}}>		
+			<View style={{ padding : 20, top : 20}}>
 				<View style ={[commonStyles.inputcontent,{borderColor:'#fbcdc5',borderWidth:0.5}]}>
 
 					<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
-						<Ionicons name="ios-mail-outline" 
-						size={30} 
+						<Ionicons name="ios-mail-outline"
+						size={30}
 						color="#900"
 						style= {{ padding: 10}}
 						/>
@@ -148,19 +149,19 @@ class Login extends Component {
 							keyboardType={'email-address'}
 							placeholder="Email Address"
 							maxLength={140}
-							onSubmitEditing={() => { 
+							onSubmitEditing={() => {
           						this.focusNextField('two');
           					}}
           					returnKeyType={ "next" }
- 					        ref={ input => { 
+ 					        ref={ input => {
  					        	this.inputs['one'] = input;
  					        }}
  					        onChangeText={(email) => this.setState({email})}
 						/>
 					</View>
 					<View style ={commonStyles.iconpassword}>
-						<Ionicons name="ios-lock-outline" 
-						size={30} 
+						<Ionicons name="ios-lock-outline"
+						size={30}
 						color="#900"
 						style= {{ padding: 10}}
 						/>
@@ -172,11 +173,11 @@ class Login extends Component {
 							placeholder="Password"
 							secureTextEntry
 							maxLength={140}
-							onSubmitEditing={() => { 
+							onSubmitEditing={() => {
           						this.onSubmit();
           					}}
           					returnKeyType={ "done" }
- 					        ref={ input => { 
+ 					        ref={ input => {
  					        	this.inputs['two'] = input;
  					        }}
  					        onChangeText={(password) => this.setState({password})}
@@ -205,26 +206,26 @@ class Login extends Component {
   					<Modal isVisible={this.state.visibleModal}>
   					<View style={{alignItems : 'center', padding:10}}>
 				    {errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
-				    
-				    {errorStatus ? <Text 
-					onPress = {()=> this.setState({ visibleModal : false})} 
+
+				    {errorStatus ? <Text
+					onPress = {()=> this.setState({ visibleModal : false})}
 					style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
-					
+
 				</View>
         	</Modal>
 		</View>
-		<View style={{ 
+		<View style={{
 			flex: 1,
         	flexDirection: 'column',
         	justifyContent: 'center',
         	alignItems: 'center'
         }}>
-        	<Text style={{ fontSize : 10, width : width/2,}}> 
-			By Signing in you are agreeing to our 
+        	<Text style={{ fontSize : 10, width : width/2,}}>
+			By Signing in you are agreeing to our
 			</Text>
 			<View style={{flexDirection:'row'}}>
-			<TouchableOpacity 
-			onPress={()=> routes.terms({ 
+			<TouchableOpacity
+			onPress={()=> routes.terms({
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
@@ -233,8 +234,8 @@ class Login extends Component {
 			</Text>
 			</TouchableOpacity>
 			<Text style={{color :'black', fontSize : 10, }}> of use and </Text>
-			<TouchableOpacity 
-			onPress={()=> routes.terms({ 
+			<TouchableOpacity
+			onPress={()=> routes.terms({
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
@@ -244,20 +245,20 @@ class Login extends Component {
 			</TouchableOpacity>
 			</View>
 		</View>
-	
+
 			</View>
 
 		);
 	}
-	createAcount () { 
+	createAcount () {
 		routes.registerPage();
 	}
 
 	validate(){
 		const {email, password} = this.state;
-		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
-		if(reg.test(email) === false) 
-		{ 
+		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+		if(reg.test(email) === false)
+		{
 			MessageBarManager.showAlert({
             message: "Please Enter Valid Email",
             alertType: 'alert',
@@ -273,7 +274,7 @@ class Login extends Component {
 			return false
 		}
 			return true;
-	} 
+	}
 	onSubmit() {
 	Keyboard.dismiss();
 		const {email, password, os} = this.state;

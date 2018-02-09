@@ -3857,6 +3857,10 @@ react-native-modal@^4.1.1:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
 
+react-native-percentage-circle@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-percentage-circle/-/react-native-percentage-circle-1.0.6.tgz#773fb65043faf269ce6b59c9faa8c11a33e1e8dd"
+
 react-native-picker-dropdown@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/react-native-picker-dropdown/-/react-native-picker-dropdown-0.1.1.tgz#f1154c65e9280ef9bded11b5fc9caaff32a14f82"

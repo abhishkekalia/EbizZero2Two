@@ -11,7 +11,7 @@ class Profile extends Component {
 	constructor(props) {
         super(props);
 
-        this.getKey = this.getKey.bind(this);        
+        this.getKey = this.getKey.bind(this);
         this.state={
         	dataSource: [],
         	status : false,
@@ -27,15 +27,15 @@ class Profile extends Component {
 	    this.getKey()
 	    .then(()=>this.getAddress())
 		.done()
-		
+
 		EventEmitter.removeAllListeners("reloadAddressProfile");
         EventEmitter.on("reloadAddressProfile", (value)=>{
             console.log("reloadAddressProfile", value);
-            this.getAddress()    
+            this.getAddress()
         });
     }
     componentWillMount() {
-        Actions.refresh({ right: this._renderRightButton,});    
+        Actions.refresh({ right: this._renderRightButton,});
     }
    _renderRightButton = () => {
         return(
@@ -44,16 +44,16 @@ class Profile extends Component {
     };
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
+        try {
+            const value = await AsyncStorage.getItem('data');
             var response = JSON.parse(value);
 
-            this.setState({ 
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 email: response.userdetail.email,
                 phone_no: response.userdetail.phone_no,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -62,19 +62,19 @@ class Profile extends Component {
     	const { u_id, country } = this.state;
     	let formData = new FormData();
     	formData.append('u_id', String(u_id));
-    	formData.append('country', String(country)); 
-    		const config = { 
-               	method: 'POST', 
-               	headers: { 
-               		'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;' 
+    	formData.append('country', String(country));
+    		const config = {
+               	method: 'POST',
+               	headers: {
+               		'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;'
                 },
             	body: formData,
             }
-        fetch(Utils.gurl('MyProfile'), config)  
+        fetch(Utils.gurl('MyProfile'), config)
         .then((response) => response.json())
-        .then((responseData) => { 
-        this.setState({ 
+        .then((responseData) => {
+        this.setState({
             	status : responseData.response.status,
             	dataSource : responseData.response.data,
             	address : responseData.response.address
@@ -90,8 +90,8 @@ class Profile extends Component {
 		if(this.state.address == '') {
 			return (
 				<View>
-					<Text  style={{ fontSize :8}}> 
-					There is no address. 
+					<Text  style={{ fontSize :8}}>
+					There is no address.
 					</Text>
 				</View>
 			)
@@ -105,7 +105,7 @@ class Profile extends Component {
 							M:{address.mobile_number}
 							</Text>
 							<Text style={{fontSize:12}}>
-							{[address.block_no ," ", address.street , " ", address.houseno,"\n", address.appartment, " ",address.floor, " ", 
+							{[address.block_no ," ", address.street , " ", address.houseno,"\n", address.appartment, " ",address.floor, " ",
                     address.jadda,"\n",address.city," ",address.direction]}
 							</Text>
 						</View>);
@@ -120,13 +120,13 @@ class Profile extends Component {
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 					<View style={{ flexDirection : 'row', }}>
 						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'green'}}>
-							<Entypo 
-							name="user" 
-							size={15} 
-							style={{ 
-								padding :5, 
+							<Entypo
+							name="user"
+							size={15}
+							style={{
+								padding :5,
 								backgroundColor : 'transparent',
-								alignItems : 'center', 
+								alignItems : 'center',
 								borderRadius : 30 ,
 								// borderWidth:1
 							}}/>
@@ -139,7 +139,7 @@ class Profile extends Component {
 						</View>
 					</View>
 
-					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }} 
+					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }}
 					onPress={()=> Actions.editProfile({
 						title : this.state.dataSource.fullname,
 						fullname : this.state.dataSource.fullname ,
@@ -152,29 +152,29 @@ class Profile extends Component {
 						<Entypo name="edit" size={25} color="#a9d5d1"/>
 					</TouchableOpacity >
 				</View>
-				
+
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
 					<View style={{ padding : 20, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
-						<TouchableOpacity style={{ 
-							flexDirection : 'row', 
+						<TouchableOpacity style={{
+							flexDirection : 'row',
 							justifyContent: 'space-between',
-							alignItems : 'center', 
-							paddingRight:10, 
+							alignItems : 'center',
+							paddingRight:10,
 							paddingLeft:10,
-							borderBottomWidth : 1, 
+							borderBottomWidth : 1,
 							borderColor : '#ccc',
-							height :40  
+							height :40
 						}}  onPress={()=>Actions.getmyaddress()} >
 							<Text style={{ fontSize : 10, color:"#900"}}>My Address Book</Text>
-								
+
 									<Ionicons name="ios-arrow-forward" size={25} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
 						</TouchableOpacity>
 					{this.address(address)}
-					
+
 				</View>
 				</View>
-				<TouchableOpacity onPress={()=>Actions.settings()} style={styles.setings}>
+				<TouchableOpacity onPress={()=>Actions.settings({is_notification: dataSource.is_notification})} style={styles.setings}>
 					<Text>Settings</Text>
 					<Ionicons name="ios-arrow-forward" size={25} color="#ccc"/>
 				</TouchableOpacity>
@@ -185,7 +185,7 @@ class Profile extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1, 
+		flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap'
 	},
@@ -193,11 +193,11 @@ const styles = StyleSheet.create({
 		borderWidth : 1,
 		borderColor :'#ccc',
 	},
-	setings : { 
-		top : 5, 
-		backgroundColor : '#fff', 
-		padding : 10, 
-		flexDirection: "row", 
+	setings : {
+		top : 5,
+		backgroundColor : '#fff',
+		padding : 10,
+		flexDirection: "row",
 		justifyContent: "space-between"
 	},
 	label: {

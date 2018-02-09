@@ -40,8 +40,8 @@ const { width, height } = Dimensions.get('window');
 
 const INITIAL_STATE = { quantity: '',  Size: ''}
 
-export default class AddService extends Component { 
-    constructor(props) { 
+export default class AddService extends Component {
+    constructor(props) {
         super(props);
         this.state={
             imageSelect : false,
@@ -64,7 +64,7 @@ export default class AddService extends Component {
 
   }
 
-    focusNextField(id) { 
+    focusNextField(id) {
         this.inputs[id].focus();
     }
 
@@ -74,7 +74,7 @@ export default class AddService extends Component {
         .done();
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });    
+        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
     }
    _renderLeftButton = () => {
         return(
@@ -90,29 +90,29 @@ export default class AddService extends Component {
     };
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-            }); 
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
     validate(){
-        const { service_type , service_name, 
-            short_description, detail_description, price, 
-            special_price,Imagepaths, Imagepath} = this.state; 
+        const { service_type , service_name,
+            short_description, detail_description, price,
+            special_price,Imagepaths, Imagepath} = this.state;
 
         let path = Imagepath.length
         if(path < 1){
             MessageBarManager.showAlert({
                 message: "Plese Select At Lest Single Image",
                 alertType: 'warning',
-                })      
+                })
             return false
             }
 
@@ -120,82 +120,82 @@ export default class AddService extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Service Type",
                 alertType: 'warning',
-                })      
+                })
             return false
-        } 
+        }
         if (!service_name.length){
             MessageBarManager.showAlert({
                 message: "Plese Insert Service Name",
                 alertType: 'warning',
-                })      
+                })
             return false
-        }    
+        }
         if (!short_description.length){
             MessageBarManager.showAlert({
                 message: "Plese Insert Short description Of Product",
                 alertType: 'warning',
-                })      
+                })
             return false
-        }    
+        }
         if (!detail_description.length){
             MessageBarManager.showAlert({
                 message: "Plese Insert Detail description Of Product",
                 alertType: 'warning',
-                })      
+                })
             return false
-        }    
+        }
         if (!price){
             MessageBarManager.showAlert({
                 message: "Plese Insert Price",
                 alertType: 'warning',
-                })      
+                })
             return false
-        }    
+        }
         if (!special_price){
             MessageBarManager.showAlert({
                 message: "Plese Insert special Price",
                 alertType: 'warning',
-                })      
+                })
             return false
-             
+
         }
         if ( special_price > price){
             MessageBarManager.showAlert({
                 message: "Special Price cannot be greater than Price",
                 alertType: 'warning',
-                })      
+                })
             return false
-        }      
+        }
         return true;
     }
 
     uploadTocloud(){
-        const { service_type , service_name, 
-            short_description, detail_description, price, 
+        const { service_type , service_name,
+            short_description, detail_description, price,
             special_price, Imagepath , u_id, country} = this.state;
-        
-        if(this.validate()) { 
+
+        if(this.validate()) {
             this.setState({
                 visibleModal : true
             });
-        
-            RNFetchBlob.fetch('POST', Utils.gurl('addService'),{ 
-                Authorization : "Bearer access-token", 
-                'Accept': 'application/json', 
+
+            RNFetchBlob.fetch('POST', Utils.gurl('addService'),{
+                Authorization : "Bearer access-token",
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             [...Imagepath,
-            { name : 'u_id', data: String(u_id)}, 
-            { name : 'country', data: String(country)}, 
-            { name : 'service_type', data: String(service_type)}, 
-            { name : 'service_name', data: String(service_name)}, 
-            { name : 'short_description', data: String(short_description)}, 
-            { name : 'detail_description', data: String(detail_description)}, 
-            { name : 'price', data: String(price)}, 
-            { name : 'special_price', data: String(special_price)}, 
+            { name : 'u_id', data: String(u_id)},
+            { name : 'country', data: String(country)},
+            { name : 'service_type', data: String(service_type)},
+            { name : 'service_name', data: String(service_name)},
+            { name : 'short_description', data: String(short_description)},
+            { name : 'detail_description', data: String(detail_description)},
+            { name : 'price', data: String(price)},
+            { name : 'special_price', data: String(special_price)},
             ])
             .uploadProgress((written, total) => {
-            console.warn('uploaded', Math.floor(written/total*100) + '%') 
+            console.warn('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((res)=> this.setState({
                 visibleModal : false
@@ -204,7 +204,7 @@ export default class AddService extends Component {
                 MessageBarManager.showAlert({
                 message: errorMessage,
                 alertType: 'warning',
-                })      
+                })
             })
             .done();
         }
@@ -217,10 +217,10 @@ export default class AddService extends Component {
             storageOptions: {
             skipBackup: true
             }
-        }; 
+        };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response); 
+            console.log('Response = ', response);
             if (response.didCancel) {
             console.log('User cancelled photo picker');
             }
@@ -231,18 +231,20 @@ export default class AddService extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
            else {
-            let path = response.uri
               let name = response.fileName
-              tempImg = path.replace(/^file:\/\//, '');
+              let url = response.uri
+              let path =
+                (Platform.OS === 'ios')?
+                    url.replace(/^file:\/\//, '') : response.uri
 
-       let source = { 
-        name : 'service_images[]', 
-        filename : response.fileName, 
-        data: RNFetchBlob.wrap(tempImg), 
-        uri: response.uri , 
-        // name: response.fileName, 
+       let source = {
+        name : 'service_images[]',
+        filename : response.fileName,
+        data: RNFetchBlob.wrap(path),
+        uri: response.uri ,
+        // name: response.fileName,
         type: 'image/jpg'};
-              
+
                 let uri = response.uri;
                 this.setState({
                     avatarSource: source,
@@ -250,11 +252,11 @@ export default class AddService extends Component {
                     videoSelect : false,
                     // image : path,
                 });
-                var newStateArray = this.state.rows.slice(); 
-                var newPathArray = this.state.Imagepath.slice(); 
-                newStateArray.push(source); 
-                newPathArray.push(source); 
-                    this.setState({ 
+                var newStateArray = this.state.rows.slice();
+                var newPathArray = this.state.Imagepath.slice();
+                newStateArray.push(source);
+                newPathArray.push(source);
+                    this.setState({
                         rows: newStateArray,
                         Imagepath: newPathArray
                     });
@@ -262,45 +264,45 @@ export default class AddService extends Component {
         });
     }
     render() {
-        const { imageSelect, quantityRows, sizeRows, Imagepath} = this.state; 
+        const { imageSelect, quantityRows, sizeRows, Imagepath} = this.state;
 
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
-        
+
         return (
-            <ScrollView 
-            contentContainerStyle={commonStyles.container} 
+            <ScrollView
+            contentContainerStyle={commonStyles.container}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'handled'}>
                 <View style={commonStyles.ImageAdd}>
-                    <Text style={{color: borderColorImage, marginBottom : 10}}>Select Service Image</Text>  
-                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Service Picture</Text>  
+                    <Text style={{color: borderColorImage, marginBottom : 10}}>Select Service Image</Text>
+                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Service Picture</Text>
                     <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
-                        <Feather onPress={this.selectPhotoTapped.bind(this)} 
-                            name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} /> 
+                        <Feather onPress={this.selectPhotoTapped.bind(this)}
+                            name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} />
                     </View>
                     <View style={{  top: 10, flexDirection:'row', marginBottom :20}}>
                         { this.state.avatarSource === null ? undefined :
-                            <SelectedImage 
-                            productImages={this.state.rows} 
+                            <SelectedImage
+                            productImages={this.state.rows}
                             />
                         }
                     </View>
                 </View>
-                <View style={[commonStyles.formItems, { paddingRight : 25}]}> 
+                <View style={[commonStyles.formItems, { paddingRight : 25}]}>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Service Type *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.service_type}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
                         placeholder="Service Type"
                         maxLength={140}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('two');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['one'] = input;
                         }}
                         onChangeText={(service_type) => this.setState({service_type})}
@@ -308,18 +310,18 @@ export default class AddService extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Name *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.service_name}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
                         placeholder="Service name"
                         maxLength={140}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('three');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['two'] = input;
                         }}
                         onChangeText={(service_name) => this.setState({service_name})}
@@ -327,18 +329,18 @@ export default class AddService extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Short Description *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.short_description}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
                         placeholder="Short Description "
                         maxLength={140}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('four');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['three'] = input;
                         }}
                         onChangeText={(short_description) => this.setState({short_description})}
@@ -346,7 +348,7 @@ export default class AddService extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Detail Description  *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height)}]}
                         value={this.state.detail_description}
                         numberOfLines={3}
@@ -355,11 +357,11 @@ export default class AddService extends Component {
                         autoCorrect={false}
                         placeholder="Detail Description "
                         maxLength={140}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('five');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['four'] = input;
                         }}
                         onContentSizeChange={(event) => {
@@ -370,7 +372,7 @@ export default class AddService extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Price *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
@@ -378,11 +380,11 @@ export default class AddService extends Component {
                         autoCorrect={false}
                         placeholder="Price "
                         maxLength={7}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('six');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['five'] = input;
                         }}
                         onChangeText={(price) => this.setState({price})}
@@ -390,7 +392,7 @@ export default class AddService extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Special Price *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.special_price}
                         underlineColorAndroid = 'transparent'
@@ -399,17 +401,17 @@ export default class AddService extends Component {
                         placeholder="Special Price"
                         maxLength={7}
                         returnKeyType={"done" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['six'] = input;
                         }}
                         onChangeText={(special_price) => this.setState({special_price})}
                         />
                     </View>
-                    
-                   
+
+
                 </View>
 
-                    
+
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                         <CirclesLoader />
