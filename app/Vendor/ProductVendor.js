@@ -27,6 +27,7 @@ import Slideshow from './Slideshow';
 import DatePicker from 'react-native-datepicker';
 import Share, {ShareSheet} from 'react-native-share';
 import {CirclesLoader} from 'react-native-indicator';
+import EventEmitter from "react-native-eventemitter";
 
 const {width,height} = Dimensions.get('window');
 
@@ -96,6 +97,11 @@ export default class ProductVendor extends Component {
         .then( ()=>this.serviceDetail())
         .done()
 
+        EventEmitter.removeAllListeners("reloadAddress");
+        EventEmitter.on("reloadAddress", (value)=>{
+            console.log("reloadAddress", value);
+            this.fetchAddress()    
+        });
 
     }
     async getKey() {
@@ -313,17 +319,18 @@ export default class ProductVendor extends Component {
                     flex: 1,
                     flexDirection: 'column',
                     justifyContent: 'space-between',
+                    backgroundColor:'rgba(248,248,248,1)'
                     }}>
 
                     <View >
                         <Text style={{ padding : 10, color : '#696969', fontSize:15}}>{this.props.product_name}</Text>
                         <View style={{flexDirection: 'row', justifyContent:'space-between', marginBottom : 10}}>
                             <Text style={{color : '#a9d5d1', fontWeight:'bold' }}>  {this.props.special_price} KWD</Text>
-                            <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold'}}>{this.props.price} KWD</Text>
+                            <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5}}>{this.props.price} KWD</Text>
                         </View>
 
                 {this.props.is_user ?  
-                    <View style={{ borderColor :"#ccc", borderWidth:1, paddingTop : 10}}>
+                    <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingTop : 10}}>
                         <Button
                         onPress= {()=>this.order()}
                         // onPress={this.onOpen.bind(this)}
@@ -345,8 +352,12 @@ export default class ProductVendor extends Component {
                                     borderWidth : 0.5, 
                                     borderColor: "#ccc", 
                                     alignItems : 'flex-start',
+                                    paddingLeft : 5,
                                 },
                             }}
+                            cancelBtnText="Cancel"
+                            confirmBtnText="OK"
+                            placeholder="Select Date"
                         onDateChange={(date_in) => {this.setState({date_in: date_in});}}/>
                         </View>
 
@@ -356,16 +367,45 @@ export default class ProductVendor extends Component {
                                 >
                                 <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
                                     <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
-                                    <TextInput
+                                    {/* <TextInput
                                     style ={{
                                         height:40, 
                                         width : width-50,
                                         borderWidth : StyleSheet.hairlineWidth, 
-                                        borderColor: "#ccc"}}
+                                        borderColor: "#ccc",
+                                        paddingLeft: 5,
+                                        color: '#ccc',
+                                    }}
                                     value={this.state.selectedAddress}
                                     editable={false}
                                     underlineColorAndroid={'transparent'}
-                                    />
+                                    /> */}
+                                    <View style ={{
+                                        height:40, 
+                                        width : width-50,
+                                        borderWidth : StyleSheet.hairlineWidth, 
+                                        borderColor: "#ccc",
+                                        paddingLeft: 5,
+                                        // color: '#ccc',
+                                        // textAlign:'center',
+                                        justifyContent:'center',
+                                        // backgroundColor:'red',
+                                    }}>
+                                    <Text style ={{                                        
+                                        color: '#ccc',
+                                    }}>{this.state.selectedAddress}</Text>
+                                    </View>
+                                    {/* <Text style ={{
+                                        height:40, 
+                                        width : width-50,
+                                        borderWidth : StyleSheet.hairlineWidth, 
+                                        borderColor: "#ccc",
+                                        paddingLeft: 5,
+                                        color: '#ccc',
+                                        // textAlign:'center',
+                                        // justifyContent:'center'
+                                        backgroundColor:'red',
+                                    }}>{this.state.selectedAddress}</Text> */}
                                 </View>
                                 </TouchableOpacity>
                             :
@@ -394,12 +434,12 @@ export default class ProductVendor extends Component {
 
                         : undefined }
                         
-                        <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20}}>
-                            <Text style={{ height : 30 }}> Product Information</Text>
-                            <View style={{ width : width/4, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
-                            <Text> {this.props.short_description}
+                        <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 10, paddingRight:10, backgroundColor:'#fff'}}>
+                            <Text style={{ height : 30, color:'#696969', paddingTop:10}}> Product Information</Text>
+                            <View style={{ marginLeft:5,width : 140, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
+                            <Text style={{ color:'#696969', marginTop:5}}> {this.props.short_description}
                             </Text>
-                            <Text> {this.props.detail_description}
+                            <Text style={{ color:'#696969', marginTop:5,marginBottom:20}}> {this.props.detail_description}
                             </Text>
                             
                         </View>
@@ -409,6 +449,16 @@ export default class ProductVendor extends Component {
                 </View>
             </ScrollView>
                  <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
+                 <View style={{flexDirection:'row', justifyContent:'center', width:'100%'}}>
+                 <View style={{flexDirection:'row', justifyContent:'center', width:'50%', alignItems:'center'}}>
+                 <Text>Select Address</Text>
+                 </View>
+                 <View style={{flexDirection:'row', justifyContent:'center', width:'50%'}}>
+                 <TouchableOpacity style={{padding:10, backgroundColor:'#a9d5d1', alignItems:'center', width:'80%'}} onPress={()=> routes.newaddress({isFromEdit:false})}>
+                 <Text style={{color:'#fff'}}>Add New Address</Text>
+                 </TouchableOpacity>
+                 </View>
+                 </View>
                 {listView}
                 </ShareSheet>
                         <Modal isVisible={this.state.visibleModal}>

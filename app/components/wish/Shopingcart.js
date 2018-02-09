@@ -282,7 +282,7 @@ export default class Shopingcart extends Component {
     }
     noItemFound(){
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', alignContent:'center',flex:1}}>
                 <Text> No Item added to your cart </Text>
                </View> );
     }

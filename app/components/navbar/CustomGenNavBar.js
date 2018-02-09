@@ -21,7 +21,13 @@ export default class CustomGenNavBar extends React.Component {
             return (
                 <TouchableOpacity
                 onPress={Actions.pop}
-                style={[styles.navBarItem, { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 }]}>
+                style={
+                    [styles.navBarItem, 
+                { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 , 
+                width:'15%', 
+                height: (Platform.OS === 'ios') ? '80%' : '100%'
+            }
+                ]}>
                     <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25}/>
                 </TouchableOpacity>
             )
@@ -30,7 +36,15 @@ export default class CustomGenNavBar extends React.Component {
 
     _renderMiddle() { 
         return (
-            <View style={[styles.navBarItem, { top: (Platform.OS === 'ios') ? 15 : 0 }]}>
+            <View style={
+                [styles.navBarItem, 
+                { top: (Platform.OS === 'ios') ? 12 : 0 , 
+                width:'70%', 
+                height: (Platform.OS === 'ios') ? '80%' : '100%',
+                justifyContent: 'center',
+                alignItems:'center'
+                }
+                ]}>
               <Text style={{color: '#fff',  fontSize: 15}}>{ this.props.title }</Text>
             </View>
         )
@@ -38,7 +52,15 @@ export default class CustomGenNavBar extends React.Component {
 
     _renderRight(name) {
         return (
-            <View style={[styles.navBarItem, { flexDirection: 'row', justifyContent: 'flex-end'  }]}>
+            <View style={
+                [styles.navBarItem, 
+                {top: (Platform.OS === 'ios') ? 12 : 0, 
+                flexDirection: 'row', 
+                justifyContent: 'flex-end',
+                width:'15%', 
+                height: (Platform.OS === 'ios') ? '80%' : '100%'
+            }
+            ]}>
                 <TouchableOpacity
                 onPress={() => console.log('Share')}
                 style={{ paddingRight: 10}}>
@@ -67,7 +89,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     }, 
     navBarItem: { 
-        flex: 1, 
+        // flex: 1, 
         justifyContent: 'center',
     }
 })

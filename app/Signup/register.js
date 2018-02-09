@@ -144,7 +144,7 @@ class Register extends Component {
 
 		const {errorStatus, loading} = this.props;
 		return (
-			<ScrollView style={[ commonStyles.content]} testID="Login" keyboardShouldPersistTaps={'handled'}>
+			<ScrollView style={[ commonStyles.content,{marginTop:0,marginBottom:0,paddingTop:20,paddingBottom:20}]} testID="Login" keyboardShouldPersistTaps={'handled'}>
 				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
 					<View style ={commonStyles.iconusername}>
 		
@@ -344,7 +344,7 @@ class Register extends Component {
 						flexDirection: 'column',
 						justifyContent: 'center',
 						alignItems: 'center',
-						top:20
+						marginTop:20
 					}}>
 						<Text style={{ fontSize : 12, width : '80%',}}> 
 						By Signing in you are agreeing to our 
@@ -371,8 +371,9 @@ class Register extends Component {
 						</TouchableOpacity>
 					</View>
 			</View>
+			<View style={{height:40,width:'100%'}}></View>
   			</View>
-
+			
 			<KeyboardSpacer/>
 			</ScrollView>
 		);

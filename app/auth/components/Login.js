@@ -123,10 +123,10 @@ class Login extends Component {
                 alignItems : 'center'}}>
 			<Image 
 			source={require('../../images/login_img.png')}
-			style={{ width : '25%', height : '50%' }}
+			style={{ width : '25%', height : '50%', marginTop:10 }}
 			/>	
-			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '70%', marginTop:20}}> 
-			Use the email address and password used when you created your acount
+			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '100%', marginTop:20, textAlign:'center'}}> 
+			Use the email address and password used {'\n'} when you created your acount
 			</Text>
 			</View>	
 
@@ -219,26 +219,26 @@ class Login extends Component {
         	justifyContent: 'center',
         	alignItems: 'center'
         }}>
-        	<Text style={{ fontSize : 10, width : width/2,}}> 
+        	<Text style={{ fontSize : 10, width : '100%', textAlign:'center'}}> 
 			By Signing in you are agreeing to our 
 			</Text>
-			<View style={{flexDirection:'row'}}>
+			<View style={{flexDirection:'row', width:'100%', justifyContent:'center'}}>
 			<TouchableOpacity 
 			onPress={()=> routes.terms({ 
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
-			<Text style={{color :'#a9d5d1', fontSize : 10, }}>
+			<Text style={{color :'#a9d5d1', fontSize : 10,textAlign:'center' }}>
 			terms and conditions
 			</Text>
 			</TouchableOpacity>
-			<Text style={{color :'black', fontSize : 10, }}> of use and </Text>
+			<Text style={{color :'black', fontSize : 10, textAlign:'center'}}> of use and </Text>
 			<TouchableOpacity 
 			onPress={()=> routes.terms({ 
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
-			<Text style={{color :'#fbcdc5', fontSize : 10, }}>
+			<Text style={{color :'#fbcdc5', fontSize : 10, textAlign:'center'}}>
 			 Privacy Policy
 			</Text>
 			</TouchableOpacity>

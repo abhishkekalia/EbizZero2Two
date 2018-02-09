@@ -421,9 +421,10 @@ export default class ProductDescription extends Component {
                 <View style={{ 
                     flex: 1,
                     flexDirection: 'column',
-                    justifyContent: 'space-between'}}>
+                    justifyContent: 'space-between',backgroundColor:'rgba(248,248,248,1)'}}>
 
                     <View>
+                        <View style={{backgroundColor:'rgba(248,248,248,1)', borderTopColor:'#ccc', borderTopWidth:0.5}}>
                         <Text style={{ padding : 10, color : '#696969', fontSize:15}}>{this.state.data.product_name}</Text>
                         <Vendor 
                         vendor_id= {this.state.data.vendor_id}
@@ -432,7 +433,8 @@ export default class ProductDescription extends Component {
                         />
                         <View style={{flexDirection: 'row', justifyContent:'space-between', marginBottom : 10}}>
                             <Text style={{color : '#a9d5d1', fontWeight:'bold' }}>  {this.state.data.special_price} KWD</Text>
-                            <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold'}}>{this.state.data.price} KWD</Text>
+                            <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5}}>{this.state.data.price} KWD</Text>
+                        </View>
                         </View>
                         <View style={{ flexDirection : 'row'}}>
                             <TouchableOpacity style={[styles.button,{}]} onPress={this.onOpen.bind(this)}>
@@ -440,11 +442,11 @@ export default class ProductDescription extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.buttonCart,{ flexDirection:'row', justifyContent:'center'}]} onPress={()=> this.addtoCart()}>
                             <Ionicons name="md-basket" size={25} color="#fff" />
-                            <Text style={{ color:'#fff'}}>Add To Cart</Text>
+                            <Text style={{ color:'#fff', paddingLeft:5}}>Add To Cart</Text>
                             </TouchableOpacity>
                         </View>
                         <View>
-                        <View style={{flexDirection:"row", padding : 10, alignItems:'center',height:40}}>
+                        <View style={{flexDirection:"row", padding : 10, alignItems:'center',height:40,backgroundColor:'rgba(248,248,248,1)'}}>
                         <Icon 
                         name="select-all"
                         size={25}
@@ -478,12 +480,12 @@ export default class ProductDescription extends Component {
                         </View>
                             </View>
                         </View>
-                        <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20}}>
-                            <Text style={{ height : 30 }}> Product Information</Text>
-                            <View style={{ width : width/4, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
-                            <Text> {this.state.data.short_description}
+                        <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20, backgroundColor:'#fff'}}>
+                            <Text style={{ height : 30 , color:'#696969', paddingTop:10}}> Product Information</Text>
+                            <View style={{ width : 140, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
+                            <Text style={{ color:'#696969', marginTop:5}}> {this.state.data.short_description}
                             </Text>
-                            <Text> {this.state.data.detail_description}
+                            <Text style={{ color:'#696969', marginBottom:10}}> {this.state.data.detail_description}
                             </Text>
                             
                         </View>
@@ -624,7 +626,7 @@ class Vendor extends Component{
     let resultObject = this.search(product_id, product);
 
     return (
-        <Text style={styles.category}>{ this.state.vendor_id ? resultObject: undefined}
+        <Text style={styles.category}>{  this.state.vendor_id ? resultObject: undefined}
         </Text>
     );
   }
