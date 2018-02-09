@@ -143,6 +143,7 @@ export default class Editmyprofile extends Component<{}> {
             MessageBarManager.showAlert({
             message: "Please Enter Your FullName",
             alertType: 'alert',
+            title:''
             })
             return false;
         }
@@ -153,6 +154,7 @@ export default class Editmyprofile extends Component<{}> {
           MessageBarManager.showAlert({
                  message: "Plese Enter Valid Email",
                  alertType: 'alert', 
+                 title:''
                })
           return false;
         }
@@ -161,6 +163,7 @@ export default class Editmyprofile extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Your Contact Number",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -170,6 +173,7 @@ export default class Editmyprofile extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Your Country",
                 alertType: 'alert',
+                title:''
             })
             return false
         }

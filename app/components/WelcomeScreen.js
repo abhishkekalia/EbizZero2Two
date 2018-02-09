@@ -108,6 +108,7 @@ export default class WelcomeScreen extends Component {
         {this.state.netStatus ? this.fetchData() : MessageBarManager.showAlert({ 
                 message: `Internet connection not available`,
                 alertType: 'error',
+                title:''
             })
         }          
     }
@@ -278,7 +279,9 @@ export default class WelcomeScreen extends Component {
                         options={this.state.deliveryareas}
                         cancelButtonIndex={CANCEL_INDEX}
                         // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                        onPress={this.handleDeliveryPress}/>
+                        onPress={this.handleDeliveryPress}
+                        style={{padding:20, width:'70%'}}
+                        />
             </View>
         );
 

@@ -197,6 +197,7 @@ export default class ProductVendor extends Component {
                 MessageBarManager.showAlert({
                     message: "Plese Select Booking Date",
                     alertType: 'warning',
+                    title:''
                 })      
             return false
             } 

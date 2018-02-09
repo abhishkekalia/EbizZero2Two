@@ -95,6 +95,7 @@ export default class Myuserfaturah extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Payment Success", 
                     alertType: 'alert', 
+                    title:''
                 })
             routes.pop();
         }
@@ -103,6 +104,7 @@ export default class Myuserfaturah extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Payment Not Success", 
                     alertType: 'alert', 
+                    title:''
                 })
         })
         .done();

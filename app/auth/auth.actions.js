@@ -67,7 +67,8 @@ export const login = (username, password, os) => {
          } else {
             MessageBarManager.showAlert({
             message: "invalid username and password",
-            alertType: 'error',
+			alertType: 'error',
+			title:''
             })
             dispatch(loginFail(new Error('Username and Password Does not matched')));
     	}

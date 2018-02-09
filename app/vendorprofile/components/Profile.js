@@ -57,9 +57,11 @@ class Profile extends Component {
         {this.state.netStatus ?  MessageBarManager.showAlert({ 
                 message: `Internet connection is available`,
                 alertType: 'alert',
+                title:''
             }) : MessageBarManager.showAlert({ 
                 message: `Internet connection not available`,
                 alertType: 'error',
+                title:''
             })
         }          
     }

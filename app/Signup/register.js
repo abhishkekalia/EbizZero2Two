@@ -384,7 +384,8 @@ validate(){
 	if (!fullname.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Fullname",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})		
 		return false
 	} 
@@ -394,7 +395,8 @@ validate(){
 		{ 
 		MessageBarManager.showAlert({
            message: "Plese Enter Valid Email",
-           alertType: 'alert', 
+		   alertType: 'alert', 
+		   title:''
          })
 		return false;
 	}
@@ -402,14 +404,16 @@ validate(){
 	if (!password.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Password",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false
 	}
 	if( gender.value === undefined){
 		MessageBarManager.showAlert({
            message: "Plese Select Gender",
-           alertType: 'alert', 
+		   alertType: 'alert', 
+		   title:''
          })
 		return false;
 	}
@@ -423,21 +427,24 @@ validate(){
 	if (!selectCountry.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select Country",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false
 	} 
 	if (!address.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Address",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false
 	}
 	if (!type.length){ 
 		MessageBarManager.showAlert({
             message: "Plese Select User Type",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false;
 	}

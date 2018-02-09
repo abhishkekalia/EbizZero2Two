@@ -96,6 +96,7 @@ export default class BookMyService extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Payment Success", 
                     alertType: 'alert', 
+                    title:''
                 })
                 routes.pop();
             }
@@ -104,6 +105,7 @@ export default class BookMyService extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Payment Not Success", 
                     alertType: 'alert', 
+                    title:''
                 })
         })
         .done();

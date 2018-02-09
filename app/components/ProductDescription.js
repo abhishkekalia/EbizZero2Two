@@ -112,6 +112,7 @@ export default class ProductDescription extends Component {
             MessageBarManager.showAlert({
                 message: "Please Select Size",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -120,6 +121,7 @@ export default class ProductDescription extends Component {
             MessageBarManager.showAlert({
                 message: "Please Select Color",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -218,6 +220,7 @@ export default class ProductDescription extends Component {
                     message: responseData.data.message, 
                     alertType: 'alert', 
                     stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                    title:''
                 })
                 // routes.shopingCart()
         }else{
@@ -225,6 +228,7 @@ export default class ProductDescription extends Component {
                 message: responseData.data.message, 
                 alertType: 'alert', 
                 stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                title:''
             })
         }
         })

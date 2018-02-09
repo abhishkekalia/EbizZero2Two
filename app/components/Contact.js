@@ -67,6 +67,7 @@ export default class Contact extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Your Name",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -75,6 +76,7 @@ export default class Contact extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Your Email",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -83,6 +85,7 @@ export default class Contact extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Select Your Issue",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -91,6 +94,7 @@ export default class Contact extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Your Message",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -122,6 +126,7 @@ export default class Contact extends Component<{}> {
            MessageBarManager.showAlert({
                 message: responseData.data.message,
                 alertType: 'alert',
+                title:''
             })
            this.setState({message : '', issue : ''})
         })

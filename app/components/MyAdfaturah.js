@@ -95,6 +95,7 @@ export default class MyAdfaturah extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Payment Success", 
                     alertType: 'alert', 
+                    title:''
                 })
                 routes.pop();
             }
@@ -103,6 +104,7 @@ export default class MyAdfaturah extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Error Ocurd while Payment", 
                     alertType: 'alert', 
+                    title:''
                 })
         })
         .done();

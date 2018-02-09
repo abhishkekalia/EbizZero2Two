@@ -128,6 +128,7 @@ export default class Marketingadd extends Component {
                 MessageBarManager.showAlert({
                 message: "error while opload add",
                 alertType: 'warning',
+                title:''
                 })
                 this.setState({
                         visibleModal : false,

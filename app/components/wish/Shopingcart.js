@@ -108,6 +108,7 @@ export default class Shopingcart extends Component {
                 alertType: 'alert', 
                 stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
                 animationType: 'SlideFromLeft',
+                title:''
             })
         })
         .catch((error) => {
@@ -210,6 +211,7 @@ export default class Shopingcart extends Component {
                 message: responseData.data.message, 
                 alertType: 'alert', 
                 stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                title:''
             })
         })
         .then(()=>this.fetchData())
@@ -227,6 +229,7 @@ export default class Shopingcart extends Component {
             MessageBarManager.showAlert({
                 message: "Please Select Items For Your Cart",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -319,6 +322,7 @@ export default class Shopingcart extends Component {
                         message: responseData.data.message, 
                         alertType: 'alert', 
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        title:''
                     })
             })
             .then(()=>this.props.callback())

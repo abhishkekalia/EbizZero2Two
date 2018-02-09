@@ -178,6 +178,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Select At Lest Single Image",
                 alertType: 'warning',
+                title:''
                 })      
             return false
             }
@@ -187,6 +188,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Product Name",
                 alertType: 'warning',
+                title:''
                 })      
             return false
         } 
@@ -194,6 +196,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Short Description Of Product",
                 alertType: 'warning',
+                title:''
                 })      
             return false
         }    
@@ -201,6 +204,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Detail description Of Product",
                 alertType: 'warning',
+                title:''
                 })      
             return false
         }    
@@ -208,6 +212,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Price",
                 alertType: 'warning',
+                title:''
                 })      
             return false
         }    
@@ -215,6 +220,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert special Price",
                 alertType: 'warning',
+                title:''
                 })      
             return false
              
@@ -223,6 +229,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Special Price cannot be greater than Price",
                 alertType: 'warning',
+                title:''
                 })      
             return false
         }
@@ -230,6 +237,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Enter Quantity of Items",
                 alertType: 'warning',
+                title:''
                 })      
             return false
              
@@ -238,6 +246,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Enter Size of Items",
                 alertType: 'warning',
+                title:''
                 })      
             return false
              
@@ -289,6 +298,7 @@ export default class AddProduct extends Component {
                 MessageBarManager.showAlert({
                 message: errorMessage,
                 alertType: 'warning',
+                title:''
                 })      
             })
             .done();

@@ -73,6 +73,7 @@ export default class MarketingCompaign extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Select Image Or Video To Upload Advertisement",
                 alertType: 'warning',
+                title:''
                 })      
             return false
         }
@@ -80,6 +81,7 @@ export default class MarketingCompaign extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Select Advertisement Category",
                 alertType: 'warning',
+                title:''
                 })      
             return false
         } 
@@ -147,6 +149,7 @@ export default class MarketingCompaign extends Component {
                 MessageBarManager.showAlert({
                 message: "error while opload add",
                 alertType: 'warning',
+                title:''
                 })
                 this.setState({
                         visibleModal : false,

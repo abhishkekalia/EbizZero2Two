@@ -69,7 +69,8 @@ class Login extends Component {
         this.setState({ netStatus: isConnected }); 
         {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({ 
                 message: `Internet connection not available`,
-                alertType: 'error',
+				alertType: 'error',
+				title:''
             })
         }
     }
@@ -107,7 +108,8 @@ class Login extends Component {
 			{ 
 			MessageBarManager.showAlert({
             message: "Plese Enter Valid Email",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
             })
 			return false;
 		}
@@ -260,7 +262,8 @@ class Login extends Component {
 		{ 
 			MessageBarManager.showAlert({
             message: "Please Enter Valid Email",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''			
             })
 			return false;
 		}
@@ -268,7 +271,8 @@ class Login extends Component {
 		{
 			MessageBarManager.showAlert({
             	message: "Please Enter Your Password",
-            	alertType: 'alert',
+				alertType: 'alert',
+				title:''
         	})
 			return false
 		}

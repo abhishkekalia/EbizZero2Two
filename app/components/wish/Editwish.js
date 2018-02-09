@@ -69,6 +69,7 @@ export default class Editwish extends Component {
                 MessageBarManager.showAlert({ 
                     message: responseData.data.message, 
                     alertType: 'alert', 
+                    title:''
                 })
             }
         })
@@ -101,6 +102,7 @@ export default class Editwish extends Component {
             MessageBarManager.showAlert({ 
             message: responseData.data.message, 
             alertType: 'alert', 
+            title:''
             })
         })
         .then(()=>this.props.fetchData())

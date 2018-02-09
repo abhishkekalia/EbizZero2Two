@@ -150,6 +150,7 @@ export default class WishList extends Component {
             MessageBarManager.showAlert({
                 message: "Please Select Items For Your Cart",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -184,6 +185,7 @@ export default class WishList extends Component {
                         message: responseData.data.message, 
                         alertType: 'alert', 
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        title:''
                     })
                     Actions.shopingCart();
                 }else {
@@ -191,6 +193,7 @@ export default class WishList extends Component {
                         message: responseData.data.message, 
                         alertType: 'alert', 
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        title:''
                     })
                 }
             })
@@ -451,6 +454,7 @@ class SelectItem extends Component{
             MessageBarManager.showAlert({
                 message: "Please Select Color",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -484,6 +488,7 @@ class SelectItem extends Component{
                         message: responseData.data.message, 
                         alertType: 'alert', 
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        title:''
                     })
             })
             .then(()=>this.props.callback())

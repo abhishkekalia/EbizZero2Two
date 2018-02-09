@@ -231,11 +231,13 @@ export default class Settings extends Component {
                 MessageBarManager.showAlert({ 
                 message: response.data.message, 
                 alertType: 'alert', 
+                title:''
                 })
             }else{
                 MessageBarManager.showAlert({ 
                 message: response.data.message, 
                 alertType: 'alert', 
+                title:''
                 })
             }
 

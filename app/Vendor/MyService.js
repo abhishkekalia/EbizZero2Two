@@ -85,6 +85,7 @@ export default class MyService extends Component {
             MessageBarManager.showAlert({
             message: "error while fetching data",
             alertType: 'warning',
+            title:''
             })      
         })
         .done();

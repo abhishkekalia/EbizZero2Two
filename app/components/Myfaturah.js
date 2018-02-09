@@ -97,6 +97,7 @@ export default class Myfaturah extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Payment Success", 
                     alertType: 'alert', 
+                    title:''
                 })
                 routes.pop();
             }
@@ -105,6 +106,7 @@ export default class Myfaturah extends Component {
                 MessageBarManager.showAlert({ 
                     message: "Payment Not Success", 
                     alertType: 'alert', 
+                    title:''
                 })
         })
         .done();

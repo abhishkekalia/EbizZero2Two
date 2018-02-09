@@ -326,6 +326,7 @@ class Footer extends Component{
             MessageBarManager.showAlert({
             message: "error while update data",
             alertType: 'warning',
+            title:''
             })      
         })
         .done();
