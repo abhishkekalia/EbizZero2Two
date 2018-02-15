@@ -5,7 +5,6 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
-    TouchableNativeFeedback,
     Dimensions,
     Button,
     Keyboard,
@@ -31,8 +30,8 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import Editimage from './Editimage';
 const { width, height } = Dimensions.get('window');
 
-export default class EditProduct extends Component { 
-    constructor(props) { 
+export default class EditProduct extends Component {
+    constructor(props) {
         super(props);
         this.state={
             image: null,
@@ -54,7 +53,7 @@ export default class EditProduct extends Component {
             rows : [] ,
             Imagepath : [],
             is_feature : this.props.is_feature ,
-            removed_images : []     
+            removed_images : []
         }
     this.inputs = {};
 
@@ -62,7 +61,7 @@ export default class EditProduct extends Component {
     this.handlePress = this.handlePress.bind(this)
   }
 
-    focusNextField(id) { 
+    focusNextField(id) {
         this.inputs[id].focus();
     }
 
@@ -82,7 +81,7 @@ export default class EditProduct extends Component {
 
         for (i = 0; i < length; i++) {
             organization = Items[i];
-            Select.push ({uri:organization.image});                 
+            Select.push ({uri:organization.image});
         }
         this.setState({
             rows : Select
@@ -90,7 +89,7 @@ export default class EditProduct extends Component {
 
     }
     componentWillMount() {
-        // routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });    
+        // routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
     }
    _renderLeftButton = () => {
         return(
@@ -106,10 +105,10 @@ export default class EditProduct extends Component {
     };
 
     validate(){
-        const { productname, 
-            shortdescription, detaildescription, price, 
-            discount,final_price, quantityRows, 
-            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state; 
+        const { productname,
+            shortdescription, detaildescription, price,
+            discount,final_price, quantityRows,
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state;
 
         let path = rows.length
         if(path < 1){
@@ -117,7 +116,7 @@ export default class EditProduct extends Component {
                 message: "Plese Select At Lest Single Image",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
             }
         if (!productname.length){
@@ -125,92 +124,92 @@ export default class EditProduct extends Component {
                 message: "Plese Insert Product Name",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
-        } 
+        }
         if (!shortdescription.length){
             MessageBarManager.showAlert({
                 message: "Plese Insert Short Description Of Product",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
-        }    
+        }
         if (!detaildescription.length){
             MessageBarManager.showAlert({
                 message: "Plese Insert Detail description Of Product",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
-        }    
+        }
         if (!price){
             MessageBarManager.showAlert({
                 message: "Plese Insert Price",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
-        }    
+        }
         if (!special){
             MessageBarManager.showAlert({
                 message: "Plese Insert special Price",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
-             
+
         }
         if ( special > price){
             MessageBarManager.showAlert({
                 message: "Special Price cannot be greater than Price",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
         }
-      
+
         return true;
     }
 
     uploadTocloud(){
-        const { 
-            product_category , productname, 
-            shortdescription, detaildescription, price, 
-            discount,final_price, quantityRows, 
+        const {
+            product_category , productname,
+            shortdescription, detaildescription, price,
+            discount,final_price, quantityRows,
             Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images} = this.state;
         const { u_id, country } = this.props;
-        if(this.validate()) { 
+        if(this.validate()) {
             this.setState({
                 visibleModal : true
             });
-        
-            RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{ 
-                Authorization : "Bearer access-token", 
-                'Accept': 'application/json', 
+
+            RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{
+                Authorization : "Bearer access-token",
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             [...Imagepath,
-            { name : 'u_id', data: String(u_id)}, 
-            { name : 'country', data: String(country)}, 
-            { name : 'product_category', data: String(product_category)}, 
-            { name : 'product_name', data: String(productname)}, 
-            { name : 'short_description', data: String(shortdescription)}, 
-            { name : 'detail_description', data: String(detaildescription)}, 
-            { name : 'price', data: String(price)}, 
-            { name : 'special_price', data: String(special)}, 
-            { name : 'discount', data: String(10)}, 
-            { name : 'final_price', data: String(special)}, 
-            { name : 'product_id', data: String(this.props.product_id)}, 
-            { name : 'removed_images', data: removed_images.toString()}, 
-            { name : 'quantity', data: quantityRows.toString()}, 
-            { name : 'size_id', data: sizeRows.toString()}, 
-            { name : 'size', data: sizeRows.toString()}, 
-            { name : 'quantity', data: sizeRows.toString()}, 
-            { name : 'is_feature', data: String(is_feature)}, 
+            { name : 'u_id', data: String(u_id)},
+            { name : 'country', data: String(country)},
+            { name : 'product_category', data: String(product_category)},
+            { name : 'product_name', data: String(productname)},
+            { name : 'short_description', data: String(shortdescription)},
+            { name : 'detail_description', data: String(detaildescription)},
+            { name : 'price', data: String(price)},
+            { name : 'special_price', data: String(special)},
+            { name : 'discount', data: String(10)},
+            { name : 'final_price', data: String(special)},
+            { name : 'product_id', data: String(this.props.product_id)},
+            { name : 'removed_images', data: removed_images.toString()},
+            { name : 'quantity', data: quantityRows.toString()},
+            { name : 'size_id', data: sizeRows.toString()},
+            { name : 'size', data: sizeRows.toString()},
+            { name : 'quantity', data: sizeRows.toString()},
+            { name : 'is_feature', data: String(is_feature)},
             ])
             .uploadProgress((written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%') 
+            console.log('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((res)=>{
                 var getdata = JSON.parse(responseData.data);
@@ -219,7 +218,7 @@ export default class EditProduct extends Component {
                         message: "Product Update Successfully",
                         alertType: 'warning',
                         title:''
-                    }) 
+                    })
                     this.setState({
                         visibleModal : false
                     })
@@ -228,7 +227,7 @@ export default class EditProduct extends Component {
                         message: "Product Upload Failed",
                         alertType: 'warning',
                         title:''
-                    }) 
+                    })
                     this.setState({
                         visibleModal : false
                     })
@@ -242,7 +241,7 @@ export default class EditProduct extends Component {
                 // })
                 this.setState({
                         visibleModal : false
-                    })      
+                    })
             })
             .done();
         }
@@ -255,10 +254,10 @@ export default class EditProduct extends Component {
             storageOptions: {
             skipBackup: true
             }
-        }; 
+        };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response); 
+            console.log('Response = ', response);
             if (response.didCancel) {
             console.log('User cancelled photo picker');
             }
@@ -269,12 +268,12 @@ export default class EditProduct extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-    
-       let source = { 
-        name : 'product_images[]', 
-        filename : response.fileName, 
-        data: RNFetchBlob.wrap(response.uri), 
-        uri: response.uri , 
+
+       let source = {
+        name : 'product_images[]',
+        filename : response.fileName,
+        data: RNFetchBlob.wrap(response.uri),
+        uri: response.uri ,
         type: 'image/jpg'};
                 let uri = response.uri;
                 this.setState({
@@ -283,11 +282,11 @@ export default class EditProduct extends Component {
                     videoSelect : false,
                     // image : path,
                 });
-                var newStateArray = this.state.rows.slice(); 
-                var newPathArray = this.state.Imagepath.slice(); 
-                newStateArray.push(source); 
-                newPathArray.push(source); 
-                    this.setState({ 
+                var newStateArray = this.state.rows.slice();
+                var newPathArray = this.state.Imagepath.slice();
+                newStateArray.push(source);
+                newPathArray.push(source);
+                    this.setState({
                         rows: newStateArray,
                         Imagepath: newPathArray
                     });
@@ -296,15 +295,15 @@ export default class EditProduct extends Component {
     }
     productCont(){
         Keyboard.dismiss();
-        
+
         const { quantity, Size} = this.state;
 
-        var newStateArray = this.state.quantityRows.slice(); 
-        var newsizeArray = this.state.sizeRows.slice(); 
+        var newStateArray = this.state.quantityRows.slice();
+        var newsizeArray = this.state.sizeRows.slice();
 
-        newStateArray.push(quantity); 
-        newsizeArray.push(Size); 
-        this.setState({...INITIAL_STATE, 
+        newStateArray.push(quantity);
+        newsizeArray.push(Size);
+        this.setState({...INITIAL_STATE,
             quantityRows: newStateArray,
             sizeRows: newsizeArray,
             additional : false
@@ -320,23 +319,23 @@ export default class EditProduct extends Component {
     }
 
     render() {
-        const { imageSelect, quantityRows, sizeRows} = this.state; 
+        const { imageSelect, quantityRows, sizeRows} = this.state;
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
-        
+
         let is_feature;
-        if(this.state.is_feature === '0' ){ 
+        if(this.state.is_feature === '0' ){
             is_feature = false} else { is_feature = true}
 
         return (
-            <ScrollView 
-            contentContainerStyle={commonStyles.container} 
+            <ScrollView
+            contentContainerStyle={commonStyles.container}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'handled'}>
-                
-                <View style={commonStyles.formItems}> 
+
+                <View style={commonStyles.formItems}>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Name *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.productname}
                         // onFocus={()=>this.hidetab()}
@@ -344,11 +343,11 @@ export default class EditProduct extends Component {
                         autoCorrect={false}
                         placeholder="Product name"
                         maxLength={140}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('two');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['one'] = input;
                         }}
                         onChangeText={(productname) => this.setState({productname})}
@@ -356,18 +355,18 @@ export default class EditProduct extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Short Description *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.shortdescription}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
                         placeholder="Short Description "
                         maxLength={140}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('three');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['two'] = input;
                         }}
                         onChangeText={(shortdescription) => this.setState({shortdescription})}
@@ -375,7 +374,7 @@ export default class EditProduct extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Detail Description  *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height)}]}
                         value={this.state.detaildescription}
                         numberOfLines={3}
@@ -384,11 +383,11 @@ export default class EditProduct extends Component {
                         autoCorrect={false}
                         placeholder="Detail Description "
                         maxLength={140}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('four');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['three'] = input;
                         }}
                         onContentSizeChange={(event) => {
@@ -399,7 +398,7 @@ export default class EditProduct extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Price *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
@@ -407,11 +406,11 @@ export default class EditProduct extends Component {
                         autoCorrect={false}
                         placeholder="Price "
                         maxLength={7}
-                        onSubmitEditing={() => { 
+                        onSubmitEditing={() => {
                             this.focusNextField('five');
                         }}
                         returnKeyType={ "next" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['four'] = input;
                         }}
                         onChangeText={(price) => this.setState({price})}
@@ -419,7 +418,7 @@ export default class EditProduct extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <Text style={commonStyles.label}>Special Price *</Text>
-                        <TextInput 
+                        <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.special}
                         underlineColorAndroid = 'transparent'
@@ -428,7 +427,7 @@ export default class EditProduct extends Component {
                         placeholder="Special Price"
                         maxLength={7}
                         returnKeyType={"done" }
-                        ref={ input => { 
+                        ref={ input => {
                             this.inputs['five'] = input;
                         }}
                         onChangeText={(special) => this.setState({special})}
@@ -438,7 +437,7 @@ export default class EditProduct extends Component {
                         <Text style={commonStyles.label}>Product Is Feature *</Text>
                         <Switch
                         value={is_feature}
-                        onValueChange={(val) => 
+                        onValueChange={(val) =>
                             this.setState({ is_feature : val ? "2" : "0"})
                         }
                         disabled={false}
@@ -449,30 +448,29 @@ export default class EditProduct extends Component {
                         circleActiveColor={'#30a566'}
                         circleInActiveColor={'#000000'}/>
                     </View>
-                   
+
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
-                    <TouchableNativeFeedback
-                    onPress={this.selectPhotoTapped.bind(this)}
-                    background={TouchableNativeFeedback.SelectableBackground()}>
-                    
+                    <TouchableOpacity
+                    onPress={this.selectPhotoTapped.bind(this)}>
+
                     <View style={{ }}>
-                        <Feather  
+                        <Feather
                             name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                            <Text>Click here</Text> 
+                            <Text>Click here</Text>
                     </View>
-                    </TouchableNativeFeedback>
-                        <Editimage 
-                            productImages={this.state.rows} 
+                    </TouchableOpacity>
+                        <Editimage
+                            productImages={this.state.rows}
                             callback={this.getResponse.bind(this)}
                             getremovedata= {this.getRemoveresponse.bind(this)}
                             />
                     </View>
                 </View>
-            <TouchableOpacity onPress={() => this.uploadTocloud() } style={{ 
+            <TouchableOpacity onPress={() => this.uploadTocloud() } style={{
                 height:54,
                 marginTop : 20,
                 justifyContent :'center',
-                alignItems :'center', 
+                alignItems :'center',
                 backgroundColor:'#a9d5d1'
             }} >
             <Text style={{color : '#fff', fontWeight:'bold'}}>Edit Product</Text>
@@ -480,7 +478,7 @@ export default class EditProduct extends Component {
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                     <CirclesLoader />
-                    
+
                 </View>
             </Modal>
 
