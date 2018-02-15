@@ -286,6 +286,7 @@ export default class AddProduct extends Component {
             { name : 'quantity', data: quantityRows.toString()},
             { name : 'size', data: sizeRows.toString()},
             { name : 'is_feature', data: String(is_feature)},
+            { name : 'gender', data: String(1)},
             ])
             .uploadProgress((written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%')

@@ -183,7 +183,8 @@ class Register extends Component {
           					returnKeyType={ "next" }
  					        ref={ input => {
  					        	this.inputs['two'] = input;
- 					        }}
+							 }}
+							 keyboardType = {"email-address"}
 							onChangeText={(email) => this.setState({email})}
 						/>
 					</View>
@@ -278,7 +279,7 @@ class Register extends Component {
 	}}
 		>					 */}
 						<Picker
-                            style={{width: width-50, height: 40}}
+                            style={{width: width-50, height: 40, position:'relative', zIndex:999}}
                             mode="dropdown"
                             selectedValue={this.state.selectCountry}
                             onValueChange={(itemValue, itemIndex) =>

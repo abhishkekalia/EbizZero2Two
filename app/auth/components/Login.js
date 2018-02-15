@@ -181,7 +181,7 @@ Forgotpassword(){
 		source={require('../../images/login_img.png')}
 		style={{ width : '100%', height : '50%',
 		 marginTop:10,
-		 resizeMode : 'center' }}
+		 resizeMode : 'contain' }}
 		/>
 		<Text style={{color: '#fbcdc5' , fontSize : 12, width : '100%', marginTop:20, textAlign:'center'}}>
 		Use the email address and password used {'\n'} when you created your acount
@@ -367,7 +367,7 @@ Forgotpassword(){
 		source={require('../../images/login_img.png')}
 		style={{ width : '100%', height : '50%',
 		 marginTop:10,
-		 resizeMode : 'center' }}
+		 resizeMode : 'contain' }}
 		/>
 		<Text style={{color: '#fbcdc5' , fontSize : 12, width : '100%', marginTop:20, textAlign:'center'}}>
 		Use the email address and password used {'\n'} when you created your acount

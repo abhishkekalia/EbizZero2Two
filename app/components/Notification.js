@@ -33,7 +33,7 @@ export default class Notification extends Component {
         this.fetchData()
     }
     _onRefresh() {
-    this.setState({refreshing: true});
+        this.setState({refreshing: true});
             this.fetchData();
     }
 
@@ -77,7 +77,7 @@ export default class Notification extends Component {
                 refreshControl={ 
                     <RefreshControl
                     refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh} />
+                    onRefresh={this._onRefresh.bind(this)} />
                 }
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource}

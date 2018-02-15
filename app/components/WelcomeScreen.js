@@ -208,6 +208,7 @@ export default class WelcomeScreen extends Component {
                             width : 200,
                             height : 200,
                         }}
+                        resizeMode='cover'
                         source={require('../images/logo.png')} />
                     </View>
                     <ActivityIndicator
@@ -258,7 +259,8 @@ export default class WelcomeScreen extends Component {
                             width : 200,
                             height : 200,
                         }}
-                        source={require('../images/logo.png')} />
+                        source={require('../images/logo.png')} 
+                        resizeMode='cover' />
                     </View>
 
                     <View style={styles.container}>
@@ -270,6 +272,7 @@ export default class WelcomeScreen extends Component {
                             width : 25,
                             height : 25,
                         }}
+                        resizeMode = 'cover'
                         source={require('../images/country_icon.png')} />
                         </View>
                         <Text style={{width: width/2, color: "#a9d5d1"}}>{ this.state.selectCountry ? this.state.countries[this.state.selectCountry] : countryTitle}</Text>
@@ -289,6 +292,7 @@ export default class WelcomeScreen extends Component {
                             width : 25,
                             height : 25,
                         }}
+                        resizeMode = 'cover'
                         source={require('../images/area_icon.png')} />
                         </View>
                             <Text style={{width: width/2, color: "#a9d5d1"}}>{ this.state.deliveryarea ? this.state.deliveryareas [this.state.deliveryarea] : deliveryTitle}</Text>

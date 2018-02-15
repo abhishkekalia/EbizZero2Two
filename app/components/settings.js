@@ -8,7 +8,7 @@ import {
   AsyncStorage,
   TouchableOpacity,
   Dimensions,
-  Picker
+//   Picker
 } from 'react-native';
 import Utils from 'app/common/Utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -17,7 +17,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const { width, height } = Dimensions.get('window');
 import EventEmitter from "react-native-eventemitter";
 
-// import { Picker } from 'react-native-picker-dropdown';
+import { Picker } from 'react-native-picker-dropdown';
 
 const is_notification = '0'
 
