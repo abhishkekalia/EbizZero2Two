@@ -32,57 +32,58 @@ export const login = (username, password, os) => {
 
 	let formData = new FormData();
 	formData.append('email', String(username));
-	formData.append('password', String(password)); 
-	formData.append('device_type', String(os)); 
-	formData.append('device_token', Math.random().toString()); 
+	formData.append('password', String(password));
+	formData.append('device_type', String(os));
+	formData.append('device_token', Math.random().toString());
 
-	const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+	const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
-    fetch(Utils.gurl('login'), config) 
-    .then((response) => response.json()) 
+    fetch(Utils.gurl('login'), config)
+    .then((response) => response.json())
     .then((responseData) => {
 
-    	 if (responseData.response.status) { 
-    	 	AsyncStorage.setItem('data', JSON.stringify({ 
-    	   		"userdetail" : { 
-	           		"u_id" : responseData.response.data.u_id , 
-	           		"fullname" : responseData.response.data.fullname , 
+    	 if (responseData.response.status) {
+    	 	AsyncStorage.setItem('data', JSON.stringify({
+    	   		"userdetail" : {
+	           		"u_id" : responseData.response.data.u_id ,
+	           		"fullname" : responseData.response.data.fullname ,
 	           		"email" : responseData.response.data.email ,
 	           		"phone_no" : responseData.response.data.phone_no ,
 	           		"country" : responseData.response.data.country ,
 	           		"address" : responseData.response.data.address ,
 	           		"u_name" : responseData.response.data.is_active ,
-	           		"user_type" : responseData.response.data.user_type 
+	           		"user_type" : responseData.response.data.user_type
             	}
         	}));
-        	let usr_type = responseData.response.data.user_type
-    	 	dispatch(successHome(username, password, usr_type));
+					let usr_type = responseData.response.data.user_type,
+					 u_id = responseData.response.data.u_id;
+    	 	dispatch(successHome(username, password, usr_type, u_id));
 
          } else {
             MessageBarManager.showAlert({
             message: "invalid username and password",
-			alertType: 'error',
-			title:''
+						alertType: 'error',
+						title:''
             })
             dispatch(loginFail(new Error('Username and Password Does not matched')));
     	}
-    }) 
-    .catch(err => { 
-    	console.log(err); 
-    }) 
+    })
+    .catch(err => {
+    	console.log(err);
+    })
     .done();
-	
-	
+
+
 };
 };
 
-const successHome = (username, password ,usr_type) => {
+const successHome = (username, password ,usr_type, u_id) => {
  	if(usr_type === "3"){
  	routes.vendortab()
  	}else{
@@ -92,6 +93,7 @@ const successHome = (username, password ,usr_type) => {
 		payload: {
 			token: Math.random().toString(),
 			user_type : usr_type,
+			u_id : u_id,
 			username,
 			password
 		}

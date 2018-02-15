@@ -1,10 +1,10 @@
 import React, {Component, PropTypes} from 'react';
-import { 
-    Dimensions, 
-    StyleSheet, 
-    ScrollView, 
-    View, 
-    Image, 
+import {
+    Dimensions,
+    StyleSheet,
+    ScrollView,
+    View,
+    Image,
     Text,
     ViewPropTypes,
     // Button,
@@ -18,28 +18,62 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
-import LinearGradient from 'react-native-linear-gradient';
 
 import Share, {ShareSheet, Button} from 'react-native-share';
 
 const { width, height } = Dimensions.get('window')
 
-class Menu extends React.Component { 
-
+class Menu extends React.Component {
     constructor(props) {
-        super(props); 
-        this.state={ 
+        super(props);
+        this.state={
             visible: false,
+            // isBAse : false,
+            notificationCount : 0
         }
     }
+    componentDidMount(){
+      const {identity} = this.props;
+      let formData = new FormData();
+      formData.append('u_id', String(identity.u_id));
 
-       render() { 
+      const config = {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'multipart/form-data;',
+              },
+              body: formData,
+          }
+      fetch(Utils.gurl('getNotificationCount'), config)
+      .then((response) => response.json())
+      .then((responseData) => {
+          if(responseData.status){
+            console.warn(responseData.data.count);
+              this.setState({
+              notificationCount: responseData.data.count,
+              // refreshing : false
+              });
+          }
+          else{
+              // this.setState({
+              // refreshing : false
+              // })
+          }
+      })
+      .catch((error) => {
+          console.log(error);
+      })
+      .done();
+    }
+
+       render() {
         const {identity, logout} = this.props;
-        return ( 
-            <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}> 
-                <TouchableOpacity 
+        return (
+            <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}>
+                <TouchableOpacity
 						onPress={Actions.profile}>
-                <View style={styles.avatarContainer}> 
+                <View style={styles.avatarContainer}>
                     <View style={styles.username}>
                     <View style= {styles.guest}>
                         <Zocial name='guest' color="#000" size={15} />
@@ -48,25 +82,43 @@ class Menu extends React.Component {
                     <Text style={{ position: 'absolute' , paddingLeft : width/3, paddingTop : 75, color:"#fff", marginTop:10}}>{identity.username}</Text>
                 </View>
                 </TouchableOpacity>
-                <View style={[styles.badge, styles.seprator]}> 
-                            <Ionicons 
-                            name="ios-notifications" 
-                            color="#87cefa" size={30}
-                            style={{ left : 5}}
-                            />
-                    <Text 
+                <View style={[styles.badge, styles.seprator]}>
+                {
+                  this.state.notificationCount > 0 ? <IconBadge
+                  MainElement={
+                    <Ionicons
+                    name="ios-notifications"
+                    color="#87cefa" size={30}
+                    style={{ left : 5}}
+                    />
+                  }
+                  BadgeElement={
+                    <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
+                  }
+                  IconBadgeStyle={{
+                      width:16,
+                      height:18,
+                      // left : 10,
+                      backgroundColor: 'orange'}}
+                  /> :
+                  <Ionicons
+                    name="ios-notifications"
+                    color="#87cefa" size={30}
+                    style={{ left : 5}}
+                    />
+                  }
+                    <Text
                     onPress={Actions.notificationShow}
-
                      style={{
-                        fontSize: 12, 
-                        padding: 10, 
+                        fontSize: 12,
+                        padding: 10,
                         marginTop : 1,
                         left :5,
                     }}>Notification</Text>
                </View>
 
                <View style={{height:40}}>
-                   
+
                </View>
 
                {/* <LinearGradient colors={['#ffffff', '#dfdfdf', '#ffffff']} style={styles.linearGradient}> */}
@@ -100,11 +152,11 @@ class Menu extends React.Component {
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={Actions.sync}
-                style={[styles.item, styles.seprator]}> Rate us on App Store</Text>    
+                style={[styles.item, styles.seprator]}> Rate us on App Store</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={()=>( Utils.logout()),logout}
-                style={styles.item}> logout</Text>
+                style={styles.item}> Logout</Text>
                 {this.renderShareSheet()}
             </ScrollView>
         );
@@ -193,7 +245,7 @@ class Menu extends React.Component {
 
     onOpen() {
         console.log("OPEN")
-        this.setState({ 
+        this.setState({
             visible:true,
         });
     }
@@ -236,9 +288,9 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width:'80%'
       },
-      contentContainer: { 
-        // flex: 1, 
-        backgroundColor: '#fff', 
+      contentContainer: {
+        // flex: 1,
+        backgroundColor: '#fff',
         alignItems: 'center',
 
     },
@@ -247,8 +299,8 @@ const styles = StyleSheet.create({
         // borderBottomWidth : 0.5
     },
 
-    badge : { 
-        flexDirection: 'row', 
+    badge : {
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop:10,
@@ -266,13 +318,13 @@ const styles = StyleSheet.create({
         backgroundColor: "grey",
         position : 'absolute'
     },
-    
+
     avatarContainer: {
         width: width,
         height : 120,
         backgroundColor : '#f08080',
     },
-    
+
     avatar: {
         width :60,
         height : 60,
@@ -303,7 +355,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center'
     },
-    
+
     item: {
         fontSize: 12,
         backgroundColor : '#fff',

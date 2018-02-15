@@ -12,14 +12,14 @@ let Utils = {
     // },
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-                user_type: response.userdetail.user_type 
-            }); 
+                user_type: response.userdetail.user_type
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -30,7 +30,7 @@ let Utils = {
     country: () => {
         return AsyncStorage.getItem('data')
         .then((result) => {
-            var response = JSON.parse(result); 
+            var response = JSON.parse(result);
             return response.userdetail.country;
         });
     },
@@ -39,7 +39,7 @@ let Utils = {
 
         return AsyncStorage.getItem('data')
         .then((result) => {
-            var response = JSON.parse(result); 
+            var response = JSON.parse(result);
             var data =response.userdetail.u_id
             return data;
         });
@@ -47,8 +47,8 @@ let Utils = {
 
     logout(){
         AsyncStorage.removeItem('data', (err, result) => {
-            return result; 
-        }); 
+            return result;
+        });
     }
 };
 

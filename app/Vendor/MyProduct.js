@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { 
-    StyleSheet, 
-    ActivityIndicator, 
-    ListView, 
-    Text, 
-    View, 
-    Image, 
+import {
+    StyleSheet,
+    ActivityIndicator,
+    ListView,
+    Text,
+    View,
+    Image,
     Platform,
     Dimensions,
-    TouchableOpacity, 
-    AsyncStorage, 
+    TouchableOpacity,
+    AsyncStorage,
 
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
@@ -28,9 +28,9 @@ export default class MyProduct extends Component {
             country : null
         }
     }
- 
+
     GetItem (flower_name) {
-        alert(flower_name); 
+        alert(flower_name);
     }
 
     componentDidMount(){
@@ -38,38 +38,38 @@ export default class MyProduct extends Component {
         .then( ()=>this.fetchData())
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton });    
+        routes.refresh({ right: this._renderRightButton });
     }
     _renderRightButton = () => {
         return null
-    }; 
+    };
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
-    fetchData(){ 
-        const {u_id, country } = this.state; 
+    fetchData(){
+        const {u_id, country } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
             }
-        fetch(Utils.gurl('productList'), config) 
+        fetch(Utils.gurl('productList'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -95,15 +95,14 @@ export default class MyProduct extends Component {
               style={{
                 height: .5,
                 width: "100%",
-                backgroundColor: "#CCC",
               }}
             />
         );
     }
 
     Description (product_name, productImages ,short_description, detail_description, price ,special_price){
-        routes.vendordesc({ 
-                        title: product_name, 
+        routes.vendordesc({
+                        title: product_name,
                         product_name : product_name,
                         productImages : productImages,
                         short_description : short_description,
@@ -116,8 +115,8 @@ export default class MyProduct extends Component {
     render() {
         if (this.state.isLoading) {
             return (
-                <View style={{flex: 1, paddingTop: 20}}>
-                  <ActivityIndicator />
+                <View style={{flex: 1, paddingTop: 20, justifyContent: 'center'}}>
+                  <ActivityIndicator size="large" />
                 </View>
             );
         }
@@ -128,7 +127,7 @@ export default class MyProduct extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
-                renderSeparator= {this.ListViewItemSeparator} 
+                renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
         return (
@@ -142,24 +141,25 @@ export default class MyProduct extends Component {
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
 
         return (
-            <View style={{ 
+            <View style={{
             width : width-30,
             flexDirection: 'column' ,
-            marginTop : 2, 
-            borderWidth : 1, 
-            borderColor : "#ccc", 
-            borderRadius : 2
+            marginTop : 2,
+            borderWidth : 1,
+            borderColor : "#ccc",
+            borderRadius : 5,
+            overflow: 'hidden'
         }}>
-                <Header 
+                <Header
                 product_category= {data.product_category}
                 u_id={this.state.u_id}
                 country={this.state.country}
                 />
-                <TouchableOpacity style={{ 
-                flexDirection: 'row', 
+                <TouchableOpacity style={{
+                flexDirection: 'row',
                 backgroundColor : "#fff",
-                borderBottomWidth : 1, 
-                borderColor : "#ccc", 
+                borderBottomWidth : StyleSheet.hairlineWidth,
+                borderColor : "#ccc",
                 }}
                 onPress={()=>routes.editproduct({
                     u_id : this.state.u_id,
@@ -179,12 +179,12 @@ export default class MyProduct extends Component {
                     productImages: data.productImages
                 })}
                 >
-                    <Image style={[styles.thumb, {margin: 10}]} 
-                    resizeMode={"stretch"} 
+                    <Image style={[styles.thumb, {margin: 10}]}
+                    resizeMode={"stretch"}
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
-                    />  
-                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>  
-                        <Text style={[styles.row, { color:'#222',fontWeight :'bold', marginTop: 10}]} >  {data.product_name} </Text>
+                    />
+                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
+                        <Text style={ { color:'#222',fontWeight :'bold', marginTop: 10}} >  {data.product_name} </Text>
                         <Text style={{ fontSize : 12, color : '#222'}} > {data.short_description} </Text>
                         <View style={{ flexDirection : "row"}}>
                             <Text style={{color:"#a9d5d1", fontSize: 12}}> Quantity Available : {data.quantity} </Text>
@@ -201,8 +201,8 @@ export default class MyProduct extends Component {
                             </View>
                         </View>
                         <View style={{ flexDirection : "row"}}>
-                           <Text style={{color : '#fbcdc5', fontSize:12}}> Status : </Text>
-                           <Text style={{color: '#222',fontSize:12}}> {data.is_approved ? 'Approved' : 'Pending'} </Text>
+                           <Text style={{color : '#fbcdc5', fontSize:12}}>Status : </Text>
+                           <Text style={{color: '#222',fontSize:12}}>{data.is_approved ? 'Approved' : 'Pending'} </Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -231,29 +231,29 @@ class Header extends Component{
         this.fetchData();
     }
 
-    search = (nameKey, myArray)=>{ 
-        for (var i = 0; i < myArray.length; i++) { 
-            if (myArray[i].category_id === nameKey) { 
+    search = (nameKey, myArray)=>{
+        for (var i = 0; i < myArray.length; i++) {
+            if (myArray[i].category_id === nameKey) {
                 return myArray[i].category_name;
             }
         }
     }
 
-    fetchData(){ 
-        const {u_id, country } = this.props; 
+    fetchData(){
+        const {u_id, country } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('country', String(country));
+
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
-        fetch(Utils.gurl('getFilterMenu'), config) 
+        fetch(Utils.gurl('getFilterMenu'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -276,11 +276,10 @@ class Header extends Component{
   render() {
     let product_id = this.props.product_category
     let product = this.state.product_category
-
     let resultObject = this.search(product_id, product);
 
     return (
-      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc'}]}>
+      <View style={[styles.row, { borderBottomWidth: StyleSheet.hairlineWidth, borderColor:'#ccc'}]}>
       <Text style={{ color : '#fbcdc5', padding: 10}}>Categories : </Text>
         <Text style={{padding: 10, color:"#222"}}>{ this.state.product_category ? resultObject: undefined}
         </Text>
@@ -296,23 +295,23 @@ class Footer extends Component{
             is_active : this.props.is_active
         }
     }
-    productActiveDeactive(product_id, approv_code){ 
-        const {u_id, country } = this.props; 
+    productActiveDeactive(product_id, approv_code){
+        const {u_id, country } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        formData.append('active_flag', String(approv_code)); 
+        formData.append('country', String(country));
+        formData.append('product_id', String(product_id));
+        formData.append('active_flag', String(approv_code));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
             }
-        fetch(Utils.gurl('productActiveDeactive'), config) 
+        fetch(Utils.gurl('productActiveDeactive'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -327,7 +326,7 @@ class Footer extends Component{
             message: "error while update data",
             alertType: 'warning',
             title:''
-            })      
+            })
         })
         .done();
     }
@@ -349,12 +348,12 @@ class Footer extends Component{
         }
         return(
         <View style={styles.bottom}>
-                    <TouchableOpacity 
-                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]} 
+                    <TouchableOpacity
+                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
                     onPress={this.props.calllback}>
                         <Text style={{ color :'#fff', fontSize: 12}}>Preview</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]} 
+                    <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
                     onPress={()=>this.productActiveDeactive(this.props.product_id, approv_code)}>
                         <Text style={{ color :'#fff', fontSize : 12}}>{approved}</Text>
                     </TouchableOpacity>
@@ -362,25 +361,14 @@ class Footer extends Component{
         )
     }
 }
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        padding : 10 
+        padding : 10
     },
 
     row: {
         flexDirection: 'row',
-        marginTop : 1
-    },
-    qtybutton: {
-        paddingLeft: 10,
-        paddingRight: 10,
-
-        alignItems: 'center',
-        borderWidth : 0.5,
-        borderColor : "#ccc",
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
     },
         countryIcon: {
         width : 40,
@@ -390,8 +378,8 @@ const styles = StyleSheet.create({
 
 
     lowerButton :{
-        // alignItems : 'center', 
-        borderWidth : 0.5, 
+        // alignItems : 'center',
+        borderWidth : 0.5,
         borderColor : "#ccc",
         padding : 5,
         borderRadius : 5
@@ -418,7 +406,7 @@ const styles = StyleSheet.create({
     bottom : {
         flexDirection : 'row',
         justifyContent : 'space-between',
-        backgroundColor : "#fff",
+        backgroundColor : "transparent",
         padding : 5
     },
 

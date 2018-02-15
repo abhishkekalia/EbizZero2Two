@@ -21,9 +21,9 @@ export default class ProductOrder extends Component<{}> {
     }
 
     bindMethods() {
-        if (! this.bindableMethods) {
+        if (!this.bindableMethods) {
             return;
-        }   
+        }
 
         for (var methodName in this.bindableMethods) {
             this[methodName] = this.bindableMethods[methodName].bind(this);
@@ -52,7 +52,7 @@ export default class ProductOrder extends Component<{}> {
         }
     }
         componentWillMount() {
-        routes.refresh({ right: undefined , left : undefined});    
+        routes.refresh({ right: undefined , left : undefined});
     }
 
     componentDidMount() {
@@ -62,13 +62,13 @@ export default class ProductOrder extends Component<{}> {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-            }); 
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -76,11 +76,11 @@ export default class ProductOrder extends Component<{}> {
     changeorderstatus(order_id, status){
         let formData = new FormData();
         formData.append('order_id', String(order_id));
-        formData.append('status', String(status)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('status', String(status));
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
@@ -100,21 +100,18 @@ export default class ProductOrder extends Component<{}> {
                 loaded     : true,
             });
         })
-        .done();        
+        .done();
 
     }
-
-
-
     fetchData () {
-        const { u_id,country, } = this.state; 
+        const { u_id,country, } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('country', String(country));
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
@@ -139,7 +136,7 @@ export default class ProductOrder extends Component<{}> {
 
                 orderDetail = order.orderDetail;
                 orderLength = orderDetail.length;
-                
+
                 rowIDs[i] = [];
 
                 for(j = 0; j < orderLength; j++) {
@@ -163,18 +160,15 @@ export default class ProductOrder extends Component<{}> {
             }
         })
         .catch((errorMessage, statusCode) => {
-            this.setState({
-                loaded     : true,
-                status     : false
-            });
+          console.log(errorMessage);
         })
-        .done();        
-    }    
+        .done();
+    }
     noItemFound(){
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
                 <Text>You Have No Itmes In Ordered</Text>
-            </View> 
+            </View>
         );
     }
 
@@ -219,8 +213,8 @@ export default class ProductOrder extends Component<{}> {
                     style      = {styles.listview}
                     renderRow  = {this.renderRow}
                     renderSectionHeader = {this.renderSectionHeader}
-                    enableEmptySections = {true} 
-                    automaticallyAdjustContentInsets={false} 
+                    enableEmptySections = {true}
+                    automaticallyAdjustContentInsets={false}
                     renderSeparator={this._renderSeparator}
                     showsVerticalScrollIndicator={false}
                 />
@@ -241,7 +235,7 @@ export default class ProductOrder extends Component<{}> {
                 <Text style={styles.text}>{sectionID}</Text>
                 </View>
             </View>
-        ); 
+        );
     }
 };
 
@@ -250,51 +244,51 @@ Object.assign(ProductOrder.prototype, {
         renderRow : function (rowData, sectionID, rowID) {
             let label,
             ord_status;
-            if(rowID.order_status === '1'){ 
+            if(rowID.order_status === '1'){
                 label = 'Pending';
                 ord_status = 0;
-            } 
+            }
             else if(rowID.order_status === '0'){
             label = 'Complete';
             ord_status = 1;
         }
             return (
-                <TouchableOpacity style={styles.row} onPress={()=>console.warn()}>
+                <View style={styles.row}>
                     <View style={{ flexDirection : 'row', backgroundColor:'#fff'}}>
                         <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Product ID : </Text>
                         <Text style={styles.rowText}>{rowID.product_id} </Text>
                     </View>
                     <View style={{ flexDirection : 'row'}}>
                         <Text style={[styles.rowText, {color : '#222'} ]}>{rowID.product_name} </Text>
-                    </View> 
+                    </View>
                     <View style={{ flexDirection : 'row'}}>
-                        <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Qty :</Text> 
-                        <Text style={[styles.rowText, { color : '#ccc'}]}>{rowID.quantity} </Text> 
+                        <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Qty :</Text>
+                        <Text style={[styles.rowText, { color : '#ccc'}]}>{rowID.quantity} </Text>
                     </View>
                     <View style={{ flexDirection : 'row'}}>
 
-                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Price: </Text> 
-                        <Text style={styles.rowText}>{rowID.price} </Text> 
+                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Price: </Text>
+                        <Text style={styles.rowText}>{rowID.price} </Text>
                     </View>
                     <View style={{ flexDirection : 'row'}}>
-                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Special Price: </Text> 
-                        <Text style={styles.rowText}>{rowID.special_price} </Text> 
+                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Special Price: </Text>
+                        <Text style={styles.rowText}>{rowID.special_price} </Text>
                     </View>
                     <View style={styles.footer}>
                         <View style={{ flexDirection : 'row'}}>
 
                             <Text style={[styles.rowText, {color : '#fbcdc5'} ]}>Order Status : </Text>
-                            <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status )}> 
+                            <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status )}>
                             <Text style={[styles.rowText, { color : '#a9d5d1'}]}>{label} </Text>
-                            </TouchableOpacity> 
+                            </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection : 'row'}}>
 
-                            <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>Order Date : </Text> 
-                            <Text style={styles.rowText}>{ rowID.order_date} </Text> 
+                            <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>Order Date : </Text>
+                            <Text style={styles.rowText}>{ rowID.order_date} </Text>
                         </View>
                     </View>
-                </TouchableOpacity>
+                </View>
             );
         }
     }
@@ -331,16 +325,15 @@ var styles = StyleSheet.create({
     rowStyle: {
         flex : 1,
             flexDirection: 'column' ,
-            marginTop : 2, 
-            borderWidth : 1, 
-            borderColor : "#ccc", 
+            marginTop : 2,
+            borderWidth : 1,
+            borderColor : "#ccc",
             borderRadius : 2
-
     },
-    footer : { 
-        flexDirection : 'row', 
-        justifyContent : 'space-between', 
-        borderWidth : StyleSheet.hairlineWidth, 
+    footer : {
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        borderWidth : StyleSheet.hairlineWidth,
         borderColor : '#ccc',
         // borderRadius : 2
     },
@@ -372,7 +365,7 @@ var styles = StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'center',
-        // padding: 10,
+        padding: 5,
         backgroundColor: '#F6F6F6'
     },
 

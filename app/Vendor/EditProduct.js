@@ -123,6 +123,7 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Product Name",
                 alertType: 'warning',
+
                 title:''
                 })
             return false
@@ -233,12 +234,8 @@ export default class EditProduct extends Component {
                     })
                 }
             })
+            .then(()=>routes.product())
             .catch((errorMessage, statusCode) => {
-                routes.product();
-                // message: "Failed Due to Some communication Error",
-                // MessageBarManager.showAlert({
-                // alertType: 'warning',
-                // })
                 this.setState({
                         visibleModal : false
                     })
@@ -268,11 +265,15 @@ export default class EditProduct extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
+              let url = response.uri
+              let path =
+                (Platform.OS === 'ios')?
+                    url.replace(/^file:\/\//, '') : response.uri
 
        let source = {
         name : 'product_images[]',
         filename : response.fileName,
-        data: RNFetchBlob.wrap(response.uri),
+        data: RNFetchBlob.wrap(path),
         uri: response.uri ,
         type: 'image/jpg'};
                 let uri = response.uri;
@@ -450,15 +451,31 @@ export default class EditProduct extends Component {
                     </View>
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
-                    <TouchableOpacity
-                    onPress={this.selectPhotoTapped.bind(this)}>
 
-                    <View style={{ }}>
+                    {Platform.OS === 'ios' ? 
+                        <TouchableOpacity
+                        onPress={this.selectPhotoTapped.bind(this)}>
+    
+                        <View style={{ }}>
                         <Feather
                             name="upload-cloud" size= {30} style={{ padding:20 }}/>
                             <Text>Click here</Text>
                     </View>
                     </TouchableOpacity>
+                        
+                    : 
+                    <TouchableNativeFeedback
+                    onPress={this.selectPhotoTapped.bind(this)}
+                    background={TouchableNativeFeedback.SelectableBackground()}>
+
+                    <View style={{ justifyContent: 'center'}}>
+                    <Feather
+                            name="upload-cloud" size= {30} style={{ padding:20 }}/>
+                            <Text>Click here</Text>
+                    </View>
+                    </TouchableNativeFeedback>
+                        
+                    }
                         <Editimage
                             productImages={this.state.rows}
                             callback={this.getResponse.bind(this)}

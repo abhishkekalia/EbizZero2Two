@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { 
-    StyleSheet, 
-    ActivityIndicator, 
-    ListView, 
-    Text, 
-    View, 
-    Image, 
+import {
+    StyleSheet,
+    ActivityIndicator,
+    ListView,
+    Text,
+    View,
+    Image,
     Platform,
     Dimensions,
-    TouchableOpacity, 
-    AsyncStorage, 
+    TouchableOpacity,
+    AsyncStorage,
 
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
@@ -28,45 +28,45 @@ export default class MyService extends Component {
             country : null
         }
     }
- 
+
     componentDidMount(){
         this.getKey()
         .then( ()=>this.fetchData())
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton });    
+        routes.refresh({ right: this._renderRightButton });
     }
     _renderRightButton = () => {
         return null
     };
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
-    fetchData(){ 
-        const {u_id, country } = this.state; 
+    fetchData(){
+        const {u_id, country } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
             }
-        fetch(Utils.gurl('serviceList'), config) 
+        fetch(Utils.gurl('serviceList'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -86,7 +86,7 @@ export default class MyService extends Component {
             message: "error while fetching data",
             alertType: 'warning',
             title:''
-            })      
+            })
         })
         .done();
     }
@@ -95,16 +95,15 @@ export default class MyService extends Component {
         return (
             <View
               style={{
-                height: .5,
+                height: StyleSheet.hairlineWidth,
                 width: "100%",
-                backgroundColor: "#CCC",
               }}
             />
         );
     }
 
     Description (product_name, productImages ,short_description, detail_description, price ,special_price){
-        routes.vendordesc({ 
+        routes.vendordesc({
                         title: product_name,
                         product_name : product_name,
                         productImages : productImages,
@@ -130,11 +129,11 @@ export default class MyService extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
-                renderSeparator= {this.ListViewItemSeparator} 
+                renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
         return (
-        <View style={{paddingBottom : 53}}>
+        <View style={{paddingBottom : 53, backgroundColor: 'rgba(248,248,248,1)'}}>
             {listView}
         </View>
         );
@@ -144,20 +143,20 @@ export default class MyService extends Component {
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
 
         return (
-            <View style={{ 
+            <View style={{
             width : width-30,
             flexDirection: 'column' ,
-            marginTop : 2, 
-            borderWidth : 1, 
-            borderColor : "#ccc", 
-            borderRadius : 2
+            marginTop : 2,
+            borderWidth : 1,
+            borderColor : "#ccc",
+            borderRadius : 5
         }}>
                 <Header service_type= {data.service_type}/>
-                <TouchableOpacity style={{ 
-                flexDirection: 'row', 
+                <TouchableOpacity style={{
+                flexDirection: 'row',
                 backgroundColor : "#fff",
-                borderBottomWidth : 1, 
-                borderColor : "#ccc", 
+                borderBottomWidth : 1,
+                borderColor : "#ccc",
                 }}
                 onPress={()=>routes.editservice({
                     u_id : this.state.u_id,
@@ -172,17 +171,17 @@ export default class MyService extends Component {
                     is_active: data.is_active,
                     serviceImages: data.serviceImages
                 })}>
-                    <Image style={[styles.thumb, {margin: 10}]} 
-                    resizeMode={"stretch"} 
+                    <Image style={[styles.thumb, {margin: 10}]}
+                    resizeMode={"stretch"}
                     source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null}}
-                    />  
+                    />
 
-                    <View style={{flexDirection: 'column', alignItems: 'center'}}>  
-                        <Text style={[styles.row, { color:'#222',fontWeight :'bold', marginTop: 10}]} > {data.service_name} </Text>
+                    <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+                        <Text style={{ color:'#222',fontWeight :'bold', marginTop: 10}} > {data.service_name}</Text>
                             <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>
                             <View style={{ flexDirection : "row"}}>
                             <Text style={{color : '#696969', fontSize: 10}} >Price : </Text>
-                            <Text style={{ color: '#696969', fontSize: 10}}> {data.price} KWD</Text>
+                            <Text style={{ color: '#696969', fontSize: 10}}>{data.price} KWD</Text>
                             </View>
                             <View style={{ flexDirection : "row"}}>
                             <Text style={{color : '#696969', fontSize: 10}} >Special Price : </Text>
@@ -233,23 +232,23 @@ class Footer extends Component{
             is_approved : this.props.is_approved
         }
     }
-    productActiveDeactive(product_id, approv_code){ 
-        const {u_id, country } = this.state; 
+    productActiveDeactive(product_id, approv_code){
+        const {u_id, country } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(2));
-        formData.append('country', String(1)); 
-        formData.append('product_id', String(product_id)); 
-        formData.append('active_flag', String(approv_code)); 
+        formData.append('country', String(1));
+        formData.append('product_id', String(product_id));
+        formData.append('active_flag', String(approv_code));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
             }
-        fetch(Utils.gurl('productActiveDeactive'), config) 
+        fetch(Utils.gurl('productActiveDeactive'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -283,20 +282,20 @@ componentWillReceiveProps(){
         }
         return(
         <View style={styles.bottom}>
-                    <TouchableOpacity 
-                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]} 
+                    <TouchableOpacity
+                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
                     onPress={this.props.calllback}>
                         <Text style={{ color :'#fff', fontSize: 12}}>Preview</Text>
                     </TouchableOpacity>
-                    
+
                 </View>
         )
     }
 }
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        padding : 10 
+        padding : 10
     },
 
     row: {
@@ -321,8 +320,8 @@ const styles = StyleSheet.create({
 
 
     lowerButton :{
-        // alignItems : 'center', 
-        borderWidth : 0.5, 
+        // alignItems : 'center',
+        borderWidth : 0.5,
         borderColor : "#ccc",
         padding : 5,
         borderRadius : 5

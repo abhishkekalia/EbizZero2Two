@@ -2,10 +2,10 @@ import React, { Component} from 'react';
 import {
     ListView,
     TouchableOpacity,
-    ScrollView, 
+    ScrollView,
     StyleSheet,
-    Dimensions, 
-    Text, 
+    Dimensions,
+    Text,
     View,
     TextInput,
     AsyncStorage,
@@ -37,21 +37,20 @@ import ModalWrapper from 'react-native-modal-wrapper';
 // import ProgressBar from 'react-native-progress/Circle';
 
 import EventEmitter from "react-native-eventemitter";
-// import { arrayOf } from '../../../../../../Library/Caches/typescript/2.6/node_modules/@types/prop-types';
 
 const { width, height } = Dimensions.get('window')
 let index = 0;
 
 export default class MainView extends Component {
     constructor(props) {
-        super(props); 
+        super(props);
         this.fetchData = this.fetchData.bind(this);
         this.getKey= this.getKey.bind(this);
-        this.state={ 
-            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
+        this.state={
+            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
             serviceArrayStatus : false,
-            status : false, 
+            status : false,
             textInputValue: '',
             shoperId : '',
             data : [],
@@ -67,10 +66,10 @@ export default class MainView extends Component {
             country : null,
             loaded: false,
             toggle : false,
-            refreshing: false, 
+            refreshing: false,
             visible: false,
             product_id : '',
-            product_name : '', 
+            product_name : '',
             url : '',
             arrSelectedCategory : [],
             isFilterProduct : true
@@ -107,7 +106,7 @@ export default class MainView extends Component {
 
     }
     componentWillMount() {
-        Actions.refresh({ right: this._renderRightButton,});    
+        Actions.refresh({ right: this._renderRightButton,});
     }
    _renderLeftButton = () => {
         return(
@@ -126,7 +125,7 @@ export default class MainView extends Component {
   }
   onOpen(product_name, product_id, url) {
     console.log("OPEN")
-    this.setState({ 
+    this.setState({
         visible:true,
         product_name : product_name,
         product_id : product_id,
@@ -137,28 +136,28 @@ export default class MainView extends Component {
     _onRefresh() {
     this.setState({
         refreshing: true,
-        dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }), 
+        dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
     });
             this.fetchData();
     }
 
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-                user_type: response.userdetail.user_type 
-            }); 
+                user_type: response.userdetail.user_type
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
-    modal = () => this.setState({ 
-        isModalVisible: !this.state.isModalVisible 
+    modal = () => this.setState({
+        isModalVisible: !this.state.isModalVisible
     })
 
     filterbyShop = () => {
@@ -168,7 +167,7 @@ export default class MainView extends Component {
             this.fetchData()
             return
         }
-        this.setState({ 
+        this.setState({
             isModalVisible: !this.state.isModalVisible,
             loaded : false,
             isFilterProduct : true
@@ -179,25 +178,25 @@ export default class MainView extends Component {
         const {u_id, country, rows } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-        formData.append('vendor_id', String(rows));  
+        formData.append('country', String(country));
+        formData.append('vendor_id', String(rows));
         console.log("request:=",formData)
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
 
-        fetch(Utils.gurl('filterByShop'), config) 
+        fetch(Utils.gurl('filterByShop'), config)
         .then((response) => response.json())
         .then((responseData) => {
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 status : responseData.status,
-                loaded: true, 
+                loaded: true,
                 refreshing: false
             });
         })
@@ -208,17 +207,17 @@ export default class MainView extends Component {
     }
     renderLoadingView() {
         return (
-            <ActivityIndicator  
+            <ActivityIndicator
             style={[styles.centering]}
-            color="#a9d5d1" 
+            color="#a9d5d1"
             size="large"/>
         );
     }
     renderLoadingView() {
         return (
-            <ActivityIndicator  
+            <ActivityIndicator
             style={[styles.centering]}
-            color="#a9d5d1" 
+            color="#a9d5d1"
             size="large"/>
         );
     }
@@ -238,16 +237,16 @@ export default class MainView extends Component {
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(user_type));
-        formData.append('country', String(country));   
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        formData.append('country', String(country));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        fetch(Utils.gurl('listOfAllShop'), config) 
+        fetch(Utils.gurl('listOfAllShop'), config)
         .then((response) => response.json())
         .then((responseData) => {
             this.setState({
@@ -268,7 +267,7 @@ export default class MainView extends Component {
 
     check (data){
         console.log("this.state.rows:=",this.state.rows)
-        var newStateArray = this.state.rows.slice(); 
+        var newStateArray = this.state.rows.slice();
         console.log("newStateArray:=",newStateArray)
 
         // var indexOfObj = -1
@@ -279,10 +278,10 @@ export default class MainView extends Component {
         // }
         // console.log("indexOfObj:=",indexOfObj)
         // if (indexOfObj == -1) {
-        //     newStateArray.push(data.u_id); 
+        //     newStateArray.push(data.u_id);
         // }
-        
-        newStateArray.push(data.u_id); 
+
+        newStateArray.push(data.u_id);
 
         // data.checked = !data.checked;
         // console.log("data.checked:=",data.checked)
@@ -303,17 +302,17 @@ export default class MainView extends Component {
     }
 
     unCheck(data){
-            // var index = this.state.rows.indexOf(data.u_id); 
+            // var index = this.state.rows.indexOf(data.u_id);
             // if (index > -1) {
             //     var newArray =  this.state.rows.splice(index, 1);
             //     this.setState({
             //         rows: newArray
             //     });
-                
+
             // }
 
             var newStateArray = this.state.rows.slice();
-            var index = newStateArray.indexOf(data.u_id); 
+            var index = newStateArray.indexOf(data.u_id);
             console.log("index:=",index)
             if (index > -1) {
                 newStateArray.splice(index, 1);
@@ -325,7 +324,7 @@ export default class MainView extends Component {
             // data.checked = !data.checked;
             // console.log("unCheck rows:=",this.state.rows)
 
-        // var arrData = this.state.dataArray            
+        // var arrData = this.state.dataArray
         // for (var i = 0; i < arrData.length; i++) {
         //     if (arrData[i].u_id == data.u_id) {
         //         // console.log("Equal")
@@ -337,7 +336,7 @@ export default class MainView extends Component {
             rows: newStateArray
         });
     }
-    
+
     renderView() {
         if (!this.state.dataArray || this.state.dataArray.length === 0)return;
         var len = this.state.dataArray.length;
@@ -386,17 +385,17 @@ export default class MainView extends Component {
 
     //     let formData = new FormData();
     //     formData.append('u_id', String(user_type));
-    //     formData.append('country', String(country)); 
+    //     formData.append('country', String(country));
 
-    //     const config = { 
-    //             method: 'POST', 
-    //             headers: { 
-    //                 'Accept': 'application/json', 
+    //     const config = {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Accept': 'application/json',
     //                 'Content-Type': 'multipart/form-data;',
     //             },
     //             body: formData,
     //         }
-    //     fetch(Utils.gurl('listOfAllShop'), config) 
+    //     fetch(Utils.gurl('listOfAllShop'), config)
     //     .then((response) => response.json())
     //     .then((responseData) => {
     //         this.setState({
@@ -413,31 +412,31 @@ export default class MainView extends Component {
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
 
-        fetch(Utils.gurl('allProductItemList'), config) 
+        fetch(Utils.gurl('allProductItemList'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                     status : responseData.status,
-                    loaded: true, 
+                    loaded: true,
                     refreshing: false
                 });
             }else {
                 this.setState({
                     status : responseData.status,
-                    loaded: true, 
+                    loaded: true,
                     refreshing: false
                 })
             }
@@ -448,21 +447,21 @@ export default class MainView extends Component {
         .done();
 
     }
-    fetchService(){ 
-        const {u_id, country } = this.state; 
+    fetchService(){
+        const {u_id, country } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
             }
-        fetch(Utils.gurl('serviceList'), config) 
+        fetch(Utils.gurl('serviceList'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -479,7 +478,7 @@ export default class MainView extends Component {
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
 
     }
@@ -502,34 +501,34 @@ export default class MainView extends Component {
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-        // formData.append('categoty_id', String(this.props.filterdBy));  
-        formData.append('category_id', String(selCat)); 
+        formData.append('country', String(country));
+        // formData.append('categoty_id', String(this.props.filterdBy));
+        formData.append('category_id', String(selCat));
         formData.append('vendor_id', String(venderIds));
         console.log("request:=",formData);
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
 
-        fetch(Utils.gurl('filterProducts'), config) 
+        fetch(Utils.gurl('filterProducts'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                     status : responseData.status,
-                    loaded: true, 
+                    loaded: true,
                     refreshing: false
                 });
             }else {
                 this.setState({
                     status : responseData.status,
-                    loaded: true, 
+                    loaded: true,
                     refreshing: false
                 })
             }
@@ -543,7 +542,7 @@ export default class MainView extends Component {
         Description (service_id, product_name, productImages ,
             short_description, detail_description, price ,special_price){
         Actions.vendordesc({
-            is_user : true, 
+            is_user : true,
             service_id : service_id,
             title: product_name,
             product_name : product_name,
@@ -557,9 +556,9 @@ export default class MainView extends Component {
 
     renderLoadingView() {
         return (
-            <ActivityIndicator  
+            <ActivityIndicator
             style={[styles.centering]}
-            color="#a9d5d1" 
+            color="#a9d5d1"
             size="large"/>
             );
     }
@@ -573,25 +572,25 @@ export default class MainView extends Component {
         if (!this.state.status) {
             return this.noItemFound();
         }
-        
+
 
         return (
-        <View>
+        <View style={{backgroundColor: '#f9f9f9'}}>
             {this.renderFilterOptions()}
-            <ScrollView 
-            contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 50}} 
+            <ScrollView
+            contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 50}}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="always">
-                <StatusBar 
-                hidden={false} 
-                backgroundColor="#a9d5d1" 
+                <StatusBar
+                hidden={false}
+                backgroundColor="#a9d5d1"
                 barStyle="light-content"/>
                 <GetMarketing/>
 
                 {this.renderListData()}
                 {this.renderAllShopViews()}
                 {this.renderAllServiceViews()}
-                
+
             </ScrollView>
             {this.renderShareSheet()}
             </View>
@@ -683,7 +682,7 @@ export default class MainView extends Component {
         let listView = (<View></View>);
             listView = (
                 <ListView
-                refreshControl={ 
+                refreshControl={
                     <RefreshControl
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh} />
@@ -699,7 +698,7 @@ export default class MainView extends Component {
         let serviceListview = (<View></View>);
             serviceListview = (
                 <ListView
-                refreshControl={ 
+                refreshControl={
                     <RefreshControl
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh} />
@@ -735,12 +734,12 @@ export default class MainView extends Component {
                             <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
                     }
                     <View>
-                    { 
+                    {
                         serviceListview
                     }
                     </View>
-            </View> 
-            
+            </View>
+
             :
 
             <View>
@@ -751,7 +750,7 @@ export default class MainView extends Component {
                         <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
                 }
                 <View>
-                { 
+                {
                     serviceListview
                 }
                 </View>
@@ -767,7 +766,7 @@ export default class MainView extends Component {
                     listView
                 }
                 </View>
-                
+
             </View>
 
         );
@@ -776,23 +775,23 @@ export default class MainView extends Component {
     renderService(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-        
+
        return (
-            <View style={styles.row} > 
+            <View style={styles.row} >
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
-                    
-                    <TouchableOpacity 
+
+                    <TouchableOpacity
                     onPress={()=> this.Description(data.service_id, data.service_name, data.serviceImages ,
                     data.short_description, data.detail_description, data.price ,data.special_price)}>
-                                             
+
 
                 <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages}/>
-       
+
                     </TouchableOpacity>
                 </View>
-                
+
                 <View style={{ padding :15}}>
-                <TouchableOpacity  style={styles.name} 
+                <TouchableOpacity  style={styles.name}
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
 
@@ -800,11 +799,11 @@ export default class MainView extends Component {
                 </TouchableOpacity>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
-                    flex: 0, 
-                    flexDirection: 'row', 
+                    flex: 0,
+                    flexDirection: 'row',
                     justifyContent: 'space-between',
                     top : 5
-                }}> 
+                }}>
                     <Text style={styles.special_price}>{data.special_price} KWD</Text>
                     <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} KWD</Text>
                 </View>
@@ -816,38 +815,38 @@ export default class MainView extends Component {
     renderFilterOptions() {
         return(
         <View style={{ flexDirection : 'row'}}>
-                    <View style={ { 
+                    <View style={ {
                         flex : 0.5,
                         // width : width/2,
-                        height : 40, 
-                        justifyContent : "space-around", 
+                        height : 40,
+                        justifyContent : "space-around",
                         backgroundColor : '#fff',
-                        padding : 2}}> 
-                        
-                        <TouchableOpacity 
+                        padding : 2}}>
+
+                        <TouchableOpacity
                         onPress={this.modal} style={styles.allshop}
-                        > 
+                        >
                             <Text>All Shop</Text>
-                            <Ionicons 
-                            name="md-arrow-dropdown" 
-                            size={20} 
-                            color="#a9d5d1" 
+                            <Ionicons
+                            name="md-arrow-dropdown"
+                            size={20}
+                            color="#a9d5d1"
                             />
                         </TouchableOpacity>
                     </View>
                     <View style={ {
-                    flex : 0.5, 
-                        // width : width/2, 
-                        height : 40, 
-                        justifyContent : "space-around", 
-                        backgroundColor : '#fff', 
-                        padding : 2}}> 
-                        <TouchableOpacity onPress={this.Service} style={styles.allshop}> 
+                    flex : 0.5,
+                        // width : width/2,
+                        height : 40,
+                        justifyContent : "space-around",
+                        backgroundColor : '#fff',
+                        padding : 2}}>
+                        <TouchableOpacity onPress={this.Service} style={styles.allshop}>
                             <Text>Services</Text>
-                            <Ionicons 
-                            name="md-arrow-dropdown" 
-                            size={20} 
-                            color="#a9d5d1" 
+                            <Ionicons
+                            name="md-arrow-dropdown"
+                            size={20}
+                            color="#a9d5d1"
                             />
                         </TouchableOpacity>
                     </View>
@@ -864,37 +863,37 @@ export default class MainView extends Component {
                 style={styles.sidebar}
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isModalVisible}>
-                <View style={{ 
-                    height:54, 
-                    flexDirection : 'row', 
-                    alignItems:'center', 
+                <View style={{
+                    height:54,
+                    flexDirection : 'row',
+                    alignItems:'center',
                     justifyContent : 'space-between',
                     backgroundColor:'#a9d5d1'
                 }}>
                         <Text>{null}</Text>
                         <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>All Shop</Text>
-                        <TouchableOpacity 
-                        underlayColor ={"#fff"} 
+                        <TouchableOpacity
+                        underlayColor ={"#fff"}
                         onPress={()=>this.filterbyShop()}
                         >
                             <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff'}}>Done</Text>
                         </TouchableOpacity>
-                        
+
                     </View>
                     <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}>
                     <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
                     <Text style={{ padding : 10}}>All Shop</Text>
-                    {this.state.rows.length == 0 ? 
+                    {this.state.rows.length == 0 ?
                         <Ionicons name="ios-checkmark" size={30} color="green"  style={{ paddingRight : 10}}/>
                     :
                         undefined
                     }
-                    
+
                     </TouchableOpacity>
                         {this.renderView()}
                     </ScrollView>
-                    
+
                 </ModalWrapper>
         );
     }
@@ -909,27 +908,37 @@ export default class MainView extends Component {
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isService}>
 
-                <View style={{ 
-                    height:54, 
-                    flexDirection : 'row', 
-                    alignItems:'center', 
-                    justifyContent : 'space-between', 
+                <View style={{
+                    height:54,
+                    flexDirection : 'row',
+                    alignItems:'center',
+                    justifyContent : 'space-between',
                     backgroundColor:'#a9d5d1'
                 }}>
                         <Text>{null}</Text>
                         <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>All Service</Text>
-                        <TouchableOpacity 
-                        underlayColor ={"#fff"} 
+                        <TouchableOpacity
+                        underlayColor ={"#fff"}
                         onPress={()=>this.filterbyService()}
                         >
                             <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff'}}>Done</Text>
                         </TouchableOpacity>
-                        
+
                     </View>
-                    <ScrollView>
+                    <ScrollView contentContainerStyle={styles.contentContainer}
+                    showsVerticalScrollIndicator={false}>
+                    <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+                    <Text style={{ padding : 10}}>All Service</Text>
+                    {this.state.servicerows.length == 0 ?
+                        <Ionicons name="ios-checkmark" size={30} color="green"  style={{ paddingRight : 10}}/>
+                    :
+                        undefined
+                    }
+
+                    </TouchableOpacity>
                         {this.renderServiceView()}
                     </ScrollView>
-                    
+
             </ModalWrapper>
         )
     }
@@ -937,22 +946,22 @@ export default class MainView extends Component {
        // service  filter
 
     Service = () => this.setState({ isService: !this.state.isService })
-    
+
     loadServiceData (){
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));   
-        // formData.append('u_id', String(user_type));   
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        formData.append('country', String(country));
+        // formData.append('u_id', String(user_type));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        fetch(Utils.gurl('serviceList'), config) 
+        fetch(Utils.gurl('serviceList'), config)
         .then((response) => response.json())
         .then((responseData) => {
             this.setState({
@@ -978,7 +987,7 @@ export default class MainView extends Component {
             return
         }
 
-        this.setState({ 
+        this.setState({
             isService: !this.state.isService,
             loaded : false,
             isFilterProduct : false
@@ -991,18 +1000,18 @@ export default class MainView extends Component {
         const {u_id, country, user_type, servicerows } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(servicerows));
-        formData.append('country', String(country));   
-        // formData.append('u_id', String(user_type));   
+        formData.append('country', String(country));
+        // formData.append('u_id', String(user_type));
         console.log("request:=",formData)
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
             }
-        fetch(Utils.gurl('filterByService'), config) 
+        fetch(Utils.gurl('filterByService'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -1010,7 +1019,7 @@ export default class MainView extends Component {
                 this.setState({
                 dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
                 status : responseData.status,
-                loaded: true, 
+                loaded: true,
                 refreshing: false
 
 
@@ -1022,20 +1031,20 @@ export default class MainView extends Component {
                 this.setState({
                 isLoading : false,
                 status : responseData.status,
-                loaded: true, 
+                loaded: true,
                 refreshing: false
                 })
             }
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
 
     onServiceClick(data) {
         // var newStateArray = this.state.servicerows.slice();
-        // newStateArray.push(data.service_id); 
+        // newStateArray.push(data.service_id);
         // this.setState({
         //     servicerows: newStateArray
         // });
@@ -1047,10 +1056,10 @@ export default class MainView extends Component {
 
     checkService (data){
         console.log("this.state.rows:=",this.state.servicerows)
-        var newStateArray = this.state.servicerows.slice(); 
+        var newStateArray = this.state.servicerows.slice();
         console.log("newStateArray:=",newStateArray)
-        
-        newStateArray.push(data.service_id); 
+
+        newStateArray.push(data.service_id);
 
         this.setState({
             servicerows: newStateArray,
@@ -1059,12 +1068,12 @@ export default class MainView extends Component {
 
     unCheckService(data){
         var newStateArray = this.state.servicerows.slice();
-        var index = newStateArray.indexOf(data.service_id); 
+        var index = newStateArray.indexOf(data.service_id);
         console.log("index:=",index)
         if (index > -1) {
             newStateArray.splice(index, 1);
         }
-            
+
         this.setState({
             servicerows: newStateArray
         });
@@ -1106,7 +1115,7 @@ export default class MainView extends Component {
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text> No Item Found In Your Service</Text>
-            </View> 
+            </View>
         );
     }
 
@@ -1114,7 +1123,7 @@ export default class MainView extends Component {
         if (!this.state.serviceArrayStatus) {
             return this.noServiceFound();
         }
-        
+
         var leftText = data.service_name;
         return (
             <CheckBox
@@ -1126,9 +1135,9 @@ export default class MainView extends Component {
             />);
     }
     moveToDesc(title, product_id, is_wishlist){
-        Actions.deascriptionPage({ 
-            title: title, 
-            product_id : product_id , 
+        Actions.deascriptionPage({
+            title: title,
+            product_id : product_id ,
             is_wishlist : is_wishlist,
             updateState : this._onRefresh.bind(this)
         })
@@ -1141,7 +1150,7 @@ export default class MainView extends Component {
                 {this.renderAllShopViews()}
                 {this.renderAllServiceViews()}
                 <Text style={{marginTop:10}}> No Item Found </Text>
-            </View> 
+            </View>
         );
     }
 
@@ -1149,49 +1158,49 @@ export default class MainView extends Component {
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#696969' : '#000';
-        let textDecorationLine = data.special_price ? 'line-through' : 'none';  
+        let textDecorationLine = data.special_price ? 'line-through' : 'none';
         let url =  data.productImages[0] ? data.productImages[0].image : "null"
 
        return (
-            <View style={styles.row} > 
+            <View style={styles.row} >
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                     onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}>
                         <LoadImage productImages={data.productImages}/>
                     </TouchableOpacity>
-                    <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}} 
-                        name="share-google" 
-                        size={25} 
-                        color="#a9d5d1" 
+                    <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}}
+                        name="share-google"
+                        size={25}
+                        color="#a9d5d1"
                         onPress={()=>this.onOpen(data.product_name, data.product_id , url )}/>
-                        <Editwish 
-                        u_id={this.state.u_id} 
-                        country={this.state.country} 
-                        is_wishlist={data.is_wishlist} 
+                        <Editwish
+                        u_id={this.state.u_id}
+                        country={this.state.country}
+                        is_wishlist={data.is_wishlist}
                         product_id={data.product_id}
                         fetchData={()=>this.fetchData()}/>
                 </View>
-                
+
                 <View style={{ padding :10}}>
-                <TouchableOpacity  style={styles.name} 
+                <TouchableOpacity  style={styles.name}
                 onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}
                 >
 
                 <Text style={{fontSize : 10, color :'#989898' }}>{data.product_name}</Text>
 
                 </TouchableOpacity>
-                <View style={styles.description}><Header 
+                <View style={styles.description}><Header
                 product_category= {data.product_category}
                 u_id={this.state.u_id}
                 country={this.state.country}
                 />
                 </View>
                 <View style={{
-                    flex: 0, 
-                    flexDirection: 'row', 
+                    flex: 0,
+                    flexDirection: 'row',
                     justifyContent: 'space-between',
                     marginTop : 10
-                }}> 
+                }}>
                     <Text style={styles.special_price}>{data.special_price} KWD</Text>
                     <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} KWD</Text>
                 </View>
@@ -1213,29 +1222,29 @@ class Header extends Component{
         this.fetchData();
     }
 
-    search = (nameKey, myArray)=>{ 
-        for (var i = 0; i < myArray.length; i++) { 
-            if (myArray[i].category_id === nameKey) { 
+    search = (nameKey, myArray)=>{
+        for (var i = 0; i < myArray.length; i++) {
+            if (myArray[i].category_id === nameKey) {
                 return myArray[i].category_name;
             }
         }
     }
 
-    fetchData(){ 
-        const {u_id, country } = this.props; 
+    fetchData(){
+        const {u_id, country } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('country', String(country));
+
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
-        fetch(Utils.gurl('getFilterMenu'), config) 
+        fetch(Utils.gurl('getFilterMenu'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -1251,7 +1260,7 @@ class Header extends Component{
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
 
     }
@@ -1270,7 +1279,7 @@ class Header extends Component{
 }
 
 var styles = StyleSheet.create({
-    contentContainer: { 
+    contentContainer: {
         paddingVertical: 10
     },
     container: {
@@ -1280,7 +1289,7 @@ var styles = StyleSheet.create({
         backgroundColor: '#F5FCFF'
     },
     list: {
-        // borderWidth: 1, 
+        // borderWidth: 1,
         // borderColor: '#CCC',
         flexDirection: 'row',
         flexWrap: 'wrap'
@@ -1306,16 +1315,16 @@ var styles = StyleSheet.create({
         width : width/2-20,
         alignItems : 'center',
         padding : 10,
-        borderTopWidth : 0.5, 
+        borderTopWidth : 0.5,
         borderColor :'#ccc',
         borderLeftWidth : 0.5
     },
-    allshop :{ 
-        flex:1, 
-        justifyContent : "space-around", 
-        flexDirection: 'row', 
-        borderWidth : StyleSheet.hairlineWidth, 
-        borderColor: "#ccc", 
+    allshop :{
+        flex:1,
+        justifyContent : "space-around",
+        flexDirection: 'row',
+        borderWidth : StyleSheet.hairlineWidth,
+        borderColor: "#ccc",
         alignItems: 'center'
     },
 
@@ -1382,9 +1391,9 @@ const REACT_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAA
 
 
 
-class LoadImage extends Component { 
+class LoadImage extends Component {
     constructor(props) {
-        super(props); 
+        super(props);
         this.state={
             loaded: false
         }
@@ -1394,19 +1403,19 @@ class LoadImage extends Component {
         console.log(this.props.productImages[0])
         var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
 
-        return ( 
-            imgUrl == "null" ? 
-                
-                <Image style={styles.thumb} 
+        return (
+            imgUrl == "null" ?
+
+                <Image style={styles.thumb}
                 resizeMode = 'center'
-                resizeMethod = 'resize'            
+                resizeMethod = 'resize'
                 source={require('../images/no-image.jpg')}
                 onLoadEnd={() => { this.setState({ loaded: true }); }}
-                />  
+                />
             :
-                <Image style={styles.thumb} 
+                <Image style={styles.thumb}
                 resizeMode = 'center'
-                resizeMethod = 'resize'            
+                resizeMethod = 'resize'
                 source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
                 onLoadEnd={() => { this.setState({ loaded: true }); }}
                 />

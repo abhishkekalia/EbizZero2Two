@@ -1,12 +1,12 @@
 import React, {Component, PropTypes} from "react";
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  TouchableOpacity, 
-  UIManager, 
-  findNodeHandle, 
-  Dimensions, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  UIManager,
+  findNodeHandle,
+  Dimensions,
   ListView ,
   AsyncStorage
 } from "react-native";
@@ -27,10 +27,10 @@ const ICON_SIZE = 24
 export default class AddressBook extends Component {
     constructor(props) {
         super(props);
-        this.getKey = this.getKey.bind(this);      
+        this.getKey = this.getKey.bind(this);
         this.onSelect = this.onSelect.bind(this)
         this.state={
-            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
+            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             u_id: '',
             country : '',
             isSelected : '',
@@ -77,84 +77,84 @@ export default class AddressBook extends Component {
                         "vendor_id":organization.vendor_id,
                         "price":organization.price,
                         "delivery_datetime": currentdate,
-                        "order_date": nextdate 
-                    })                 
+                        "order_date": nextdate
+                    })
         }
         this.addToOrder(Select)
         .done()
     }
-    
-    removeFromCart(value){
-        try { 
-            const { u_id, country } = this.state;
-            let formData = new FormData();
-            formData.append('u_id', String(u_id));
-            formData.append('country', String(country));
-            formData.append('order_detail', JSON.stringify(value));
-            formData.append('amount', String(this.props.totalAmount));
-            const config = { 
-                   method: 'POST', 
-                   headers: { 
-                        'Accept': 'application/json', 
-                        'Content-Type': 'multipart/form-data;',
-                   },
-                   body: formData,
-              }
-            fetch(Utils.gurl('addToOrder'), config)  
-            .then((response) => response.json())
-            .then((responseData) => { 
-            if(responseData.status){
-            // console.warn("calling my Fatureh") 
-              routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
-              }else{
-                this.removeLoader
-            }
-            }) 
-            .catch((error) => {
-                console.log(error);
-            })
-        .done();
 
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-
-    }
+    // removeFromCart(value){
+    //     try {
+    //         const { u_id, country } = this.state;
+    //         let formData = new FormData();
+    //         formData.append('u_id', String(u_id));
+    //         formData.append('country', String(country));
+    //         formData.append('order_detail', JSON.stringify(value));
+    //         formData.append('amount', String(this.props.totalAmount));
+    //         const config = {
+    //                method: 'POST',
+    //                headers: {
+    //                     'Accept': 'application/json',
+    //                     'Content-Type': 'multipart/form-data;',
+    //                },
+    //                body: formData,
+    //           }
+    //         fetch(Utils.gurl('addToOrder'), config)
+    //         .then((response) => response.json())
+    //         .then((responseData) => {
+    //         if(responseData.status){
+    //         console.warn("calling my Fatureh")
+    //           routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+    //           }else{
+    //             this.removeLoader
+    //         }
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         })
+    //     .done();
+    //
+    //     } catch (error) {
+    //         console.log("Error retrieving data" + error);
+    //     }
+    //
+    // }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
     async addToOrder(value){
-        try { 
+        try {
             const { u_id, country } = this.state;
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('order_detail', JSON.stringify(value));
             formData.append('amount', String(this.props.totalAmount));
-            const config = { 
-                   method: 'POST', 
-                   headers: { 
-                        'Accept': 'application/json', 
+            const config = {
+                   method: 'POST',
+                   headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data;',
                    },
                    body: formData,
               }
-            fetch(Utils.gurl('addToOrder'), config)  
+            fetch(Utils.gurl('addToOrder'), config)
             .then((response) => response.json())
-            .then((responseData) => { 
+            .then((responseData) => {
             if(responseData.status){
-            // console.warn("calling my Fatureh") 
+            // console.warn("calling my Fatureh")
               routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
               }else{
                 this.removeLoader
@@ -169,36 +169,36 @@ export default class AddressBook extends Component {
         }
 
     }
-    removeLoader = () => this.setState({ 
+    removeLoader = () => this.setState({
         visibleModal : false
     })
 
     fetchAddress(){
         const { u_id, country } = this.state;
-        
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        fetch(Utils.gurl('addressList'), config)  
+        fetch(Utils.gurl('addressList'), config)
         .then((response) => response.json())
-        .then((responseData) => { 
+        .then((responseData) => {
             if(responseData.status){
                 this.setState({
-                status : responseData.status, 
+                status : responseData.status,
                  dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 });
             }else{
                 this.setState({
-                status : responseData.status, 
+                status : responseData.status,
                 });
             }
         })
@@ -211,26 +211,26 @@ export default class AddressBook extends Component {
 
     onRemove (data){
         const { u_id, country } = this.state;
-          
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('address_id', String(data.address_id)); 
+        formData.append('country', String(country));
+        formData.append('address_id', String(data.address_id));
 
-        const config = { 
-             method: 'POST', 
-             headers: { 
-                  'Accept': 'application/json', 
+        const config = {
+             method: 'POST',
+             headers: {
+                  'Accept': 'application/json',
                   'Content-Type': 'multipart/form-data;',
              },
              body: formData,
         }
-        fetch(Utils.gurl('deleteAddress'), config)  
+        fetch(Utils.gurl('deleteAddress'), config)
         .then((response) => response.json())
         .then((responseData) => {
-          MessageBarManager.showAlert({ 
-          message: responseData.data.message, 
-          alertType: 'alert', 
+          MessageBarManager.showAlert({
+          message: responseData.data.message,
+          alertType: 'alert',
           title:''
           })
         })
@@ -243,20 +243,20 @@ export default class AddressBook extends Component {
 
     }
     onEdit (data) {
-        routes.newaddress({ 
-            address_id : data.address_id, 
+        routes.newaddress({
+            address_id : data.address_id,
             full_name : data.full_name,
-            alternate_number : data.alternate_number, 
-            mobile_number : data.mobile_number, 
-            address_line1 : data.address_line1, 
-            address_line2 : data.address_line2, 
-            landmark : data.landmark, 
-            town : data.town, 
-            city : data.city, 
-            state : data.state, 
-            country : data.country, 
-            pincode : data.pincode, 
-            address_type : data.address_type, 
+            alternate_number : data.alternate_number,
+            mobile_number : data.mobile_number,
+            address_line1 : data.address_line1,
+            address_line2 : data.address_line2,
+            landmark : data.landmark,
+            town : data.town,
+            city : data.city,
+            state : data.state,
+            country : data.country,
+            pincode : data.pincode,
+            address_type : data.address_type,
         });
     }
 
@@ -279,7 +279,7 @@ export default class AddressBook extends Component {
 
          if (!this.state.status) {
             return this.noItemFound();
-        } 
+        }
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -293,7 +293,7 @@ export default class AddressBook extends Component {
             );
         return (
         <View style={styles.container}>
-        
+
         {listView}
         <TouchableOpacity style={{ alignItems : 'center', backgroundColor:'#ccc'}}  onPress={()=>routes.pop()}>
         <Text style={{padding :10}}>Close</Text>
@@ -311,12 +311,12 @@ export default class AddressBook extends Component {
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
-        <View 
-            style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff',flexDirection:'row' }} 
+        <View
+            style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff',flexDirection:'row' }}
         >
-            <RadioGroup 
+            <RadioGroup
             style={{justifyContent: 'flex-end'}}
-            onSelect = {(sectionID, value) => this.onSelect(sectionID, value)}
+            onSelect = {(sectionID, value) => this.onSelect(sectionID, data.address_id)}
             >
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flexDirection: 'column' }}>
@@ -331,7 +331,7 @@ export default class AddressBook extends Component {
                         <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
                         </View>
                         <Text style={{fontSize:12}}>
-                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
                     data.jadda,"\n",data.city," ",data.direction]}
                     </Text>
                     </View>

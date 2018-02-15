@@ -26,11 +26,13 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const videoIcon = '../images/videoIcon.png';
 const INITIAL_STATE = {avatarSource: ''};
+
 const textstring = "Upload your image into the External Circle \n" +
                     "Upload your 10 sec video into the External Circle \n" +
                     "Price: 1 KD per picture  / 1.5 KD per video"
-export default class Marketingadd extends Component { 
-    constructor(props) { 
+
+export default class Marketingadd extends Component {
+    constructor(props) {
         super(props);
         this.state={
             image: null,
@@ -49,7 +51,7 @@ export default class Marketingadd extends Component {
             user_type : null,
             country : null,
             amount : '0',
-            visibleModal: false       
+            visibleModal: false
         }
     }
     componentDidMount(){
@@ -57,65 +59,65 @@ export default class Marketingadd extends Component {
         .done();
     }
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-                user_type: response.userdetail.user_type 
-            }); 
+                user_type: response.userdetail.user_type
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
-   
+
     uploadTocloud(){
-        const { 
-            image, 
-            imageSelect , 
-            imageURl , 
-            avatarSource, 
-            videoSelect, 
-            u_id, 
-            user_type, 
-            country, 
-            amount, 
+        const {
+            image,
+            imageSelect ,
+            imageURl ,
+            avatarSource,
+            videoSelect,
+            u_id,
+            user_type,
+            country,
+            amount,
             thumbnail_image,
             thumblinefiletype,
             fileType,
             Source,
             uploadFileName,
             thumblinename,
-        } = this.state; 
+        } = this.state;
         var isImage;
 
-        if(image === 'image') { 
+        if(image === 'image') {
             isImage = "1" } else { isImage = "2"}
-            
+
             this.setState({
                 visibleModal : true
             })
-            
-            RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{ 
-                Authorization : "Bearer access-token", 
+
+            RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{
+                Authorization : "Bearer access-token",
                 'Accept': 'application/json',
                 'Content-Type': 'application/octet-stream',
             },
             [
             { name: 'path', filename: uploadFileName, type: fileType,  data: RNFetchBlob.wrap(Source) },
             { name : 'thumbnail_image',  filename : thumblinename,  type : thumblinefiletype, data: RNFetchBlob.wrap(thumbnail_image)},
-            { name : 'u_id', data: String(u_id)}, 
-            { name : 'country', data: String(country)}, 
-            { name : 'user_type', data: String(user_type)}, 
-            { name : 'ad_type', data: String(isImage)}, 
-            { name : 'ad_category', data: String(4)}, 
-            { name : 'amount', data: String(amount)}, 
+            { name : 'u_id', data: String(u_id)},
+            { name : 'country', data: String(country)},
+            { name : 'user_type', data: String(user_type)},
+            { name : 'ad_type', data: String(isImage)},
+            { name : 'ad_category', data: String(4)},
+            { name : 'amount', data: String(amount)},
             ])
             .uploadProgress({ interval : 250 },(written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%') 
+            console.log('uploaded', Math.floor(written/total*100) + '%')
             })
-            .then((responseData)=>{ 
+            .then((responseData)=>{
                var getdata = JSON.parse(responseData.data);
                if(getdata.status){
                     routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: amount })
@@ -145,10 +147,10 @@ export default class Marketingadd extends Component {
             storageOptions: {
               skipBackup: true
             }
-        }; 
+        };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response); 
+            console.log('Response = ', response);
             if (response.didCancel) {
             console.log('User cancelled photo picker');
             }
@@ -159,14 +161,15 @@ export default class Marketingadd extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-              let source = { uri: response.uri }; 
-              let path = response.uri
+              let source = { uri: response.uri };
               let name = response.fileName
-              tempImg = path.replace(/^file:\/\//, '');
-
+              let url = response.uri
+              let path =
+                (Platform.OS === 'ios')?
+                    url.replace(/^file:\/\//, '') : response.uri
                 this.setState({
                     avatarSource: source,
-                    thumbnail_image : tempImg,
+                    thumbnail_image : path,
                     thumblinefiletype : 'image/jpg',
                     imageSelect : true,
                     videoSelect : false,
@@ -185,10 +188,10 @@ export default class Marketingadd extends Component {
             storageOptions: {
               skipBackup: true
             }
-        }; 
+        };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response); 
+            console.log('Response = ', response);
             if (response.didCancel) {
             console.log('User cancelled photo picker');
             }
@@ -199,20 +202,22 @@ export default class Marketingadd extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-              let source = { uri: response.uri }; 
-              let path = response.uri;
+              let source = { uri: response.uri };
               let name = response.fileName;
+              let url = response.uri
+              let path =
+                (Platform.OS === 'ios')?
+                    url.replace(/^file:\/\//, '') : response.uri
 
-              tempImg = path.replace(/^file:\/\//, '');
                 this.setState({
-                    avatarSource: source,   
-                    thumbnail_image : tempImg,
+                    avatarSource: source,
+                    thumbnail_image : path,
                     imageSelect : true,
                     videoSelect : false,
                     image : 'image',
                     fileType : 'image/jpg',
                     thumblinefiletype : 'image/jpg',
-                    Source: tempImg,
+                    Source: path,
                     uploadFileName : name,
                     thumblinename : name,
                     amount : "1"
@@ -221,7 +226,7 @@ export default class Marketingadd extends Component {
         });
     }
 
-    selectVideoTapped() { 
+    selectVideoTapped() {
         const options = {
             title: 'Video Picker',
             takePhotoButtonTitle: 'Take Video...',
@@ -241,27 +246,29 @@ export default class Marketingadd extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-           
+
             var filename = Date.now().toString();
             let name = filename + "." + response.uri.split('.')[1];
-              let path = response.uri;
+            let url = response.uri
+            let path =
+              (Platform.OS === 'ios')?
+                  url.replace(/^file:\/\//, '') : response.uri
 
-                tempvideo = path.replace(/^file:\/\//, '');
 
               this.setState({
-                videoSource: tempvideo ,
+                videoSource: path ,
                 videoSelect : true,
                 imageSelect : false,
                 image : 'video',
                 fileType : 'video/mp4',
                 uploadFileName : name ,
-                Source: tempvideo,
+                Source: path,
                 amount : "1.5",
 
               });
 
-        Alert.alert( 
-            'Select Thumbline Image', 
+        Alert.alert(
+            'Select Thumbline Image',
             'Please Select Thumbline Image',
             [{text: 'Cancel', onPress: () => this.onCancelPress(), style: 'cancel'},
             {text: 'OK', onPress: () => this.SelectThumbline()},
@@ -281,16 +288,16 @@ onCancelPress(){
     });
 }
     render() {
-        const { imageSelect , videoSelect} = this.state; 
-        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d'    
-        borderColorVideo= videoSelect ? "#a9d5d1" : '#f53d3d'    
+        const { imageSelect , videoSelect} = this.state;
+        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d'
+        borderColorVideo= videoSelect ? "#a9d5d1" : '#f53d3d'
 
         return (
             <View style={[styles.container, { padding : 10}]}>
-                <View style={{ 
-                    flex:0.8, 
-                    borderColor : '#bbb', 
-                    borderWidth : StyleSheet.hairlineWidth, 
+                <View style={{
+                    flex:0.8,
+                    borderColor : '#bbb',
+                    borderWidth : StyleSheet.hairlineWidth,
                     flexDirection: 'column',
                     justifyContent: 'space-around',
                     padding : 10
@@ -306,16 +313,16 @@ onCancelPress(){
                     </Text>
 
                     <View style={{justifyContent : "space-around",flexDirection: 'row',}}>
-                        <Entypo  
-                            name="image" 
+                        <Entypo
+                            name="image"
                             size= {30}
                             color={borderColorImage}
                             onPress={this.selectPhotoTapped.bind(this)}
-                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} /> 
-                        <Feather 
+                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
+                        <Feather
                         name="play-circle" onPress={this.selectVideoTapped.bind(this)}
                         color={borderColorVideo}
-                        size= {30} 
+                        size= {30}
                         style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
                     </View>
 
@@ -328,7 +335,7 @@ onCancelPress(){
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                     <CirclesLoader />
-                    
+
                 </View>
             </Modal>
 

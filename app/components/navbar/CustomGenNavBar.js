@@ -9,7 +9,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 
 export default class CustomGenNavBar extends React.Component {
     _renderLeft() {
-        if (Actions.currentScene === 'homePage') { 
+        if (Actions.currentScene === 'homePage') {
             return (
                 <TouchableOpacity
                   onPress={() => console.log('Hamburger button pressed')}
@@ -22,9 +22,9 @@ export default class CustomGenNavBar extends React.Component {
                 <TouchableOpacity
                 onPress={Actions.pop}
                 style={
-                    [styles.navBarItem, 
-                { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 , 
-                width:'15%', 
+                    [styles.navBarItem,
+                { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 ,
+                width:'15%',
                 height: (Platform.OS === 'ios') ? '80%' : '100%'
             }
                 ]}>
@@ -34,12 +34,12 @@ export default class CustomGenNavBar extends React.Component {
         }
     }
 
-    _renderMiddle() { 
+    _renderMiddle() {
         return (
             <View style={
-                [styles.navBarItem, 
-                { top: (Platform.OS === 'ios') ? 12 : 0 , 
-                width:'70%', 
+                [styles.navBarItem,
+                { top: (Platform.OS === 'ios') ? 12 : 0 ,
+                width:'70%',
                 height: (Platform.OS === 'ios') ? '80%' : '100%',
                 justifyContent: 'center',
                 alignItems:'center'
@@ -53,11 +53,11 @@ export default class CustomGenNavBar extends React.Component {
     _renderRight(name) {
         return (
             <View style={
-                [styles.navBarItem, 
-                {top: (Platform.OS === 'ios') ? 12 : 0, 
-                flexDirection: 'row', 
+                [styles.navBarItem,
+                {top: (Platform.OS === 'ios') ? 12 : 0,
+                flexDirection: 'row',
                 justifyContent: 'flex-end',
-                width:'15%', 
+                width:'15%',
                 height: (Platform.OS === 'ios') ? '80%' : '100%'
             }
             ]}>
@@ -72,7 +72,7 @@ export default class CustomGenNavBar extends React.Component {
 
     render() {
         let dinamicStyle = { backgroundColor: '#a9d5d1'}
-        let renderRight = this.props.renderRightButton ? this.props.renderRightButton() : this._renderRight() 
+        let renderRight = this.props.renderRightButton ? this.props.renderRightButton() : this._renderRight()
         return (
             <View style={[styles.container, dinamicStyle]}>
                 { this._renderLeft() }
@@ -83,13 +83,13 @@ export default class CustomGenNavBar extends React.Component {
     }
 }
 
-const styles = StyleSheet.create({ 
-    container: { 
+const styles = StyleSheet.create({
+    container: {
         height: (Platform.OS === 'ios') ? 64 : 54,
         flexDirection: 'row'
-    }, 
-    navBarItem: { 
-        // flex: 1, 
+    },
+    navBarItem: {
+        // flex: 1,
         justifyContent: 'center',
     }
 })

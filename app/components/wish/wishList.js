@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { 
-    Text, 
-    View, 
-    TouchableHighlight, 
-    StyleSheet, 
+import {
+    Text,
+    View,
+    TouchableHighlight,
+    StyleSheet,
     ListView,
     TouchableOpacity,
-    ScrollView, 
-    Dimensions, 
+    ScrollView,
+    Dimensions,
     TextInput,
     AsyncStorage,
     Image ,
@@ -35,25 +35,25 @@ import Share, {ShareSheet, Button} from 'react-native-share';
 import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window');
-const SHORT_LIST = ['Small', 'Medium', 'Large'];
+// const SHORT_LIST = ['Small', 'Medium', 'Large'];
 
 export default class WishList extends Component {
-    constructor(props) { 
-        super(props); 
-        this.getKey = this.getKey.bind(this);        
+    constructor(props) {
+        super(props);
+        this.getKey = this.getKey.bind(this);
         this.fetchData = this.fetchData.bind(this);
-        this.state = { 
-            dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}), 
+        this.state = {
+            dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             status : false,
             u_id: null,
             country : null,
             loaded: false,
             toggle : false,
-            refreshing: false, 
+            refreshing: false,
             color: 'blue',
             visible: false,
-        }; 
-    } 
+        };
+    }
     componentDidMount(){
         this.getKey()
         .then( ()=>this.fetchData())
@@ -67,7 +67,7 @@ export default class WishList extends Component {
         console.log("componentDidMount")
     }
     componentWillMount() {
-        Actions.refresh({ right: this._renderRightButton,});    
+        Actions.refresh({ right: this._renderRightButton,});
         console.log("componentWillMount")
     }
    _renderRightButton = () => {
@@ -76,50 +76,50 @@ export default class WishList extends Component {
         );
     };
 
-   
+
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
     refreshfromCount(){
         this.fetchData()
-    
+
     }
     onCancel() {
         console.log("CANCEL")
         this.setState({visible:false});
     }
-    
+
     onOpen() {
         console.log("OPEN")
         this.setState({visible:true});
     }
 
 
-    fetchData(){ 
+    fetchData(){
         const {u_id, country, user_type } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
 
-        fetch(Utils.gurl('wishlist'), config) 
+        fetch(Utils.gurl('wishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -139,7 +139,7 @@ export default class WishList extends Component {
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
 
     }
@@ -158,40 +158,40 @@ export default class WishList extends Component {
     }
 
     addtoCart(count, product_id, size){
-        const { color, u_id, country, user_type  } = this.state; 
+        const { color, u_id, country, user_type  } = this.state;
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('product_id', String(product_id)); 
-        formData.append('size', String(size)); 
-        formData.append('color', String(color)); 
-        formData.append('quantity', String(count)); 
+        formData.append('country', String(country));
+        formData.append('product_id', String(product_id));
+        formData.append('size', String(size));
+        formData.append('color', String(color));
+        formData.append('quantity', String(count));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
         if (this.validate(size)) {
-            fetch(Utils.gurl('addTocart'), config) 
+            fetch(Utils.gurl('addTocart'), config)
             .then((response) => response.json())
             .then((responseData) => {
                 if(responseData.status){
-                    MessageBarManager.showAlert({ 
-                        message: responseData.data.message, 
-                        alertType: 'alert', 
+                    MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        alertType: 'alert',
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
                         title:''
                     })
                     Actions.shopingCart();
                 }else {
-                    MessageBarManager.showAlert({ 
-                        message: responseData.data.message, 
-                        alertType: 'alert', 
+                    MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        alertType: 'alert',
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
                         title:''
                     })
@@ -201,7 +201,7 @@ export default class WishList extends Component {
             .then(()=> this.fetchData())
             .catch((error) => {
               console.log(error);
-            })       
+            })
             .done();
         }
     }
@@ -209,19 +209,19 @@ export default class WishList extends Component {
         const {u_id, country} = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
+        formData.append('country', String(country));
         formData.append('product_id', String(product_id));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
 
-        fetch(Utils.gurl('removeFromWishlist'), config) 
+        fetch(Utils.gurl('removeFromWishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if (responseData.status) {
@@ -230,7 +230,7 @@ export default class WishList extends Component {
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
     updateState = () => {
@@ -247,15 +247,15 @@ export default class WishList extends Component {
     }
     getSize(size){
         this.setState({size});
-    }    
+    }
     getColor(color){
         this.setState({color});
     }
     renderLoadingView() {
         return (
             <ActivityIndicator
-            style={styles.centering}  
-            color="#a9d5d1" 
+            style={styles.centering}
+            color="#a9d5d1"
             size="small"/>
             );
     }
@@ -274,11 +274,11 @@ export default class WishList extends Component {
 
         if (!this.state.status) {
             return this.noItemFound();
-        } 
+        }
         let listView = (<View></View>);
             listView = (
                 <ListView
-                refreshControl={ 
+                refreshControl={
                     <RefreshControl
                     refreshing={this.state.refreshing}
                     onRefresh={this.fetchData} />
@@ -374,37 +374,36 @@ export default class WishList extends Component {
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         return (
-            <View style={{ 
+            <View style={{
             flexDirection: 'column' ,
-            marginTop : 2, 
-            borderWidth : 0.5, 
-            borderColor : "#ccc", 
+            marginTop : 2,
+            borderWidth : 0.5,
+            borderColor : "#ccc",
             borderRadius : 5}}>
 
-            <SelectItem product_id={data.product_id} u_id={this.state.u_id} country={this.state.country} callback={this.refreshfromCount.bind(this)} >
+            <SelectItem product_id={data.product_id} u_id={this.state.u_id} country={this.state.country} callback={this.refreshfromCount.bind(this)} size_arr={data.size_arr}>
 
-                <View style={{ 
-                flexDirection: 'row', 
+                <View style={{
+                flexDirection: 'row',
                 backgroundColor : "#fff", alignItems : 'center'}}>
                     <Image style={[styles.thumb]}
-                    resizemode="center" 
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
-                    />  
+                    />
                         <View style={{flexDirection: 'column', justifyContent : 'space-between', marginLeft: 10}}>
-                        <TouchableOpacity onPress={()=>Actions.deascriptionPage({ 
-                            title: data.product_name, 
-                            product_id : data.product_id})}>                            
+                        <TouchableOpacity onPress={()=>Actions.deascriptionPage({
+                            title: data.product_name,
+                            product_id : data.product_id})}>
                                 <Text style={{fontSize: 13, color: '#696969', marginTop: 10, marginBottom:5}} > {data.product_name} </Text>
                         </TouchableOpacity>
                             <Text style={{ fontSize : 10, color : '#696969',bottom:5}} > {data.short_description} </Text>
                             <View style={{ flexDirection : "row"}}>
                                 <Text style={{fontSize: 13 }}> Quantity :  </Text>
-                                <Countmanager  
-                                quantity={data.quantity} 
-                                u_id={this.state.u_id} 
-                                product_id={data.product_id} 
-                                updatetype={"0"} 
-                                country={this.state.country} 
+                                <Countmanager
+                                quantity={data.quantity}
+                                u_id={this.state.u_id}
+                                product_id={data.product_id}
+                                updatetype={"0"}
+                                country={this.state.country}
                                 callback={this.refreshfromCount.bind(this)}
                                 />
                             </View>
@@ -419,13 +418,13 @@ export default class WishList extends Component {
                             </View>
                             </View>
                         </View>
-                    </View>                             
+                    </View>
                 <View style={styles.bottom}>
                     <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
                     <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
                         <Text style={{ left : 5}}>Share WishList</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]} 
+                    <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}
                     onPress={()=>this.addtoCart(data.quantity, data.product_id, data.size)}>
                     <Image source={require('../../images/cart_icon.png')} style={{ width:"10%", height : "100%"}}/>
                         <Text style={{ left :5}}>Move to Cart</Text>
@@ -438,16 +437,38 @@ export default class WishList extends Component {
 }
 
 class SelectItem extends Component{
-    constructor(props) { 
-        super(props); 
-        this.state = { 
-            size : '',
-            color : 'blue',
-            selectSize : false
-        }; 
-    }
+  constructor(props) {
+      super(props);
+      this.state = {
+          size : '',
+          color : 'blue',
+          selectSize : false,
+          SHORT_LIST : ['0']
+
+      };
+  }
+  componentDidMount(){
+    var data =this.props.size_arr,
+        length = data.length,
+        sizeList= []
+
+            for(var i=0; i < length; i++) {
+                order = data[i];
+                // console.warn(order);
+                sizeof = order.size;
+                sizeList.push(sizeof);
+            }
+            // console.warn(sizeList);
+            this.setState({
+              SHORT_LIST: sizeList,
+            })
+
+  }
+//   componentWillReceiveProps(nextProps){
+// console.warn(nextProps);
+//       }
         validate(){
-        const { color} = this.state; 
+        const { color} = this.state;
 
         if (!color.length)
         {
@@ -459,34 +480,34 @@ class SelectItem extends Component{
             return false
         }
             return true;
-    } 
- 
+    }
+
     editWishlist(size){
-        const { color, } = this.state; 
+        const { color, } = this.state;
         const {u_id, country, product_id } = this.props;
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
+        formData.append('country', String(country));
         formData.append('product_id', String(product_id));
-        formData.append('size', String(size)); 
-        formData.append('color', String(color)); 
+        formData.append('size', String(size));
+        formData.append('color', String(color));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
         if (this.validate()) {
-            fetch(Utils.gurl('editWishlist'), config) 
+            fetch(Utils.gurl('editWishlist'), config)
             .then((response) => response.json())
             .then((responseData) => {
-                MessageBarManager.showAlert({ 
-                        message: responseData.data.message, 
-                        alertType: 'alert', 
+                MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        alertType: 'alert',
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
                         title:''
                     })
@@ -494,7 +515,7 @@ class SelectItem extends Component{
             .then(()=>this.props.callback())
             .catch((error) => {
               console.log(error);
-            })       
+            })
             .done();
         }
     }
@@ -503,19 +524,19 @@ class SelectItem extends Component{
         const {u_id, country, product_id } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
+        formData.append('country', String(country));
         formData.append('product_id', String(product_id));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
 
-        fetch(Utils.gurl('removeFromWishlist'), config) 
+        fetch(Utils.gurl('removeFromWishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if (responseData.status) {
@@ -525,11 +546,11 @@ class SelectItem extends Component{
         .then(()=>this.props.callback())
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
     changeSize(result){
-        this.setState({ 
+        this.setState({
             selectSize: false,
             size: result.selectedItem.label
         });
@@ -537,6 +558,7 @@ class SelectItem extends Component{
     }
 
     render(){
+      let { SHORT_LIST } = this.state;
             let swipeBtns = [{
             text: 'Edit',
             backgroundColor: '#a9d5d1',
@@ -554,12 +576,12 @@ class SelectItem extends Component{
          }];
 
         return(
-            <Swipeout 
+            <Swipeout
                 right={swipeBtns}
                 autoClose={true}
-                backgroundColor= 'transparent'> 
+                backgroundColor= 'transparent'>
                 {this.props.children}
-                
+
                 <SinglePickerMaterialDialog
                   title={'Select Size'}
                   items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
@@ -577,7 +599,7 @@ class SelectItem extends Component{
 const styles = StyleSheet.create ({
     container: {
         flexDirection: 'column',
-        padding : 10 
+        padding : 10
     },
 
     row: {
@@ -602,16 +624,17 @@ const styles = StyleSheet.create ({
 
 
     wishbutton :{
-        alignItems : 'center', 
+        alignItems : 'center',
         width : width/2-10,
-        borderWidth : 0.5, 
+        borderWidth : 0.5,
         borderColor : "#ccc",
         padding : 5
     },
 
     thumb: {
-        width   : width/6,
-        height  :width/5 ,
+      resizeMode: 'center',
+        width   : '20%',
+        height  :'50%' ,
         marginLeft : 10
     },
 
@@ -630,8 +653,8 @@ const styles = StyleSheet.create ({
     },
 
     bottom : {
-        borderBottomLeftRadius : 10, 
-        borderBottomRightRadius : 10, 
+        borderBottomLeftRadius : 10,
+        borderBottomRightRadius : 10,
         flexDirection : 'row',
         justifyContent : 'space-around',
         backgroundColor : "#fff"

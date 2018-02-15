@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { 
-    StyleSheet, 
-    ActivityIndicator, 
-    ListView, 
-    Text, 
-    View, 
-    Image, 
+import {
+    StyleSheet,
+    ActivityIndicator,
+    ListView,
+    Text,
+    View,
+    Image,
     Dimensions,
     FlatList
 } from 'react-native';
@@ -18,9 +18,9 @@ const { width, height } = Dimensions.get('window')
 export default class Editimage extends Component {
     constructor(props) {
         super(props);
-               
-        this.state={ 
-            dataSource: [], 
+
+        this.state={
+            dataSource: [],
             isLoading: true,
         }
     }
@@ -41,34 +41,40 @@ export default class Editimage extends Component {
         this.props.callback(myArray);
         let a = url.split("/"),
         rm= a[a.length-1];
-        
+
         this.props.getremovedata(rm);
     }
 
     render() {
-        if (this.state.isLoading) { 
+        if (this.state.isLoading) {
             return (
                 <View style={{ justifyContent: 'center',}}>
                     <ActivityIndicator />
                 </View>
             );
         }
- 
+
         return (
             <FlatList
             horizontal
             data= {this.state.dataSource}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item: rowData }) => { 
+            renderItem={({ item: rowData }) => {
                 return (
-                <View style={{ height:110}}> 
-                <Card 
-                image={{ uri: rowData.uri }}
-                containerStyle={styles.imageViewContainer}
-                />
-                <Icon 
-                onPress={()=>this.removeImage(rowData.uri)}
-                name="close-box" size={20} color='#696969' style={{ alignSelf: 'flex-end', position:'absolute', right : 15, top:15}}/>
+                <View style={{ height:200, position: 'relative', zIndex:-1}}>
+                  <Icon
+                  onPress={()=>this.removeImage(rowData.uri)}
+                  name="close-box" size={30} color='#696969' style={{
+                    alignSelf: 'flex-end',
+                     //position:'absolute',
+                     right :0,
+                     zIndex: 1,
+                     top:0
+                   }}/>
+                  <Card
+                  image={{ uri: rowData.uri }}
+                  containerStyle={styles.imageViewContainer}
+                  />
                 </View>
                 );
             }}
@@ -77,10 +83,12 @@ export default class Editimage extends Component {
         );
     }
 }
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     imageViewContainer: {
-        width: 80,
+        width: 100,
         height: '100%',
+        position: 'relative',
+        zIndex: 0,
         margin: 10,
         borderWidth : 1,
         borderColor : '#ccc',

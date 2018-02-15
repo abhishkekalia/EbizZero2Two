@@ -32,21 +32,21 @@ import EventEmitter from "react-native-eventemitter";
 const {width,height} = Dimensions.get('window');
 
 export default class ProductVendor extends Component {
-    constructor (props) { 
-        super(props); 
+    constructor (props) {
+        super(props);
         this.state = {
-            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),  
+            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             imgList : [] ,
             data : [],
             count : 1,
-            date_in: '', //new Date(), 
+            date_in: '', //new Date(),
             date_out:new Date(),
             addressStatus : false,
             u_id: null,
             country : null,
             user_type: null,
-            size: '', 
-            color: '', 
+            size: '',
+            color: '',
             quantity:'',
             service_provider_id : '',
             address_id : '',
@@ -55,11 +55,11 @@ export default class ProductVendor extends Component {
         this.loadHandle = this.loadHandle.bind(this)
     }
 
-    loadHandle (i) { 
-        let loadQueue = this.state.loadQueue 
+    loadHandle (i) {
+        let loadQueue = this.state.loadQueue
         loadQueue[i] = 1
-        this.setState({ 
-            loadQueue 
+        this.setState({
+            loadQueue
         })
     }
     onCancel() {
@@ -67,7 +67,7 @@ export default class ProductVendor extends Component {
     this.setState({visible:false});
   }
   onOpen() {
-        if(this.validate()) { 
+        if(this.validate()) {
             console.log("OPEN")
             this.setState({visible:true});
       }
@@ -87,7 +87,7 @@ export default class ProductVendor extends Component {
             Select.push ({
                         // "title": organization.image_id,
                         "url": organization.image,
-                    })                 
+                    })
         }
                 // console.warn(Select);
 
@@ -100,43 +100,43 @@ export default class ProductVendor extends Component {
         EventEmitter.removeAllListeners("reloadAddress");
         EventEmitter.on("reloadAddress", (value)=>{
             console.log("reloadAddress", value);
-            this.fetchAddress()    
+            this.fetchAddress()
         });
 
     }
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-                user_type: response.userdetail.user_type 
-            }); 
+                user_type: response.userdetail.user_type
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
-    removeLoader = () => this.setState({ 
+    removeLoader = () => this.setState({
         visibleModal : false,
     })
-    serviceDetail(){ 
-        const {u_id, country } = this.state; 
+    serviceDetail(){
+        const {u_id, country } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('service_id', String(this.props.service_id)); 
+        formData.append('country', String(country));
+        formData.append('service_id', String(this.props.service_id));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
             }
-        fetch(Utils.gurl('serviceDetail'), config) 
+        fetch(Utils.gurl('serviceDetail'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -147,7 +147,7 @@ export default class ProductVendor extends Component {
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
 
@@ -155,38 +155,38 @@ export default class ProductVendor extends Component {
 
     fetchAddress(){
         const { u_id, country } = this.state;
-        
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        fetch(Utils.gurl('addressList'), config)  
+        fetch(Utils.gurl('addressList'), config)
         .then((response) => response.json())
-        .then((responseData) => { 
+        .then((responseData) => {
             if(responseData.status){
                 this.setState({
-                addressStatus : responseData.status, 
+                addressStatus : responseData.status,
                  dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 });
             }else{
                 this.setState({
-                addressStatus : responseData.status, 
+                addressStatus : responseData.status,
                 });
             }
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
-        
+
     }
     sizechart(){
         console.warn("size chart");
@@ -198,12 +198,12 @@ export default class ProductVendor extends Component {
                     message: "Plese Select Booking Date",
                     alertType: 'warning',
                     title:''
-                })      
+                })
             return false
-            } 
+            }
             return true
 
-    } 
+    }
 
     buyNow(){
         routes.AddressLists();
@@ -211,23 +211,23 @@ export default class ProductVendor extends Component {
     order (){
         const{ data , size, color, count , address_id } = this.state;
             var Select =[];
-            
+
         var today = new Date();
 
         currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
 
             this.addToOrder(address_id)
-            .then(()=>this.setState({ 
+            .then(()=>this.setState({
                 // visibleModal: true,
             }))
             .done()
     }
     async addToOrder(value){
-        const { u_id, country, date_in, service_provider_id} = this.state; 
-        
+        const { u_id, country, date_in, service_provider_id} = this.state;
+
         currentdate = date_in + ' '+ new Date().toLocaleTimeString();
 
-        try { 
+        try {
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
@@ -236,22 +236,22 @@ export default class ProductVendor extends Component {
             formData.append('address_id', String(value));
             formData.append('service_provider_id', String(service_provider_id));
             formData.append('amount', String(this.props.special_price));
-            const config = { 
-                   method: 'POST', 
-                   headers: { 
-                        'Accept': 'application/json', 
+            const config = {
+                   method: 'POST',
+                   headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data;',
                    },
                    body: formData,
               }
-            fetch(Utils.gurl('bookService'), config)  
+            fetch(Utils.gurl('bookService'), config)
             .then((response) => response.json())
             .then((responseData) => {
- 
+
             if(responseData.status){
-              routes.bookmyservice({ 
-                uri : responseData.data.url, 
-                service_id : this.props.service_id, 
+              routes.bookmyservice({
+                uri : responseData.data.url,
+                service_id : this.props.service_id,
                 price : this.props.special_price,
                 callback: this.removeLoader
             })
@@ -261,7 +261,7 @@ export default class ProductVendor extends Component {
             })
             .catch((error) => {
               console.log(error);
-            })       
+            })
             .done();
         } catch (error) {
             console.log("Error retrieving data" + error);
@@ -282,13 +282,12 @@ export default class ProductVendor extends Component {
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text>You have no Added Address </Text>
-                <TouchableOpacity onPress={()=>routes.newaddress()}><Text>Add From here</Text></TouchableOpacity>
+            <Text style={{fontSize: 12, fontWeight: 'bold'}}>No Address Found </Text>
                </View> );
     }
 
-    
-    render () { 
+
+    render () {
         const { date_in, count } = this.state;
         let color = this.props.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = this.props.special_price ? 'line-through' : 'none';
@@ -306,17 +305,17 @@ export default class ProductVendor extends Component {
                 />
             );
 
-        return ( 
+        return (
             <View style={styles.container}>
 
-            <ScrollView 
+            <ScrollView
                 keyboardShouldPersistTaps="always"
                 showsVerticalScrollIndicator={false}>
                 <View style={{ height : height/1.5}}>
                 <SlideshowTest imgList={this.state.imgList}/>
                 </View>
 
-                <View style={{ 
+                <View style={{
                     flex: 1,
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -330,14 +329,14 @@ export default class ProductVendor extends Component {
                             <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5}}>{this.props.price} KWD</Text>
                         </View>
 
-                {this.props.is_user ?  
+                {this.props.is_user ?
                     <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingTop : 10}}>
                         <Button
                         onPress= {()=>this.order()}
                         // onPress={this.onOpen.bind(this)}
                         title= "Book Now"
                         color="#fbcdc5"
-                        />                      
+                        />
                     <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
                         <Ionicons name ="date-range" size={25} style={{ padding :5}} color="#a9d5d1"/>
                         <DatePicker
@@ -349,9 +348,9 @@ export default class ProductVendor extends Component {
                             showIcon={false}
                             customStyles={{
                                 dateInput: {
-                                    width : width, 
-                                    borderWidth : 0.5, 
-                                    borderColor: "#ccc", 
+                                    width : width,
+                                    borderWidth : 0.5,
+                                    borderColor: "#ccc",
                                     alignItems : 'flex-start',
                                     paddingLeft : 5,
                                 },
@@ -363,16 +362,16 @@ export default class ProductVendor extends Component {
                         </View>
 
                             {Platform.OS === 'ios' ?
-                                <TouchableOpacity         
+                                <TouchableOpacity
                                 onPress={this.onOpen.bind(this)}
                                 >
                                 <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
                                     <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
                                     {/* <TextInput
                                     style ={{
-                                        height:40, 
+                                        height:40,
                                         width : width-50,
-                                        borderWidth : StyleSheet.hairlineWidth, 
+                                        borderWidth : StyleSheet.hairlineWidth,
                                         borderColor: "#ccc",
                                         paddingLeft: 5,
                                         color: '#ccc',
@@ -382,9 +381,9 @@ export default class ProductVendor extends Component {
                                     underlineColorAndroid={'transparent'}
                                     /> */}
                                     <View style ={{
-                                        height:40, 
+                                        height:40,
                                         width : width-50,
-                                        borderWidth : StyleSheet.hairlineWidth, 
+                                        borderWidth : StyleSheet.hairlineWidth,
                                         borderColor: "#ccc",
                                         paddingLeft: 5,
                                         // color: '#ccc',
@@ -392,14 +391,14 @@ export default class ProductVendor extends Component {
                                         justifyContent:'center',
                                         // backgroundColor:'red',
                                     }}>
-                                    <Text style ={{                                        
+                                    <Text style ={{
                                         color: '#ccc',
                                     }}>{this.state.selectedAddress}</Text>
                                     </View>
                                     {/* <Text style ={{
-                                        height:40, 
+                                        height:40,
                                         width : width-50,
-                                        borderWidth : StyleSheet.hairlineWidth, 
+                                        borderWidth : StyleSheet.hairlineWidth,
                                         borderColor: "#ccc",
                                         paddingLeft: 5,
                                         color: '#ccc',
@@ -410,7 +409,7 @@ export default class ProductVendor extends Component {
                                 </View>
                                 </TouchableOpacity>
                             :
-                            <TouchableNativeFeedback         
+                            <TouchableNativeFeedback
                             onPress={this.onOpen.bind(this)}
                             background={TouchableNativeFeedback.SelectableBackground()}
                             >
@@ -418,9 +417,9 @@ export default class ProductVendor extends Component {
                                 <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
                                 <TextInput
                                 style ={{
-                                    height:40, 
+                                    height:40,
                                     width : width-50,
-                                    borderWidth : StyleSheet.hairlineWidth, 
+                                    borderWidth : StyleSheet.hairlineWidth,
                                     borderColor: "#ccc"}}
                                 value={this.state.selectedAddress}
                                 editable={false}
@@ -430,11 +429,11 @@ export default class ProductVendor extends Component {
                             </TouchableNativeFeedback>
                         }
 
-                        
+
                         </View>
 
                         : undefined }
-                        
+
                         <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 10, paddingRight:10, backgroundColor:'#fff'}}>
                             <Text style={{ height : 30, color:'#696969', paddingTop:10}}> Product Information</Text>
                             <View style={{ marginLeft:5,width : 140, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
@@ -442,15 +441,15 @@ export default class ProductVendor extends Component {
                             </Text>
                             <Text style={{ color:'#696969', marginTop:5,marginBottom:20}}> {this.props.detail_description}
                             </Text>
-                            
+
                         </View>
 
                     </View>
-                    
+
                 </View>
             </ScrollView>
                  <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-                 <View style={{flexDirection:'row', justifyContent:'center', width:'100%'}}>
+                 <View style={{flexDirection:'row', justifyContent:'center', width:'100%', marginBottom: -30}}>
                  <View style={{flexDirection:'row', justifyContent:'center', width:'50%', alignItems:'center'}}>
                  <Text>Select Address</Text>
                  </View>
@@ -460,7 +459,9 @@ export default class ProductVendor extends Component {
                  </TouchableOpacity>
                  </View>
                  </View>
-                {listView}
+                 <View style={{margin: 35}}>
+                 {(this.state.dataSource.getRowCount() < 1) ? this.noItemFound() : listView}
+                </View>
                 </ShareSheet>
                         <Modal isVisible={this.state.visibleModal}>
             <View style={{alignItems : 'center', padding:10}}>
@@ -473,23 +474,23 @@ export default class ProductVendor extends Component {
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
-            <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}} 
-            onPress= {()=>this.setState({ 
+            <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}}
+            onPress= {()=>this.setState({
                 address_id: data.address_id,
                 selectedAddress : data.full_name,
                 visible:false
             })}
             >
                 <View style={{ flexDirection: 'column' }}>
-                    <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>    
+                    <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
                         <Text style={{ fontSize: 15, color:'#696969'}}>{data.full_name}</Text>
                     </View>
                     <View style={{flexDirection:'row', alignItems : 'center'}}>
-                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>M : </Text>                     
+                        <Text style={{ fontSize : 13, color: '#a9d5d1'}}>M : </Text>
                         <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
                     </View>
                     <Text style={{fontSize:12, color:'#696969'}}>
-                    {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                    {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
                     data.jadda,"\n",data.city," ",data.direction]}
                     </Text>
                 </View>
@@ -518,13 +519,13 @@ class SlideshowTest extends Component {
         });
     }
 
-    componentWillUnmount() { 
+    componentWillUnmount() {
         clearInterval(this.state.interval);
     }
 
-    render() { 
+    render() {
         return (
-        <Slideshow 
+        <Slideshow
         height ={height - 200}
         dataSource={this.props.imgList}
         position={this.state.position}
@@ -541,7 +542,7 @@ container: {
     backgroundColor: '#F5FCFF',
   },
 
-    description: { 
+    description: {
         width : width/3
     },
     qtybutton: {
@@ -568,7 +569,7 @@ container: {
       flex: 1,
       backgroundColor: 'transparent'
     },
-    
+
     loadingView: {
       position: 'absolute',
       justifyContent: 'center',
@@ -579,7 +580,7 @@ container: {
       bottom: 0,
       backgroundColor: 'rgba(0,0,0,.5)'
     },
-    
+
     loadingImage: {
         width: 60,
         height: 60

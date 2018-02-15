@@ -24,11 +24,11 @@ import Modal from 'react-native-modal';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const videoIcon = '../../images/videoIcon.png';
-const INITIAL_STATE = {avatarSource: '', ad_category: ''};
+// const INITIAL_STATE = {avatarSource: '', ad_category: ''};
 import { Picker } from 'react-native-picker-dropdown';
 
-export default class MarketingCompaign extends Component { 
-    constructor(props) { 
+export default class MarketingCompaign extends Component {
+    constructor(props) {
         super(props);
         this.state={
             image: null,
@@ -47,7 +47,7 @@ export default class MarketingCompaign extends Component {
             user_type : null,
             country : null,
             amount : '0',
-            visibleModal: false       
+            visibleModal: false
         }
     }
     componentDidMount(){
@@ -55,26 +55,26 @@ export default class MarketingCompaign extends Component {
         .done();
     }
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-                user_type: response.userdetail.user_type 
-            }); 
+                user_type: response.userdetail.user_type
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
     validate(){
-        const { Source, ad_category} = this.state; 
+        const { Source, ad_category} = this.state;
         if (!Source.length){
             MessageBarManager.showAlert({
                 message: "Plese Select Image Or Video To Upload Advertisement",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
         }
         if (!ad_category.length){
@@ -82,23 +82,23 @@ export default class MarketingCompaign extends Component {
                 message: "Plese Select Advertisement Category",
                 alertType: 'warning',
                 title:''
-                })      
+                })
             return false
-        } 
+        }
         return true;
     }
 
     uploadTocloud(){
-        const { 
-            image, 
-            imageSelect , 
-            imageURl , 
-            avatarSource, 
-            videoSelect, 
-            u_id, 
-            user_type, 
-            country, 
-            amount, 
+        const {
+            image,
+            imageSelect ,
+            imageURl ,
+            avatarSource,
+            videoSelect,
+            u_id,
+            user_type,
+            country,
+            amount,
             ad_category,
             thumbnail_image,
             thumblinefiletype,
@@ -106,10 +106,10 @@ export default class MarketingCompaign extends Component {
             Source,
             uploadFileName,
             thumblinename,
-        } = this.state; 
+        } = this.state;
         var isImage;
 
-        if(image === 'image') { 
+        if(image === 'image') {
             isImage = "1" } else { isImage = "2"}
 
         if(this.validate()){
@@ -117,8 +117,8 @@ export default class MarketingCompaign extends Component {
                 visibleModal : true
             })
 // console.warn(Source);
-            RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{ 
-                Authorization : "Bearer access-token", 
+            RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{
+                Authorization : "Bearer access-token",
                 'Accept': 'application/json',
                 'Content-Type': 'application/octet-stream',
             },
@@ -126,21 +126,21 @@ export default class MarketingCompaign extends Component {
             { name: 'path', filename: uploadFileName, type: fileType,  data: RNFetchBlob.wrap(Source) },
             // { name : 'path',  filename : uploadFileName, type : fileType , data: RNFetchBlob.wrap(Source)},
             { name : 'thumbnail_image',  filename : thumblinename,  type : thumblinefiletype, data: RNFetchBlob.wrap(thumbnail_image)},
-            { name : 'u_id', data: String(u_id)}, 
-            { name : 'country', data: String(country)}, 
-            { name : 'user_type', data: String(user_type)}, 
-            { name : 'ad_type', data: String(isImage)}, 
-            { name : 'ad_category', data: String(ad_category)}, 
-            { name : 'amount', data: String(amount)}, 
+            { name : 'u_id', data: String(u_id)},
+            { name : 'country', data: String(country)},
+            { name : 'user_type', data: String(user_type)},
+            { name : 'ad_type', data: String(isImage)},
+            { name : 'ad_category', data: String(ad_category)},
+            { name : 'amount', data: String(amount)},
             ])
             .uploadProgress({ interval : 250 },(written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%') 
+            console.log('uploaded', Math.floor(written/total*100) + '%')
             })
-            .then((responseData)=>{ 
+            .then((responseData)=>{
                var getdata = JSON.parse(responseData.data);
                if(getdata.status){
                     routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: amount })
-                    this.setState({...INITIAL_STATE,
+                    this.setState({
                         visibleModal : false,
                     })
                 }
@@ -158,29 +158,29 @@ export default class MarketingCompaign extends Component {
             .done();
         // let formData = new FormData();
         // formData.append('u_id', String(u_id));
-        // formData.append('country', String(country)); 
-        // formData.append('user_type', String(user_type)); 
-        // formData.append('ad_type', String(isImage)); 
+        // formData.append('country', String(country));
+        // formData.append('user_type', String(user_type));
+        // formData.append('ad_type', String(isImage));
         // formData.append('path', {
         //     uri:  Source,
-        //     type: 'image/jpg', 
-        //     name: uploadFileName});         
+        //     type: 'image/jpg',
+        //     name: uploadFileName});
         // formData.append('thumbnail_image', {
         //     uri:  thumbnail_image,
-        //     type: 'image/jpg', 
+        //     type: 'image/jpg',
         //     name: uploadFileName});
-        // formData.append('ad_category', String(ad_category)); 
-        // formData.append('amount', String(amount)); 
+        // formData.append('ad_category', String(ad_category));
+        // formData.append('amount', String(amount));
 
-        // const config = { 
-        //     method: 'POST', 
-        //     headers: { 
-        //         'Accept': 'application/json', 
+        // const config = {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
         //         'Content-Type': 'multipart/form-data;',
         //     },
         //     body: formData,
-        // } 
-        //     fetch(Utils.gurl('addMarketingAd'), config) 
+        // }
+        //     fetch(Utils.gurl('addMarketingAd'), config)
         //     .then((response) => response.json())
         //     .then((responseData) => {
         //         routes.myuserAdfaturah({ uri : responseData.data.url, ad_id : responseData.data.ad_id, amount :amount })
@@ -212,10 +212,10 @@ export default class MarketingCompaign extends Component {
             storageOptions: {
               skipBackup: true
             }
-        }; 
+        };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response); 
+            console.log('Response = ', response);
             if (response.didCancel) {
             console.log('User cancelled photo picker');
             }
@@ -226,14 +226,16 @@ export default class MarketingCompaign extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-              let source = { uri: response.uri }; 
-              let path = response.uri
+              let source = { uri: response.uri };
               let name = response.fileName
-              tempImg = path.replace(/^file:\/\//, '');
+              let url = response.uri
+              let path =
+                (Platform.OS === 'ios')?
+                    url.replace(/^file:\/\//, '') : response.uri
 
                 this.setState({
                     avatarSource: source,
-                    thumbnail_image : tempImg,
+                    thumbnail_image : path,
                     thumblinefiletype : 'image/jpg',
                     imageSelect : true,
                     videoSelect : false,
@@ -252,10 +254,10 @@ export default class MarketingCompaign extends Component {
             storageOptions: {
               skipBackup: true
             }
-        }; 
+        };
 
         ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response); 
+            console.log('Response = ', response);
             if (response.didCancel) {
             console.log('User cancelled photo picker');
             }
@@ -266,20 +268,22 @@ export default class MarketingCompaign extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-              let source = { uri: response.uri }; 
-              let path = response.uri;
+              let source = { uri: response.uri };
               let name = response.fileName;
+              let url = response.uri
+              let path =
+                (Platform.OS === 'ios')?
+                    url.replace(/^file:\/\//, '') : response.uri
 
-              tempImg = path.replace(/^file:\/\//, '');
                 this.setState({
-                    avatarSource: source,   
-                    thumbnail_image : tempImg,
+                    avatarSource: source,
+                    thumbnail_image : path,
                     imageSelect : true,
                     videoSelect : false,
                     image : 'image',
                     fileType : 'image/jpg',
                     thumblinefiletype : 'image/jpg',
-                    Source: tempImg,
+                    Source: path,
                     uploadFileName : name,
                     thumblinename : name,
                     amount : "1"
@@ -288,7 +292,7 @@ export default class MarketingCompaign extends Component {
         });
     }
 
-    selectVideoTapped() { 
+    selectVideoTapped() {
         const options = {
             title: 'Video Picker',
             takePhotoButtonTitle: 'Take Video...',
@@ -308,27 +312,28 @@ export default class MarketingCompaign extends Component {
               console.log('User tapped custom button: ', response.customButton);
             }
             else {
-           
+
             var filename = Date.now().toString();
             let name = filename + "." + response.uri.split('.')[1];
-              let path = response.uri;
-
-                tempvideo = path.replace(/^file:\/\//, '');
+            let url = response.uri
+            let path =
+              (Platform.OS === 'ios')?
+                  url.replace(/^file:\/\//, '') : response.uri
 
               this.setState({
-                videoSource: tempvideo ,
+                videoSource: path ,
                 videoSelect : true,
                 imageSelect : false,
                 image : 'video',
                 fileType : 'video/mp4',
                 uploadFileName : name ,
-                Source: tempvideo,
+                Source: path,
                 amount : "1.5",
 
               });
 
-        Alert.alert( 
-            'Select Thumbline Image', 
+        Alert.alert(
+            'Select Thumbline Image',
             'Please Select Thumbline Image',
             [{text: 'Cancel', onPress: () => this.onCancelPress(), style: 'cancel'},
             {text: 'OK', onPress: () => this.SelectThumbline()},
@@ -348,18 +353,18 @@ onCancelPress(){
     });
 }
     render() {
-        const { imageSelect , videoSelect} = this.state; 
-        borderColorImage= imageSelect ? "#a9d5d1" : '#fbcdc5'    
-        borderColorVideo= videoSelect ? "#a9d5d1" : '#fbcdc5'    
+        const { imageSelect , videoSelect} = this.state;
+        borderColorImage= imageSelect ? "#a9d5d1" : '#fbcdc5'
+        borderColorVideo= videoSelect ? "#a9d5d1" : '#fbcdc5'
 
         return (
             <View style={[styles.container, { padding : 10}]}>
             <TouchableOpacity style={{ alignItems : 'flex-end'}} onPress={()=>this.uploadTocloud()}>
-            <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5}}>Upload</Text>
-            </TouchableOpacity> 
-                <View style={{ flex:1, 
-                    borderColor : '#ccc', 
-                    borderWidth : 1, 
+            <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5, marginBottom: 5}}>Upload</Text>
+            </TouchableOpacity>
+                <View style={{ flex:1,
+                    borderColor : '#ccc',
+                    borderWidth : 1,
                     flexDirection: 'column',
                     justifyContent: 'space-around',
                     padding : 10
@@ -371,33 +376,33 @@ onCancelPress(){
                         }
                         </View>
                     <View style={{justifyContent : "space-around",flexDirection: 'row',}}>
-                        <Entypo  
-                            name="image" 
+                        <Entypo
+                            name="image"
                             size= {30}
                             color={borderColorImage}
                             onPress={this.selectPhotoTapped.bind(this)}
-                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} /> 
-                        <Feather 
+                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
+                        <Feather
                         name="play-circle" onPress={this.selectVideoTapped.bind(this)}
                         color={borderColorVideo}
-                        size= {30} 
+                        size= {30}
                         style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
                     </View>
 
                     <View style={{ borderWidth : 1, borderColor : '#ccc', margin : 10, borderRadius : 5, height:40, justifyContent:'center'}}>
-                    <Picker 
+                    <Picker
                     mode={"dropdown"}
-                    selectedValue={this.state.ad_category} 
-                    onValueChange={(itemValue, itemIndex) => this.setState({ad_category: itemValue})}> 
-                    <Picker.Item label="Select Ad Category" value="" /> 
-                    <Picker.Item label="Products" value="1" /> 
+                    selectedValue={this.state.ad_category}
+                    onValueChange={(itemValue, itemIndex) => this.setState({ad_category: itemValue})}>
+                    <Picker.Item label="Select Ad Category" value="" />
+                    <Picker.Item label="Products" value="1" />
                     <Picker.Item label="accessories" value="2" />
                     <Picker.Item label="Services" value="3" />
                     <Picker.Item label="External" value="4" />
                     </Picker>
                     </View>
                     <Text style={{ width: width-50 ,textAlign: 'center', fontSize: 14, }}>
-                    Raise your awareness about your brand by promoting video and images 
+                    Raise your awareness about your brand by promoting video and images
                     that show behind the scene footage, product lounches or customer Stories
 
                     </Text>
@@ -414,7 +419,7 @@ onCancelPress(){
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                     <CirclesLoader />
-                    
+
                 </View>
             </Modal>
 

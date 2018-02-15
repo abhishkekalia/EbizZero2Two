@@ -1,13 +1,13 @@
-import React, { 
-	Component, 
+import React, {
+	Component,
 	PropTypes
 } from 'react';
-import { 
-	View, 
+import {
+	View,
 	Text,
-	ScrollView, 
-	TextInput, 
-	TouchableOpacity, 
+	ScrollView,
+	TextInput,
+	TouchableOpacity,
 	Button,
 	Platform,
 	Image,
@@ -31,24 +31,26 @@ class Login extends Component {
 	constructor() {
 		super();
 		this.state = {
-            termsandcondition_title:'',
-			termsandcondition_description:'', 
-			email: '', 
+      termsandcondition_title:'',
+			termsandcondition_description:'',
+			email: '',
 			password: '',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			loading: false,
-			visibleModal: false
+			visibleModal: false,
+			isForgotPassword: false,
+			forgotemail: '',
 		};
 	    this.inputs = {};
 	}
 	componentwillMount(){
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
 
         NetInfo.isConnected.fetch().done(
             (isConnected) => { this.setState({ netStatus: isConnected }); }
             );
 
-        NetInfo.isConnected.fetch().done((isConnected) => { 
+        NetInfo.isConnected.fetch().done((isConnected) => {
             if (isConnected)
             {
             	this.gettermandcondition()
@@ -58,16 +60,17 @@ class Login extends Component {
         });
     }
 	componentDidMount(){
+		this.gettermandcondition()
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
-        NetInfo.isConnected.fetch().done((isConnected) => { 
-            this.setState({ 
-                netStatus: isConnected 
-            }); 
+        NetInfo.isConnected.fetch().done((isConnected) => {
+            this.setState({
+                netStatus: isConnected
+            });
         });
     }
-    handleConnectionChange = (isConnected) => { 
-        this.setState({ netStatus: isConnected }); 
-        {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({ 
+    handleConnectionChange = (isConnected) => {
+        this.setState({ netStatus: isConnected });
+        {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({
                 message: `Internet connection not available`,
 				alertType: 'error',
 				title:''
@@ -75,7 +78,7 @@ class Login extends Component {
         }
     }
 
-	focusNextField(id) { 
+	focusNextField(id) {
     	this.inputs[id].focus();
     }
     gettermandcondition(){
@@ -83,10 +86,10 @@ class Login extends Component {
              method: "GET", headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }   
+            }
         })
         .then((response) => response.json())
-        .then((responseData) => { 
+        .then((responseData) => {
         	if (responseData.status) {
             	this.setState({
             	    termsandcondition_title: responseData.data.termsandcondition_title,
@@ -99,13 +102,52 @@ class Login extends Component {
             console.log(error);
         }).done();
     }
-
-	onBlurUser() { 
+Forgotpassword(){
+	const { forgotemail } = this.state;
+	let formData = new FormData();
+	formData.append('email', String(forgotemail));
+	const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+    fetch(Utils.gurl('Forgotpassword'), config)
+    .then((response) => response.json())
+    .then((responseData) => {
+    	 if (responseData.response.status) {
+				 alert('email sent')
+    	}else {
+				alert('you are not registerd user')
+    	}
+    })
+		.then(()=>this.setState({
+			isForgotPassword:false,
+			forgotemail : '',
+		 }))
+    .catch(err => {
+    	console.log(err);
+    })
+    .done();
+}
+	onBlurUser() {
 		const { email } = this.state;
-		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
+		if (!email.length)
+		{
+			MessageBarManager.showAlert({
+				message: "Please Enter Email Address",
+				alertType: 'alert',
+				title:''
+					})
+			return false
+		}
 
-		if(reg.test(email) === false) 
-			{ 
+		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+
+		if(reg.test(email) === false)
+			{
 			MessageBarManager.showAlert({
             message: "Plese Enter Valid Email",
 			alertType: 'alert',
@@ -118,27 +160,29 @@ class Login extends Component {
 	render() {
 		const {errorStatus, loading} = this.props;
 		return (
-			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
-			<View style={{ flex : 1, 
+			<ScrollView style={[commonStyles.container, commonStyles.content]} testID="Login" keyboardShouldPersistTaps="handled">
+			<View style={{ flex : 1,
 				flexDirection: 'column',
-                justifyContent: 'center', 
+                justifyContent: 'center',
                 alignItems : 'center'}}>
-			<Image 
+			<Image
 			source={require('../../images/login_img.png')}
-			style={{ width : '25%', height : '50%', marginTop:10 }}
-			/>	
-			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '100%', marginTop:20, textAlign:'center'}}> 
+			style={{ width : '100%', height : '50%',
+			 marginTop:10,
+			 resizeMode : 'center' }}
+			/>
+			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '100%', marginTop:20, textAlign:'center'}}>
 			Use the email address and password used {'\n'} when you created your acount
 			</Text>
-			</View>	
+			</View>
 
-			<View style={{ padding : 20, top : 20}}>		
+			<View style={{ padding : 20, top : 20}}>
 				<View style ={[commonStyles.inputcontent,{borderColor:'#fbcdc5',borderWidth:0.5}]}>
 
 					<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
-						<Ionicons name="ios-mail-outline" 
-						size={30} 
-						color="#900"
+						<Ionicons name="ios-mail-outline"
+						size={30}
+						color="#fbcdc5"
 						style= {{ padding: 10}}
 						/>
 						<TextInput
@@ -150,20 +194,20 @@ class Login extends Component {
 							keyboardType={'email-address'}
 							placeholder="Email Address"
 							maxLength={140}
-							onSubmitEditing={() => { 
+							onSubmitEditing={() => {
           						this.focusNextField('two');
           					}}
           					returnKeyType={ "next" }
- 					        ref={ input => { 
+ 					        ref={ input => {
  					        	this.inputs['one'] = input;
  					        }}
  					        onChangeText={(email) => this.setState({email})}
 						/>
 					</View>
 					<View style ={commonStyles.iconpassword}>
-						<Ionicons name="ios-lock-outline" 
-						size={30} 
-						color="#900"
+						<Ionicons name="ios-lock-outline"
+						size={30}
+						color="#fbcdc5"
 						style= {{ padding: 10}}
 						/>
 						<TextInput
@@ -174,11 +218,11 @@ class Login extends Component {
 							placeholder="Password"
 							secureTextEntry
 							maxLength={140}
-							onSubmitEditing={() => { 
+							onSubmitEditing={() => {
           						this.onSubmit();
           					}}
           					returnKeyType={ "done" }
- 					        ref={ input => { 
+ 					        ref={ input => {
  					        	this.inputs['two'] = input;
  					        }}
  					        onChangeText={(password) => this.setState({password})}
@@ -194,7 +238,9 @@ class Login extends Component {
 				</TouchableOpacity>
 
 				<View style={{alignItems: 'center'}}>
+				<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.setState({isForgotPassword:true})}>
 				<Text style={{top:10, padding : 20 }}>Forgot your password</Text>
+				</TouchableOpacity>
 				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
 				{/* <Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/> */}
@@ -207,36 +253,37 @@ class Login extends Component {
   					<Modal isVisible={this.state.visibleModal}>
   					<View style={{alignItems : 'center', padding:10}}>
 				    {errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
-				    
-				    {errorStatus ? <Text 
-					onPress = {()=> this.setState({ visibleModal : false})} 
+
+				    {errorStatus ? <Text
+					onPress = {()=> this.setState({ visibleModal : false})}
 					style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
-					
+
 				</View>
         	</Modal>
 		</View>
-		<View style={{ 
+		<View style={{
 			flex: 1,
         	flexDirection: 'column',
         	justifyContent: 'center',
-        	alignItems: 'center'
+        	alignItems: 'center',
+					marginTop: 10
         }}>
-        	<Text style={{ fontSize : 10, width : '100%', textAlign:'center'}}> 
-			By Signing in you are agreeing to our 
+        	<Text style={{ fontSize : 10, width : '100%', textAlign:'center'}}>
+			By Signing in you are agreeing to our
 			</Text>
 			<View style={{flexDirection:'row', width:'100%', justifyContent:'center'}}>
-			<TouchableOpacity 
-			onPress={()=> routes.terms({ 
+			<TouchableOpacity
+			onPress={()=> routes.terms({
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
 			<Text style={{color :'#a9d5d1', fontSize : 10,textAlign:'center' }}>
-			terms and conditions
+			Terms and Conditions
 			</Text>
 			</TouchableOpacity>
-			<Text style={{color :'black', fontSize : 10, textAlign:'center'}}> of use and </Text>
-			<TouchableOpacity 
-			onPress={()=> routes.terms({ 
+			<Text style={{color :'#696969', fontSize : 10, textAlign:'center'}}> of use and </Text>
+			<TouchableOpacity
+			onPress={()=> routes.terms({
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
@@ -246,24 +293,66 @@ class Login extends Component {
 			</TouchableOpacity>
 			</View>
 		</View>
-	
-			</View>
 
+		<Modal isVisible={this.state.isForgotPassword}>
+				<View style={{alignItems : 'center', padding:10, backgroundColor: '#fff'}}>
+				<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
+					<Ionicons name="ios-mail-outline"
+					size={30}
+					color="#fbcdc5"
+					style= {{ padding: 10}}
+					/>
+					<TextInput
+						style={[commonStyles.inputusername,{left:6.5}]}
+						onBlur={ () => this.onBlurUser() }
+						value={this.state.forgotemail}
+						underlineColorAndroid = 'transparent'
+						autoCorrect={false}
+						keyboardType={'email-address'}
+						placeholder="Email Address"
+						maxLength={140}
+						onSubmitEditing={() => {
+										this.focusNextField('two');
+									}}
+									returnKeyType={ "next" }
+								ref={ input => {
+									this.inputs['one'] = input;
+								}}
+								onChangeText={(forgotemail) => this.setState({forgotemail})}
+					/>
+				</View>
+				<View style={{flexDirection: 'row', height: 40}}>
+				<TouchableOpacity
+				onPress={()=> this.setState({ isForgotPassword:  false})}>
+				<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+				 Cancel
+				</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+				onPress={()=> this.Forgotpassword()}>
+				<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+				 Submit
+				</Text>
+				</TouchableOpacity>
+				</View>
+				</View>
+		</Modal>
+			</ScrollView>
 		);
 	}
-	createAcount () { 
+	createAcount () {
 		routes.registerPage();
 	}
 
 	validate(){
 		const {email, password} = this.state;
-		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ; 
-		if(reg.test(email) === false) 
-		{ 
+		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+		if(reg.test(email) === false)
+		{
 			MessageBarManager.showAlert({
             message: "Please Enter Valid Email",
 			alertType: 'alert',
-			title:''			
+			title:''
             })
 			return false;
 		}
@@ -276,8 +365,18 @@ class Login extends Component {
         	})
 			return false
 		}
+		if (password.length < 4)
+		{
+			MessageBarManager.showAlert({
+							message: "Password Must have Six Character",
+				alertType: 'alert',
+				title:''
+					})
+			return false
+		}
+
 			return true;
-	} 
+	}
 	onSubmit() {
 	Keyboard.dismiss();
 		const {email, password, os} = this.state;

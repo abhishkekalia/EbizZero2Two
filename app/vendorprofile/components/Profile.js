@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage ,NetInfo} from "react-native";
 import { Actions} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-
+import PercentageCircle from 'react-native-percentage-circle';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
@@ -10,7 +10,7 @@ import Marketing from '../../Vendor/marketing'
 class Profile extends Component {
 	constructor(props) {
         super(props);
-        this.getKey = this.getKey.bind(this);        
+        this.getKey = this.getKey.bind(this);
         this.state={
         	dataSource: [],
         	status : false,
@@ -20,17 +20,18 @@ class Profile extends Component {
             email : null,
             phone_no : null,
             data : [],
-            marketing_campaign : []
+            marketing_campaign : [],
+						chart : []
         };
     }
     componentwillMount(){
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange); 
+        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
 
         NetInfo.isConnected.fetch().done(
             (isConnected) => { this.setState({ netStatus: isConnected }); }
             );
 
-        NetInfo.isConnected.fetch().done((isConnected) => { 
+        NetInfo.isConnected.fetch().done((isConnected) => {
             if (isConnected)
             {
             	console.warn('hello')
@@ -45,37 +46,37 @@ class Profile extends Component {
 	    .done()
 
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
-        NetInfo.isConnected.fetch().done((isConnected) => { 
-            this.setState({ 
-                netStatus: isConnected 
-            }); 
+        NetInfo.isConnected.fetch().done((isConnected) => {
+            this.setState({
+                netStatus: isConnected
+            });
         });
     }
-    
-    handleConnectionChange = (isConnected) => { 
-        this.setState({ netStatus: isConnected }); 
-        {this.state.netStatus ?  MessageBarManager.showAlert({ 
+
+    handleConnectionChange = (isConnected) => {
+        this.setState({ netStatus: isConnected });
+        {this.state.netStatus ?  MessageBarManager.showAlert({
                 message: `Internet connection is available`,
                 alertType: 'alert',
                 title:''
-            }) : MessageBarManager.showAlert({ 
+            }) : MessageBarManager.showAlert({
                 message: `Internet connection not available`,
                 alertType: 'error',
                 title:''
             })
-        }          
+        }
     }
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
+        try {
+            const value = await AsyncStorage.getItem('data');
             var response = JSON.parse(value);
 
-            this.setState({ 
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 email: response.userdetail.email,
                 phone_no: response.userdetail.phone_no,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -84,56 +85,70 @@ class Profile extends Component {
     	const { u_id, country } = this.state;
     	let formData = new FormData();
     	formData.append('u_id', String(u_id));
-    	formData.append('country', String(country)); 
-    		const config = { 
-               	method: 'POST', 
-               	headers: { 
-               		'Accept': 'application/json', 
-                    'Content-Type': 'multipart/form-data;' 
+    	formData.append('country', String(country));
+    		const config = {
+               	method: 'POST',
+               	headers: {
+               		'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;'
                 },
             	body: formData,
             }
-        fetch(Utils.gurl('MyProfile'), config)  
+        fetch(Utils.gurl('MyProfile'), config)
         .then((response) => response.json())
         .then((responseData) => {
-        	if(responseData.response.status){ 
-        	    this.setState({ 
+        	if(responseData.response.status){
+        	    this.setState({
         	       	status : responseData.response.status,
         	       	dataSource : responseData.response.data,
         	       	address : responseData.response.address,
                     data : responseData.response.feature_product,
-                    marketing_campaign : responseData.response.marketing_campaign
+                    marketing_campaign : responseData.response.marketing_campaign,
+										chart : responseData.response.chart
         	        });
         	}else{
-        	    this.setState({ 
+        	    this.setState({
         	       	status : responseData.response.status
         	    })
         	}
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
 
 	render() {
 		const {identity, logout} = this.props;
-		const {data, u_id, address, dataSource} = this.state;
-
+		const {data, u_id, address, dataSource, chart} = this.state;
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
+			<View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 5,marginBottom: 5}}>
+			<View style={{flexDirection: 'column',}}>
+			<PercentageCircle radius={35} percent={chart.total_sales} color={"#fbcdc5"} borderWidth={10}></PercentageCircle>
+			<Text style={styles.chart }>Total Sales</Text>
+			</View>
+			<View style={{flexDirection: 'column',}}>
+			<PercentageCircle radius={35} percent={chart.monthly_total_sales} color={"#a9d5d1"} borderWidth={10}></PercentageCircle>
+			<Text style={styles.chart }>Monthly Sales</Text>
+			</View>
+			<View style={{flexDirection: 'column',}}>
+			<PercentageCircle radius={35} percent={chart.feature_product_sales} color={"#FFCC7D"}  borderWidth={10}></PercentageCircle>
+			<Text style={styles.chart}>Feature Sales</Text>
+			</View>
+  </View>
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 					<View style={{ flexDirection : 'row', }}>
 						<View style={{ width :60, height:60, justifyContent: 'center', alignItems : 'center'}}>
-							<Entypo 
-							name="user" 
-							size={25} 
-							style={{ 
-								padding :5, 
+							<Entypo
+							name="user"
+							size={25}
+							style={{
+								padding :5,
 								width: 35,
 								height :35,
 								backgroundColor : '#ccc',
-								alignItems : 'center', 
+								alignItems : 'center',
 								borderRadius : 17 ,
 							}}/>
 						</View>
@@ -154,7 +169,7 @@ class Profile extends Component {
 				</View>
 				<Text>Marketing</Text>
 				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign}/>
-				<TouchableOpacity 
+				<TouchableOpacity
                 onPress={()=>( Utils.logout()),logout}
                 style={styles.logout}>
 					<Text style={{ color: "#fbcdc5"}}>Logout</Text>
@@ -167,7 +182,7 @@ class Profile extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1, 
+		flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap'
 	},
@@ -175,10 +190,10 @@ const styles = StyleSheet.create({
 		borderWidth : 1,
 		borderColor :'#ccc',
 	},
-	logout : { 
-		backgroundColor : '#fff', 
-		padding : 10, 
-		flexDirection: "row", 
+	logout : {
+		backgroundColor : '#fff',
+		padding : 10,
+		flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         borderTopWidth :StyleSheet.hairlineWidth,
@@ -187,6 +202,9 @@ const styles = StyleSheet.create({
 	label: {
 		fontSize: 12,
 		fontStyle: 'italic'
+	},
+	chart : {
+		fontSize:  12
 	}
 });
 export default Profile;

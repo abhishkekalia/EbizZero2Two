@@ -36,13 +36,13 @@ export default class ServiceOrder extends Component {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-            }); 
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -50,25 +50,25 @@ export default class ServiceOrder extends Component {
 
      _onRefresh () {
     this.setState({refreshing: true}, ()=> {this.fetchData()});
-            
+
   }
 
     fetchData (){
-        const { u_id,country, } = this.state; 
+        const { u_id,country, } = this.state;
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('country', String(country));
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
 
-        fetch(Utils.gurl('getbookedServiceForVendor'), config)
+        fetch(Utils.gurl('getbookedServiceForUser'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -91,14 +91,14 @@ export default class ServiceOrder extends Component {
                 status     : false
             });
         })
-        .done();        
+        .done();
 
     }
     noItemFound(){
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
                 <Text>You Have No Itmes In Service</Text>
-            </View> 
+            </View>
         );
     }
 
@@ -118,22 +118,22 @@ export default class ServiceOrder extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
-                renderSeparator= {this.ListViewItemSeparator} 
+                renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
         return (
         <View>
             {listView}
         </View>
- 
+
         );
     }
 
     renderLoadingView() {
         return (
-            <ActivityIndicator  
+            <ActivityIndicator
             style={[styles.centering]}
-            color="#1e90ff" 
+            color="#1e90ff"
             size="large"/>
             );
     }
@@ -142,17 +142,17 @@ export default class ServiceOrder extends Component {
         let textDecorationLine = data.serviceDetail.special_price ? 'line-through' : 'none';
 
         return (
-            <TouchableOpacity  
-            style={{ flexDirection : 'column'}} 
-            key={rowID} 
-            data={rowData} 
-            onPress={()=>Actions.servicecustomer({
-                title :data.userDetail.fullname,
+            <TouchableOpacity
+            style={{ flexDirection : 'column'}}
+            key={rowID}
+            data={rowData}
+            onPress={()=>Actions.serviceusr({
+                title :data.addressDetail.fullname,
                 addressDetail : data.addressDetail,
             })}>
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>Booking Date: {data.service_datetime}</Text>
-                    <Text style={styles.headerText}>Amount : {data.amount}</Text>
+                    <Text style={[styles.headerText, {color: '#fbcdc5'}]}>Booking Date : {data.service_datetime}</Text>
+                    <Text style={[styles.headerText, {color: '#a9d5d1'}]}>Amount : {data.amount}</Text>
                 </View>
                 <View style={{ flexDirection : 'column', left : 10}} >
                     <View style={styles.row}>
@@ -162,16 +162,17 @@ export default class ServiceOrder extends Component {
                     </View>
                     <View style={styles.row}>
                     <Text style={styles.label}>Customer Name : </Text>
-                    <Text style={styles.bodyText}>{data.userDetail.fullname}</Text>
+                    <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
                     </View>
                     <View style={styles.row}>
                     <Text style={[styles.label]}>Customer Email : </Text>
-                    <Text style={styles.bodyText}>{data.userDetail.email}</Text>
+                    <Text style={styles.bodyText}>{data.serviceDetail.short_description}</Text>
                     </View>
                     <View style={styles.row}>
                     <Text style={styles.label}>Price : </Text>
                     <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
                     <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
+                    <Text style={styles.label}> KWD </Text>
                     </View>
                 </View>
 
@@ -208,7 +209,9 @@ var styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        backgroundColor: '#a9d5d1'
+        backgroundColor: '#fff',
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: '#fbcdc5'
     },
 
     thumb: {
@@ -222,7 +225,6 @@ var styles = StyleSheet.create({
 
     headerText :{
         fontSize: 12,
-        color : '#fff'
     },
     bodyText :{
         fontSize: 11,
