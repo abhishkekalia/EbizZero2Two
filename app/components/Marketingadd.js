@@ -26,9 +26,11 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const videoIcon = '../images/videoIcon.png';
 const INITIAL_STATE = {avatarSource: ''};
+
 const textstring = "Upload your image into the External Circle \n" +
                     "Upload your 10 sec video into the External Circle \n" +
                     "Price: 1 KD per picture  / 1.5 KD per video"
+
 export default class Marketingadd extends Component {
     constructor(props) {
         super(props);
@@ -128,6 +130,7 @@ export default class Marketingadd extends Component {
                 MessageBarManager.showAlert({
                 message: "error while opload add",
                 alertType: 'warning',
+                title:''
                 })
                 this.setState({
                         visibleModal : false,

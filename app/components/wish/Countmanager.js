@@ -1,29 +1,29 @@
 import React, { Component } from 'react';
-import { 
-    Text, 
-    View, 
-    TouchableHighlight, 
-    StyleSheet, 
+import {
+    Text,
+    View,
+    TouchableHighlight,
+    StyleSheet,
     ListView,
     TouchableOpacity,
-    ScrollView, 
-    Dimensions, 
+    ScrollView,
+    Dimensions,
     TextInput,
     AsyncStorage,
     ActivityIndicator,
-    Image 
+    Image
 } from 'react-native';
 const { width, height } = Dimensions.get('window');
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 export default class Countmanager extends Component {
-	constructor(props) { 
-        super(props); 
-        this.state = { 
+	constructor(props) {
+        super(props);
+        this.state = {
             Quentity : '',
             loaded: true,
-        }; 
+        };
     }
 
     updateQuantity(){
@@ -31,35 +31,37 @@ export default class Countmanager extends Component {
         const { u_id, product_id , updatetype, country} = this.props;
 
         this.setState({ loaded : false })
-        
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('product_id', String(product_id));
         formData.append('quantity', String(Quentity));
-        formData.append('updatetype', String(updatetype));  
+        formData.append('updatetype', String(updatetype));
         formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
+        }
 
-        fetch(Utils.gurl('updateQuantity'), config) 
+        fetch(Utils.gurl('updateQuantity'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                MessageBarManager.showAlert({ 
-                    message: responseData.data.message, 
-                    alertType: 'alert', 
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    alertType: 'alert',
+                    title:''
                 })
             }else{
-                MessageBarManager.showAlert({ 
-                    message: responseData.data.message, 
-                    alertType: 'success', 
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    alertType: 'success',
+                    title:''
                 })
             }
         })
@@ -69,20 +71,20 @@ export default class Countmanager extends Component {
         }))
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
     decrement () {
- 	if(this.props.quantity > 1) 
+ 	if(this.props.quantity > 1)
         this.substract()
         .then( ()=>this.updateQuantity())
         .done()
     }
     async substract() {
-        try { 
-            this.setState({ 
-                Quentity : parseInt(this.props.quantity)-1 
-            }); 
+        try {
+            this.setState({
+                Quentity : parseInt(this.props.quantity)-1
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -90,10 +92,10 @@ export default class Countmanager extends Component {
 
 
     async add() {
-        try { 
-            this.setState({ 
-                Quentity : parseInt(this.props.quantity)+1 
-            }); 
+        try {
+            this.setState({
+                Quentity : parseInt(this.props.quantity)+1
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -106,29 +108,29 @@ export default class Countmanager extends Component {
     }
     renderLoadingView() {
         return (
-            <ActivityIndicator  
-            color="#a9d5d1" 
+            <ActivityIndicator
+            color="#a9d5d1"
             size="small"/>
             );
     }
-	render(){ 
+	render(){
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
 		return(
 			<View style={{ flexDirection: 'row'}}>
-			<TouchableOpacity 
-			style={styles.qtybutton} 
+			<TouchableOpacity
+			style={styles.qtybutton}
 			onPress= {()=> this.decrement()}
             >
-			<Text style={{color: '#a9d5d1', fontWeight: 'bold' }}> - </Text>
+			<Text style={{color: '#a9d5d1', fontSize: 20, fontWeight: 'bold'}}> - </Text>
 			 </TouchableOpacity>
-			 <Text style={[styles.qtybutton]}> {this.props.quantity} </Text>
-            <TouchableOpacity 
-               style={styles.qtybutton} 
+			 <Text style={[styles.qtybutton, { fontSize: 20, fontWeight: 'bold'}]}> {this.props.quantity} </Text>
+            <TouchableOpacity
+               style={styles.qtybutton}
             onPress= {()=> this.increment()}>
-            <Text style={{color: '#a9d5d1'}}> + </Text>
-            </TouchableOpacity>			
+            <Text style={{color: '#a9d5d1',  fontSize: 20, fontWeight: 'bold'}}> + </Text>
+            </TouchableOpacity>
             </View>
 		)
 	}
@@ -141,7 +143,7 @@ const styles = StyleSheet.create ({
         // justifyContent: 'center',
         // alignItems: 'center',
         // backgroundColor: '#ccc',
-        padding : 10 
+        padding : 10
     },
 
     row: {
@@ -152,8 +154,8 @@ const styles = StyleSheet.create ({
         marginTop : 1
     },
     qtybutton: {
-        paddingLeft: 10,
-        paddingRight: 10,
+        padding: 10,
+        // paddingRight: 10,
 
         alignItems: 'center',
         borderWidth : 1,
@@ -163,7 +165,7 @@ const styles = StyleSheet.create ({
         // shadowOffset:{width:2,height:4}
     },
         countryIcon: {
-        // borderRightWidth: 1, 
+        // borderRightWidth: 1,
         // borderColor: '#CCC',
         width : 40,
         height:40,
@@ -172,11 +174,11 @@ const styles = StyleSheet.create ({
 
 
     wishbutton :{
-        alignItems : 'center', 
+        alignItems : 'center',
         width : width/2-10,
-        // borderBottomLeftRadius : 10, 
-        // borderBottomRightRadius : 10, 
-        borderWidth : 0.5, 
+        // borderBottomLeftRadius : 10,
+        // borderBottomRightRadius : 10,
+        borderWidth : 0.5,
         borderColor : "#ccc",
         padding : 5
 
@@ -201,8 +203,8 @@ const styles = StyleSheet.create ({
         padding: 20
     },
     bottom : {
-        borderBottomLeftRadius : 10, 
-        borderBottomRightRadius : 10, 
+        borderBottomLeftRadius : 10,
+        borderBottomRightRadius : 10,
         flexDirection : 'row',
         justifyContent : 'space-around',
         backgroundColor : "#fff"

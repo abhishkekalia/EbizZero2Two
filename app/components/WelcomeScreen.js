@@ -34,7 +34,8 @@ export default class WelcomeScreen extends Component {
 
         this.state = {
             countries: ["0"],
-            deliveryareas: ["cancel","Ahmedabad","Gandhinagar"],
+            deliveryareas: ["cancel","Select Country First"],
+            dataSource : [],
             selectCountry: '',
             animating: true,
             refreshing: false,
@@ -51,14 +52,41 @@ export default class WelcomeScreen extends Component {
     this.countrySheet.show()
   }
   handlePress(i) {
+    const { dataSource , countries} = this.state;
     if(i === 0){
         this.setState({
-            selectCountry: ''
+            selectCountry: '',
+            deliveryareas: ["cancel","Select Country First"],
     })
     }else{
-    this.setState({
-      selectCountry: i.toString()
-    })}
+      this.setState({
+        selectCountry: i.toString()
+      })
+
+      data = dataSource.filter((item)=>{
+        return item.country_name == countries[i];
+      }).map((item)=>{
+        // delete item.country_name;
+        return item;
+      });
+
+
+      var source_data = data[0].city,
+            length = data[0].city.length,
+            city_list= []
+
+            city_list.push('Cancel');
+            for(var i=0; i < length; i++) {
+                order = source_data[i];
+                // console.warn(order);
+                city_name = order.city_name;
+                city_list.push(city_name);
+            }
+
+            this.setState({
+              deliveryareas: city_list
+            })}
+
   }
   showDelivery() {
     this.deliverySheet.show()
@@ -69,9 +97,14 @@ export default class WelcomeScreen extends Component {
             deliveryarea : ''
         })
     }else {
+      if (this.state.selectCountry == '') {
+        this.showCountrysheet()
+      }
+      else {
         this.setState({
             deliveryarea: i.toString()
         })
+      }
 
     }
   }
@@ -108,6 +141,7 @@ export default class WelcomeScreen extends Component {
         {this.state.netStatus ? this.fetchData() : MessageBarManager.showAlert({
                 message: `Internet connection not available`,
                 alertType: 'error',
+                title:''
             })
         }
     }
@@ -137,6 +171,7 @@ export default class WelcomeScreen extends Component {
 
                     this.setState({
                 countries: optionsList,
+                dataSource : responseData.response.data,
                  loaded: true
                     })
 
@@ -278,7 +313,9 @@ export default class WelcomeScreen extends Component {
                         options={this.state.deliveryareas}
                         cancelButtonIndex={CANCEL_INDEX}
                         // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                        onPress={this.handleDeliveryPress}/>
+                        onPress={this.handleDeliveryPress}
+                        style={{padding:20, width:'70%'}}
+                        />
             </View>
         );
 

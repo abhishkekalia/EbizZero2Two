@@ -413,21 +413,24 @@ validate(){
 	if (!company.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Company Name",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
 	if (!representative_name.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Representative Name",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
 	if (!contact.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Contact Number",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
@@ -437,14 +440,16 @@ validate(){
 		{
 		MessageBarManager.showAlert({
            message: "Plese Enter Valid Email",
-           alertType: 'warning',
+		   alertType: 'warning',
+		   title:''
          })
 		return false;
 	}
 	if (!address.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Address",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
@@ -452,14 +457,16 @@ validate(){
 	if (!password.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Password",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
 	if( gender.value === undefined){
 		MessageBarManager.showAlert({
            message: "Plese Select Gender",
-           alertType: 'warning',
+		   alertType: 'warning',
+		   title:''
          })
 		return false;
 	}
@@ -467,35 +474,40 @@ validate(){
 	if (!selectCountry.length){
 		MessageBarManager.showAlert({
             message: "Plese Select Country",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
 	if (!facebook_id.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Facebook Bussiness Page",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
 	if (!twitter_id.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Twitter Bussiness Page",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
 	if (!instagram_id.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Instagram Bussiness Page",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
 	if (!snapchat_id.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Snapchat Bussiness Page",
-            alertType: 'warning',
+			alertType: 'warning',
+			title:''
         	})
 		return false
 	}
@@ -547,7 +559,8 @@ onSubmit() {
 	    	routes.loginPage()
 	    	MessageBarManager.showAlert({
             message: "Congratulations You Are Successfully Registered ",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 	    })
 	    .catch(err => {

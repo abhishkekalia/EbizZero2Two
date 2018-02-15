@@ -50,6 +50,7 @@ import BookMyService from './components/BookMyService';
 import MyAdfaturah from './components/MyAdfaturah';
 import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
+import ServiceUser from './components/Order/ServiceUser'
 
 import Filter from './components/Filter';
 import MenuIcon from './images/imgpsh.png';
@@ -467,7 +468,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                 key="getmyaddress"
                 hideTabBar={true}
                 titleStyle={{alignSelf: 'center'}}
-                renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{  alignItems:'center',padding:15, paddingTop:35}}/>}
+                renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15}}/>}
                 >
                     <Scene
                     key="getmyaddress"
@@ -497,6 +498,15 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     <Scene
                     key="service"
                     component={ServiceCustomer}
+                    // title="ServiceCustomer"
+                    navBar={CustomGenNavBar}
+                    type={ActionConst.ANDROID_BACK}
+                    renderTitle/>
+                </Stack>
+                <Stack key="serviceusr">
+                    <Scene
+                    key="service"
+                    component={ServiceUser}
                     // title="ServiceCustomer"
                     navBar={CustomGenNavBar}
                     type={ActionConst.ANDROID_BACK}

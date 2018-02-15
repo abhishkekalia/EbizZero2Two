@@ -9,7 +9,8 @@ import {
 	ScrollView,
 	Platform,
 	Keyboard,
-	Dimensions
+	Dimensions,
+	Picker
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -21,6 +22,7 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 // import { Picker } from 'react-native-picker-dropdown';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const { width, height } = Dimensions.get('window')
 
@@ -96,6 +98,9 @@ class Register extends Component {
             	     loaded: true
         		});
         	}
+		})
+		.catch((error) => {
+            console.log(error);
         }).done();
     }
 
@@ -114,6 +119,9 @@ class Register extends Component {
                 userTypes: responseData.response.data,
                  loaded: true
         });
+		})
+		.catch((error) => {
+            console.log(error);
         }).done();
     }
 
@@ -137,8 +145,8 @@ class Register extends Component {
 
 		const {errorStatus, loading} = this.props;
 		return (
-			<ScrollView style={[ commonStyles.content]} testID="Login" keyboardShouldPersistTaps={'handled'}>
-				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
+			<ScrollView style={[ commonStyles.content,{marginTop:0,marginBottom:0,paddingTop:20,paddingBottom:20}]} testID="Login" keyboardShouldPersistTaps={'handled'}>
+				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
 					<View style ={commonStyles.iconusername}>
 
 						<TextInput
@@ -200,12 +208,12 @@ class Register extends Component {
 						/>
 
 					</View>
-					<TouchableOpacity style ={[commonStyles.show, { flexDirection: 'row', alignItems: 'center'}]} onPress={()=> this.eye()}>
+					<TouchableOpacity style ={[commonStyles.show, { flexDirection: 'row', alignItems: 'center',borderBottomColor:'#fbcdc5'}]} onPress={()=> this.eye()}>
 							<Icon name= {icon} size={25} style={{ right : 20}}/>
 							<Text>Show Password </Text>
 					</TouchableOpacity>
 
- 				<View style={{borderBottomWidth: 0.5, borderColor: '#ccc'}}>
+ 				<View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
  				        			<Text/>
 
         			<SegmentedControls
@@ -260,7 +268,8 @@ class Register extends Component {
 					        				flexDirection: 'row',
 					        				justifyContent: 'space-between',
 					        				alignItems: 'center' ,
-					        				marginBottom : 5
+											marginBottom : 5,
+											paddingLeft:5
 					        					}]}>
 					{/* <View style={{flexDirection: 'row',
         justifyContent: 'space-between',
@@ -278,7 +287,7 @@ class Register extends Component {
 
                             </Picker>
 
-							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
+							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:10, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
 
 						</TouchableOpacity>
 						{/* </View> */}
@@ -314,12 +323,13 @@ class Register extends Component {
 							 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
 					</View>
 				</TouchableOpacity>
+
   				<View style={{flexDirection : 'column', alignItems : 'center', flex: 1}}>
   					<TouchableOpacity style={{padding :20}}
   					onPress={()=> routes.registerVendor()}>
   					<Text >If you are vendor ? Register Here</Text>
   					</TouchableOpacity>
-  					<Text style={{ padding : 20}}>By Signing in You are agreeing to Our </Text>
+  					{/* <Text style={{ padding : 20}}>By Signing in You are agreeing to Our </Text>
 
   					<TouchableOpacity
   					onPress={()=> routes.terms({
@@ -328,8 +338,44 @@ class Register extends Component {
   					})}>
   					<Text> Terms and
   					Conditions of Use and Privacy Policy</Text>
-  					</TouchableOpacity>
-  				</View>
+					  </TouchableOpacity> */}
+
+					<View style={{
+						flex: 1,
+						flexDirection: 'column',
+						justifyContent: 'center',
+						alignItems: 'center',
+						marginTop:20
+					}}>
+						<Text style={{ fontSize : 12, width : '80%',}}>
+						By Signing in you are agreeing to our
+						</Text>
+						<View style={{flexDirection:'row'}}>
+						<TouchableOpacity
+						onPress={()=> routes.terms({
+							title: this.state.termsandcondition_title,
+							description: this.state.termsandcondition_description
+						})}>
+						<Text style={{color :'#a9d5d1', fontSize : 12, }}>
+						terms and conditions
+						</Text>
+						</TouchableOpacity>
+						<Text style={{color :'black', fontSize : 12, }}> of use and </Text>
+						<TouchableOpacity
+						onPress={()=> routes.terms({
+							title: this.state.termsandcondition_title,
+							description: this.state.termsandcondition_description
+						})}>
+						<Text style={{color :'#fbcdc5', fontSize : 12, }}>
+						Privacy Policy
+						</Text>
+						</TouchableOpacity>
+					</View>
+			</View>
+			<View style={{height:40,width:'100%'}}></View>
+  			</View>
+
+			<KeyboardSpacer/>
 			</ScrollView>
 		);
 	}
@@ -339,7 +385,8 @@ validate(){
 	if (!fullname.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Fullname",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false
 	}
@@ -349,7 +396,8 @@ validate(){
 		{
 		MessageBarManager.showAlert({
            message: "Plese Enter Valid Email",
-           alertType: 'alert',
+		   alertType: 'alert',
+		   title:''
          })
 		return false;
 	}
@@ -357,14 +405,16 @@ validate(){
 	if (!password.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Password",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false
 	}
 	if( gender.value === undefined){
 		MessageBarManager.showAlert({
            message: "Plese Select Gender",
-           alertType: 'alert',
+		   alertType: 'alert',
+		   title:''
          })
 		return false;
 	}
@@ -378,21 +428,24 @@ validate(){
 	if (!selectCountry.length){
 		MessageBarManager.showAlert({
             message: "Plese Select Country",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false
 	}
 	if (!address.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Address",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false
 	}
 	if (!type.length){
 		MessageBarManager.showAlert({
             message: "Plese Select User Type",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
         	})
 		return false;
 	}

@@ -37,7 +37,9 @@ class Login extends Component {
 			password: '',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			loading: false,
-			visibleModal: false
+			visibleModal: false,
+			isForgotPassword: false,
+			forgotemail: '',
 		};
 	    this.inputs = {};
 	}
@@ -70,7 +72,8 @@ class Login extends Component {
         this.setState({ netStatus: isConnected });
         {this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({
                 message: `Internet connection not available`,
-                alertType: 'error',
+				alertType: 'error',
+				title:''
             })
         }
     }
@@ -99,16 +102,56 @@ class Login extends Component {
             console.log(error);
         }).done();
     }
-
+Forgotpassword(){
+	const { forgotemail } = this.state;
+	let formData = new FormData();
+	formData.append('email', String(forgotemail));
+	const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+    fetch(Utils.gurl('Forgotpassword'), config)
+    .then((response) => response.json())
+    .then((responseData) => {
+    	 if (responseData.response.status) {
+				 alert('email sent')
+    	}else {
+				alert('you are not registerd user')
+    	}
+    })
+		.then(()=>this.setState({
+			isForgotPassword:false,
+			forgotemail : '',
+		 }))
+    .catch(err => {
+    	console.log(err);
+    })
+    .done();
+}
 	onBlurUser() {
 		const { email } = this.state;
+		if (!email.length)
+		{
+			MessageBarManager.showAlert({
+				message: "Please Enter Email Address",
+				alertType: 'alert',
+				title:''
+					})
+			return false
+		}
+
 		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
 
 		if(reg.test(email) === false)
 			{
 			MessageBarManager.showAlert({
             message: "Plese Enter Valid Email",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
             })
 			return false;
 		}
@@ -117,17 +160,19 @@ class Login extends Component {
 	render() {
 		const {errorStatus, loading} = this.props;
 		return (
-			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
+			<ScrollView style={[commonStyles.container, commonStyles.content]} testID="Login" keyboardShouldPersistTaps="handled">
 			<View style={{ flex : 1,
 				flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems : 'center'}}>
 			<Image
 			source={require('../../images/login_img.png')}
-			style={{ width : '25%', height : '50%' }}
+			style={{ width : '100%', height : '50%',
+			 marginTop:10,
+			 resizeMode : 'center' }}
 			/>
-			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '70%', marginTop:20}}>
-			Use the email address and password used when you created your acount
+			<Text style={{color: '#fbcdc5' , fontSize : 12, width : '100%', marginTop:20, textAlign:'center'}}>
+			Use the email address and password used {'\n'} when you created your acount
 			</Text>
 			</View>
 
@@ -137,7 +182,7 @@ class Login extends Component {
 					<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
 						<Ionicons name="ios-mail-outline"
 						size={30}
-						color="#900"
+						color="#fbcdc5"
 						style= {{ padding: 10}}
 						/>
 						<TextInput
@@ -162,7 +207,7 @@ class Login extends Component {
 					<View style ={commonStyles.iconpassword}>
 						<Ionicons name="ios-lock-outline"
 						size={30}
-						color="#900"
+						color="#fbcdc5"
 						style= {{ padding: 10}}
 						/>
 						<TextInput
@@ -193,7 +238,9 @@ class Login extends Component {
 				</TouchableOpacity>
 
 				<View style={{alignItems: 'center'}}>
+				<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.setState({isForgotPassword:true})}>
 				<Text style={{top:10, padding : 20 }}>Forgot your password</Text>
+				</TouchableOpacity>
 				<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
 				</View>
 				{/* <Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/> */}
@@ -218,36 +265,79 @@ class Login extends Component {
 			flex: 1,
         	flexDirection: 'column',
         	justifyContent: 'center',
-        	alignItems: 'center'
+        	alignItems: 'center',
+					marginTop: 10
         }}>
-        	<Text style={{ fontSize : 10, width : width/2,}}>
+        	<Text style={{ fontSize : 10, width : '100%', textAlign:'center'}}>
 			By Signing in you are agreeing to our
 			</Text>
-			<View style={{flexDirection:'row'}}>
+			<View style={{flexDirection:'row', width:'100%', justifyContent:'center'}}>
 			<TouchableOpacity
 			onPress={()=> routes.terms({
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
-			<Text style={{color :'#a9d5d1', fontSize : 10, }}>
-			terms and conditions
+			<Text style={{color :'#a9d5d1', fontSize : 10,textAlign:'center' }}>
+			Terms and Conditions
 			</Text>
 			</TouchableOpacity>
-			<Text style={{color :'black', fontSize : 10, }}> of use and </Text>
+			<Text style={{color :'#696969', fontSize : 10, textAlign:'center'}}> of use and </Text>
 			<TouchableOpacity
 			onPress={()=> routes.terms({
   				title: this.state.termsandcondition_title,
   				description: this.state.termsandcondition_description
   			})}>
-			<Text style={{color :'#fbcdc5', fontSize : 10, }}>
+			<Text style={{color :'#fbcdc5', fontSize : 10, textAlign:'center'}}>
 			 Privacy Policy
 			</Text>
 			</TouchableOpacity>
 			</View>
 		</View>
 
-			</View>
-
+		<Modal isVisible={this.state.isForgotPassword}>
+				<View style={{alignItems : 'center', padding:10, backgroundColor: '#fff'}}>
+				<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
+					<Ionicons name="ios-mail-outline"
+					size={30}
+					color="#fbcdc5"
+					style= {{ padding: 10}}
+					/>
+					<TextInput
+						style={[commonStyles.inputusername,{left:6.5}]}
+						onBlur={ () => this.onBlurUser() }
+						value={this.state.forgotemail}
+						underlineColorAndroid = 'transparent'
+						autoCorrect={false}
+						keyboardType={'email-address'}
+						placeholder="Email Address"
+						maxLength={140}
+						onSubmitEditing={() => {
+										this.focusNextField('two');
+									}}
+									returnKeyType={ "next" }
+								ref={ input => {
+									this.inputs['one'] = input;
+								}}
+								onChangeText={(forgotemail) => this.setState({forgotemail})}
+					/>
+				</View>
+				<View style={{flexDirection: 'row', height: 40}}>
+				<TouchableOpacity
+				onPress={()=> this.setState({ isForgotPassword:  false})}>
+				<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+				 Cancel
+				</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+				onPress={()=> this.Forgotpassword()}>
+				<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+				 Submit
+				</Text>
+				</TouchableOpacity>
+				</View>
+				</View>
+		</Modal>
+			</ScrollView>
 		);
 	}
 	createAcount () {
@@ -261,7 +351,8 @@ class Login extends Component {
 		{
 			MessageBarManager.showAlert({
             message: "Please Enter Valid Email",
-            alertType: 'alert',
+			alertType: 'alert',
+			title:''
             })
 			return false;
 		}
@@ -269,10 +360,21 @@ class Login extends Component {
 		{
 			MessageBarManager.showAlert({
             	message: "Please Enter Your Password",
-            	alertType: 'alert',
+				alertType: 'alert',
+				title:''
         	})
 			return false
 		}
+		if (password.length < 4)
+		{
+			MessageBarManager.showAlert({
+							message: "Password Must have Six Character",
+				alertType: 'alert',
+				title:''
+					})
+			return false
+		}
+
 			return true;
 	}
 	onSubmit() {

@@ -89,22 +89,31 @@ class Profile extends Component {
     address(address){
 		if(this.state.address == '') {
 			return (
-				<View>
-					<Text  style={{ fontSize :8}}>
+				<View style={{padding:10}}>
+					<Text  style={{ fontSize :15, color:'#696969'}}>
 					There is no address.
 					</Text>
 				</View>
 			)
 		}else {
 			return (
-					<View>
-							<Text style={{ fontSize: 15}}>
+					<View style={{padding:10}}>
+							<Text style={{ fontSize: 15, color:'#696969'}}>
 							{address.full_name}
 							</Text>
-							<Text style={{ fontSize : 10}}>
-							M:{address.mobile_number}
+							<View style={{flexDirection:'row'}}>
+							<Text style={{ fontSize : 10, color:'#a9d5d1'}}>
+							M
 							</Text>
-							<Text style={{fontSize:12}}>
+							<Text style={{ fontSize : 10, color:'#fbcdc5'}}>
+							{' '}:{' '}
+							</Text>
+							<Text style={{ fontSize : 10, color:'#696969'}}>
+							{address.mobile_number}
+							</Text>
+
+							</View>
+							<Text style={{fontSize:12, color:'#696969'}}>
 							{[address.block_no ," ", address.street , " ", address.houseno,"\n", address.appartment, " ",address.floor, " ",
                     address.jadda,"\n",address.city," ",address.direction]}
 							</Text>
@@ -116,8 +125,8 @@ class Profile extends Component {
 		const {data, u_id, address, dataSource} = this.state;
 
 		return (
-			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
-				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
+			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
+				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
 					<View style={{ flexDirection : 'row', }}>
 						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'green'}}>
 							<Entypo
@@ -133,13 +142,13 @@ class Profile extends Component {
 						</View>
 
 						<View style={{flexDirection : 'column',marginTop:3}}>
-							<Text style={[styles.label, { color : '#ccc', fontSize:17}]}>{dataSource.fullname}</Text>
-							<Text style={[styles.label, { color : '#ccc'}]}>{this.state.email}</Text>
-							<Text style={[styles.label, { color : '#ff6347'}]}>Contact: {dataSource.mobile}</Text>
+							<Text style={[styles.label, { color : '#696969', fontSize:17}]}>{dataSource.fullname}</Text>
+							<Text style={[styles.label, { color : '#696969'}]}>{this.state.email}</Text>
+							<Text style={[styles.label, { color : '#fbcdc5'}]}>Contact: {dataSource.mobile}</Text>
 						</View>
 					</View>
 
-					<TouchableOpacity style={{width :60, height:60, justifyContent: 'center', alignItems : 'center' }}
+					<TouchableOpacity style={{right:-10  ,width :60, height:60, justifyContent: 'center', alignItems : 'center' }}
 					onPress={()=> Actions.editProfile({
 						title : this.state.dataSource.fullname,
 						fullname : this.state.dataSource.fullname ,
@@ -149,34 +158,35 @@ class Profile extends Component {
 						mobile : this.state.dataSource.mobile,
 						email : this.state.dataSource.email
 					})} >
-						<Entypo name="edit" size={25} color="#a9d5d1"/>
+						<Entypo name="edit" size={20} color="#a9d5d1"/>
 					</TouchableOpacity >
 				</View>
-
+				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
-					<View style={{ padding : 20, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
+					<View style={{ padding : 0, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
 						<TouchableOpacity style={{
 							flexDirection : 'row',
 							justifyContent: 'space-between',
 							alignItems : 'center',
-							paddingRight:10,
+							paddingRight:15,
 							paddingLeft:10,
-							borderBottomWidth : 1,
+							borderBottomWidth : 0.5,
 							borderColor : '#ccc',
 							height :40
 						}}  onPress={()=>Actions.getmyaddress()} >
-							<Text style={{ fontSize : 10, color:"#900"}}>My Address Book</Text>
+							<Text style={{ fontSize : 13, color:"#fbcdc5"}}>My Address Book</Text>
 
-									<Ionicons name="ios-arrow-forward" size={25} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
+									<Ionicons name="ios-arrow-forward" size={20} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
 						</TouchableOpacity>
 					{this.address(address)}
 
 				</View>
 				</View>
-				<TouchableOpacity onPress={()=>Actions.settings({is_notification: dataSource.is_notification})} style={styles.setings}>
-					<Text>Settings</Text>
-					<Ionicons name="ios-arrow-forward" size={25} color="#ccc"/>
+				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
+				<TouchableOpacity onPress={()=>Actions.settings({is_notification : this.state.dataSource.is_notification})} style={styles.setings}>
+					<Text style={{fontSize:12, color:'#696969'}}>Settings</Text>
+					<Ionicons name="ios-arrow-forward" size={20} color="#ccc"/>
 				</TouchableOpacity>
 			</View>
 		)
@@ -190,15 +200,19 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
 	},
 	content: {
-		borderWidth : 1,
+		borderWidth : 0.5,
 		borderColor :'#ccc',
 	},
 	setings : {
-		top : 5,
+		// top : 5,
 		backgroundColor : '#fff',
 		padding : 10,
 		flexDirection: "row",
-		justifyContent: "space-between"
+		justifyContent: "space-between",
+		borderWidth : 0.5,
+		borderColor :'#ccc',
+		alignItems: 'center',
+		paddingRight: 15
 	},
 	label: {
 		color: '#ccc',

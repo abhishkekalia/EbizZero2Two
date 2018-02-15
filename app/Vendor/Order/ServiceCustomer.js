@@ -21,11 +21,11 @@ export default class ServiceCustomer extends Component{
             <View style={styles.container}>
 
             <View style={{
-                borderWidth : 1, 
+                borderWidth : 1,
                 borderColor : '#ccc',
                 width: width ,
                 flexDirection : 'row',
-                backgroundColor: 'orange',
+                backgroundColor: '#FFCC7D',
 
            }}>
                 <View style ={{flexDirection : 'column', width : width/2-10}}>
@@ -45,8 +45,8 @@ export default class ServiceCustomer extends Component{
 
                 <View style={{flexDirection : 'row', width : width/2-30}}>
                     <Text style={[styles.label ,{color : '#a9d5d1'}]}>Address : </Text>
-                    <Text style={[styles.contentbody, { width : width/2.5-20}]}> 
-                    {addressDetail.block_no} {" "} 
+                    <Text style={[styles.contentbody, { width : width/2.5-20}]}>
+                    {addressDetail.block_no} {" "}
                     {addressDetail.houseno}{" "}
                     {addressDetail.street}{" "}
                     {addressDetail.appartment} {" "}

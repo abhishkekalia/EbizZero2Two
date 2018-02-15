@@ -21,7 +21,7 @@ export default class ProductOrder extends Component<{}> {
     }
 
     bindMethods() {
-        if (! this.bindableMethods) {
+        if (!this.bindableMethods) {
             return;
         }
 
@@ -103,9 +103,6 @@ export default class ProductOrder extends Component<{}> {
         .done();
 
     }
-
-
-
     fetchData () {
         const { u_id,country, } = this.state;
         let formData = new FormData();
@@ -163,10 +160,7 @@ export default class ProductOrder extends Component<{}> {
             }
         })
         .catch((errorMessage, statusCode) => {
-            this.setState({
-                loaded     : true,
-                status     : false
-            });
+          console.log(errorMessage);
         })
         .done();
     }
@@ -259,7 +253,7 @@ Object.assign(ProductOrder.prototype, {
             ord_status = 1;
         }
             return (
-                <TouchableOpacity style={styles.row} onPress={()=>console.warn()}>
+                <View style={styles.row}>
                     <View style={{ flexDirection : 'row', backgroundColor:'#fff'}}>
                         <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Product ID : </Text>
                         <Text style={styles.rowText}>{rowID.product_id} </Text>
@@ -294,7 +288,7 @@ Object.assign(ProductOrder.prototype, {
                             <Text style={styles.rowText}>{ rowID.order_date} </Text>
                         </View>
                     </View>
-                </TouchableOpacity>
+                </View>
             );
         }
     }
@@ -335,7 +329,6 @@ var styles = StyleSheet.create({
             borderWidth : 1,
             borderColor : "#ccc",
             borderRadius : 2
-
     },
     footer : {
         flexDirection : 'row',
@@ -372,7 +365,7 @@ var styles = StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'center',
-        // padding: 10,
+        padding: 5,
         backgroundColor: '#F6F6F6'
     },
 

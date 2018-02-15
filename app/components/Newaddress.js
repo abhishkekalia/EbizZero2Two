@@ -13,34 +13,36 @@ import {
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-// import { Picker } from 'react-native-picker-dropdown';
+import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window')
 
 export default class Newaddress extends Component<{}> {
     constructor(props) {
+        console.log("isFromEdit:=",props.isFromEdit);
         super(props);
         this.getKey = this.getKey.bind(this);
         this.state={
             countryList: [],
-            full_name : '',
-            mobile_number : '',
-            block_no : '',
-            houseno : '',
-            alternate_number : '',
-            appartment : '',
-            street : '',
-            floor : '',
-            jadda : '',
-            city : '',
-            direction : '',
-            country : '',
-            address_type : '1',
-            address_id : '',
+            full_name : props.isFromEdit ? props.full_name : '',
+            mobile_number : props.isFromEdit ? props.mobile_number : '',
+            block_no : props.isFromEdit ? props.block_no : '',
+            houseno : props.isFromEdit ? props.houseno : '',
+            alternate_number : props.isFromEdit ? props.alternate_number : '',
+            appartment : props.isFromEdit ? props.appartment : '',
+            street : props.isFromEdit ? props.street : '',
+            floor : props.isFromEdit ? props.floor : '',
+            jadda : props.isFromEdit ? props.jadda : '',
+            city : props.isFromEdit ? props.city : '',
+            direction : props.isFromEdit ? props.direction : '',
+            country : props.isFromEdit ? props.country : '',
+            address_type : props.isFromEdit ? props.address_type : '1',
+            address_id : props.isFromEdit ? props.address_id : '',
             u_id: '',
         };
         this.inputs = {};
@@ -108,7 +110,7 @@ export default class Newaddress extends Component<{}> {
         formData.append('mobile_number', String(mobile_number));
         formData.append('block_no', String(block_no));
         formData.append('houseno', String(houseno));
-        formData.append('alternate_number', String(alternate_number));
+        // formData.append('alternate_number', String(alternate_number));
         formData.append('appartment', String(appartment));
         formData.append('street', String(street));
         formData.append('floor', String(floor));
@@ -131,12 +133,15 @@ export default class Newaddress extends Component<{}> {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.response.status){
+                    EventEmitter.emit("reloadAddressList")
+                    EventEmitter.emit("reloadAddress")
                     routes.pop();
 
                     MessageBarManager.showAlert({
                         message: responseData.response.data.message,
                         alertType: 'alert',
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        title:''
                     })
 
                     }
@@ -146,6 +151,76 @@ export default class Newaddress extends Component<{}> {
         })
         .done();
     }
+    }
+
+    editAddressAPICall() {
+        const {
+            u_id,
+            full_name,
+            mobile_number,
+            block_no,
+            houseno,
+            alternate_number,
+            appartment,
+            street,
+            floor,
+            jadda,
+            city,
+            direction,
+            country,
+            address_type
+        } = this.state;
+
+
+        let formData = new FormData();
+        formData.append('address_id', String(this.state.address_id))
+        formData.append('u_id', String(u_id));
+        formData.append('full_name', String(full_name));
+        formData.append('mobile_number', String(mobile_number));
+        formData.append('block_no', String(block_no));
+        formData.append('houseno', String(houseno));
+        // formData.append('alternate_number', String(alternate_number));
+        formData.append('appartment', String(appartment));
+        formData.append('street', String(street));
+        formData.append('floor', String(floor));
+        formData.append('jadda', String(jadda));
+        formData.append('city', String(city));
+        formData.append('direction', String(direction));
+        formData.append('country', String(country));
+        formData.append('address_type', String(address_type));
+
+        console.log("formData:=",formData)
+
+        if (this.validate()) {
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+            fetch(Utils.gurl('editAddress'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+                console.log("responseData:=",responseData)
+                if(responseData.status){
+                    EventEmitter.emit("reloadAddressList")
+                    routes.pop();
+
+                    MessageBarManager.showAlert({
+                        message: responseData.response.data.message,
+                        alertType: 'alert',
+                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        title:''
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
+        }
     }
 
     validate(){
@@ -171,6 +246,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
             message: "Please Enter Your FullName",
             alertType: 'alert',
+            title:''
             })
             return false;
         }
@@ -179,6 +255,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Your Contact Number",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -187,6 +264,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter City",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -195,6 +273,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Block No",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -203,6 +282,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Street Name",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -211,6 +291,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter  Houseno",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -219,6 +300,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Your Country",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -227,6 +309,7 @@ export default class Newaddress extends Component<{}> {
             MessageBarManager.showAlert({
                 message: "Please Enter Address Code either 1 or 2",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -246,54 +329,57 @@ export default class Newaddress extends Component<{}> {
 
     return (
         <View style={{ flex : 1}}>
-        <View style={ {
-            height : 59,
-            backgroundColor : '#a9d5d1',
-            flexDirection : 'row',
-            justifyContent:"space-between",
-            alignItems : 'center',
-        }}>
-        <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10, top : 10}} onPress={()=> routes.pop()}/>
+            <View style={ {
+                height : 59,
+                backgroundColor : '#a9d5d1',
+                flexDirection : 'row',
+                justifyContent:"space-between",
+                alignItems : 'center',
+            }}>
+            <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10, top : 10}} onPress={()=> routes.pop()}/>
 
-        <Text style={{color:'#fff' ,top:10}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
+            <Text style={{color:'#fff' ,top:10}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
 
-        <TouchableOpacity style={{ backgroundColor:'transparent', top : 15, marginBottom : 10 ,padding: 10}}onPress={()=> this.submit()}>
-        <Text style={{ color:'#fff',padding:5, borderColor:'#fff', borderWidth:1, borderRadius : 10}}>Save</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={{ backgroundColor:'transparent', top : 15, marginBottom : 10 ,padding: 10}} onPress={()=> this.props.isFromEdit ? this.editAddressAPICall() : this.submit()}>
+                <Text style={{ color:'#fff',padding:5, borderColor:'#fff', borderWidth:1, borderRadius : 10}}>Save</Text>
+            </TouchableOpacity>
         </View>
-      <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
-        <View style={{ margin: 10}}>
+        <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
+            <View style={{ margin: 10}}>
+
+            <TextInput style={ styles.input}
+                placeholder='Full Name *'
+                autoCapitalize='none'
+                underlineColorAndroid = 'transparent'
+                // keyboardType='email-address'
+                value={this.state.full_name}
+                onSubmitEditing={() => {
+                    this.focusNextField('two');
+                }}
+                returnKeyType={ "next" }
+                ref={ input => {
+                    this.inputs['one'] = input;
+                }}
+
+                onChangeText={(text) => this.setState({ full_name: text })}
+            />
 
         <TextInput style={ styles.input}
-        placeholder='Full Name *'
-        autoCapitalize='none'
-        underlineColorAndroid = 'transparent'
-        // keyboardType='email-address'
-        value={this.state.full_name}
-        onSubmitEditing={() => {
-            this.focusNextField('two');
-        }}
-        returnKeyType={ "next" }
-        ref={ input => {
-            this.inputs['one'] = input;
-        }}
+            placeholder='Contact Number *'
+            autoCapitalize='none'
+            underlineColorAndroid = 'transparent'
+            value={this.state.mobile_number}
+            keyboardType={'numeric'}
+            onSubmitEditing={() => {
+                this.focusNextField('three');
+            }}
+            returnKeyType={ "next" }
+            ref={ input => {
+                this.inputs['two'] = input;
+            }}
+            onChangeText={(text) => this.setState({ mobile_number: text })}
+        />
 
-        onChangeText={(text) => this.setState({ full_name: text })} />
-
-        <TextInput style={ styles.input}
-        placeholder='Contact Number *'
-        autoCapitalize='none'
-        underlineColorAndroid = 'transparent'
-        value={this.state.mobile_number}
-        keyboardType={'numeric'}
-        onSubmitEditing={() => {
-            this.focusNextField('three');
-        }}
-        returnKeyType={ "next" }
-        ref={ input => {
-            this.inputs['two'] = input;
-        }}
-        onChangeText={(text) => this.setState({ mobile_number: text })} />
         <View style={{ flexDirection : 'row', justifyContent:'space-between', alignItems:'center', borderBottomWidth:StyleSheet.hairlineWidth, borderColor:'#bbb'}}>
         <Text style={{ fontSize: 13, color:'#696969', left: 10}}>Select Country</Text>
         <Picker

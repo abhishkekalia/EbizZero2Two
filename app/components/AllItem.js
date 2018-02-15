@@ -212,6 +212,7 @@ var styles =StyleSheet.create({
         borderWidth: 1,
         borderColor: '#CCC',
         borderRadius : 5,
+        backgroundColor: '#fff'
     },
     button: {
         width: width/3,

@@ -24,7 +24,7 @@ import Modal from 'react-native-modal';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const videoIcon = '../../images/videoIcon.png';
-const INITIAL_STATE = {avatarSource: '', ad_category: ''};
+// const INITIAL_STATE = {avatarSource: '', ad_category: ''};
 import { Picker } from 'react-native-picker-dropdown';
 
 export default class MarketingCompaign extends Component {
@@ -73,6 +73,7 @@ export default class MarketingCompaign extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Select Image Or Video To Upload Advertisement",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -80,6 +81,7 @@ export default class MarketingCompaign extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Select Advertisement Category",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -138,7 +140,7 @@ export default class MarketingCompaign extends Component {
                var getdata = JSON.parse(responseData.data);
                if(getdata.status){
                     routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: amount })
-                    this.setState({...INITIAL_STATE,
+                    this.setState({
                         visibleModal : false,
                     })
                 }
@@ -147,6 +149,7 @@ export default class MarketingCompaign extends Component {
                 MessageBarManager.showAlert({
                 message: "error while opload add",
                 alertType: 'warning',
+                title:''
                 })
                 this.setState({
                         visibleModal : false,
@@ -357,7 +360,7 @@ onCancelPress(){
         return (
             <View style={[styles.container, { padding : 10}]}>
             <TouchableOpacity style={{ alignItems : 'flex-end'}} onPress={()=>this.uploadTocloud()}>
-            <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5}}>Upload</Text>
+            <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5, marginBottom: 5}}>Upload</Text>
             </TouchableOpacity>
                 <View style={{ flex:1,
                     borderColor : '#ccc',

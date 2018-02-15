@@ -116,6 +116,7 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Select At Lest Single Image",
                 alertType: 'warning',
+                title:''
                 })
             return false
             }
@@ -123,6 +124,8 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Product Name",
                 alertType: 'warning',
+
+                title:''
                 })
             return false
         }
@@ -130,6 +133,7 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Short Description Of Product",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -137,6 +141,7 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Detail description Of Product",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -144,6 +149,7 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Price",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -151,6 +157,7 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert special Price",
                 alertType: 'warning',
+                title:''
                 })
             return false
 
@@ -159,6 +166,7 @@ export default class EditProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Special Price cannot be greater than Price",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -211,6 +219,7 @@ export default class EditProduct extends Component {
                     MessageBarManager.showAlert({
                         message: "Product Update Successfully",
                         alertType: 'warning',
+                        title:''
                     })
                     this.setState({
                         visibleModal : false
@@ -219,18 +228,15 @@ export default class EditProduct extends Component {
                     MessageBarManager.showAlert({
                         message: "Product Upload Failed",
                         alertType: 'warning',
+                        title:''
                     })
                     this.setState({
                         visibleModal : false
                     })
                 }
             })
+            .then(()=>routes.product())
             .catch((errorMessage, statusCode) => {
-                routes.product();
-                // message: "Failed Due to Some communication Error",
-                // MessageBarManager.showAlert({
-                // alertType: 'warning',
-                // })
                 this.setState({
                         visibleModal : false
                     })
@@ -450,7 +456,7 @@ export default class EditProduct extends Component {
                     onPress={this.selectPhotoTapped.bind(this)}
                     background={TouchableNativeFeedback.SelectableBackground()}>
 
-                    <View style={{ }}>
+                    <View style={{ justifyContent: 'center'}}>
                         <Feather
                             name="upload-cloud" size= {30} style={{ padding:20 }}/>
                             <Text>Click here</Text>

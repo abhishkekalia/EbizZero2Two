@@ -15,7 +15,7 @@ export default StyleSheet.create({
 		marginTop: 20
 	},
 	iconusername : {
-    	flexDirection: 'row', 
+    	flexDirection: 'row',
     	borderBottomWidth: 0.5,
 		borderColor: '#ccc',
 		backgroundColor : 'transparent',
@@ -27,7 +27,7 @@ export default StyleSheet.create({
     	backgroundColor : 'transparent'
     },
 
-	inputcontent : { 
+	inputcontent : {
 		borderColor: '#ccc',
 		borderWidth: 1,
 		borderStyle: 'solid',
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     	// backgroundColor: '#fff',
     	color: '#424242',
 		left : 10,
-		// height : 40
+		height : 50
 	},
 	button : {
 		height : 40,
@@ -78,7 +78,7 @@ export default StyleSheet.create({
 	borderColor: '#ccc',
 
 	},
-	registerContent : { 
+	registerContent : {
 		borderColor: '#ccc',
 		borderWidth: 0.5,
 		borderStyle: 'solid',
@@ -86,13 +86,13 @@ export default StyleSheet.create({
 	},
 	social : {
 		left : 10,
-		// borderColor:"#3b5998" , 
-		height :25, 
+		// borderColor:"#3b5998" ,
+		height :25,
 		width :25,
-		justifyContent:'center', 
+		justifyContent:'center',
 	},
 	socialInput : {
-		width : width/1.5, 
+		width : width/1.5,
 		color: '#424242',
 		left : 10,
 		justifyContent : 'center'

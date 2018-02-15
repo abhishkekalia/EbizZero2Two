@@ -238,6 +238,7 @@ export default class AddressBook extends Component {
           MessageBarManager.showAlert({ 
           message: responseData.data.message, 
           alertType: 'alert', 
+          title:''
           })
         })
         .then(()=>this.fetchAddress())
@@ -357,6 +358,7 @@ class SelectItem extends Component{
             MessageBarManager.showAlert({
                 message: "Please Select Color",
                 alertType: 'alert',
+                title:''
             })
             return false
         }
@@ -393,6 +395,7 @@ class SelectItem extends Component{
           MessageBarManager.showAlert({ 
           message: responseData.data.message, 
           alertType: 'alert', 
+          title:''
           })
         })
         .then(()=>this.props.callback())

@@ -231,11 +231,13 @@ export default class Settings extends Component {
                 MessageBarManager.showAlert({
                 message: response.data.message,
                 alertType: 'alert',
+                title:''
                 })
             }else{
                 MessageBarManager.showAlert({
                 message: response.data.message,
                 alertType: 'alert',
+                title:''
                 })
             }
 
@@ -280,7 +282,7 @@ export default class Settings extends Component {
                     <Text>Notification</Text>
                       <Switch
                       onValueChange={ (value) =>
-                        this.setState({ is_notification : notify ? "0" : "1"}, ()=>this.fetchData())
+                        this.setState({ is_notification : notify ? "0" : "1"},()=>this.fetchData())
                       }
                       value={notify}
                       onTintColor="#00ff00"
@@ -315,7 +317,7 @@ export default class Settings extends Component {
                     </TouchableOpacity>
                 </View>
 
-                <View style={{flexDirection : 'column', top : 10 }}>
+                <View style={{flexDirection : 'column', top : 5 }}>
 
                     <TouchableOpacity style={styles.locact} onPress={()=> this.getprivacypolicy()}>
                         <Text>Privacy</Text>
@@ -359,7 +361,7 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'center',
         // alignItems: 'center',
-        backgroundColor: '#ccc',
+        backgroundColor: '#f6f6f6',
     },
 
     notify: {
@@ -370,12 +372,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     locact: {
-        borderTopWidth : 1,
-        borderBottomWidth : 1,
+        borderTopWidth : StyleSheet.hairlineWidth,
+        borderBottomWidth : StyleSheet.hairlineWidth,
         borderColor : '#ccc',
         padding : 10,
         justifyContent:"space-between",
-        top : 10,
+        top : 5,
         flexDirection: 'row',
         backgroundColor: '#fff',
         alignItems: 'center'

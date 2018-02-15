@@ -110,6 +110,7 @@ export default class Slider extends Component<{}> {
                 MessageBarManager.showAlert({ 
                     message: responseData.data.message, 
                     alertType: 'alert', 
+                    title:''
                 })
             }
         })
@@ -141,6 +142,7 @@ export default class Slider extends Component<{}> {
             MessageBarManager.showAlert({ 
             message: responseData.data.message, 
             alertType: 'alert', 
+            title:''
             })
         })
         .then(()=>this.props.updateState())

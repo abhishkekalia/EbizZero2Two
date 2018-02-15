@@ -21,7 +21,7 @@ export default class ProductOrder extends Component<{}> {
     bindMethods() {
         if (! this.bindableMethods) {
             return;
-        }   
+        }
 
         for (var methodName in this.bindableMethods) {
             this[methodName] = this.bindableMethods[methodName].bind(this);
@@ -49,7 +49,7 @@ export default class ProductOrder extends Component<{}> {
             })
         }
     }
-    
+
     componentDidMount() {
         this.getKey()
         .then(()=>this.fetchData())
@@ -57,13 +57,13 @@ export default class ProductOrder extends Component<{}> {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-            }); 
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -71,22 +71,22 @@ export default class ProductOrder extends Component<{}> {
 
 
     fetchData () {
-                const { u_id,country, } = this.state; 
+                const { u_id,country, } = this.state;
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
         fetch(Utils.gurl('userOrderList'), config)
-     
+
             .then((response) => response.json())
             .then((responseData) => {
             var orders = responseData.data,
@@ -102,12 +102,12 @@ export default class ProductOrder extends Component<{}> {
             for (i = 0; i < length; i++) {
                 order = orders[i];
                 sectionIDs.push(order.order_id);
-    
+
                 dataBlob[order.order_id] = order.inserted_date;
 
                 orderDetail = order.orderDetail;
                 orderLength = orderDetail.length;
-                
+
                 rowIDs[i] = [];
 
                 for(j = 0; j < orderLength; j++) {
@@ -134,15 +134,15 @@ export default class ProductOrder extends Component<{}> {
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
-             
-    }    
+
+    }
     noItemFound(){
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
                 <Text>You Have No Itmes In Ordered</Text>
-            </View> 
+            </View>
         );
     }
 
@@ -172,14 +172,14 @@ export default class ProductOrder extends Component<{}> {
     renderListView() {
         return (
             <View style={[styles.container, {padding : 5}]}>
-               
+
                 <ListView
                     dataSource = {this.state.dataSource}
                     style      = {styles.listview}
                     renderRow  = {this.renderRow}
                     renderSectionHeader = {this.renderSectionHeader}
-                    enableEmptySections = {true} 
-                    automaticallyAdjustContentInsets={false} 
+                    enableEmptySections = {true}
+                    automaticallyAdjustContentInsets={false}
                     showsVerticalScrollIndicator={false}
                 />
             </View>
@@ -189,10 +189,10 @@ export default class ProductOrder extends Component<{}> {
     renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.section}>
-                <Text style={styles.text}>{sectionData}</Text>
-                <Text style={styles.text}>#{sectionID}</Text>
+                <Text style={[styles.text, { color: '#fbcdc5'}]}>OrderDate:  {sectionData}</Text>
+                <Text style={[styles.text,{ color: '#a9d5d1'}]}>Order Id : {sectionID}</Text>
             </View>
-        ); 
+        );
     }
 };
 
@@ -200,30 +200,30 @@ Object.assign(ProductOrder.prototype, {
     bindableMethods : {
         renderRow : function (rowData, sectionID, rowID) {
             return (
-                <TouchableOpacity 
-                style={{ padding : 10}}  
+                <TouchableOpacity
+                style={{ padding : 10}}
                 // onPress={() => this.onPressRow(rowData, sectionID)}
                 >
                     <View style={styles.rowStyle}>
-                        <View style={{ flexDirection : 'column'}}>
-                            <Text style={styles.rowText}>Product ID </Text>
-                            <Text style={styles.rowText}>#{rowID.order_id} </Text>
+                        <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                            <Text style={styles.label}>Product ID </Text>
+                            <Text style={styles.rowText}>#{rowID.product_id} </Text>
                         </View>
-                        <View style={{ flexDirection : 'column'}}>
-                            <Text style={styles.rowText}>Product Name </Text> 
+                        <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                            <Text style={styles.label}>Product Name </Text>
                             <Text style={styles.rowText}>{rowID.product_name} </Text>
-                    </View> 
-                    <View style={{ flexDirection : 'column'}}>
-                        <Text style={styles.rowText}>Quantity</Text> 
-                        <Text style={styles.rowText}>{rowID.quantity} </Text> 
                     </View>
-                    <View style={{ flexDirection : 'column'}}>
-                        <Text style={styles.rowText}>Order Status</Text> 
-                        <Text style={styles.rowText}>{ rowID.order_status ? 'pending' : 'paid'} </Text> 
+                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                        <Text style={styles.label}>Quantity</Text>
+                        <Text style={styles.rowText}>{rowID.quantity} </Text>
                     </View>
-                    <View style={{ flexDirection : 'column'}}>
-                        <Text style={styles.rowText}>price</Text> 
-                        <Text style={styles.rowText}>{rowID.price} </Text> 
+                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                        <Text style={styles.label}>Order Status</Text>
+                        <Text style={styles.rowText}>{ rowID.order_status ? 'pending' : 'paid'} </Text>
+                    </View>
+                    <View style={{ flexDirection : 'column', alignItems: 'center'}}>
+                        <Text style={styles.label}>price</Text>
+                        <Text style={styles.rowText}>{rowID.price} </Text>
                     </View>
                      </View>
                 </TouchableOpacity>
@@ -259,7 +259,7 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#3F51B5',
         flexDirection: 'column',
-        paddingTop: 25
+        // paddingTop: 25
     },
     headerText: {
         fontWeight: 'bold',
@@ -267,12 +267,11 @@ var styles = StyleSheet.create({
         color: 'white'
     },
     text: {
-        color: 'white',
         paddingHorizontal: 8,
         fontSize: 16
     },
     rowStyle: {
-        paddingVertical: 20,
+        paddingVertical: 5,
         // paddingLeft: 16,
         borderTopColor: 'white',
         borderLeftColor: 'white',
@@ -284,17 +283,24 @@ var styles = StyleSheet.create({
 
     },
     rowText: {
-        fontSize: 12
+        fontSize: 12,
+        color: '#696969'
     },
     subText: {
         fontSize: 14,
         color: '#757575'
+    },
+    label : {
+      color : "#a9d5d1",
+      fontSize : 12
     },
     section: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         padding: 5,
-        backgroundColor: '#a9d5d1'
+        backgroundColor: '#fff',
+        borderWidth:StyleSheet.hairlineWidth,
+        borderColor: '#fbcdc5'
     }
 });

@@ -163,6 +163,7 @@ export default class AddProduct extends Component {
                 }
             })
             .catch((errorMessage, statusCode) => {
+              console.log(errorMessage);
             })
 
             .done();
@@ -178,6 +179,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Select At Lest Single Image",
                 alertType: 'warning',
+                title:''
                 })
             return false
             }
@@ -187,6 +189,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Product Name",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -194,6 +197,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Short Description Of Product",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -201,6 +205,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Detail description Of Product",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -208,6 +213,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert Price",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -215,6 +221,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Insert special Price",
                 alertType: 'warning',
+                title:''
                 })
             return false
 
@@ -223,6 +230,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Special Price cannot be greater than Price",
                 alertType: 'warning',
+                title:''
                 })
             return false
         }
@@ -230,6 +238,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Enter Quantity of Items",
                 alertType: 'warning',
+                title:''
                 })
             return false
 
@@ -238,6 +247,7 @@ export default class AddProduct extends Component {
             MessageBarManager.showAlert({
                 message: "Plese Enter Size of Items",
                 alertType: 'warning',
+                title:''
                 })
             return false
 
@@ -281,16 +291,19 @@ export default class AddProduct extends Component {
             console.log('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((res)=>{
-              console.warn(res);
-                this.setState({
-                    visibleModal : false
-                })
+              MessageBarManager.showAlert({
+              message: "Product Addedd",
+              alertType: 'warning',
+              title:''
+              })
             })
+            .then(()=> this.setState({
+                      visibleModal : false
+                      })
+            )
+            .then(()=>routes.product())
             .catch((errorMessage, statusCode) => {
-                MessageBarManager.showAlert({
-                message: errorMessage,
-                alertType: 'warning',
-                })
+              console.log(errorMessage);
             })
             .done();
         }
@@ -404,8 +417,7 @@ export default class AddProduct extends Component {
                         // destructiveButtonIndex={DESTRUCTIVE_INDEX}
                         onPress={this.handlePress}/> */}
 
-
-<ActionSheet
+                        <ActionSheet
                         ref={o => this.ActionSheet = o}
                         title={title}
                         options={this.state.options}
