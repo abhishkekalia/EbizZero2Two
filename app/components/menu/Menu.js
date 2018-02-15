@@ -49,7 +49,7 @@ class Menu extends React.Component {
       .then((response) => response.json())
       .then((responseData) => {
           if(responseData.status){
-            console.warn(responseData.data.count);
+            // console.warn(responseData.data.count);
               this.setState({
               notificationCount: responseData.data.count,
               // refreshing : false

@@ -10,7 +10,7 @@ import {
 	Platform,
 	Keyboard,
 	Dimensions,
-	Picker
+	// Picker
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -21,7 +21,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-// import { Picker } from 'react-native-picker-dropdown';
+import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const { width, height } = Dimensions.get('window')

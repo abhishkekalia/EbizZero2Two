@@ -128,7 +128,7 @@ class Profile extends Component {
 			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
 					<View style={{ flexDirection : 'row', }}>
-						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'green'}}>
+						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'rgba(240,241,243,1)'}}>
 							<Entypo
 							name="user"
 							size={15}
