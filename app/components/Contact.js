@@ -147,6 +147,7 @@ export default class Contact extends Component<{}> {
                     underlineColorAndroid = 'transparent'
                     autoCorrect={false}
                     placeholder="Name"
+                    fontSize={13}
                     maxLength={140}
                             onSubmitEditing={() => { 
                                 this.focusNextField('two');
@@ -162,6 +163,7 @@ export default class Contact extends Component<{}> {
                     underlineColorAndroid = 'transparent'
                     autoCorrect={false}
                     placeholder="Email Address"
+                    fontSize={13}
                     maxLength={140}
                             onSubmitEditing={() => { 
                                 this.focusNextField('three');
@@ -184,7 +186,7 @@ export default class Contact extends Component<{}> {
                     mode="dropdown"
                     selectedValue={this.state.issue}
                     onValueChange={(itemValue, itemIndex) => this.setState({issue: itemValue})}
-                    style={{fontSize:15}}
+                    
                     >
                         <Picker.Item label="Select Issue" value="" />
                         <Picker.Item label="Damage" value="1" />
@@ -200,6 +202,7 @@ export default class Contact extends Component<{}> {
                     autoCorrect={false}
                     placeholder="Message"
                     multiline={true}
+                    fontSize={13}
                     maxLength={140}
 
                             returnKeyType={ "done" }
@@ -225,7 +228,7 @@ export default class Contact extends Component<{}> {
                 </View>
                 <View style={{ flexDirection: 'row', alignItems :'center', paddingLeft:10, marginTop:5}}>
                     <Ionicons name="ios-stopwatch-outline" size={15} color="#900"/>
-                    <Text style={{paddingLeft:10}}>Daily 8 Am to 12 PM</Text>
+                    <Text style={{paddingLeft:10}}>Daily, 8 AM to 12 PM</Text>
                 </View>
             </ScrollView>
         );

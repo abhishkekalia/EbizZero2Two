@@ -389,6 +389,7 @@ export default class ProductDescription extends Component {
         const renderedButtons =  this.state.Size.map((b, i) => {
             return <Button
             color = {this.state.sizeindex === i ? '#a9d5d1' : '#ccc'}
+            borderColor='red'
             key={b.size}
             title={b.size}
             onPress={()=>this.setState({

@@ -88,7 +88,7 @@ class Menu extends React.Component {
                   MainElement={
                     <Ionicons
                     name="ios-notifications"
-                    color="#87cefa" size={30}
+                    color="#a9d5d1" size={30}
                     style={{ left : 5}}
                     />
                   }
@@ -103,7 +103,7 @@ class Menu extends React.Component {
                   /> :
                   <Ionicons
                     name="ios-notifications"
-                    color="#87cefa" size={30}
+                    color="#a9d5d1" size={30}
                     style={{ left : 5}}
                     />
                   }
@@ -141,11 +141,6 @@ class Menu extends React.Component {
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={Actions.postad}
-                style={[styles.item, styles.seprator]}> Marketing</Text>
-
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
                 onPress={()=>this.onOpen()}
                 style={[styles.item, styles.seprator]}> Share with Friends</Text>
 
@@ -153,6 +148,11 @@ class Menu extends React.Component {
                 <Text
                 onPress={Actions.sync}
                 style={[styles.item, styles.seprator]}> Rate us on App Store</Text>
+
+                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                <Text
+                onPress={Actions.postad}
+                style={[styles.item, styles.seprator]}> Marketing</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={()=>( Utils.logout()),logout}
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     },
 
     avatarContainer: {
-        width: width,
+        width: width-20,
         height : 120,
         backgroundColor : '#f08080',
     },

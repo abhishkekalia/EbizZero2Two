@@ -31,7 +31,7 @@ class Login extends Component {
 	constructor() {
 		super();
 		this.state = {
-      termsandcondition_title:'',
+      	termsandcondition_title:'',
 			termsandcondition_description:'',
 			email: '',
 			password: '',
@@ -160,11 +160,19 @@ Forgotpassword(){
 	render() {
 		const {errorStatus, loading} = this.props;
 		return (
-
+			<View style={{flex:1}}>
+				<View style= {{height:64,backgroundColor: '#a9d5d1'}}>
+				<Text style = {{color : "#FFF", alignSelf: 'center', paddingTop:28, fontSize:16}}>
+					Login into Zero2Two
+				</Text>
+				</View>
+				{
 			Platform.OS === 'ios' ?
 			this.getIOSView()
 			:
 			this.getAndroidView()
+				}
+			</View>
 		);
 	}
 
@@ -173,6 +181,9 @@ Forgotpassword(){
 		// <ScrollView style={[commonStyles.container, commonStyles.content]} testID="Login" keyboardShouldPersistTaps="handled">
 		return(
 			<View style={[commonStyles.container, commonStyles.content]} testID="Login">
+			
+			{/* navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                        titleStyle={{color : "#FFF", alignSelf: 'center'}}/> */}
 		<View style={{ flex : 1,
 			flexDirection: 'column',
 			justifyContent: 'center',
@@ -251,9 +262,9 @@ Forgotpassword(){
 
 			<View style={{alignItems: 'center'}}>
 			<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.setState({isForgotPassword:true})}>
-			<Text style={{top:10, padding : 20 }}>Forgot your password</Text>
+			<Text style={{top:10, padding : 20 }}>Forgot your password?</Text>
 			</TouchableOpacity>
-			<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
+			<Text style={{color : '#87cefa' , padding : 20 }}>New Customer?</Text>
 			</View>
 			{/* <Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/> */}
 			<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.createAcount.bind(this)}>

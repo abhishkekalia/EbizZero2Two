@@ -110,7 +110,7 @@ export default class AddProduct extends Component {
    _renderRightButton = () => {
         return(
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-            <Text style={{color : '#fff'}}>ADD</Text>
+            <Text style={{color : '#fff'}}>UPLOAD</Text>
             </TouchableOpacity>
         );
     };

@@ -28,6 +28,7 @@ import ActionSheet from 'react-native-actionsheet';
 import GetImage from './imageSlider';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import RNFetchBlob from 'react-native-fetch-blob';
 const CANCEL_INDEX = 0
@@ -420,7 +421,7 @@ export default class AddService extends Component {
 
                 </View>
 
-
+                <KeyboardSpacer/>
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                         <CirclesLoader />

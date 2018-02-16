@@ -3,6 +3,8 @@ import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+// import { EventEmitter } from 'events';
+import EE12 from "react-native-eventemitter";
 
 
 export default class CustomNavBar extends React.Component {
@@ -24,7 +26,7 @@ export default class CustomNavBar extends React.Component {
 
     _renderMiddle() { 
         return (
-            <View style={styles.navBarItem}>
+            <View style={[styles.navBarItem,{alignItems:'center'}]}>
                 <Text style={{color: '#fff' , fontSize: 15}}>Filters</Text>
             </View>
         )
@@ -32,9 +34,9 @@ export default class CustomNavBar extends React.Component {
 
     _renderRight() {
         return ( 
-            <View style={[styles.navBarItem, { flexDirection: 'row',justifyContent: 'flex-end', alignItems: 'center' }]}>
+            <View style={[styles.navBarItem, { flexDirection: 'row',justifyContent: 'flex-end', alignItems: 'center', opacity:0 }]}>
                 <TouchableOpacity
-                onPress={() => console.warn('refresh')}
+                onPress={() => EE12.emit("refreshFilterOption","")}
                 style={{ paddingRight: 10 }}>
                     <Ionicons name="ios-refresh" 
                     size={30} 

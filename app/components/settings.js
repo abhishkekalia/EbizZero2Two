@@ -287,7 +287,9 @@ export default class Settings extends Component {
                       value={notify}
                       onTintColor="#00ff00"
                       thumbTintColor="#fff"
-                      tintColor="#000" />
+                      tintColor="#000"
+                      onTintColor="#a9d5d1"
+                      thumbTintColor='black'/>
                 </View>
 
                 <View style={{ flexDirection : 'column'}}>

@@ -105,7 +105,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene key='loginPage'
                         component={LoginPage}
                         title='Login into ZeroToTwo'
-                        hideNavBar={false}
+                        hideNavBar={true}
                         type={ActionConst.REPLACE}
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                         titleStyle={{color : "#FFF", alignSelf: 'center'}}/>
