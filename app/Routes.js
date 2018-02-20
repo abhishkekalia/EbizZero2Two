@@ -319,12 +319,13 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     title="EditService"
                     />
                 </Stack>
-                <Stack key="AddressLists" hideNavBar={true} >
+                <Stack key="AddressLists" navBar={CustomGenNavBar} hideNavBar={true} >
                     <Scene
                     key="address"
                     component={AddressBook}
-                    title="Addressbook"
-                    hideNavBar={true}
+                    title="Select Address"
+                    hideNavBar={false}
+                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15,marginTop:10}}/>}
                     />
                 </Stack>
                 <Stack key="deascriptionPage" renderTitle >
@@ -468,7 +469,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                 key="getmyaddress"
                 hideTabBar={true}
                 titleStyle={{alignSelf: 'center'}}
-                renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15}}/>}
+                renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15,marginTop:10}}/>}
                 >
                     <Scene
                     key="getmyaddress"

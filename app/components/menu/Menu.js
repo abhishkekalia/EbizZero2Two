@@ -70,7 +70,7 @@ class Menu extends React.Component {
        render() {
         const {identity, logout} = this.props;
         return (
-            <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}>
+            <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
                 <TouchableOpacity
 						onPress={Actions.profile}>
                 <View style={styles.avatarContainer}>

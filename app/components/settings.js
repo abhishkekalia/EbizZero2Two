@@ -8,6 +8,7 @@ import {
   AsyncStorage,
   TouchableOpacity,
   Dimensions,
+  Image,
 //   Picker
 } from 'react-native';
 import Utils from 'app/common/Utils';
@@ -257,7 +258,7 @@ export default class Settings extends Component {
         })
         .then((response) => response.json())
         .then((responseData) => {
-                    // console.warn(JSON.stringify(responseData))
+            console.log("CountryList:=-",responseData.response.data)
             this.setState({
                 countryList: responseData.response.data,
                  loaded: true
@@ -276,6 +277,13 @@ export default class Settings extends Component {
 
     render() {
       let notify = (this.state.is_notification === "1") ? true : false
+      var selCountryObj = null
+      for (let index = 0; index < this.state.countryList.length; index++) {
+          let element = this.state.countryList[index];
+          if (element.country_id == this.state.country) {
+              selCountryObj = element
+          }
+      }
         return (
             <View style={styles.container}>
                 <View style={styles.notify}>
@@ -305,7 +313,14 @@ export default class Settings extends Component {
                         backgroundColor: '#fff',
                         alignItems: 'center'
                     }}>
-                        <Text>Country</Text>
+                        <Text style={{width:'40%'}}>Country</Text>
+                        {!this.state.country? undefined: <Image style={{height:30, width:40}}
+							resizeMode = 'center'
+							resizeMethod = 'resize'
+							source={{uri : selCountryObj ? selCountryObj.flag : "" }}
+							onLoadEnd={() => {  }}
+							/>
+						}
                         <Picker
                         mode="dropdown"
                         style={{width : width/3}}
