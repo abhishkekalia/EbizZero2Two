@@ -7,11 +7,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "package.json": "^2.0.1",
     "react": "16.0.0",
     "react-native": "0.51.0",
     "react-native-actionsheet": "^2.3.0",
-    "react-native-country-picker-modal": "^0.5.1",
     "react-native-datepicker": "^1.6.0",
     "react-native-drawer": "^2.5.0",
     "react-native-elements": "^0.18.5",
@@ -31,7 +29,6 @@
     "react-native-modal": "^4.1.1",
     "react-native-modal-wrapper": "^3.1.0",
     "react-native-percentage-circle": "^1.0.6",
-    "react-native-picker-dropdown": "^0.1.1",
     "react-native-popup-dialog": "0.10.45",
     "react-native-progress": "^3.4.0",
     "react-native-progress-bar": "^0.1.2",
