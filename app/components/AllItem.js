@@ -121,18 +121,20 @@ export default class AllItem extends Component {
         
        return (
             <View style={styles.row} > 
-                <View style={{flexDirection: 'row', justifyContent: "center"}}>
+                <View style={{flexDirection: 'row', justifyContent: "center", overflow:'hidden', paddingTop:15}}>
                     
                             <TouchableOpacity 
                             onPress={()=> this.moveToDesc(data.product_name, data.product_id, null) }
                             // onPress={()=>Actions.deascriptionPage({ title: data.product_id, product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}
                             >
                             <Image style={styles.thumb} 
-                                source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}/>
+                                source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}
+                                resizeMethod = 'resize'
+                                />
                                 </TouchableOpacity>
                 </View>
                 
-                <View style={{ padding :15}}>
+                <View style={{ padding :15,paddingTop:0}}>
                 <TouchableOpacity  style={styles.name} 
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
@@ -176,11 +178,11 @@ var styles =StyleSheet.create({
         padding: 20
     },
     name : {
-        top : 5
+        top : 0
     },
     description : {
         fontSize : 7,
-        top : 5
+        top : 3
     },
     special_price : {
         fontSize : 10,
@@ -227,7 +229,7 @@ var styles =StyleSheet.create({
         width: width/4-10,
         height: width/4+30,
         resizeMode : 'center',
-        top : 15
+        top : 0
     },
 
     text: {

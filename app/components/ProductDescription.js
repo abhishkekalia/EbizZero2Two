@@ -13,6 +13,7 @@ import {
   ListView,
   StyleSheet,
   ActivityIndicator,
+  TouchableHighlight
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -265,10 +266,11 @@ export default class ProductDescription extends Component {
             user,
             i;
 
-        for (i = 0; i < length; i++) {
-            organization = Items[i];
-            Select.push (organization.image)
-        }
+            for (i = 0; i < length; i++) {
+                organization = Items[i];
+                Select.push (organization.image)
+            }
+
             if(responseData.status){
                 this.setState({
                     imgList : Select,
@@ -283,6 +285,7 @@ export default class ProductDescription extends Component {
         })
         .done();
     }
+
     fetchAddress(){
         const { u_id, country } = this.state;
 
@@ -316,7 +319,6 @@ export default class ProductDescription extends Component {
           console.log(error);
         })
         .done();
-
     }
 
     order (delivery_address_id){
@@ -387,15 +389,18 @@ export default class ProductDescription extends Component {
         //     return this.noItemFound();
         // }
         const renderedButtons =  this.state.Size.map((b, i) => {
-            return <Button
-            color = {this.state.sizeindex === i ? '#a9d5d1' : '#ccc'}
-            borderColor='red'
-            key={b.size}
-            title={b.size}
-            onPress={()=>this.setState({
-                size: b.size,
-                sizeindex : i
-            })}/>;
+            return <View style={{borderColor:this.state.sizeindex === i ? '#a9d5d1' : '#ccc', borderWidth:1, borderRadius:10, overflow:'hidden'}}> 
+                        <Button
+                            color = {this.state.sizeindex === i ? '#a9d5d1' : '#ccc'}
+                            borderColor='red'
+                            key={b.size}
+                            title={b.size}
+                            onPress={()=>this.setState({
+                                size: b.size,
+                                sizeindex : i
+                            })}
+                        />
+                    </View>
         });
         let listView = (<View></View>);
             listView = (
@@ -544,28 +549,26 @@ export default class ProductDescription extends Component {
         }
     }
 
-        renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-         if (!this.state.addressStatus) {
+    renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+        if (!this.state.addressStatus) {
             return this.noItemFound();
         }
-
         return (
-                <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}} onPress= {()=>this.order(data.address_id)}>
-                    <View style={{ flexDirection: 'column' }}>
-                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
-                            <Text style={{ fontSize: 15}}>{data.full_name}</Text>
-                        </View>
-                        <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
-                        <Text style={{fontSize:12}}>
-                        {/* {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]} */}
-                        {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
-                    data.jadda,"\n",data.city," ",data.direction]}
-                        </Text>
+            <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}} onPress= {()=>this.order(data.address_id)}>
+                <View style={{ flexDirection: 'column' }}>
+                    <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
+                        <Text style={{ fontSize: 15}}>{data.full_name}</Text>
                     </View>
-                </TouchableOpacity>
+                    <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
+                    <Text style={{fontSize:12}}>
+                    {/* {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]} */}
+                    {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
+                data.jadda,"\n",data.city," ",data.direction]}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         );
     }
-
 }
 const SHORT_LIST = ['red', 'yellow', 'pink'];
 

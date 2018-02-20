@@ -33,98 +33,96 @@ class Menu extends React.Component {
         }
     }
     componentDidMount(){
-      const {identity} = this.props;
-      let formData = new FormData();
-      formData.append('u_id', String(identity.u_id));
-
-      const config = {
-              method: 'POST',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'multipart/form-data;',
-              },
-              body: formData,
-          }
-      fetch(Utils.gurl('getNotificationCount'), config)
-      .then((response) => response.json())
-      .then((responseData) => {
-          if(responseData.status){
-            // console.warn(responseData.data.count);
-              this.setState({
-              notificationCount: responseData.data.count,
-              // refreshing : false
-              });
-          }
-          else{
-              // this.setState({
-              // refreshing : false
-              // })
-          }
-      })
-      .catch((error) => {
-          console.log(error);
-      })
-      .done();
+        const {identity} = this.props;
+        let formData = new FormData();
+        formData.append('u_id', String(identity.u_id));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        fetch(Utils.gurl('getNotificationCount'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                // console.warn(responseData.data.count);
+                this.setState({
+                notificationCount: responseData.data.count,
+                // refreshing : false
+                });
+            }
+            else{
+                // this.setState({
+                // refreshing : false
+                // })
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
 
-       render() {
+    render() {
         const {identity, logout} = this.props;
         return (
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
-                <TouchableOpacity
-						onPress={Actions.profile}>
-                <View style={styles.avatarContainer}>
-                    <View style={styles.username}>
-                    <View style= {styles.guest}>
-                        <Zocial name='guest' color="#000" size={15} />
+                <TouchableOpacity onPress={Actions.profile}>
+                    <View style={styles.avatarContainer}>
+                        <View style={styles.username}>
+                        <View style= {styles.guest}>
+                            <Zocial name='guest' color="#000" size={15} />
+                        </View>
+                        </View>
+                        <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:30}}>{identity.username}</Text>
                     </View>
-                    </View>
-                    <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:90}}>{identity.username}</Text>
-                </View>
                 </TouchableOpacity>
                 <View style={[styles.badge, styles.seprator]}>
                 {
-                  this.state.notificationCount > 0 ? <IconBadge
-                  MainElement={
+                    this.state.notificationCount > 0 ? 
+                    <IconBadge
+                        MainElement={
+                            <Ionicons
+                                name="ios-notifications"
+                                color="#a9d5d1" size={30}
+                                style={{ left : 5}}
+                            />
+                        }
+                        BadgeElement={
+                            <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
+                        }
+                        IconBadgeStyle={{
+                            width:16,
+                            height:18,
+                            // left : 10,
+                            backgroundColor: 'orange'
+                        }}
+                    /> :
                     <Ionicons
-                    name="ios-notifications"
-                    color="#a9d5d1" size={30}
-                    style={{ left : 5}}
+                        name="ios-notifications"
+                        color="#a9d5d1" size={30}
+                        style={{ left : 5}}
                     />
-                  }
-                  BadgeElement={
-                    <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
-                  }
-                  IconBadgeStyle={{
-                      width:16,
-                      height:18,
-                      // left : 10,
-                      backgroundColor: 'orange'}}
-                  /> :
-                  <Ionicons
-                    name="ios-notifications"
-                    color="#a9d5d1" size={30}
-                    style={{ left : 5}}
-                    />
-                  }
-                    <Text
-                    onPress={Actions.notificationShow}
-                     style={{
+                }
+                    <Text onPress={Actions.notificationShow}
+                        style={{
                         fontSize: 12,
                         padding: 10,
                         marginTop : 1,
                         left :5,
                     }}>Notification</Text>
-               </View>
+                </View>
 
-               <View style={{height:40}}>
+                <View style={{height:40}}>
+                </View>
 
-               </View>
-
-               {/* <LinearGradient colors={['#ffffff', '#dfdfdf', '#ffffff']} style={styles.linearGradient}> */}
-               {/* <LinearGradient colors={['#dfdfdf', '#ffffff', '#dfdfdf']} style={styles.linearGradient} positions={10}> */}
-               <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-               {/* </LinearGradient> */}
+                {/* <LinearGradient colors={['#ffffff', '#dfdfdf', '#ffffff']} style={styles.linearGradient}> */}
+                {/* <LinearGradient colors={['#dfdfdf', '#ffffff', '#dfdfdf']} style={styles.linearGradient} positions={10}> */}
+                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                {/* </LinearGradient> */}
                 <Text
                 onPress={Actions.homePage}
                 style={[styles.item, styles.seprator]}>Home</Text>
@@ -335,24 +333,26 @@ const styles = StyleSheet.create({
     },
 
     username: {
-        flex : 1,
-        left : width/2.5,
+        // flex : 1,
+        // left : width/2.5,
         top :20,
-        position: 'absolute',
+        position: 'relative',
         backgroundColor : '#fff',
         width : 55,
         height : 55,
         borderRadius : 50,
-        padding :2.5,
-        zIndex:9999,
-        overflow:'hidden'
+        // padding :2.5,
+        // zIndex:9999,
+        overflow:'hidden',
+        alignItems:'center',
+        justifyContent:'center'
     },
     guest : {
         backgroundColor : '#a9d5d1',
         width : 50,
         height : 50,
         borderRadius : 50,
-        padding : 15,
+        // padding : 15,
         display:'flex',
         alignItems:'center',
         justifyContent:'center'
