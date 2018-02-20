@@ -118,18 +118,17 @@ export default class ProductOrder extends Component<{}> {
             }
 
             if (responseData.status) {
-
-            this.setState({
-                dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
-                loaded     : true,
-                status     : responseData.status
-            });
-        }else {
-             this.setState({
-                loaded     : true,
-                status     : responseData.status
-            });
-        }
+                this.setState({
+                    dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
+                    loaded     : true,
+                    status     : responseData.status
+                });
+            }else {
+                this.setState({
+                    loaded     : true,
+                    status     : responseData.status
+                });
+            }
 
         })
         .catch((error) => {
@@ -141,7 +140,7 @@ export default class ProductOrder extends Component<{}> {
     noItemFound(){
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
-                <Text>You Have No Itmes In Ordered</Text>
+                <Text>You have no items in product</Text>
             </View>
         );
     }
@@ -153,7 +152,6 @@ export default class ProductOrder extends Component<{}> {
         if (!this.state.status) {
             return this.noItemFound();
         }
-
         return this.renderListView();
     }
 
@@ -189,7 +187,7 @@ export default class ProductOrder extends Component<{}> {
     renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.section}>
-                <Text style={[styles.text, { color: '#fbcdc5'}]}>OrderDate:  {sectionData}</Text>
+                <Text style={[styles.text,{ color: '#fbcdc5'}]}>OrderDate:  {sectionData}</Text>
                 <Text style={[styles.text,{ color: '#a9d5d1'}]}>Order Id : {sectionID}</Text>
             </View>
         );
@@ -267,8 +265,8 @@ var styles = StyleSheet.create({
         color: 'white'
     },
     text: {
-        paddingHorizontal: 8,
-        fontSize: 16
+        // paddingHorizontal: 8,
+        fontSize: 14
     },
     rowStyle: {
         paddingVertical: 5,
@@ -300,7 +298,7 @@ var styles = StyleSheet.create({
         alignItems: 'flex-start',
         padding: 5,
         backgroundColor: '#fff',
-        borderWidth:StyleSheet.hairlineWidth,
+        borderWidth: StyleSheet.hairlineWidth,
         borderColor: '#fbcdc5'
     }
 });

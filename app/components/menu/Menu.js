@@ -79,7 +79,7 @@ class Menu extends React.Component {
                         <Zocial name='guest' color="#000" size={15} />
                     </View>
                     </View>
-                    <Text style={{ position: 'absolute' , paddingLeft : width/3, paddingTop : 75, color:"#fff", marginTop:10}}>{identity.username}</Text>
+                    <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:90}}>{identity.username}</Text>
                 </View>
                 </TouchableOpacity>
                 <View style={[styles.badge, styles.seprator]}>
@@ -323,6 +323,8 @@ const styles = StyleSheet.create({
         width: width-20,
         height : 120,
         backgroundColor : '#f08080',
+        flexDirection:'column',
+        alignItems:'center'
     },
 
     avatar: {
