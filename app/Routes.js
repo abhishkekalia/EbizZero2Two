@@ -12,7 +12,7 @@ import {
   Stack,
   Lightbox,
 } from "react-native-router-flux";
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet , Platform} from 'react-native';
 import MessageBar from './common/MessageBar';
 
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
@@ -325,7 +325,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     component={AddressBook}
                     title="Select Address"
                     hideNavBar={false}
-                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15,marginTop:10}}/>}
+                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:Platform.OS==='ios'?15:0,marginTop:Platform.OS==='ios'?10:0}}/>}
                     />
                 </Stack>
                 <Stack key="deascriptionPage" renderTitle >

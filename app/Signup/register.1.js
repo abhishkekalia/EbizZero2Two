@@ -11,8 +11,7 @@ import {
 	Keyboard,
 	Dimensions,
 	Image,
-	// Picker,
-	StyleSheet
+	// Picker
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -25,13 +24,6 @@ import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import ActionSheet from 'react-native-actionsheet';
-const CANCEL_INDEX = 0;
-const DESTRUCTIVE_INDEX = 0
-
-const countryTitle = 'Select Country'
 
 const { width, height } = Dimensions.get('window')
 
@@ -72,13 +64,10 @@ class Register extends Component {
 			userType : null,
 			type : '2',
 			os : (Platform.OS === 'ios') ? 2 : 1,
-			countries: ["0"],
 		};
 	    this.inputs = {};
-		this.showCountrysheet = this.showCountrysheet.bind(this)
-		this.handlePress = this.handlePress.bind(this)
+
 	}
-	
 	componentDidMount(){
         this.fetchData();
         this.gettermandcondition()
@@ -127,21 +116,9 @@ class Register extends Component {
         .then((response) => response.json())
         .then((responseData) => {
 			console.log("CountryList:=-",responseData.response.data)
-			var data = responseData.response.data,
-                    length = data.length,
-                    optionsList= []
-                    optionsList.push('Cancel');
-
-                    for(var i=0; i < length; i++) {
-                        order = data[i];
-                        // console.warn(order);
-                        country_name = order.country_name;
-                        optionsList.push(country_name);
-                    }
             this.setState({
                 userTypes: responseData.response.data,
-				 loaded: true,
-				 countries: optionsList
+                 loaded: true
         });
 		})
 		.catch((error) => {
@@ -161,52 +138,8 @@ class Register extends Component {
         return this.state.userTypes.map(user => (
             <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} />
         ))
-	}
-	showCountrysheet() {
-		this.countrySheet.show()
-	  }
-	handlePress(i) {
-		console.log('handlePress:=',i)
-		// const { userTypes , countries} = this.state;
-		// this.handlePress[]
-		
-		if(i === 0){
-			this.setState({
-				selectCountry: '',
-				// deliveryareas: ["cancel","Select Country First"],
-		})
-		}else{
-			console.log("userTypes:=",this.state.userTypes[i-1].country_id)
-		// console.log("countries:=",countries[i])
-		  this.setState({
-			selectCountry: this.state.userTypes[i-1].country_id.toString()
-		  })
-	
-		//   data = userTypes.filter((item)=>{
-		// 	return item.country_name == countries[i];
-		//   }).map((item)=>{
-		// 	// delete item.country_name;
-		// 	return item;
-		//   });
-		}
-	
-		//   var source_data = data[0].city,
-		// 		length = data[0].city.length,
-		// 		city_list= []
-	
-		// 		city_list.push('Cancel');
-		// 		for(var i=0; i < length; i++) {
-		// 			order = source_data[i];
-		// 			// console.warn(order);
-		// 			city_name = order.city_name;
-		// 			city_list.push(city_name);
-		// 		}
-	
-		// 		this.setState({
-		// 		  deliveryareas: city_list
-		// 		})}
-	
-	  }
+    }
+
 	render() {
 		        let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked' ;
 				// let icon = this.state.hidden ? 'ios-eye' : 'ios-eye-off';
@@ -220,7 +153,6 @@ class Register extends Component {
 				}
 
 		const {errorStatus, loading} = this.props;
-		const resizeMode = 'center';
 		return (
 			<ScrollView style={[ commonStyles.content,{marginTop:0,marginBottom:0,paddingTop:20,paddingBottom:20}]} testID="Login" keyboardShouldPersistTaps={'handled'}>
 				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
@@ -342,14 +274,12 @@ class Register extends Component {
 						/>
 					</View>
 
-					<TouchableOpacity onPress={this.showCountrysheet} style={[commonStyles.iconusername, {
+					<TouchableOpacity style={[commonStyles.iconusername, {
 					        				flexDirection: 'row',
 					        				justifyContent: 'space-between',
 					        				alignItems: 'center' ,
 											marginBottom : 5,
-											paddingLeft:5,
-											height:40,
-											overflow:'hidden'
+											paddingLeft:5
 					        					}]}>
 					{/* <View style={{flexDirection: 'row',
         justifyContent: 'space-between',
@@ -367,13 +297,8 @@ class Register extends Component {
 						onLoadEnd={() => {  }}
 						/>
 						}
-						<Text style={{ }} >{this.state.selectCountry? selCountryObj.country_name  : this.state.selectCountry }</Text>
-						<FontAwesome
-                            name="chevron-down"
-                            size={20}
-                            color="#000"
-                            style={{padding:5, marginRight:5}}/>
-						{/* <Picker
+
+						<Picker
 							style=
 							{{
 								width: !this.state.selectCountry? width-50 : width-100, // width-50, 
@@ -393,46 +318,12 @@ class Register extends Component {
 							
 							{this.loadUserTypes()}
 
-                            </Picker> */}
+                            </Picker>
 
 							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:10, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
 
 						</TouchableOpacity>
 						{/* </View> */}
-
-						{/* <TouchableOpacity onPress={this.showCountrysheet} style={[commonStyles.iconusername, {
-					        				flexDirection: 'row',
-					        				justifyContent: 'space-between',
-					        				alignItems: 'center' ,
-											marginBottom : 5,
-											paddingLeft:5
-					        					}]}>
-                        <View style={styles.countryIcon}>
-                        <Image
-                        style={{
-                            resizeMode,
-                            width : 25,
-                            height : 25,
-                        }}
-                        resizeMode = 'cover'
-                        source={require('../images/country_icon.png')} />
-                        </View>
-                        <Text style={{width: width/2, color: "#a9d5d1"}}>{ this.state.selectCountry ? this.state.countries[this.state.selectCountry] : countryTitle}</Text>
-                        <FontAwesome
-                            name="chevron-down"
-                            size={20}
-                            color="#FFCC7D"
-                            style={{padding:5}}/>
-
-                        </TouchableOpacity> */}
-
-							<ActionSheet
-                        ref={o => this.countrySheet = o}
-                        // title={!this.state.selectCountry? this.state.selectCountry : selCountryObj.country_name  }
-                        options={this.state.countries}
-                        cancelButtonIndex={CANCEL_INDEX}
-                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                        onPress={this.handlePress}/>
 
 					<View style={[{
 					flexDirection: 'row',
@@ -650,44 +541,5 @@ onSubmit() {
 		}
 	}
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex:1,
-        // justifyContent : 'center',
-        alignItems:'center',
-        backgroundColor:'transparent',
-        paddingTop:20
-    },
-
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#fbcdc5',
-        // justifyContent: 'center',
-        alignItems: 'center' ,
-        backgroundColor: '#F6F6F6',
-        marginBottom : 10
-    },
-
-    countryIcon: {
-        borderRightWidth: 1,
-        borderColor: '#fbcdc5',
-        width : 40,
-        height:40,
-        marginLeft :10,
-        marginRight :10,
-        paddingTop :5,
-        justifyContent :'center',
-        alignItems : 'center'
-    },
-    centering : {
-        flex : 1,
-        justifyContent  :'center',
-        alignItems : 'center'
-    }
-});
 
 export default Register;

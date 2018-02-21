@@ -23,13 +23,6 @@ import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Picker } from 'react-native-picker-dropdown';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import ActionSheet from 'react-native-actionsheet';
-const CANCEL_INDEX = 0;
-const DESTRUCTIVE_INDEX = 0
-
-const countryTitle = 'Select Country'
-
 const { width, height } = Dimensions.get('window')
 
 const INITIAL_STATE = {
@@ -75,11 +68,9 @@ class Vendorreg extends Component {
 			snapchat_id	: '',
 			type : '3',
 			os : (Platform.OS === 'ios') ? 2 : 1,
-			countries: ["0"],
 		};
 	    this.inputs = {};
-		this.showCountrysheet = this.showCountrysheet.bind(this)
-		this.handlePress = this.handlePress.bind(this)
+
 	}
 	componentDidMount(){
         this.fetchData();
@@ -105,22 +96,10 @@ class Vendorreg extends Component {
         })
         .then((response) => response.json())
         .then((responseData) => {
-					// console.warn(JSON.stringify(responseData))
-					var data = responseData.response.data,
-                    length = data.length,
-                    optionsList= []
-                    optionsList.push('Cancel');
-
-                    for(var i=0; i < length; i++) {
-                        order = data[i];
-                        // console.warn(order);
-                        country_name = order.country_name;
-                        optionsList.push(country_name);
-                    }
+                    // console.warn(JSON.stringify(responseData))
             this.setState({
                 userTypes: responseData.response.data,
-				 loaded: true,
-				 countries: optionsList
+                 loaded: true
         });
         }).done();
     }
@@ -137,53 +116,7 @@ class Vendorreg extends Component {
         return this.state.userTypes.map(user => (
             <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} />
         ))
-	}
-	
-	showCountrysheet() {
-		this.countrySheet.show()
-	  }
-	handlePress(i) {
-		console.log('handlePress:=',i)
-		// const { userTypes , countries} = this.state;
-		// this.handlePress[]
-		
-		if(i === 0){
-			this.setState({
-				selectCountry: '',
-				// deliveryareas: ["cancel","Select Country First"],
-		})
-		}else{
-			console.log("userTypes:=",this.state.userTypes[i-1].country_id)
-		// console.log("countries:=",countries[i])
-		  this.setState({
-			selectCountry: this.state.userTypes[i-1].country_id.toString()
-		  })
-	
-		//   data = userTypes.filter((item)=>{
-		// 	return item.country_name == countries[i];
-		//   }).map((item)=>{
-		// 	// delete item.country_name;
-		// 	return item;
-		//   });
-		}
-	
-		//   var source_data = data[0].city,
-		// 		length = data[0].city.length,
-		// 		city_list= []
-	
-		// 		city_list.push('Cancel');
-		// 		for(var i=0; i < length; i++) {
-		// 			order = source_data[i];
-		// 			// console.warn(order);
-		// 			city_name = order.city_name;
-		// 			city_list.push(city_name);
-		// 		}
-	
-		// 		this.setState({
-		// 		  deliveryareas: city_list
-		// 		})}
-	
-	  }
+    }
 
 	render() {
 		        let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked' ;
@@ -362,22 +295,12 @@ class Vendorreg extends Component {
 					        	justifyContent: 'center',
 					        	alignItems: 'center' ,
 					        	}}>				 */}
-					{/* <View style={{flexDirection: 'row',
+					<View style={{flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center' ,
 		marginLeft: 5
 	}}
-		> */}
-		<TouchableOpacity onPress={this.showCountrysheet} style={[commonStyles.iconusername, {
-					        				flexDirection: 'row',
-					        				justifyContent: 'space-between',
-					        				alignItems: 'center' ,
-											marginBottom : 5,
-											paddingLeft:5,
-											height:40,
-											overflow:'hidden',
-											borderBottomWidth:0
-					        					}]}>
+		>
 
 						{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
 							resizeMode = 'center'
@@ -386,15 +309,8 @@ class Vendorreg extends Component {
 							onLoadEnd={() => {  }}
 							/>
 						}
-
-						<Text style={{ }} >{this.state.selectCountry? selCountryObj.country_name  : this.state.selectCountry }</Text>
-						<FontAwesome
-                            name="chevron-down"
-                            size={20}
-                            color="#000"
-                            style={{padding:5, marginRight:5}}/>
 		
-						{/* <Picker
+						<Picker
 							style={{
 								width: !this.state.selectCountry? width-50 : width-100, //width-50, 
 								height: 40
@@ -412,18 +328,10 @@ class Vendorreg extends Component {
                             this.setState({selectCountry: itemValue})}>
                                 {this.loadUserTypes()}
 
-                            </Picker> */}
+                            </Picker>
 
 							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
-                    </TouchableOpacity>
-					{/* </View> */}
-					<ActionSheet
-                        ref={o => this.countrySheet = o}
-                        // title={!this.state.selectCountry? this.state.selectCountry : selCountryObj.country_name  }
-                        options={this.state.countries}
-                        cancelButtonIndex={CANCEL_INDEX}
-                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                        onPress={this.handlePress}/>
+                    </View>
 				</View>
 				<Text style={{ paddingTop:5,paddingBottom:5}}>Add Social Media Acount</Text>
 				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
