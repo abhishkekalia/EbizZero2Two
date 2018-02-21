@@ -49,7 +49,7 @@ class Menu extends React.Component {
       .then((response) => response.json())
       .then((responseData) => {
           if(responseData.status){
-            console.warn(responseData.data.count);
+            // console.warn(responseData.data.count);
               this.setState({
               notificationCount: responseData.data.count,
               // refreshing : false
@@ -70,7 +70,7 @@ class Menu extends React.Component {
        render() {
         const {identity, logout} = this.props;
         return (
-            <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}>
+            <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
                 <TouchableOpacity
 						onPress={Actions.profile}>
                 <View style={styles.avatarContainer}>
@@ -79,7 +79,7 @@ class Menu extends React.Component {
                         <Zocial name='guest' color="#000" size={15} />
                     </View>
                     </View>
-                    <Text style={{ position: 'absolute' , paddingLeft : width/3, paddingTop : 75, color:"#fff", marginTop:10}}>{identity.username}</Text>
+                    <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:30}}>{identity.username}</Text>
                 </View>
                 </TouchableOpacity>
                 <View style={[styles.badge, styles.seprator]}>
@@ -88,7 +88,7 @@ class Menu extends React.Component {
                   MainElement={
                     <Ionicons
                     name="ios-notifications"
-                    color="#87cefa" size={30}
+                    color="#a9d5d1" size={30}
                     style={{ left : 5}}
                     />
                   }
@@ -103,7 +103,7 @@ class Menu extends React.Component {
                   /> :
                   <Ionicons
                     name="ios-notifications"
-                    color="#87cefa" size={30}
+                    color="#a9d5d1" size={30}
                     style={{ left : 5}}
                     />
                   }
@@ -141,11 +141,6 @@ class Menu extends React.Component {
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={Actions.postad}
-                style={[styles.item, styles.seprator]}> Marketing</Text>
-
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
                 onPress={()=>this.onOpen()}
                 style={[styles.item, styles.seprator]}> Share with Friends</Text>
 
@@ -153,6 +148,11 @@ class Menu extends React.Component {
                 <Text
                 onPress={Actions.sync}
                 style={[styles.item, styles.seprator]}> Rate us on App Store</Text>
+
+                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                <Text
+                onPress={Actions.postad}
+                style={[styles.item, styles.seprator]}> Marketing</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={()=>( Utils.logout()),logout}
@@ -320,9 +320,11 @@ const styles = StyleSheet.create({
     },
 
     avatarContainer: {
-        width: width,
+        width: width-20,
         height : 120,
         backgroundColor : '#f08080',
+        flexDirection:'column',
+        alignItems:'center'
     },
 
     avatar: {
@@ -333,24 +335,26 @@ const styles = StyleSheet.create({
     },
 
     username: {
-        flex : 1,
-        left : width/2.5,
+        // flex : 1,
+        // left : width/2.5,
         top :20,
-        position: 'absolute',
+        position: 'relative',
         backgroundColor : '#fff',
         width : 55,
         height : 55,
         borderRadius : 50,
-        padding :2.5,
-        zIndex:9999,
-        overflow:'hidden'
+        // padding :2.5,
+        // zIndex:9999,
+        overflow:'hidden',
+        alignItems:'center',
+        justifyContent:'center'
     },
     guest : {
         backgroundColor : '#a9d5d1',
         width : 50,
         height : 50,
         borderRadius : 50,
-        padding : 15,
+        // padding : 15,
         display:'flex',
         alignItems:'center',
         justifyContent:'center'

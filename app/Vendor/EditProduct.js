@@ -5,7 +5,6 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
-    TouchableNativeFeedback,
     Dimensions,
     Button,
     Keyboard,
@@ -209,6 +208,7 @@ export default class EditProduct extends Component {
             { name : 'size', data: sizeRows.toString()},
             { name : 'quantity', data: sizeRows.toString()},
             { name : 'is_feature', data: String(is_feature)},
+            { name : 'gender', data: String(1)},
             ])
             .uploadProgress((written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%')
@@ -452,16 +452,31 @@ export default class EditProduct extends Component {
                     </View>
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
+
+                    {Platform.OS === 'ios' ? 
+                        <TouchableOpacity
+                        onPress={this.selectPhotoTapped.bind(this)}>
+    
+                        <View style={{ }}>
+                        <Feather
+                            name="upload-cloud" size= {30} style={{ padding:20 }}/>
+                            <Text>Click here</Text>
+                    </View>
+                    </TouchableOpacity>
+                        
+                    : 
                     <TouchableNativeFeedback
                     onPress={this.selectPhotoTapped.bind(this)}
                     background={TouchableNativeFeedback.SelectableBackground()}>
 
                     <View style={{ justifyContent: 'center'}}>
-                        <Feather
+                    <Feather
                             name="upload-cloud" size= {30} style={{ padding:20 }}/>
                             <Text>Click here</Text>
                     </View>
                     </TouchableNativeFeedback>
+                        
+                    }
                         <Editimage
                             productImages={this.state.rows}
                             callback={this.getResponse.bind(this)}

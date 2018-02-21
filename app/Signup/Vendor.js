@@ -9,7 +9,8 @@ import {
 	ScrollView,
 	Platform,
 	Dimensions,
-	Keyboard
+	Keyboard,
+	Image
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -120,6 +121,14 @@ class Vendorreg extends Component {
 	render() {
 		        let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked' ;
 		const {errorStatus, loading} = this.props;
+
+		var selCountryObj = null
+		for (let index = 0; index < this.state.userTypes.length; index++) {
+			let element = this.state.userTypes[index];
+			if (element.country_id == this.state.selectCountry) {
+				selCountryObj = element
+			}
+		}
 		return (
 			<ScrollView
 			showsVerticalScrollIndicator ={false}
@@ -292,8 +301,27 @@ class Vendorreg extends Component {
 		marginLeft: 5
 	}}
 		>
+
+						{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
+							resizeMode = 'center'
+							resizeMethod = 'resize'
+							source={{uri : selCountryObj ? selCountryObj.flag : "" }}
+							onLoadEnd={() => {  }}
+							/>
+						}
+		
 						<Picker
-                            style={{width: width-50, height: 40}}
+							style={{
+								width: !this.state.selectCountry? width-50 : width-100, //width-50, 
+								height: 40
+							}}
+							// style=
+							// {{
+							// 	width: !this.state.selectCountry? width-50 : width-100, // width-50, 
+							// 	height: 40, 
+							// 	position:'relative', 
+							// 	zIndex:999
+							// }}
                             mode="dropdown"
                             selectedValue={this.state.selectCountry}
                             onValueChange={(itemValue, itemIndex) =>

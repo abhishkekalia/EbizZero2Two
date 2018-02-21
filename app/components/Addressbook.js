@@ -20,6 +20,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 import {CirclesLoader} from 'react-native-indicator';
+import EventEmitter from "react-native-eventemitter";
 
 const { width } = Dimensions.get('window')
 const ICON_SIZE = 24
@@ -52,6 +53,11 @@ export default class AddressBook extends Component {
         .then( ()=>this.fetchAddress())
         .done();
 
+        EventEmitter.removeAllListeners("reloadAddressList");
+        EventEmitter.on("reloadAddressList", (value)=>{
+            console.log("reloadAddressList", value);
+            this.fetchAddress()    
+        });
     }
     getItems (delivery_address_id){
         var Items = this.props.SetToList,
@@ -155,7 +161,14 @@ export default class AddressBook extends Component {
             .then((responseData) => {
             if(responseData.status){
             // console.warn("calling my Fatureh")
-              routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+                var data = ({
+                    uri : responseData.data.url,
+                    order_id : responseData.data.order_id,
+                }) 
+                routes.pop()
+                EventEmitter.emit("redirectToFaturah",data)
+                
+            //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
               }else{
                 this.removeLoader
             }
@@ -295,9 +308,9 @@ export default class AddressBook extends Component {
         <View style={styles.container}>
 
         {listView}
-        <TouchableOpacity style={{ alignItems : 'center', backgroundColor:'#ccc'}}  onPress={()=>routes.pop()}>
+        {/* <TouchableOpacity style={{ alignItems : 'center', backgroundColor:'#ccc'}}  onPress={()=>routes.pop()}>
         <Text style={{padding :10}}>Close</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <Modal isVisible={this.state.visibleModal}>
             <View style={{alignItems : 'center', padding:10}}>

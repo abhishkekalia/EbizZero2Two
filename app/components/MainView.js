@@ -72,7 +72,9 @@ export default class MainView extends Component {
             product_name : '',
             url : '',
             arrSelectedCategory : [],
-            isFilterProduct : true
+            isFilterProduct : true,
+            arrSelectedGender :[],
+            arrSelectedType :[],
         }
     }
 
@@ -88,19 +90,29 @@ export default class MainView extends Component {
         EventEmitter.removeAllListeners("applyCategoryFilter");
         EventEmitter.on("applyCategoryFilter", (value)=>{
             console.log("applyCategoryFilter", value);
-            if (value.length > 0) {
+            
+            if (value.selCategory.length > 0) {
                 this.setState({
                     loaded:false,
-                    arrSelectedCategory:value,
+                    arrSelectedCategory:value.selCategory,
+                    arrSelectedGender:value.selGender,
+                    arrSelectedType:value.selType,
                     isFilterProduct : true
                 })
-                this.filterByCategory(value)
+                this.filterByCategory(value.selCategory,value.selGender)
+            }
+            else {
+                this.setState({
+                    arrSelectedCategory:value.selCategory,
+                    arrSelectedGender:value.selGender,
+                    arrSelectedType:value.selType,
+                })
             }
         });
 
         EventEmitter.removeAllListeners("reloadProducts");
         EventEmitter.on("reloadProducts", (value)=>{
-            console.log("reloadProducts", value);
+            // console.log("reloadProducts", value);
             this.fetchData()
         });
 
@@ -115,7 +127,7 @@ export default class MainView extends Component {
     };
    _renderRightButton = () => {
         return(
-            <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory})} color="#fff" style={{ padding : 10}}/>
+            <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10}}/>
         );
     };
 
@@ -483,7 +495,7 @@ export default class MainView extends Component {
 
     }
 
-    filterByCategory(selectedCategory){
+    filterByCategory(selectedCategory,selectedGender){
         const {u_id, country, user_type,rows } = this.state;
         var venderIds = this.state.rows.slice();
 
@@ -499,12 +511,21 @@ export default class MainView extends Component {
             selCat.push(parseInt(selectedCategory[i],10))
         }
 
+        var selGen = [];
+        for (var i = 0; i < selectedGender.length; i++) {
+            selGen.push(parseInt(selectedGender[i],10))
+        }
+
+        let type_ids = 1;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         // formData.append('categoty_id', String(this.props.filterdBy));
         formData.append('category_id', String(selCat));
         formData.append('vendor_id', String(venderIds));
+        formData.append('type_id', 1);
+        formData.append('gender',String(selGen));
+
         console.log("request:=",formData);
         const config = {
             method: 'POST',
@@ -519,8 +540,9 @@ export default class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
+                console.log("responseData.data:=",responseData.data)
                 this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data.product),
                     status : responseData.status,
                     loaded: true,
                     refreshing: false
@@ -711,65 +733,106 @@ export default class MainView extends Component {
                 showsVerticalScrollIndicator={false}
                 />
             );
-        return(
 
-            this.state.isFilterProduct ?
-
-            <View>
-                    {
-                        Platform.OS === 'ios' ?
-                        <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
-                        :
-                        <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
-                    }
-                    <View>
-                    {
-                        listView
-                    }
+            if (this.state.arrSelectedType.length == 1) {
+                if (this.state.arrSelectedType[0] == 1) {
+                    return(
+                        <View>
+                            {
+                                Platform.OS === 'ios' ?
+                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                                :
+                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                            }
+                            <View>
+                            {
+                                listView
+                            }
+                            </View>
+                        </View>
+                    );
+                    console.log("product product product")                    
+                }
+                else {
+                    console.log("service service service")
+                    return(
+                        <View>
+                        {
+                            Platform.OS === 'ios' ?
+                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                            :
+                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                        }
+                        <View>
+                        {
+                            serviceListview
+                        }
+                        </View>        
                     </View>
-                    {
-                        Platform.OS === 'ios' ?
-                            <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
-                        :
-                            <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
-                    }
+                    );
+                }
+            }
+            else if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
+                console.log("Both")
+                return(
+                    this.state.isFilterProduct ?
+        
                     <View>
-                    {
-                        serviceListview
-                    }
+                            {
+                                Platform.OS === 'ios' ?
+                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                                :
+                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                            }
+                            <View>
+                            {
+                                listView
+                            }
+                            </View>
+                            {
+                                Platform.OS === 'ios' ?
+                                    <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                                :
+                                    <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                            }
+                            <View>
+                            {
+                                serviceListview
+                            }
+                            </View>
                     </View>
-            </View>
-
-            :
-
-            <View>
-                {
-                    Platform.OS === 'ios' ?
-                        <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+        
                     :
-                        <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
-                }
-                <View>
-                {
-                    serviceListview
-                }
-                </View>
-
-                {
-                    Platform.OS === 'ios' ?
-                    <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
-                    :
-                    <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
-                }
-                <View>
-                {
-                    listView
-                }
-                </View>
-
-            </View>
-
-        );
+        
+                    <View>
+                        {
+                            Platform.OS === 'ios' ?
+                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                            :
+                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                        }
+                        <View>
+                        {
+                            serviceListview
+                        }
+                        </View>
+        
+                        {
+                            Platform.OS === 'ios' ?
+                            <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                            :
+                            <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                        }
+                        <View>
+                        {
+                            listView
+                        }
+                        </View>
+        
+                    </View>
+        
+                );
+            }
     }
 
     renderService(data, rowData: string, sectionID: number, rowID: number, index) {

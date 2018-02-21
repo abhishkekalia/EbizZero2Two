@@ -102,17 +102,19 @@ export default class GetMarketing extends Component {
         }
 
         return (
-        <View style={{ borderBottomWidth: 0.5, borderColor: '#CCC' , height: 50}}>{listView}</View>
+        <View style={{ borderBottomWidth: 0.5, borderColor: '#CCC'}}>{listView}</View>
         );
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
 
         return (
             <TouchableOpacity style={styles.row} onPress={()=> Actions.timeLine({
-                    uri : data.path })}>
+                ad_type:data.ad_type,
+                uri : data.path })}>
                         <Image style={styles.thumb}
-                        source={{ uri : data.path}}
+                        source={{ uri : data.thumbnail_image}}
                         />
+                      <View style={styles.OvalShapeView} />
             </TouchableOpacity>
         );
     }
@@ -132,19 +134,53 @@ var styles =StyleSheet.create({
         // borderWidth: 1,
         // borderColor: '#CCC'
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
+        alignItems: 'center',
         margin: 3,
     },
 
     thumb: {
         width: 40,
         height: 40,
-        borderRadius : 40
+        borderRadius : 20,
+        zIndex: 1
     },
+
+OvalShapeView: {
+  // marginTop: -10,
+  zIndex: 0,
+  width: 20,
+  height: 20,
+  backgroundColor: '#ccc',
+  borderRadius: 20,
+  transform: [
+    {scaleX: 2}
+  ]
+},
 
     text: {
         flex: 1,
         marginTop: 5,
         fontWeight: 'bold'
-    }
+    },
+    inputExample: {
+       borderColor: '#9b9b9b',
+       backgroundColor: 'white',
+       borderWidth: 1,
+       borderStyle: 'solid',
+       height: 50,
+   },
+   inputTop: {
+       borderTopLeftRadius: 6,
+       borderTopRightRadius: 6,
+       borderBottomLeftRadius: 0,
+       borderBottomRightRadius: 0,
+   },
+   inputBottom: {
+       borderTopLeftRadius: 0,
+       borderTopRightRadius: 0,
+       borderBottomLeftRadius: 6,
+       borderBottomRightRadius: 6,
+       marginBottom: 60
+   },
 });

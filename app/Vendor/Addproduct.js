@@ -110,7 +110,7 @@ export default class AddProduct extends Component {
    _renderRightButton = () => {
         return(
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-            <Text style={{color : '#fff'}}>ADD</Text>
+            <Text style={{color : '#fff'}}>UPLOAD</Text>
             </TouchableOpacity>
         );
     };
@@ -286,6 +286,7 @@ export default class AddProduct extends Component {
             { name : 'quantity', data: quantityRows.toString()},
             { name : 'size', data: sizeRows.toString()},
             { name : 'is_feature', data: String(is_feature)},
+            { name : 'gender', data: String(1)},
             ])
             .uploadProgress((written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%')
@@ -376,6 +377,11 @@ export default class AddProduct extends Component {
             additional : false
         });
     }
+    textInputFocused(){
+      console.log("focused");
+      //this.refs.scrView.con
+      this.refs.scrView.scrollToOffset({animated:false,offset:100});
+    }
     render() {
         const { imageSelect, quantityRows, sizeRows} = this.state;
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
@@ -392,6 +398,7 @@ export default class AddProduct extends Component {
             automaticallyAdjustContentInsets={false}
             directionalLockEnabled = {true}
             horizontal = {false}
+            ref={'scrView'}
             >
                 <View style={commonStyles.ImageAdd}>
                     <Text style={{color: borderColorImage, marginBottom : 10}}>Select Product Image</Text>
@@ -453,6 +460,7 @@ export default class AddProduct extends Component {
                         <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5}]}
                         value={this.state.shortdescription}
+                        onFocus={this.textInputFocused.bind(this)}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
                         placeholder="Short Description "

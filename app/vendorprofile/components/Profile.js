@@ -97,6 +97,7 @@ class Profile extends Component {
         fetch(Utils.gurl('MyProfile'), config)
         .then((response) => response.json())
         .then((responseData) => {
+			console.log("responseData:=",responseData);
         	if(responseData.response.status){
         	    this.setState({
         	       	status : responseData.response.status,

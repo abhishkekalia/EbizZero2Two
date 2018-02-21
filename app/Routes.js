@@ -105,7 +105,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         <Scene key='loginPage'
                         component={LoginPage}
                         title='Login into ZeroToTwo'
-                        hideNavBar={false}
+                        hideNavBar={true}
                         type={ActionConst.REPLACE}
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                         titleStyle={{color : "#FFF", alignSelf: 'center'}}/>
@@ -227,7 +227,10 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                                 icon={TabIcon}
                                 iconName="tag"
                                 // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
-                                navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                                navigationBarStyle={{
+                                  backgroundColor: '#a9d5d1',
+                                // position:'absolute',left:0,right:0,top:0,bottom:0
+                               }}
                                 titleStyle={{ color: 'white', alignSelf: 'center' }}>
                                     <Scene
                                     key="product"
@@ -319,12 +322,13 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                     title="EditService"
                     />
                 </Stack>
-                <Stack key="AddressLists" hideNavBar={true} >
+                <Stack key="AddressLists" navBar={CustomGenNavBar} hideNavBar={true} >
                     <Scene
                     key="address"
                     component={AddressBook}
-                    title="Addressbook"
-                    hideNavBar={true}
+                    title="Select Address"
+                    hideNavBar={false}
+                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15,marginTop:10}}/>}
                     />
                 </Stack>
                 <Stack key="deascriptionPage" renderTitle >
@@ -468,7 +472,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                 key="getmyaddress"
                 hideTabBar={true}
                 titleStyle={{alignSelf: 'center'}}
-                renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15}}/>}
+                renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15,marginTop:10}}/>}
                 >
                     <Scene
                     key="getmyaddress"

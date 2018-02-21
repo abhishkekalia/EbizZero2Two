@@ -61,7 +61,19 @@ export default class Shopingcart extends Component {
             console.log("reloadCartlist", value);
             this.fetchData()
         });
+
+        EventEmitter.removeAllListeners("redirectToFaturah");
+        EventEmitter.on("redirectToFaturah", (value)=>{
+            console.log("redirectToFaturah", value);
+
+            routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura})
+        });
     }
+
+    callBackFitura() {
+        console.log("Callback from fitura")
+    }
+
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton,});
     }

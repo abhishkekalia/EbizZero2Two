@@ -5,7 +5,6 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
-    TouchableNativeFeedback,
     Dimensions,
     Button,
     Keyboard,
@@ -434,16 +433,28 @@ export default class EditService extends Component {
 
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
-                    <TouchableNativeFeedback
-                    onPress={this.selectPhotoTapped.bind(this)}
-                    background={TouchableNativeFeedback.SelectableBackground()}>
 
-                    <View style={{ }}>
-                        <Feather
-                            name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                            <Text>Click here</Text>
-                    </View>
-                    </TouchableNativeFeedback>
+                        {
+                            Platform.OS === 'ios' ? 
+                            <TouchableOpacity
+                            onPress={this.selectPhotoTapped.bind(this)}>
+                            <View style={{ }}>
+                                <Feather
+                                    name="upload-cloud" size= {30} style={{ padding:20 }}/>
+                                    <Text>Click here</Text>
+                            </View>
+                            </TouchableOpacity>
+                            :
+                            <TouchableNativeFeedback
+                                onPress={this.selectPhotoTapped.bind(this)}
+                                background={TouchableNativeFeedback.SelectableBackground()}>
+                                <View style={{ }}>
+                                <Feather
+                                    name="upload-cloud" size= {30} style={{ padding:20 }}/>
+                                    <Text>Click here</Text>
+                            </View>
+                            </TouchableNativeFeedback>
+                        }
                         <Editimage
                             productImages={this.state.rows}
                             callback={this.getResponse.bind(this)}

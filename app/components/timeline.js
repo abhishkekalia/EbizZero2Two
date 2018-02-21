@@ -22,9 +22,11 @@ export default class Timeline extends Component{
         };
     }
     componentDidMount(){
-        setTimeout(()=>{
-            Actions.pop()
-        }, 5000);
+    }
+    startCounter(){
+      setTimeout(()=>{
+          Actions.pop()
+      }, 9000);
     }
     render() {
         setTimeout((()=> {
@@ -41,7 +43,7 @@ export default class Timeline extends Component{
                     style={{ width: width}}
                     progress={this.state.progress}
                 />
-                {this.props.isImage ? <ImagePlayer uri = {this.props.uri}/> : <VideoPlayer/>}
+              {this.props.ad_type==='1' ? <ImagePlayer uri = {this.props.uri} callback={()=>this.startCounter()}/> : <VideoPlayer uri = {this.props.uri} callback={()=>this.startCounter()}/>}
             </View>
         )
     }
@@ -57,6 +59,8 @@ class ImagePlayer extends React.Component {
        <View style={{alignItems: "center", height: 280, width: width }}>
        <Image
        source={{uri: this.props.uri ,width: width, height: 500}}
+       // onLoad={()=>console.warn('load')}
+       onLoad={this.props.callback}
        style={{
        alignSelf: 'center',
        flex: 1,
@@ -65,7 +69,7 @@ class ImagePlayer extends React.Component {
        resizeMode: 'cover',
        borderWidth: 1,}}
        resizeMode="stretch"/>
-         </View>);
+   </View>);
      }
    }
 
@@ -81,7 +85,9 @@ class VideoPlayer extends React.Component {
         <Video
          style={{height: 280, flex: 1, alignSelf: "stretch"}}
          resizeMode="cover"
-         source={{uri: "http://techslides.com/demos/sample-videos/small.mp4"}} />
+         source={{uri: "http://techslides.com/demos/sample-videos/small.mp4"}}
+         onLoadStart={()=>console.warn('loading')}
+         onLoad={this.props.callback}/>
          </View>);
      }
    }

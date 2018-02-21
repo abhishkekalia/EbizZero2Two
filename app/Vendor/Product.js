@@ -54,8 +54,6 @@ class Product extends Component {
     render() {
         return (
             <View style={styles.container}>
-          
-
                 <SegmentedControlTab
                     values={[ 'My Product','Add Product']}
                     selectedIndex={this.state.customStyleIndex}

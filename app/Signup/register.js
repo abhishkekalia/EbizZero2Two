@@ -10,7 +10,8 @@ import {
 	Platform,
 	Keyboard,
 	Dimensions,
-	Picker
+	Image,
+	// Picker
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -21,7 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-// import { Picker } from 'react-native-picker-dropdown';
+import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const { width, height } = Dimensions.get('window')
@@ -114,7 +115,7 @@ class Register extends Component {
         })
         .then((response) => response.json())
         .then((responseData) => {
-                    // console.warn(JSON.stringify(responseData))
+			console.log("CountryList:=-",responseData.response.data)
             this.setState({
                 userTypes: responseData.response.data,
                  loaded: true
@@ -141,7 +142,15 @@ class Register extends Component {
 
 	render() {
 		        let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked' ;
-		        // let icon = this.state.hidden ? 'ios-eye' : 'ios-eye-off';
+				// let icon = this.state.hidden ? 'ios-eye' : 'ios-eye-off';
+				
+				var selCountryObj = null
+				for (let index = 0; index < this.state.userTypes.length; index++) {
+					let element = this.state.userTypes[index];
+					if (element.country_id == this.state.selectCountry) {
+						selCountryObj = element
+					}
+				}
 
 		const {errorStatus, loading} = this.props;
 		return (
@@ -183,7 +192,8 @@ class Register extends Component {
           					returnKeyType={ "next" }
  					        ref={ input => {
  					        	this.inputs['two'] = input;
- 					        }}
+							 }}
+							 keyboardType = {"email-address"}
 							onChangeText={(email) => this.setState({email})}
 						/>
 					</View>
@@ -277,13 +287,36 @@ class Register extends Component {
 		marginLeft: 5,
 	}}
 		>					 */}
+
+						
+						
+						{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
+						resizeMode = 'center'
+						resizeMethod = 'resize'
+						source={{uri : selCountryObj ? selCountryObj.flag : "" }}
+						onLoadEnd={() => {  }}
+						/>
+						}
+
 						<Picker
-                            style={{width: width-50, height: 40}}
+							style=
+							{{
+								width: !this.state.selectCountry? width-50 : width-100, // width-50, 
+								height: 40, 
+								position:'relative', 
+								zIndex:999
+							}}
                             mode="dropdown"
                             selectedValue={this.state.selectCountry}
-                            onValueChange={(itemValue, itemIndex) =>
-                            this.setState({selectCountry: itemValue})}>
-                                {this.loadUserTypes()}
+							onValueChange={(itemValue, itemIndex) =>
+							// console.log("(itemValue, itemIndex):=",itemValue,itemIndex)
+							this.setState({
+								selectCountry: itemValue
+							})
+						}
+						>
+							
+							{this.loadUserTypes()}
 
                             </Picker>
 

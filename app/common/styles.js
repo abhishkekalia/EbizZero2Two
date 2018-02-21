@@ -16,7 +16,7 @@ export default StyleSheet.create({
 	},
 	iconusername : {
     	flexDirection: 'row',
-    	borderBottomWidth: 0.5,
+    	borderBottomWidth: StyleSheet.hairlineWidth,
 		borderColor: '#ccc',
 		backgroundColor : 'transparent',
 		borderColor:'#fbcdc5'
@@ -24,12 +24,13 @@ export default StyleSheet.create({
 
 	iconpassword : {
     	flexDirection: 'row',
-    	backgroundColor : 'transparent'
+    	backgroundColor : 'transparent',
+			paddingBottom: 1
     },
 
 	inputcontent : {
 		borderColor: '#ccc',
-		borderWidth: 1,
+		borderWidth: StyleSheet.hairlineWidth,
 		borderStyle: 'solid',
 		borderRadius: 5,
 		bottom : 10
@@ -74,13 +75,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-   	borderBottomWidth: 0.5,
+   	borderBottomWidth: StyleSheet.hairlineWidth,
 	borderColor: '#ccc',
 
 	},
 	registerContent : {
 		borderColor: '#ccc',
-		borderWidth: 0.5,
+		borderWidth: StyleSheet.hairlineWidth,
 		borderStyle: 'solid',
 		borderRadius: 5,
 	},

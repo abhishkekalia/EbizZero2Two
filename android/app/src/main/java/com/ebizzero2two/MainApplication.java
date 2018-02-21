@@ -4,15 +4,18 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.brentvatne.react.ReactVideoPackage;
+import com.devfd.RNGeocoder.RNGeocoderPackage;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.BV.LinearGradient.LinearGradientPackage;
 import cl.json.RNSharePackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,11 +32,13 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new ReactVideoPackage(),
+            new RNGeocoderPackage(),
+            new MapsPackage(),
             new VectorIconsPackage(),
-            new LinearGradientPackage(),
             new RNSharePackage(),
-            new RNFetchBlobPackage(),
-            new ImagePickerPackage()
+            new LinearGradientPackage(),
+            new ImagePickerPackage(),
+            new RNFetchBlobPackage()
       );
     }
 

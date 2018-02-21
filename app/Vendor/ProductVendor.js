@@ -526,7 +526,7 @@ class SlideshowTest extends Component {
     render() {
         return (
         <Slideshow
-        height ={height - 200}
+        height ={height - 230}
         dataSource={this.props.imgList}
         position={this.state.position}
         onPositionChanged={position => this.setState({ position })} />
