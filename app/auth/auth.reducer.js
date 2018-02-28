@@ -30,6 +30,13 @@ export default function auth(state = INITIAL_STATE, action) {
 				token: null,
 				user_type : null
 			};
+		case types.CHANGE_LANGUAGE:
+				return {
+					...state,
+					errorStatus: '',
+					lang: action.payload,
+				};
+
 		default:
 			return state;
 	}

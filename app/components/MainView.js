@@ -33,6 +33,9 @@ import Modal from 'react-native-modal';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Feather from 'react-native-vector-icons/Feather';
 import ModalWrapper from 'react-native-modal-wrapper';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n'
+
 // import Image from 'react-native-image-progress';
 // import ProgressBar from 'react-native-progress/Circle';
 
@@ -41,7 +44,7 @@ import EventEmitter from "react-native-eventemitter";
 const { width, height } = Dimensions.get('window')
 let index = 0;
 
-export default class MainView extends Component {
+class MainView extends Component {
     constructor(props) {
         super(props);
         this.fetchData = this.fetchData.bind(this);
@@ -90,7 +93,7 @@ export default class MainView extends Component {
         EventEmitter.removeAllListeners("applyCategoryFilter");
         EventEmitter.on("applyCategoryFilter", (value)=>{
             console.log("applyCategoryFilter", value);
-            
+
             if (value.selCategory.length > 0) {
                 this.setState({
                     loaded:false,
@@ -118,13 +121,14 @@ export default class MainView extends Component {
 
     }
     componentWillMount() {
-        Actions.refresh({ right: this._renderRightButton,});
+        Actions.refresh({ right: this._renderRightButton, left: this._renderLeftButton,});
     }
-   _renderLeftButton = () => {
-        return(
-            <Text style={{color : '#fff'}}></Text>
-        );
-    };
+    _renderLeftButton = () => {
+         return(
+             <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
+         );
+     };
+
    _renderRightButton = () => {
         return(
             <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10}}/>
@@ -375,6 +379,7 @@ export default class MainView extends Component {
     }
 
     renderCheckBox(data) {
+        const { lang } = this.props;
         var leftText = data.ShopName;
         var icon_name = data.icon_name;
         return (
@@ -384,6 +389,7 @@ export default class MainView extends Component {
                 onClick={()=>this.onClick(data)}
                 isChecked={data.checked}
                 leftText={leftText}
+                lang={lang}
             />
         );
     }
@@ -701,6 +707,8 @@ export default class MainView extends Component {
     }
 
     renderListData(){
+        const { lang} = this.props;
+
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -740,9 +748,9 @@ export default class MainView extends Component {
                         <View>
                             {
                                 Platform.OS === 'ios' ?
-                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                                 :
-                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                             }
                             <View>
                             {
@@ -751,7 +759,7 @@ export default class MainView extends Component {
                             </View>
                         </View>
                     );
-                    console.log("product product product")                    
+                    console.log("product product product")
                 }
                 else {
                     console.log("service service service")
@@ -759,30 +767,29 @@ export default class MainView extends Component {
                         <View>
                         {
                             Platform.OS === 'ios' ?
-                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                             :
-                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                         }
                         <View>
                         {
                             serviceListview
                         }
-                        </View>        
+                        </View>
                     </View>
                     );
                 }
             }
             else if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                console.log("Both")
                 return(
                     this.state.isFilterProduct ?
-        
+
                     <View>
                             {
                                 Platform.OS === 'ios' ?
-                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                                 :
-                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left',  fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                             }
                             <View>
                             {
@@ -791,9 +798,9 @@ export default class MainView extends Component {
                             </View>
                             {
                                 Platform.OS === 'ios' ?
-                                    <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                                    <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                                 :
-                                    <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                                    <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                             }
                             <View>
                             {
@@ -801,36 +808,36 @@ export default class MainView extends Component {
                             }
                             </View>
                     </View>
-        
+
                     :
-        
+
                     <View>
                         {
                             Platform.OS === 'ios' ?
-                                <Text style={{ left : 10, fontWeight : 'bold'}}>All Service</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                             :
-                                <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Service</Text>
+                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                         }
                         <View>
                         {
                             serviceListview
                         }
                         </View>
-        
+
                         {
                             Platform.OS === 'ios' ?
-                            <Text style={{ left : 10, fontWeight : 'bold'}}>All Item</Text>
+                            <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                             :
-                            <Text style={{ left : 10, fontWeight : 'bold', fontFamily :"halvetica"}}>All Item</Text>
+                            <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                         }
                         <View>
                         {
                             listView
                         }
                         </View>
-        
+
                     </View>
-        
+
                 );
             }
     }
@@ -838,6 +845,7 @@ export default class MainView extends Component {
     renderService(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        const { lang} = this.props;
 
        return (
             <View style={styles.row} >
@@ -858,12 +866,12 @@ export default class MainView extends Component {
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
 
-                <Text style={{fontSize : 13, color :'#000' }}>{data.service_name}</Text>
+                <Text style={{fontSize : 13, color :'#000' ,textAlign:(lang === 'ar') ?  'right': 'left'}}>{data.service_name}</Text>
                 </TouchableOpacity>
-                <Text style={styles.description}>{data.short_description}</Text>
+                <Text style={[styles.description, {textAlign:(lang === 'ar') ?  'right': 'left'}]}>{data.short_description}</Text>
                 <View style={{
                     flex: 0,
-                    flexDirection: 'row',
+                    flexDirection: (lang === 'ar') ?  'row-reverse': 'row',
                     justifyContent: 'space-between',
                     top : 5
                 }}>
@@ -876,8 +884,9 @@ export default class MainView extends Component {
     }
 
     renderFilterOptions() {
+        const { lang} = this.props;
         return(
-        <View style={{ flexDirection : 'row'}}>
+        <View style={{ flexDirection : (lang === 'ar') ? 'row-reverse' : 'row'}}>
                     <View style={ {
                         flex : 0.5,
                         // width : width/2,
@@ -887,9 +896,9 @@ export default class MainView extends Component {
                         padding : 2}}>
 
                         <TouchableOpacity
-                        onPress={this.modal} style={styles.allshop}
+                        onPress={this.modal} style={[styles.allshop, {flexDirection : (lang === 'ar') ? 'row-reverse' : 'row'}]}
                         >
-                            <Text>All Shop</Text>
+                            <Text>{I18n.t('home.allshop', { locale: lang })}</Text>
                             <Ionicons
                             name="md-arrow-dropdown"
                             size={20}
@@ -904,8 +913,8 @@ export default class MainView extends Component {
                         justifyContent : "space-around",
                         backgroundColor : '#fff',
                         padding : 2}}>
-                        <TouchableOpacity onPress={this.Service} style={styles.allshop}>
-                            <Text>Services</Text>
+                        <TouchableOpacity onPress={this.Service} style={[styles.allshop, {flexDirection : (lang === 'ar') ? 'row-reverse' : 'row'}]}>
+                            <Text>{I18n.t('home.services', { locale: lang })}</Text>
                             <Ionicons
                             name="md-arrow-dropdown"
                             size={20}
@@ -918,35 +927,36 @@ export default class MainView extends Component {
     }
 
     renderAllShopViews() {
+        const { lang} = this.props;
         return(
             <ModalWrapper
-                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
+                containerStyle={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: 'flex-end' }}
                 onRequestClose={() => this.setState({ isModalVisible: false })}
-                position="right"
+                position={(lang === 'ar') ? 'left' : 'right'}
                 style={styles.sidebar}
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isModalVisible}>
                 <View style={{
                     height:54,
-                    flexDirection : 'row',
+                    flexDirection : (lang === 'ar') ? 'row-reverse' : 'row',
                     alignItems:'center',
                     justifyContent : 'space-between',
                     backgroundColor:'#a9d5d1'
                 }}>
                         <Text>{null}</Text>
-                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>All Shop</Text>
+                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>{I18n.t('home.allshop', { locale: lang })}</Text>
                         <TouchableOpacity
                         underlayColor ={"#fff"}
                         onPress={()=>this.filterbyShop()}
                         >
-                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff'}}>Done</Text>
+                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff',marginLeft:10}}>Done</Text>
                         </TouchableOpacity>
 
                     </View>
                     <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Text style={{ padding : 10}}>All Shop</Text>
+                    <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row-reverse' : 'row', justifyContent:'space-between', alignItems:'center'}}>
+                    <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text>
                     {this.state.rows.length == 0 ?
                         <Ionicons name="ios-checkmark" size={30} color="green"  style={{ paddingRight : 10}}/>
                     :
@@ -962,36 +972,37 @@ export default class MainView extends Component {
     }
 
     renderAllServiceViews() {
+        const { lang } = this.props;
         return(
             <ModalWrapper
-                containerStyle={{ flexDirection: 'row', justifyContent: 'flex-end' }}
+                containerStyle={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: 'flex-end' }}
                 onRequestClose={() => this.setState({ isService: false })}
-                position="right"
+                position={(lang === 'ar') ? 'left' : 'right'}
                 style={styles.sidebar}
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isService}>
 
                 <View style={{
                     height:54,
-                    flexDirection : 'row',
+                    flexDirection : (lang === 'ar') ? 'row-reverse' : 'row',
                     alignItems:'center',
                     justifyContent : 'space-between',
                     backgroundColor:'#a9d5d1'
                 }}>
                         <Text>{null}</Text>
-                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>All Service</Text>
+                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>{I18n.t('home.allservice', { locale: lang })}</Text>
                         <TouchableOpacity
                         underlayColor ={"#fff"}
                         onPress={()=>this.filterbyService()}
                         >
-                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff'}}>Done</Text>
+                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff', marginLeft:10}}>{I18n.t('home.done', { locale: lang })}</Text>
                         </TouchableOpacity>
 
                     </View>
                     <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Text style={{ padding : 10}}>All Service</Text>
+                    <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row-reverse' : 'row', justifyContent:'space-between', alignItems:'center'}}>
+                    <Text style={{ padding : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                     {this.state.servicerows.length == 0 ?
                         <Ionicons name="ios-checkmark" size={30} color="green"  style={{ paddingRight : 10}}/>
                     :
@@ -1183,6 +1194,7 @@ export default class MainView extends Component {
     }
 
     renderServiceChec(data) {
+        const { lang } = this.props;
         if (!this.state.serviceArrayStatus) {
             return this.noServiceFound();
         }
@@ -1195,6 +1207,7 @@ export default class MainView extends Component {
                 onClick={()=>this.onServiceClick(data)}
                 isChecked={data.checked}
                 leftText={leftText}
+                lang={lang}
             />);
     }
     moveToDesc(title, product_id, is_wishlist){
@@ -1220,18 +1233,19 @@ export default class MainView extends Component {
 // Service filter complete here
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+        const { lang } = this.props;
         let color = data.special_price ? '#696969' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         let url =  data.productImages[0] ? data.productImages[0].image : "null"
 
        return (
             <View style={styles.row} >
-                <View style={{flexDirection: 'row', justifyContent: "center"}}>
+                <View style={{flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}}>
                     <TouchableOpacity
                     onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}>
                         <LoadImage productImages={data.productImages}/>
                     </TouchableOpacity>
-                    <EvilIcons style={{ position : 'absolute', left : 0 ,backgroundColor : 'transparent'}}
+                    <EvilIcons style={{ position : 'absolute', left : 5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
                         name="share-google"
                         size={25}
                         color="#a9d5d1"
@@ -1245,28 +1259,27 @@ export default class MainView extends Component {
                 </View>
 
                 <View style={{ padding :10}}>
-                <TouchableOpacity  style={styles.name}
-                onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}
-                >
-
-                <Text style={{fontSize : 10, color :'#989898' }}>{data.product_name}</Text>
-
-                </TouchableOpacity>
-                <View style={styles.description}><Header
-                product_category= {data.product_category}
-                u_id={this.state.u_id}
-                country={this.state.country}
-                />
-                </View>
-                <View style={{
-                    flex: 0,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop : 10
-                }}>
-                    <Text style={styles.special_price}>{data.special_price} KWD</Text>
-                    <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} KWD</Text>
-                </View>
+                    <TouchableOpacity  style={styles.name}
+                    onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}
+                    >
+                    <Text style={{fontSize : 10, color :'#989898', textAlign:(lang === 'ar') ?  'right': 'left'}}>{data.product_name}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.description}>
+                        <Header
+                        product_category= {data.product_category}
+                        u_id={this.state.u_id}
+                        country={this.state.country}
+                        lang={lang}/>
+                    </View>
+                    <View style={{
+                        flex: 0,
+                        flexDirection: (lang === 'ar') ? 'row-reverse' :'row',
+                        justifyContent: 'space-between',
+                        marginTop : 10
+                    }}>
+                        <Text style={styles.special_price}>{data.special_price} KWD</Text>
+                        <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} KWD</Text>
+                    </View>
                 </View>
             </View>
         );
@@ -1329,13 +1342,14 @@ class Header extends Component{
     }
 
   render() {
+      const { lang } = this.props;
     let product_id = this.props.product_category
     let product = this.state.product_category
 
     let resultObject = this.search(product_id, product);
 
     return (
-        <Text style={styles.category}>{ this.state.product_category ? resultObject: undefined}
+        <Text style={[styles.category, {textAlign:(lang === 'ar') ?  'right': 'left'}]}>{ this.state.product_category ? resultObject: undefined}
         </Text>
     );
   }
@@ -1385,7 +1399,6 @@ var styles = StyleSheet.create({
     allshop :{
         flex:1,
         justifyContent : "space-around",
-        flexDirection: 'row',
         borderWidth : StyleSheet.hairlineWidth,
         borderColor: "#ccc",
         alignItems: 'center'
@@ -1486,3 +1499,9 @@ class LoadImage extends Component {
         )
     }
 }
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(MainView);

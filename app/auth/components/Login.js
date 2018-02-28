@@ -13,9 +13,13 @@ import {
 	Image,
 	Keyboard,
 	Dimensions,
-	NetInfo
+	NetInfo,
+	Picker
 } from "react-native";
 import {Actions as routes} from "react-native-router-flux";
+import SettingsActions from 'app/Redux/SettingsRedux'
+import I18n from 'react-native-i18n'
+
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -156,15 +160,41 @@ Forgotpassword(){
 			return false;
 		}
 	}
+	_languageChanged = (changeLanguage, setParams) => (newLang) => {
+    this.props.changeLanguage(newLang)
+	this.props.languageChange(newLang)
 
+    setParams({
+      title: I18n.t('settings.title', { locale: newLang })
+    })
+  }
+  SampleFunction=(newLang)=>{
+	this.props.changeLanguage(newLang)
+	this.props.languageChange(newLang)
+
+  }
 	render() {
-		const {errorStatus, loading} = this.props;
+		const {errorStatus, loading, language, changeLanguage} = this.props;
+		const {setParams} = this.props.navigation
 		return (
 			<View style={{flex:1}}>
-				<View style= {{height:64,backgroundColor: '#a9d5d1'}}>
+				<View style= {{height:64,backgroundColor: '#a9d5d1', zIndex: 0}}>
 				<Text style = {{color : "#FFF", alignSelf: 'center', paddingTop:28, fontSize:16}}>
 					Login into Zero2Two
 				</Text>
+				<View style={{ flexDirection: (language === 'ar') ? 'row' : 'row-reverse', zIndex: 1}}>
+					{ Object.keys(I18n.translations).map((item, key)=>(
+						language === item ? undefined: <Text
+						style={{ bottom:  5}}
+						key={key}
+						// {I18n.translations[item].id }
+						onPress={ this.SampleFunction.bind(this, item) }>
+						{I18n.t('login.language', { locale: language })}
+					</Text>
+				)
+			)}
+		</View>
+
 				</View>
 				{
 			Platform.OS === 'ios' ?
@@ -367,7 +397,7 @@ Forgotpassword(){
 	}
 
 	getAndroidView () {
-		const {errorStatus, loading} = this.props;
+		const {errorStatus, loading, language} = this.props;
 		return(
 			<ScrollView style={[commonStyles.container, commonStyles.content]} testID="Login" keyboardShouldPersistTaps="handled">
 		<View style={{ flex : 1,
@@ -381,27 +411,27 @@ Forgotpassword(){
 		 resizeMode : 'contain' }}
 		/>
 		<Text style={{color: '#fbcdc5' , fontSize : 12, width : '100%', marginTop:20, textAlign:'center'}}>
-		Use the email address and password used {'\n'} when you created your acount
+			{I18n.t('login.loginmsg', { locale: language })}
 		</Text>
 		</View>
 
 		<View style={{ padding : 20, top : 20}}>
 			<View style ={[commonStyles.inputcontent,{borderColor:'#fbcdc5',borderWidth:0.5}]}>
 
-				<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
+				<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5', flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row'}]}>
 					<Ionicons name="ios-mail-outline"
 					size={30}
 					color="#fbcdc5"
 					style= {{ padding: 10}}
 					/>
 					<TextInput
-						style={[commonStyles.inputusername,{left:6.5}]}
+						style={[commonStyles.inputusername,{left:6.5, textAlign: (this.props.language == 'ar') ? 'right' : 'left'}]}
 						onBlur={ () => this.onBlurUser() }
 						value={this.state.email}
 						underlineColorAndroid = 'transparent'
 						autoCorrect={false}
 						keyboardType={'email-address'}
-						placeholder="Email Address"
+						placeholder={I18n.t('login.emailaddress', { locale: language })}
 						maxLength={140}
 						onSubmitEditing={() => {
 							  this.focusNextField('two');
@@ -413,18 +443,18 @@ Forgotpassword(){
 						 onChangeText={(email) => this.setState({email})}
 					/>
 				</View>
-				<View style ={commonStyles.iconpassword}>
+				<View style ={[commonStyles.iconpassword, {flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row'}]}>
 					<Ionicons name="ios-lock-outline"
 					size={30}
 					color="#fbcdc5"
 					style= {{ padding: 10}}
 					/>
 					<TextInput
-						style={[commonStyles.inputpassword,{}]}
+						style={[commonStyles.inputpassword,{textAlign: (this.props.language == 'ar') ? 'right' : 'left'}]}
 						value={this.state.password}
 						underlineColorAndroid = 'transparent'
 						autoCorrect={false}
-						placeholder="Password"
+						placeholder={I18n.t('login.password', { locale: language })}
 						secureTextEntry
 						maxLength={140}
 						onSubmitEditing={() => {
@@ -442,20 +472,20 @@ Forgotpassword(){
 			{/* <Button title ="Login" onPress={() => this.onSubmit()}  color="#a9d5d1"/> */}
 			<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.onSubmit()}>
 				<View style={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
-						 <Text style = {{color:"#FFFFFF"}}>Login</Text>
+						 <Text style = {{color:"#FFFFFF"}}>{I18n.t('login.login_btn', { locale: language })}</Text>
 				</View>
 			</TouchableOpacity>
 
 			<View style={{alignItems: 'center'}}>
 			<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={()=> this.setState({isForgotPassword:true})}>
-			<Text style={{top:10, padding : 20 }}>Forgot your password</Text>
+			<Text style={{top:10, padding : 20 }}>{I18n.t('login.forgotpassword', { locale: language })}</Text>
 			</TouchableOpacity>
-			<Text style={{color : '#87cefa' , padding : 20 }}>New Customer ?</Text>
+			<Text style={{color : '#87cefa' , padding : 20 }}>{I18n.t('login.newcustomer', { locale: language })}</Text>
 			</View>
 			{/* <Button title ="Create An Acount" onPress = {this.createAcount.bind(this)}   color="orange"/> */}
 			<TouchableOpacity style ={{top:10,justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.createAcount.bind(this)}>
 				<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
-						 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
+						 <Text style = {{color:"#FFFFFF"}}>{I18n.t('login.createaccountbtn', { locale: language })}</Text>
 				</View>
 			</TouchableOpacity>
 
@@ -478,26 +508,26 @@ Forgotpassword(){
 				marginTop: 10
 	}}>
 		<Text style={{ fontSize : 10, width : '100%', textAlign:'center'}}>
-		By Signing in you are agreeing to our
+			{I18n.t('login.privacypolicy1', { locale: language })}
 		</Text>
-		<View style={{flexDirection:'row', width:'100%', justifyContent:'center'}}>
+		<View style={{flexDirection:(this.props.language == 'ar') ? 'row-reverse' : 'row', width:'100%', justifyContent:'center'}}>
 		<TouchableOpacity
 		onPress={()=> routes.terms({
 			  title: this.state.termsandcondition_title,
 			  description: this.state.termsandcondition_description
 		  })}>
 		<Text style={{color :'#a9d5d1', fontSize : 10,textAlign:'center' }}>
-		Terms and Conditions
+			{I18n.t('login.privacypolicy2', { locale: language })}
 		</Text>
 		</TouchableOpacity>
-		<Text style={{color :'#696969', fontSize : 10, textAlign:'center'}}> of use and </Text>
+		<Text style={{color :'#696969', fontSize : 10, textAlign:'center'}}>{I18n.t('login.privacypolicy3', { locale: language })} </Text>
 		<TouchableOpacity
 		onPress={()=> routes.terms({
 			  title: this.state.termsandcondition_title,
 			  description: this.state.termsandcondition_description
 		  })}>
 		<Text style={{color :'#fbcdc5', fontSize : 10, textAlign:'center'}}>
-		 Privacy Policy
+			{I18n.t('login.privacypolicy4', { locale: language })}
 		</Text>
 		</TouchableOpacity>
 		</View>
@@ -518,29 +548,29 @@ Forgotpassword(){
 					underlineColorAndroid = 'transparent'
 					autoCorrect={false}
 					keyboardType={'email-address'}
-					placeholder="Email Address"
+					placeholder={I18n.t('login.emailaddress', { locale: language })}
 					maxLength={140}
 					onSubmitEditing={() => {
 									this.focusNextField('two');
 								}}
-								returnKeyType={ "next" }
+								returnKeyType={ "done" }
 							ref={ input => {
 								this.inputs['one'] = input;
 							}}
-							onChangeText={(forgotemail) => this.setState({forgotemail})}
+				onChangeText={(forgotemail) => this.setState({forgotemail})}
 				/>
 			</View>
 			<View style={{flexDirection: 'row', height: 40}}>
 			<TouchableOpacity
 			onPress={()=> this.setState({ isForgotPassword:  false})}>
 			<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
-			 Cancel
+			 {I18n.t('login.cancel', { locale: language })}
 			</Text>
 			</TouchableOpacity>
 			<TouchableOpacity
 			onPress={()=> this.Forgotpassword()}>
 			<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
-			 Submit
+				{I18n.t('login.submit', { locale: language })}
 			</Text>
 			</TouchableOpacity>
 			</View>

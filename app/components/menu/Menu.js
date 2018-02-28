@@ -18,6 +18,7 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
+import I18n from 'react-native-i18n'
 
 import Share, {ShareSheet, Button} from 'react-native-share';
 
@@ -49,16 +50,9 @@ class Menu extends React.Component {
       .then((response) => response.json())
       .then((responseData) => {
           if(responseData.status){
-            // console.warn(responseData.data.count);
               this.setState({
               notificationCount: responseData.data.count,
-              // refreshing : false
               });
-          }
-          else{
-              // this.setState({
-              // refreshing : false
-              // })
           }
       })
       .catch((error) => {
@@ -67,22 +61,39 @@ class Menu extends React.Component {
       .done();
     }
 
+    SampleFunction=(newLang)=>{
+  	// this.props.changeLanguage(newLang)
+  	this.props.languageChange(newLang)
+
+    }
+
        render() {
-        const {identity, logout} = this.props;
+        const {identity, logout, lang} = this.props;
         return (
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
-                <TouchableOpacity
-						onPress={Actions.profile}>
+
                 <View style={styles.avatarContainer}>
-                    <View style={styles.username}>
+                    <TouchableOpacity
+    						onPress={Actions.profile} style={styles.username}>
                     <View style= {styles.guest}>
                         <Zocial name='guest' color="#000" size={15} />
                     </View>
-                    </View>
+                    </TouchableOpacity>
+                    <View style={{ width: width,justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 1, position: 'absolute'}}>
+                        { Object.keys(I18n.translations).map((item, key)=>(
+                            <Text
+                                style={{ fontSize: 15, color: '#fff'}}
+                                key={key}
+                                // {I18n.translations[item].id }
+                                onPress={ this.SampleFunction.bind(this, item) }>
+                                {I18n.translations[item].id }
+                            </Text>
+                        )
+                    )}
+                </View>
                     <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:30}}>{identity.username}</Text>
                 </View>
-                </TouchableOpacity>
-                <View style={[styles.badge, styles.seprator]}>
+                <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
                 {
                   this.state.notificationCount > 0 ? <IconBadge
                   MainElement={
@@ -98,8 +109,7 @@ class Menu extends React.Component {
                   IconBadgeStyle={{
                       width:16,
                       height:18,
-                      // left : 10,
-                      backgroundColor: 'orange'}}
+                      backgroundColor: '#FFCC7D'}}
                   /> :
                   <Ionicons
                     name="ios-notifications"
@@ -114,7 +124,7 @@ class Menu extends React.Component {
                         padding: 10,
                         marginTop : 1,
                         left :5,
-                    }}>Notification</Text>
+                    }}>	{I18n.t('sidemenu.notification', { locale: lang })}</Text>
                </View>
 
                <View style={{height:40}}>
@@ -127,36 +137,36 @@ class Menu extends React.Component {
                {/* </LinearGradient> */}
                 <Text
                 onPress={Actions.homePage}
-                style={[styles.item, styles.seprator]}>Home</Text>
+                style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.home', { locale: lang })}</Text>
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={Actions.contactUs}
-                style={[styles.item, styles.seprator]}>Contact Us</Text>
+                style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.contact', { locale: lang })}</Text>
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={Actions.myorder}
-                style={[styles.item, styles.seprator]}>My Order</Text>
+                style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.order', { locale: lang })}</Text>
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={()=>this.onOpen()}
-                style={[styles.item, styles.seprator]}> Share with Friends</Text>
+                style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.share', { locale: lang })}</Text>
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={Actions.sync}
-                style={[styles.item, styles.seprator]}> Rate us on App Store</Text>
+                style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.rateus', { locale: lang })}</Text>
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={Actions.postad}
-                style={[styles.item, styles.seprator]}> Marketing</Text>
+                style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                 onPress={()=>( Utils.logout()),logout}
-                style={styles.item}> Logout</Text>
+                style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}</Text>
                 {this.renderShareSheet()}
             </ScrollView>
         );
@@ -300,7 +310,6 @@ const styles = StyleSheet.create({
     },
 
     badge : {
-        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop:10,

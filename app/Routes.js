@@ -12,10 +12,12 @@ import {
   Stack,
   Lightbox,
 } from "react-native-router-flux";
-import { Text, View, StyleSheet } from 'react-native';
+import I18n from 'react-native-i18n'
+import { Text, View, StyleSheet, Easing } from 'react-native';
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
+
 import MessageBar from './common/MessageBar';
 
-import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 import {connect} from "react-redux";
 import Register from "./Signup/register";
 import Vendorreg from "./Signup/Vendor";
@@ -28,9 +30,10 @@ import Ionicons from 'react-native-vector-icons/Feather';
 import wishList from './components/wish/wishList'
 import Shopingcart from './components/wish/Shopingcart'
 import Terms from './components/Terms';
-
 import CustomNavBar from "./components/navbar/CustomNavBar";
 import CustomGenNavBar from "./components/navbar/CustomGenNavBar";
+import HomeNavBar from "./components/navbar/HomeNavBar";
+
 import Notification from "./components/Notification";
 import TabIcon from './components/TabIcon';
 import WelcomeScreen from './components/WelcomeScreen';
@@ -88,7 +91,7 @@ const getSceneStyle = () => ({
   shadowRadius: 3,
 });
 
-const Routes = ({loading, needSignIn, user, vendor}) => (
+const Routes = ({loading, needSignIn, user, vendor, lang}) => (
   loading ?
     <Loader/> :
     <Router
@@ -113,13 +116,20 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                         key="drawer"
                         drawer ={true}
                         type="overlay"
-                        drawerImage={MenuIcon}
+                        // drawerImage={MenuIcon}
                         contentComponent={Menu}
+                        styles={drawerStyles.drawer}
+                        drawerPosition={I18n.t('home.sidemenu', { locale: lang })}
+                        onOpen={()=>Actions.refresh({key:state.key, open: true})}
+                        onClose={()=>Actions.refresh({key:state.key, open: false})}
                         tapToClose={true}
                         // initial={true}
                         // initial={true}
                         hideNavBar={true}
                         initial={user}
+                        panOpenMask={0.80}
+                        easingFunc={Easing.ease}
+                        // captureGestures="open"
                         >
                             <Scene key="tab" hideNavBar>
                                 <Tabs
@@ -127,6 +137,8 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                                 key="tabbar"
                                 swipeEnabled={false}
                                 initial={!needSignIn}
+                                navBar={HomeNavBar}
+                                // hideNavBar={true}
                                 showLabel={false}
                                 tabBarStyle={styles.tabBarStyle}
                                 // tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
@@ -142,7 +154,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
                                     icon={TabIcon}
                                     iconName="home"
                                     // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
-                                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                                    navigationBarStyle={{ backgroundColor: '#a9d5d1', }}
                                     onRight={ ()=> console.log("")}
                                     rightTitle={null}>
                                         <Scene
@@ -542,6 +554,7 @@ const Routes = ({loading, needSignIn, user, vendor}) => (
 function mapStateToProps(state) {
     let is_user
     let is_vendor
+    // console.warn(state.auth.lang);
     if(state.auth.user_type === "3"){
         is_user = false
         is_vendor = true
@@ -553,11 +566,17 @@ function mapStateToProps(state) {
     loading: !state.storage.storageLoaded,
     needSignIn: !state.auth.token,
     user: is_user,
-    vendor: is_vendor
-
+    vendor: is_vendor,
+    lang : state.auth.lang,
   }
 }
-
+const mapStateToDispatch = dispatch => ({
+  startup: () => dispatch(StartupActions.startup())
+})
+const drawerStyles = {
+  drawer: { shadowColor: '#fff', shadowOpacity: 0.8, shadowRadius: 3},
+  main: {paddingLeft: 3},
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1, backgroundColor: 'transparent', justifyContent: 'center',
@@ -570,4 +589,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
   },
 });
-export default connect(mapStateToProps)(Routes);
+export default connect(mapStateToProps, mapStateToDispatch)(Routes);

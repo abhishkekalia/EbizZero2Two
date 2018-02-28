@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { 
-    Text, 
-    View, 
-    TouchableHighlight, 
-    StyleSheet, 
+import {
+    Text,
+    View,
+    TouchableHighlight,
+    StyleSheet,
     ListView,
     TouchableOpacity,
-    ScrollView, 
-    Dimensions, 
+    ScrollView,
+    Dimensions,
     TextInput,
     AsyncStorage,
     ActivityIndicator,
-    Image 
+    Image
 } from 'react-native';
 const { width, height } = Dimensions.get('window');
 import Utils from 'app/common/Utils';
@@ -21,37 +21,28 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 export default class Edittwish extends Component {
-	constructor(props) { 
-        super(props); 
-        this.state = { 
-        }; 
+	constructor(props) {
+        super(props);
+        this.state = {
+        };
     }
+	render(){
 
-    // renderLoadingView() {
-    //     return (
-    //         <ActivityIndicator  
-    //         style={[styles.centering]}
-    //         color="#a9d5d1" 
-    //         size="small"/>
-    //         );
-    // }
-	render(){ 
-        
 		return(
-            <TouchableOpacity 
+            <TouchableOpacity
                     onPress={this.props.toggleWishList }
-                    style={{ 
-                        left : width/2-33, 
+                    style={{
+                        left : width/2-33,
                         position : 'absolute',
                         width : 50,
                         height :50,
                         backgroundColor : 'transparent'
                     }}
                     >
-                        <Ionicons  
-                        name={this.props.heartType} 
-                        size={20} 
-                        color="#a9d5d1" 
+                        <Ionicons
+                        name={this.props.heartType}
+                        size={20}
+                        color="#a9d5d1"
                         />
                     </TouchableOpacity>
 
@@ -61,19 +52,12 @@ export default class Edittwish extends Component {
 
 const styles = StyleSheet.create ({
     container: {
-        // flex: 1,
         flexDirection: 'column',
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // backgroundColor: '#ccc',
-        padding : 10 
+        padding : 10
     },
 
     row: {
         flexDirection: 'row',
-        // justifyContent: 'center',
-        // padding: 10,
-        // backgroundColor: '#F6F6F6',
         marginTop : 1
     },
     qtybutton: {
@@ -88,7 +72,7 @@ const styles = StyleSheet.create ({
         // shadowOffset:{width:2,height:4}
     },
         countryIcon: {
-        // borderRightWidth: 1, 
+        // borderRightWidth: 1,
         // borderColor: '#CCC',
         width : 40,
         height:40,
@@ -97,11 +81,11 @@ const styles = StyleSheet.create ({
 
 
     wishbutton :{
-        alignItems : 'center', 
+        alignItems : 'center',
         width : width/2-10,
-        // borderBottomLeftRadius : 10, 
-        // borderBottomRightRadius : 10, 
-        borderWidth : 0.5, 
+        // borderBottomLeftRadius : 10,
+        // borderBottomRightRadius : 10,
+        borderWidth : 0.5,
         borderColor : "#ccc",
         padding : 5
 
@@ -126,8 +110,8 @@ const styles = StyleSheet.create ({
         padding: 20
     },
     bottom : {
-        borderBottomLeftRadius : 10, 
-        borderBottomRightRadius : 10, 
+        borderBottomLeftRadius : 10,
+        borderBottomRightRadius : 10,
         flexDirection : 'row',
         justifyContent : 'space-around',
         backgroundColor : "#fff"

@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
 import { Actions} from "react-native-router-flux";
+import Feather from 'react-native-vector-icons/Feather';
 
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -35,8 +36,14 @@ class Profile extends Component {
         });
     }
     componentWillMount() {
-        Actions.refresh({ right: this._renderRightButton,});
+		Actions.refresh({ left: this._renderLeftButton, right: this._renderRightButton,});
     }
+	_renderLeftButton = () => {
+		 return(
+			 <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
+		 );
+	 };
+
    _renderRightButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>

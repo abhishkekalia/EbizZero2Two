@@ -7,18 +7,7 @@ export const AUTH_LOGIN_START = 'AUTH_LOGIN_START';
 export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 export const AUTH_LOGIN_FAIL = 'AUTH_LOGIN_FAIL';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
-
-// export const login = (username, password, os) => {
-// 	return dispatch => {
-
-// 		setTimeout(() => {
-// 			if (username.length && password.length) {
-// 				return dispatch(loginSuccess(username, password, os));
-// 			}
-// 			return dispatch(loginFail(new Error('username and password fields are required')));
-// 		}, Math.random() * 1000 + 500)
-// 	};
-// };
+export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
 
 const loginStart = () => {
 	return {
@@ -29,7 +18,6 @@ const loginStart = () => {
 export const login = (username, password, os) => {
 		return dispatch => {
 		dispatch(loginStart());
-
 	let formData = new FormData();
 	formData.append('email', String(username));
 	formData.append('password', String(password));
@@ -78,8 +66,6 @@ export const login = (username, password, os) => {
     	console.log(err);
     })
     .done();
-
-
 };
 };
 
@@ -99,7 +85,6 @@ const successHome = (username, password ,usr_type, u_id) => {
 		}
 	}
 };
-
 const loginFail = error => {
 	return {
 		type: AUTH_LOGIN_FAIL,
@@ -115,4 +100,16 @@ export const logout = () => {
 			type: AUTH_LOGOUT
 		});
 	};
+};
+export const languageChange = (newLang) => {
+	return dispatch => {
+	dispatch(changeTo(newLang));
+	};
+};
+
+const changeTo = (newLang) => {
+	return {
+		type: CHANGE_LANGUAGE,
+			payload: newLang,
+	}
 };

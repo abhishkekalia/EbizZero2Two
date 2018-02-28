@@ -3,13 +3,14 @@ package com.ebizzero2two;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.brentvatne.react.ReactVideoPackage;
-import com.devfd.RNGeocoder.RNGeocoderPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import cl.json.RNSharePackage;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.imagepicker.ImagePickerPackage;
+import com.devfd.RNGeocoder.RNGeocoderPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -31,13 +32,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNI18nPackage(),
             new ReactVideoPackage(),
-            new RNGeocoderPackage(),
-            new MapsPackage(),
             new VectorIconsPackage(),
             new RNSharePackage(),
+            new MapsPackage(),
             new LinearGradientPackage(),
             new ImagePickerPackage(),
+            new RNGeocoderPackage(),
             new RNFetchBlobPackage()
       );
     }

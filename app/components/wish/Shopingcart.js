@@ -14,7 +14,10 @@ import {
     Picker
 } from 'react-native';
 import Utils from 'app/common/Utils';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n'
 import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBarManager } from 'react-native-message-bar';
 import  Countmanager  from './Countmanager';
@@ -27,7 +30,7 @@ const { width, height } = Dimensions.get('window');
 
 // const SHORT_LIST = ['Small', 'Medium', 'Large'];
 
-export default class Shopingcart extends Component {
+class Shopingcart extends Component {
     constructor(props) {
         super(props);
         this.getKey = this.getKey.bind(this);
@@ -75,8 +78,14 @@ export default class Shopingcart extends Component {
     }
 
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton,});
+        routes.refresh({ left: this._renderLeftButton, right: this._renderRightButton,});
     }
+    _renderLeftButton = () => {
+         return(
+             <Feather name="menu" size={20} onPress={()=> routes.drawerOpen()} color="#fff" style={{ padding : 10}}/>
+         );
+     };
+
    _renderRightButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
@@ -230,6 +239,7 @@ export default class Shopingcart extends Component {
     }
 
     renderFooter(itemcount, totalamount, subtotalamount){
+        const {lang} = this.props;
         return(
         <View
                 style={{
@@ -237,23 +247,23 @@ export default class Shopingcart extends Component {
                 }}>
                 <View
                     style={{
-                        flexDirection : "row",
+                        flexDirection : (lang == 'ar')? "row-reverse" :"row",
                         justifyContent: "space-between",
                         alignItems:'center',
                         padding : 5,
                         flex : 0}}>
-                <Text>Items({itemcount})</Text>
-                <Text> KWD {totalamount}</Text>
+                <Text style={{ textAlign: (lang == 'ar')? "right" : "left"}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
+                <Text style={{textAlign: (lang == 'ar')? "right" : "left"}}> KWD {totalamount}</Text>
                 </View>
                 <View
                     style={{
-                        flexDirection : "row",
+                        flexDirection : (lang == 'ar')? "row-reverse" :"row",
                         justifyContent: "space-between",
                         alignItems:'center',
                         padding : 5,
                         flex : 0}}>
-                <Text style={{ color : "#87cefa"}} >Cart SubTotal</Text>
-                <Text style={{ color : "#87cefa"}}> KWD {subtotalamount}</Text>
+                <Text style={{ color : "#87cefa", textAlign: (lang == 'ar')? "right" : "left"}} >{I18n.t('cart.crtsubtotal', { locale: lang })}</Text>
+                <Text style={{ color : "#87cefa", textAlign: (lang == 'ar')? "right" : "left"}}> KWD {subtotalamount}</Text>
                 </View>
             </View>
 
@@ -261,15 +271,17 @@ export default class Shopingcart extends Component {
         )
     }
     noItemFound(){
+        const {lang} = this.props;
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', alignContent:'center',flex:1}}>
-                <Text> No Item added to your cart </Text>
+                <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
                </View> );
     }
 
 
     render() {
         const { itemcount, totalamount, subtotalamount } = this.state;
+        const { lang } = this.props;
 
         let listView = (<View></View>);
             listView = (
@@ -291,28 +303,27 @@ export default class Shopingcart extends Component {
             {listView}
         {this.renderFooter(itemcount, totalamount, subtotalamount)}
 
-        <View style={{ flexDirection : 'row', justifyContent : 'space-around'}}>
+        <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
                 <TouchableHighlight
                 underlayColor ={"#fff"}
                 style={[styles.shoping]}
                 onPress={()=>routes.homePage()}>
-                <Text style={{ color :'#fff'}}>Continoue Shoping</Text>
+                <Text style={{ color :'#fff'}}>{I18n.t('cart.shoping', { locale: lang })}</Text>
                 </TouchableHighlight>
                 <TouchableHighlight
                 underlayColor ={"#fff"}
                 style={[styles.checkout]}
                 onPress={()=> this.procedToCheckout()}>
-                <Text style={{ color : '#fff'}}>Proced to Checkout</Text>
+                <Text style={{ color : '#fff'}}>{I18n.t('cart.checkout', { locale: lang })}</Text>
                 </TouchableHighlight>
             </View>
         </View>
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-
+        const{ lang}= this.props;
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-
         return (
             <View style={{
             flexDirection: 'column',
@@ -325,20 +336,16 @@ export default class Shopingcart extends Component {
                 backgroundColor : "transparent"}}>
 
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <View style={{ flexDirection: 'row' , backgroundColor : "#fff", justifyContent : 'space-between', alignItems : 'center'}}>
+                        <View style={{ flexDirection:(lang == 'ar')? "row-reverse" :"row" , backgroundColor : "#fff", justifyContent : 'space-between', alignItems : 'center'}}>
 
                             <Image style={[styles.thumb, {margin: 10}]}
                             source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}/>
                         <View style={{flexDirection : 'column'}}>
-                            <TouchableHighlight
-                            underlayColor='transparent'
-                            style={styles.row} >
-                                <Text style={{ fontSize:15, color:'#696969', marginBottom:5}}> {data.product_name} </Text>
-                            </TouchableHighlight>
-                                <Text style={{ fontSize:10, color:'#696969', marginBottom:5}}> {data.short_description} </Text>
+                                <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: (lang == 'ar')? "right":"left"}}> {data.product_name} </Text>
+                                <Text style={{ fontSize:10, color:'#696969', marginBottom:5, textAlign: (lang == 'ar')? "right":"left"}}> {data.short_description} </Text>
 
-                            <View style={{ flexDirection : "row",  width:width/1.5}}>
-                                <Text style={{paddingRight : 10}}> Quantity : </Text>
+                            <View style={{ flexDirection :(lang == 'ar')?"row-reverse" :"row",  width:width/1.5}}>
+                                <Text style={{paddingRight : 10, textAlign: (lang == 'ar')? "right":"left", alignSelf: 'center'}}> {I18n.t('cart.quantity', { locale: lang })} </Text>
                                     <Countmanager
                                     quantity={data.quantity}
                                     u_id={this.state.u_id}
@@ -347,25 +354,30 @@ export default class Shopingcart extends Component {
                                     country={this.state.country}
                                     callback={this.fetchData.bind(this)}
                                     />
-
                             </View>
-                            <View style={{ flexDirection : "row"}}>
-                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>Size : </Text>
-                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>{data.size}</Text>
+                            <View style={{ flexDirection : (lang === 'ar') ?  'row-reverse': 'row',justifyContent: 'flex-start'}}>
+                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}>{I18n.t('cart.size', { locale: lang })}</Text>
+                                <Text style={{ fontSize:13, color:'#696969', paddingRight: 5,marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}>{data.size}</Text>
                             </View>
-                            <View style={{ flexDirection : "row", justifyContent:"space-between"}}>
-                                <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5}}> {data.special_price} KWD</Text>
-                                <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine}}> {data.price} KWD</Text>
+                            <View style={{ flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent:"space-between"}}>
+                                <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}> {data.special_price} KWD</Text>
+                                <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine, textAlign:(lang === 'ar') ?  'right': 'left'}}> {data.price} KWD</Text>
                             </View>
-                            <View style={{ flexDirection : "row"}}>
-                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>SubTotal : </Text>
-                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5}}>{ data.quantity*data.special_price}</Text>
+                            <View style={{ flexDirection : (lang === 'ar') ?  'row-reverse': 'row'}}>
+                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign:(lang === 'ar') ?  'right': 'left'}}>{I18n.t('cart.subtotal', { locale: lang })}</Text>
+                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}>{ data.quantity*data.special_price}</Text>
                             </View>
                         </View>
                     </View>
                 </View>
             </View>
-            <Footer  product_id={data.product_id} u_id={this.state.u_id} cart_id={data.cart_id} country={this.state.country} callback={this.fetchData.bind(this)} size_arr={data.size_arr}/>
+            <Footer  product_id={data.product_id}
+                u_id={this.state.u_id}
+                cart_id={data.cart_id}
+                country={this.state.country}
+                callback={this.fetchData.bind(this)}
+                size_arr={data.size_arr}
+                lang={lang}/>
             </View>
         )
     }
@@ -480,29 +492,31 @@ class Footer extends Component {
   }
 
   render(){
+      const{lang} =this.props;
     let {product_id,cart_id } = this.props
     let {SHORT_LIST } = this.state
     return(
-      <View style={styles.bottom}>
+      <View style={[styles.bottom, {flexDirection: (lang === 'ar') ?  'row-reverse': 'row'}]}>
           <TouchableOpacity
           onPress={()=> this.removeFromCart( cart_id, product_id)}
-          style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}>
+          style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}>
               <Entypo name="cross" size={20} color="#a9d5d1"/>
-              <Text style={{ left : 5}}>Remove</Text>
+              <Text style={{ left : 5}}>{I18n.t('cart.remove', { locale: lang })}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.wishbutton, {flexDirection : 'row', justifyContent: "center"}]}
+          <TouchableOpacity style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}
               onPress={()=>this.openDialog(product_id)}>
               <Entypo name="edit" size={20} color="#a9d5d1"/>
-              <Text style={{ left :5}}>EditCart</Text>
+              <Text style={{ left :5}}>{I18n.t('cart.edit', { locale: lang })}</Text>
           </TouchableOpacity>
           <SinglePickerMaterialDialog
-                title={'Select Size'}
+                title={I18n.t('cart.selectsize', { locale: lang })}
                 items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
                 visible={this.state.selectSize}
                 selectedItem={this.state.singlePickerSelectedItem}
                 onCancel={() => this.setState({ selectSize: false })}
-                onOk={result => this.changeSize(result)
-                }
+                onOk={result => this.changeSize(result)}
+                cancelLabel={I18n.t('cart.cancel', { locale: lang })}
+                okLabel={I18n.t('cart.ok', { locale: lang })}
               />
       </View>
 
@@ -570,7 +584,6 @@ const styles = StyleSheet.create ({
     bottom : {
         borderBottomLeftRadius : 10,
         borderBottomRightRadius : 10,
-        flexDirection : 'row',
         justifyContent : 'space-around',
         backgroundColor : "#fff"
     },
@@ -602,3 +615,10 @@ const styles = StyleSheet.create ({
         padding : 10
      }
 })
+
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(Shopingcart);

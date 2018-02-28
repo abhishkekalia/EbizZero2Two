@@ -1,42 +1,39 @@
 import React, { Component } from 'react'
-import { 
-    Modal, 
-    Text, 
+import {
+    Modal,
+    Text,
     Dimensions,
     TouchableHighlight,
-    StyleSheet, 
+    StyleSheet,
     View,
     Button ,
     TextInput,
     AsyncStorage,
     ScrollView
 } from 'react-native';
+import {connect} from "react-redux";
 import SelectMultiple from './src/SelectMultiple';
 import { Actions } from 'react-native-router-flux'
 import CheckBox from 'app/common/CheckBox';
-
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
 import Utils from 'app/common/Utils';
 import EventEmitter from "react-native-eventemitter";
+import I18n from 'react-native-i18n'
 
 const { width } = Dimensions.get('window')
 
-export default class Filter extends Component {
+class Filter extends Component {
     constructor(props) {
         super(props);
-        console.log("this.props.selectedRows:=")
-        console.log("this.props.selectedRows:=",this.props.selectedRows)
-
-        this.state = { 
-            modalVisible: true, 
+        this.state = {
+            modalVisible: true,
             selected: [],
             button : false,
             search : '',
             category : [],
             rows : this.props.selectedRows,
             selGender : this.props.selGender,
-            selType : this.props.selType, 
+            selType : this.props.selType,
             status : false,
             u_id: null,
             user_type : null,
@@ -46,9 +43,9 @@ export default class Filter extends Component {
             arrGender : [],
             arrType : [],
         }
-    } 
-    setModalVisible(visible) { 
-        this.setState({modalVisible: visible}); 
+    }
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
     }
     onSelectionsChange = (selected) => {
         this.setState({ selected })
@@ -66,60 +63,42 @@ export default class Filter extends Component {
             this.state.selGender = []
             this.state.selType = []
 
-            // let bCatgeory = this.state.category;
-            // let bArrGender = this.state.arrGender;
-            // let bArrType = this.state.arrType;
-
             this.setState({
                 rows:[],
                 selGender:[],
                 selType:[],
                 selectedIndexOfFilter:1
             })
-            // Actions.refresh(this.render());
-
-            // this.state.category = []
-            // this.state.arrGender = []
-            // this.state.arrType = []
-
-            // this.setState({
-            //     category : bCatgeory,
-            //     arrGender : bArrGender,
-            //     arrType : bArrType,
-            // })
-
-            // this.forceUpdate();
-
         });
     }
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-            }); 
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
     fetchData() {
-        const {u_id, country, } = this.state; 
+        const {u_id, country, } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
-        fetch(Utils.gurl('getFilterMenu'), config) 
+        fetch(Utils.gurl('getFilterMenu'), config)
         .then((response) => response.json())
         .then((responseData) => {
         if(responseData.status){
@@ -139,8 +118,8 @@ export default class Filter extends Component {
                 }
             }
             else {
-                for (var i = 0; i < arrData.length; i++) {                    
-                    arrData[i].checked = false                    
+                for (var i = 0; i < arrData.length; i++) {
+                    arrData[i].checked = false
                 }
             }
 
@@ -160,8 +139,8 @@ export default class Filter extends Component {
                 }
             }
             else {
-                for (var i = 0; i < arrGenderData.length; i++) {                    
-                    arrGenderData[i].checked = false                    
+                for (var i = 0; i < arrGenderData.length; i++) {
+                    arrGenderData[i].checked = false
                 }
             }
 
@@ -180,8 +159,8 @@ export default class Filter extends Component {
                 }
             }
             else {
-                for (var i = 0; i < arrTypeData.length; i++) {                    
-                    arrTypeData[i].checked = false                    
+                for (var i = 0; i < arrTypeData.length; i++) {
+                    arrTypeData[i].checked = false
                 }
             }
             console.log("1");
@@ -259,7 +238,7 @@ export default class Filter extends Component {
         return views;
 
     }
- 
+
     renderTypeView() {
         if (!this.state.arrType || this.state.arrType.length === 0)return;
         var len = this.state.arrType.length;
@@ -288,47 +267,23 @@ export default class Filter extends Component {
     renderFilterContainerView () {
         if (this.state.selectedIndexOfFilter == 1) {
             return(
-                <View style={{flex : 1, padding : 10}}>
-                    {/* <TextInput
-                    style={{height: 40, borderWidth : 0.5, borderColor : '#ccc',borderRadius : 10}}
-                    placeholder="Search by Category"
-                    underlineColorAndroid = 'transparent'
-                    onChangeText={(search) => this.setState({search})}/> */}
-    
-                    <ScrollView>
+                    <ScrollView style={{flex : 1}}>
                     {this.renderView()}
                     </ScrollView>
-                </View>
             );
         }
         else if (this.state.selectedIndexOfFilter == 2) {
             return(
-                <View style={{flex : 1, padding : 10}}>
-                    {/* <TextInput
-                    style={{height: 40, borderWidth : 0.5, borderColor : '#ccc',borderRadius : 10}}
-                    placeholder="Search by Category"
-                    underlineColorAndroid = 'transparent'
-                    onChangeText={(search) => this.setState({search})}/> */}
-    
-                    <ScrollView>
+                    <ScrollView  style={{flex : 1, }}>
                     {this.renderGenderView()}
                     </ScrollView>
-                </View>
             );
         }
         else if (this.state.selectedIndexOfFilter == 3) {
             return(
-                <View style={{flex : 1, padding : 10}}>
-                    {/* <TextInput
-                    style={{height: 40, borderWidth : 0.5, borderColor : '#ccc',borderRadius : 10}}
-                    placeholder="Search by Category"
-                    underlineColorAndroid = 'transparent'
-                    onChangeText={(search) => this.setState({search})}/> */}
-    
-                    <ScrollView>
+                    <ScrollView  style={{flex : 1, }}>
                     {this.renderTypeView()}
                     </ScrollView>
-                </View>
             );
         }
     }
@@ -339,23 +294,25 @@ export default class Filter extends Component {
         data.checked? this.check(data): this.unCheck(data)
     }
     check (data){
-        var newStateArray = this.state.rows.slice(); 
-        newStateArray.push(data.category_id); 
+        var newStateArray = this.state.rows.slice();
+        newStateArray.push(data.category_id);
         this.setState({
             rows: newStateArray
         });
     }
 
     unCheck(data){
-        var index = this.state.rows.indexOf(data.category_id); 
-        if (index > -1) {
-           var newArray =  this.state.rows.splice(index, 1);
+        var my_array = this.state.rows;
+        var start_index = this.state.rows.indexOf(data.category_id);
+        var number_of_elements_to_remove = 1;
+        var removed_elements = my_array.splice(start_index, number_of_elements_to_remove);
             this.setState({
-                rows: newArray
+                rows: my_array
             });
-        }
     }
     renderCheckBox(data) {
+        const {lang} = this.props;
+
         var leftText = data.category_name;
         var sum = data.count;
         var icon_name = data.icon_name;
@@ -367,6 +324,7 @@ export default class Filter extends Component {
                 leftText={leftText}
                 countingItem= {sum}
                 icon_name={icon_name}
+                lang={lang}
             />);
     }
 
@@ -376,23 +334,25 @@ export default class Filter extends Component {
         data.checked? this.checkGender(data): this.unCheckGender(data)
     }
     checkGender (data){
-        var newStateArray = this.state.selGender.slice(); 
-        newStateArray.push(data.gender); 
+        var newStateArray = this.state.selGender.slice();
+        newStateArray.push(data.gender);
         this.setState({
             selGender: newStateArray
         });
     }
 
     unCheckGender(data){
-        var index = this.state.selGender.indexOf(data.gender); 
-        if (index > -1) {
-           var newArray =  this.state.selGender.splice(index, 1);
+        var my_array = this.state.selGender;
+        var start_index = this.state.selGender.indexOf(data.gender);
+        var number_of_elements_to_remove = 1;
+        var removed_elements = my_array.splice(start_index, number_of_elements_to_remove);
             this.setState({
-                selGender: newArray
+                selGender: my_array
             });
-        }
     }
     renderCheckBoxGender(data) {
+        const {lang} = this.props;
+
         var leftText = data.name;
         var sum = data.count;
         var icon_name = data.icon_name;
@@ -404,6 +364,7 @@ export default class Filter extends Component {
                 leftText={leftText}
                 countingItem= {sum}
                 icon_name={icon_name}
+                lang={lang}
             />);
     }
 
@@ -413,23 +374,25 @@ export default class Filter extends Component {
         data.checked? this.checkType(data): this.unCheckType(data)
     }
     checkType (data){
-        var newStateArray = this.state.selType.slice(); 
-        newStateArray.push(data.type_id); 
+        var newStateArray = this.state.selType.slice();
+        newStateArray.push(data.type_id);
         this.setState({
             selType: newStateArray
         });
     }
 
     unCheckType(data){
-        var index = this.state.selType.indexOf(data.type_id); 
-        if (index > -1) {
-           var newArray =  this.state.selType.splice(index, 1);
+        // var index = this.state.selType.indexOf(data.type_id);
+        var my_array = this.state.selType;
+        var start_index = this.state.selType.indexOf(data.type_id);
+        var number_of_elements_to_remove = 1;
+        var removed_elements = my_array.splice(start_index, number_of_elements_to_remove);
             this.setState({
-                selType: newArray
+                selType: my_array
             });
-        }
     }
     renderCheckBoxType(data) {
+        const {lang} = this.props;
         var leftText = data.name;
         var sum = data.count;
         var icon_name = data.icon_name;
@@ -441,10 +404,12 @@ export default class Filter extends Component {
                 leftText={leftText}
                 countingItem= {sum}
                 icon_name={icon_name}
+                lang={lang}
             />);
     }
 
     render() {
+        const {lang} = this.props;
         var borderCat = undefined;
         var borderGen = undefined;
         var borderType = undefined;
@@ -462,101 +427,107 @@ export default class Filter extends Component {
         let bgColorType = "#ccc";
 
         if (this.state.selectedIndexOfFilter == 1) {
-            // borderCat = 1
-
             borderleftCat = 5;
             bcolorCat = "orange";
             bgColorCat = "#87cefa"
         }
         else if (this.state.selectedIndexOfFilter == 2) {
-            // borderGen = 1
-
             borderleftGen = 5;
             bcolorGen = "orange";
             bgColorGen = "#87cefa"
         }
         else if (this.state.selectedIndexOfFilter == 3) {
-            // borderType = 1
-
             borderleftType = 5;
             bcolorType = "orange";
             bgColorType = "#87cefa"
         }
 
-        // let borderleft = this.state.button ? 2 : 5;
-        // let bcolor = this.state.button ? "#ccc" : "orange";
-        // let bgColor = this.state.button ? "#ccc" : "#87cefa"
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View style = {{flex: 1, flexDirection: 'column'}}>
-                    <View style={{ 
-                        width: width/3, 
-                        borderColor : "#ccc", 
-                        borderWidth : 0.5}} >
-                        <TouchableHighlight 
-                        underlayColor ={"#fff"} 
-                        style={[ 
-                            styles.category, { 
-                                borderWidth: borderCat, 
+                <View style={{flex: 1, flexDirection: lang == 'ar' ? 'row-reverse': 'row' ,justifyContent: 'space-between'}}>
+                    <View style = { {flexDirection: 'column', borderColor : "#ccc", borderLeftWidth : StyleSheet.hairlineWidth, borderRightWidth : StyleSheet.hairlineWidth  }}>
+                    <View style={{
+                        width: width/3,
+                        borderColor : "#ccc",
+                        // borderWidth : 0.5
+                    }} >
+                        <TouchableHighlight
+                        underlayColor ={"#fff"}
+                        style={[
+                            styles.category,  lang == 'ar' ? {
+                                borderWidth: borderCat,
+                                borderRightWidth : borderleftCat ,
+                                borderColor : bcolorCat,
+                            }: {
+                                borderWidth: borderCat,
                                 borderLeftWidth : borderleftCat ,
-                                borderColor : bcolorCat, 
+                                borderColor : bcolorCat,
                             }]} onPress={() => this.setState({
                             button : !this.state.button,
                             selectedIndexOfFilter : 1
                         })} >
-                        <Text style={{color : bgColorCat}}>Category</Text>
+                        <Text style={{color : bgColorCat}}>{I18n.t('filter.category', { locale: lang })}</Text>
                         </TouchableHighlight>
                     </View>
-                    <View style={{ 
-                        width: width/3, 
-                        borderColor : "#ccc", 
-                        borderWidth : 0.5}} >
-                        <TouchableHighlight 
-                        underlayColor ={"#fff"} 
-                        style={[ 
-                            styles.category, { 
-                                borderWidth: borderGen, 
+                    <View style={{
+                        width: width/3,
+                        borderColor : "#ccc",
+                        // borderWidth : 0.5
+                    }} >
+                        <TouchableHighlight
+                        underlayColor ={"#fff"}
+                        style={[
+                            styles.category, lang == 'ar' ? {
+                                borderWidth: borderGen,
+                                borderColor : bcolorGen,
+                                borderRightWidth : borderleftGen ,
+                            } : {
+                                borderWidth: borderGen,
+                                borderColor : bcolorGen,
                                 borderLeftWidth : borderleftGen ,
-                                borderColor : bcolorGen, 
                             }]} onPress={() => this.setState({
                             button : !this.state.button,
                             selectedIndexOfFilter : 2
                         })} >
-                        <Text style={{color : bgColorGen}}>Gender</Text>
+                        <Text style={{color : bgColorGen}}>{I18n.t('filter.gender', { locale: lang })}</Text>
                         </TouchableHighlight>
                     </View>
-                    <View style={{ 
-                        width: width/3, 
-                        borderColor : "#ccc", 
-                        borderWidth : 0.5}} >
-                        <TouchableHighlight 
-                        underlayColor ={"#fff"} 
-                        style={[ 
-                            styles.category, { 
-                                borderWidth: borderType, 
+                    <View style={{
+                        width: width/3,
+                        borderColor : "#ccc",
+                        // borderWidth : 0.5
+                    }} >
+                        <TouchableHighlight
+                        underlayColor ={"#fff"}
+                        style={[
+                            styles.category, lang == 'ar' ? {
+                                borderWidth: borderType,
+                                borderRightWidth : borderleftType ,
+                                borderColor : bcolorType,
+                            }: {
+                                borderWidth: borderType,
                                 borderLeftWidth : borderleftType ,
-                                borderColor : bcolorType, 
+                                borderColor : bcolorType,
                             }]} onPress={() => this.setState({
                             button : !this.state.button,
                             selectedIndexOfFilter : 3
                         })} >
-                        <Text style={{color : bgColorType}}>Type</Text>
+                        <Text style={{color : bgColorType}}>{I18n.t('filter.type', { locale: lang })}</Text>
                         </TouchableHighlight>
                     </View>
                     </View>
-                    
+
                     {this.renderFilterContainerView()}
                 </View>
                 <View style={{padding : 10}}>
-                    <TouchableHighlight 
-                    underlayColor ={"#fff"} 
-                    style={[styles.apply]} 
+                    <TouchableHighlight
+                    underlayColor ={"#fff"}
+                    style={[styles.apply]}
                     // onPress={()=>Actions.homePage({ filterdBy : this.state.rows})}>
                     onPress={this.applyCategory.bind(this)}>
                         <MaterialIcons name="done" size={20} color="#fff"/>
                     </TouchableHighlight>
-                </View>       
+                </View>
             </View>
         );
     }
@@ -573,7 +544,7 @@ export default class Filter extends Component {
     }
 }
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     category: {
         padding : 10,
      },
@@ -583,3 +554,11 @@ const styles = StyleSheet.create({
         padding : 10
      }
 })
+
+function mapStateToProps(state) {
+	return {
+		lang: state.auth.lang,
+	};
+}
+
+export default connect(mapStateToProps)(Filter);

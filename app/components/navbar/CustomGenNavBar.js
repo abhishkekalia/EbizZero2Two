@@ -5,9 +5,10 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
 
+import {connect} from 'react-redux';
 
 
-export default class CustomGenNavBar extends React.Component {
+class CustomGenNavBar extends React.Component {
     _renderLeft() {
         if (Actions.currentScene === 'homePage') {
             return (
@@ -71,10 +72,11 @@ export default class CustomGenNavBar extends React.Component {
     }
 
     render() {
+        const {lang}= this.props
         let dinamicStyle = { backgroundColor: '#a9d5d1'}
         let renderRight = this.props.renderRightButton ? this.props.renderRightButton() : this._renderRight()
         return (
-            <View style={[styles.container, dinamicStyle]}>
+            <View style={[styles.container, dinamicStyle, {flexDirection: (lang == 'ar')? "row-reverse" : "row"}]}>
                 { this._renderLeft() }
                 { this._renderMiddle() }
                 {renderRight}
@@ -86,10 +88,16 @@ export default class CustomGenNavBar extends React.Component {
 const styles = StyleSheet.create({
     container: {
         height: (Platform.OS === 'ios') ? 64 : 54,
-        flexDirection: 'row'
     },
     navBarItem: {
         // flex: 1,
         justifyContent: 'center',
     }
 })
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+
+export default connect(mapStateToProps)(CustomGenNavBar);

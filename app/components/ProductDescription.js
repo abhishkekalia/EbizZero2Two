@@ -34,6 +34,8 @@ import {
 } from 'react-native-material-dialog';
 import { material } from 'react-native-typography';
 import EventEmitter from "react-native-eventemitter";
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n'
 
 const {width,height} = Dimensions.get('window');
 
@@ -48,7 +50,7 @@ const buttons = [
     }
 ];
 
-export default class ProductDescription extends Component {
+class ProductDescription extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -106,12 +108,12 @@ export default class ProductDescription extends Component {
 
     validate(){
         const { size, count, color} = this.state;
-
+        const{ lang } = this.props;
         if (!size.length)
         {
             MessageBarManager.showAlert({
               title:'',
-                message: "Please Select Size",
+                message: I18n.t('productdetail.sizeerr', { locale: lang }),
                 alertType: 'alert',
                 title:''
             })
@@ -120,7 +122,7 @@ export default class ProductDescription extends Component {
         if (!color.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Select Color",
+                message: I18n.t('productdetail.colorerr', { locale: lang }),
                 alertType: 'alert',
                 title:''
             })
@@ -375,6 +377,7 @@ export default class ProductDescription extends Component {
 
     render () {
         const { date_in, count } = this.state;
+        const { lang } = this.props;
         let titleColor = this.state.size ? '#a9d5d1' : '#ccc';
 
         let color = this.state.data.special_price ? '#a9d5d1' : '#000';
@@ -429,48 +432,49 @@ export default class ProductDescription extends Component {
                     justifyContent: 'space-between',backgroundColor:'rgba(248,248,248,1)'}}>
 
                     <View>
-                        <View style={{backgroundColor:'rgba(248,248,248,1)', borderTopColor:'#ccc', borderTopWidth:0.5}}>
-                        <Text style={{ padding : 10, color : '#696969', fontSize:15}}>{this.state.data.product_name}</Text>
+                        <View style={{backgroundColor:'rgba(248,248,248,1)', borderTopColor:'#ccc', borderTopWidth:0.5, margin: 10}}>
+                        <Text style={{ color : '#696969', fontSize:15, textAlign: (lang === 'ar') ? 'right': 'left'}}>{this.state.data.product_name}</Text>
                         <Vendor
                         vendor_id= {this.state.data.vendor_id}
                         u_id={this.state.u_id}
                         country={this.state.country}
+                        lang={lang}
                         />
-                        <View style={{flexDirection: 'row', justifyContent:'space-between', marginBottom : 10}}>
-                            <Text style={{color : '#a9d5d1', fontWeight:'bold' }}>  {this.state.data.special_price} KWD</Text>
-                            <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5}}>{this.state.data.price} KWD</Text>
+                        <View style={{flexDirection: (lang === 'ar') ? 'row-reverse': 'row', justifyContent:'space-between', marginBottom : 10}}>
+                            <Text style={{color : '#a9d5d1', fontWeight:'bold',textAlign: (lang === 'ar') ? 'right': 'left' }}>  {this.state.data.special_price} KWD</Text>
+                            <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5, textAlign: (lang === 'ar') ? 'right': 'left'}}>{this.state.data.price} KWD</Text>
                         </View>
                         </View>
-                        <View style={{ flexDirection : 'row'}}>
+                        <View style={{ flexDirection: (lang === 'ar') ? 'row-reverse': 'row'}}>
                             <TouchableOpacity style={[styles.button,{}]} onPress={this.onOpen.bind(this)}>
-                            <Text style={{ color:'#fff'}}>Buy It Now</Text>
+                            <Text style={{ color:'#fff', textAlign: (lang === 'ar') ? 'right': 'left'}}>{I18n.t('productdetail.buyitnowbtn', { locale: lang })}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.buttonCart,{ flexDirection:'row', justifyContent:'center'}]} onPress={()=> this.addtoCart()}>
+                            <TouchableOpacity style={[styles.buttonCart,{ flexDirection:(lang === 'ar') ? 'row-reverse': 'row', justifyContent:'center'}]} onPress={()=> this.addtoCart()}>
                             <Ionicons name="md-basket" size={25} color="#fff" />
-                            <Text style={{ color:'#fff', paddingLeft:5}}>Add To Cart</Text>
+                            <Text style={{ color:'#fff', paddingLeft:5, textAlign: (lang === 'ar') ? 'right': 'left'}}>{I18n.t('productdetail.addtocartbtn', { locale: lang })}</Text>
                             </TouchableOpacity>
                         </View>
                         <View>
-                        <View style={{flexDirection:"row", padding : 10, alignItems:'center',height:40,backgroundColor:'rgba(248,248,248,1)'}}>
+                        <View style={{flexDirection:(lang === 'ar') ? 'row-reverse': 'row', padding : 10,height:50,backgroundColor:'rgba(248,248,248,1)'}}>
                         <Icon
                         name="select-all"
                         size={25}
                         color="#FFCC7D"
                         />
-                        <Text style={{color:'#a9d5d1'}}>Select Size </Text>
+                    <Text style={{color:'#a9d5d1', textAlign: (lang === 'ar') ? 'right': 'left'}}>{I18n.t('productdetail.selctsize', { locale: lang })}</Text>
                         </View>
-                        <View style={{flexDirection : 'row', justifyContent: 'space-around'}}>
+                        <View style={{flexDirection : (lang === 'ar') ? 'row-reverse': 'row', justifyContent: 'space-around'}}>
                              {renderedButtons}
                         </View>
-                        <View style={{flexDirection : 'row',alignItems:'center', justifyContent:'space-around'}}>
+                        <View style={{flexDirection : (lang === 'ar') ? 'row-reverse': 'row',alignItems:'center', justifyContent:'space-around'}}>
                             <TouchableOpacity
                             style={{ borderWidth: StyleSheet.hairlineWidth, borderColor:'#a9d5d1', padding : 10, borderRadius: 10}}
                             onPress={() => this.setState({ selectColor: true })}>
-                                <Text>Select Color</Text>
+                                <Text style={{}}>{I18n.t('productdetail.selctcolor', { locale: lang })}</Text>
                             </TouchableOpacity>
                             <View style={{backgroundColor: this.state.color ? this.state.color.toString() : '#fff', width:25, height:25}} />
                             <View style={{
-                            flexDirection: 'row',
+                            flexDirection: (lang === 'ar') ? 'row-reverse': 'row',
                             justifyContent: 'center',
                             // alignItems: 'center',
                             padding :10
@@ -486,39 +490,40 @@ export default class ProductDescription extends Component {
                             </View>
                         </View>
                         <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20, backgroundColor:'#fff'}}>
-                            <Text style={{ height : 30 , color:'#696969', paddingTop:10}}> Product Information</Text>
-                            <View style={{ width : 140, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
-                            <Text style={{ color:'#696969', marginTop:5}}> {this.state.data.short_description}
+                            <Text style={{ height : 30 , color:'#FFCC7D', paddingTop:10, textAlign: (lang === 'ar') ? 'right': 'left' ,textDecorationLine : 'underline'}}>{I18n.t('productdetail.productinfo', { locale: lang })}</Text>
+                            <Text style={{ color:'#696969', marginTop:5,textAlign: (lang === 'ar') ? 'right': 'left'}}> {this.state.data.short_description}
                             </Text>
-                            <Text style={{ color:'#696969', marginBottom:10}}> {this.state.data.detail_description}
+                            <Text style={{ color:'#696969', marginBottom:10, textAlign: (lang === 'ar') ? 'right': 'left'}}> {this.state.data.detail_description}
                             </Text>
 
                         </View>
-                        <Text style={{padding:10}}>more Product by ZeroToTwo</Text>
+                        <Text style={{padding:10, textAlign: (lang === 'ar') ? 'right': 'left'}}>{I18n.t('productdetail.moreProducts', { locale: lang })}</Text>
                         <AllItem product_category={this.state.data.product_category}/>
                     </View>
 
                 </View>
         <SinglePickerMaterialDialog
-          title={'Select Color'}
-          items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
-          visible={this.state.selectColor}
-          selectedItem={this.state.singlePickerSelectedItem}
-          onCancel={() => this.setState({ selectColor: false })}
-          onOk={result => {
-            this.setState({ selectColor: false });
-            this.setState({ color: result.selectedItem.label });
-          }}
-        />
+            title={I18n.t('productdetail.selctcolor', { locale: lang })}
+            items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
+            visible={this.state.selectColor}
+            selectedItem={this.state.singlePickerSelectedItem}
+            onCancel={() => this.setState({ selectColor: false })}
+            onOk={result => {
+                this.setState({ selectColor: false });
+                this.setState({ color: result.selectedItem.label });
+            }}
+            cancelLabel={I18n.t('productdetail.cancel', { locale: lang })}
+            okLabel={I18n.t('productdetail.ok', { locale: lang })}
+            />
             </ScrollView>
                  <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
                  <View style={{flexDirection:'row', justifyContent:'center', width:'100%', marginBottom: -30}}>
                  <View style={{flexDirection:'row', justifyContent:'center', width:'50%', alignItems:'center'}}>
-                 <Text>Select Address</Text>
+                 <Text>{I18n.t('productdetail.selectaddress', { locale: lang })}</Text>
                  </View>
                  <View style={{flexDirection:'row', justifyContent:'center', width:'50%'}}>
                  <TouchableOpacity style={{padding:10, backgroundColor:'#a9d5d1', alignItems:'center', width:'80%'}} onPress={()=> routes.newaddress({isFromEdit:false})}>
-                 <Text style={{color:'#fff'}}>Add New Address</Text>
+                 <Text style={{color:'#fff'}}>{I18n.t('productdetail.addaddresslbl', { locale: lang })}</Text>
                  </TouchableOpacity>
                  </View>
                  </View>
@@ -545,6 +550,7 @@ export default class ProductDescription extends Component {
     }
 
         renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+            const {lang} = this.props
          if (!this.state.addressStatus) {
             return this.noItemFound();
         }
@@ -552,11 +558,11 @@ export default class ProductDescription extends Component {
         return (
                 <TouchableOpacity style={{ flexDirection: 'row' ,padding : 10}} onPress= {()=>this.order(data.address_id)}>
                     <View style={{ flexDirection: 'column' }}>
-                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
-                            <Text style={{ fontSize: 15}}>{data.full_name}</Text>
+                        <View style={{ width: width-125, flexDirection: (lang === 'ar') ? 'row-reverse': 'row' , justifyContent: 'space-between'}}>
+                            <Text style={{ fontSize: 15,  textAlign: (lang === 'ar') ? 'right': 'left'}}>{data.full_name}</Text>
                         </View>
-                        <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
-                        <Text style={{fontSize:12}}>
+                        <Text style={{ fontSize : 10,  textAlign: (lang === 'ar') ? 'right': 'left'}}>{data.mobile_number}</Text>
+                        <Text style={{fontSize:12, textAlign: (lang === 'ar') ? 'right': 'left'}}>
                         {/* {[data.address_line1 ," ", data.address_line2 , " ", data.landmark," ", data.town, " ",data.city, " ", data.state, "(", data.pincode ,")"]} */}
                         {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
                     data.jadda,"\n",data.city," ",data.direction]}
@@ -568,7 +574,6 @@ export default class ProductDescription extends Component {
 
 }
 const SHORT_LIST = ['red', 'yellow', 'pink'];
-
 class Vendor extends Component{
     constructor(props){
         super(props);
@@ -622,17 +627,17 @@ class Vendor extends Component{
           console.log(error);
         })
         .done();
-
     }
 
   render() {
+      const { lang} = this.props;
     let product_id = this.props.vendor_id
     let product = this.state.vendor_id
 
     let resultObject = this.search(product_id, product);
 
     return (
-        <Text style={styles.category}>{  this.state.vendor_id ? resultObject: undefined}
+        <Text style={[styles.category,{ textAlign: (lang === 'ar') ? 'right': 'left'}]}>{  this.state.vendor_id ? resultObject: undefined}
         </Text>
     );
   }
@@ -710,8 +715,13 @@ const styles = {
     category:{
         color :'#696969',
         fontSize : 12,
-        left : 10,
         marginBottom : 10
     }
 
 }
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(ProductDescription);
