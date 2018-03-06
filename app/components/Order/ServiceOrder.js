@@ -97,7 +97,7 @@ export default class ServiceOrder extends Component {
     noItemFound(){
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
-                <Text>You Have No Itmes In Service</Text>
+                <Text>You have no items in service</Text>
             </View>
         );
     }
@@ -154,7 +154,7 @@ export default class ServiceOrder extends Component {
                     <Text style={[styles.headerText, {color: '#fbcdc5'}]}>Booking Date : {data.service_datetime}</Text>
                     <Text style={[styles.headerText, {color: '#a9d5d1'}]}>Amount : {data.amount}</Text>
                 </View>
-                <View style={{ flexDirection : 'column', left : 10}} >
+                <View style={{ flexDirection : 'column', paddingLeft:10, paddingTop:5, paddingBottom:5, backgroundColor: '#F6F6F6'}} >
                     <View style={styles.row}>
                     <Text style={styles.label}>Service Name : </Text>
                     <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
@@ -204,9 +204,11 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
         // justifyContent: 'center',
         // padding: 10,
-        backgroundColor: '#F6F6F6'
+        // backgroundColor: '#F6F6F6'
+        paddingTop:1
     },
     header: {
+        padding:5,
         flexDirection: 'row',
         justifyContent: 'space-around',
         backgroundColor: '#fff',

@@ -94,32 +94,36 @@ class Menu extends React.Component {
                     <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:30}}>{identity.username}</Text>
                 </View>
                 <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
+
                 {
-                  this.state.notificationCount > 0 ? <IconBadge
-                  MainElement={
+                    this.state.notificationCount > 0 ?
+                    <IconBadge
+                        MainElement={
+                            <Ionicons
+                                name="ios-notifications"
+                                color="#a9d5d1" size={30}
+                                style={{ left : 5}}
+                            />
+                        }
+                        BadgeElement={
+                            <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
+                        }
+                        IconBadgeStyle={{
+                            width:16,
+                            height:18,
+                            // left : 10,
+                            backgroundColor: 'orange'
+                        }}
+                    /> :
                     <Ionicons
-                    name="ios-notifications"
-                    color="#a9d5d1" size={30}
-                    style={{ left : 5}}
+                        name="ios-notifications"
+                        color="#a9d5d1" size={30}
+                        style={{ left : 5}}
                     />
-                  }
-                  BadgeElement={
-                    <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
-                  }
-                  IconBadgeStyle={{
-                      width:16,
-                      height:18,
-                      backgroundColor: '#FFCC7D'}}
-                  /> :
-                  <Ionicons
-                    name="ios-notifications"
-                    color="#a9d5d1" size={30}
-                    style={{ left : 5}}
-                    />
-                  }
-                    <Text
-                    onPress={Actions.notificationShow}
-                     style={{
+
+                }
+                    <Text onPress={Actions.notificationShow}
+                        style={{
                         fontSize: 12,
                         padding: 10,
                         marginTop : 1,
@@ -127,14 +131,14 @@ class Menu extends React.Component {
                     }}>	{I18n.t('sidemenu.notification', { locale: lang })}</Text>
                </View>
 
-               <View style={{height:40}}>
 
-               </View>
+                <View style={{height:40}}>
+                </View>
 
-               {/* <LinearGradient colors={['#ffffff', '#dfdfdf', '#ffffff']} style={styles.linearGradient}> */}
-               {/* <LinearGradient colors={['#dfdfdf', '#ffffff', '#dfdfdf']} style={styles.linearGradient} positions={10}> */}
-               <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-               {/* </LinearGradient> */}
+                {/* <LinearGradient colors={['#ffffff', '#dfdfdf', '#ffffff']} style={styles.linearGradient}> */}
+                {/* <LinearGradient colors={['#dfdfdf', '#ffffff', '#dfdfdf']} style={styles.linearGradient} positions={10}> */}
+                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                {/* </LinearGradient> */}
                 <Text
                 onPress={Actions.homePage}
                 style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.home', { locale: lang })}</Text>

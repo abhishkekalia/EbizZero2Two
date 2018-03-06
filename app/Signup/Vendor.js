@@ -26,6 +26,13 @@ import { Picker } from 'react-native-picker-dropdown';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ActionSheet from 'react-native-actionsheet';
+const CANCEL_INDEX = 0;
+const DESTRUCTIVE_INDEX = 0
+
+const countryTitle = 'Select Country'
+
 const { width, height } = Dimensions.get('window')
 
 const INITIAL_STATE = {
@@ -71,9 +78,11 @@ class Vendorreg extends Component {
 			snapchat_id	: '',
 			type : '3',
 			os : (Platform.OS === 'ios') ? 2 : 1,
+			countries: ["0"],
 		};
 	    this.inputs = {};
-
+		this.showCountrysheet = this.showCountrysheet.bind(this)
+		this.handlePress = this.handlePress.bind(this)
 	}
 	componentDidMount(){
         this.fetchData();
@@ -99,10 +108,22 @@ class Vendorreg extends Component {
         })
         .then((response) => response.json())
         .then((responseData) => {
-                    // console.warn(JSON.stringify(responseData))
+					// console.warn(JSON.stringify(responseData))
+					var data = responseData.response.data,
+                    length = data.length,
+                    optionsList= []
+                    optionsList.push('Cancel');
+
+                    for(var i=0; i < length; i++) {
+                        order = data[i];
+                        // console.warn(order);
+                        country_name = order.country_name;
+                        optionsList.push(country_name);
+                    }
             this.setState({
                 userTypes: responseData.response.data,
-                 loaded: true
+				 loaded: true,
+				 countries: optionsList
         });
         }).done();
     }
@@ -119,7 +140,53 @@ class Vendorreg extends Component {
         return this.state.userTypes.map(user => (
             <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} />
         ))
-    }
+	}
+
+	showCountrysheet() {
+		this.countrySheet.show()
+	  }
+	handlePress(i) {
+		console.log('handlePress:=',i)
+		// const { userTypes , countries} = this.state;
+		// this.handlePress[]
+
+		if(i === 0){
+			this.setState({
+				selectCountry: '',
+				// deliveryareas: ["cancel","Select Country First"],
+		})
+		}else{
+			console.log("userTypes:=",this.state.userTypes[i-1].country_id)
+		// console.log("countries:=",countries[i])
+		  this.setState({
+			selectCountry: this.state.userTypes[i-1].country_id.toString()
+		  })
+
+		//   data = userTypes.filter((item)=>{
+		// 	return item.country_name == countries[i];
+		//   }).map((item)=>{
+		// 	// delete item.country_name;
+		// 	return item;
+		//   });
+		}
+
+		//   var source_data = data[0].city,
+		// 		length = data[0].city.length,
+		// 		city_list= []
+
+		// 		city_list.push('Cancel');
+		// 		for(var i=0; i < length; i++) {
+		// 			order = source_data[i];
+		// 			// console.warn(order);
+		// 			city_name = order.city_name;
+		// 			city_list.push(city_name);
+		// 		}
+
+		// 		this.setState({
+		// 		  deliveryareas: city_list
+		// 		})}
+
+	  }
 
 	render() {
 		const { lang , errorStatus, loading} = this.props,
@@ -302,49 +369,73 @@ class Vendorreg extends Component {
 					        	justifyContent: 'center',
 					        	alignItems: 'center' ,
 					        	}}>				 */}
-								<TouchableOpacity style={[commonStyles.iconusername, {
-														flexDirection: direction,
-														justifyContent: 'space-between',
-														alignItems: 'center' ,
-														marginBottom : 5,
-														paddingLeft:5
-															}]}>
-									{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
-									resizeMode = 'center'
-									resizeMethod = 'resize'
-									source={{uri : selCountryObj ? selCountryObj.flag : "" }}
-									onLoadEnd={() => {  }}
-									/>
-									}
+					{/* <View style={{flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center' ,
+		marginLeft: 5
+	}}
+		> */}
+		<TouchableOpacity onPress={this.showCountrysheet} style={[commonStyles.iconusername, {
+					        				flexDirection: direction,
+					        				justifyContent: 'space-between',
+					        				alignItems: 'center' ,
+											marginBottom : 5,
+											paddingLeft:5,
+											height:40,
+											overflow:'hidden',
+											borderBottomWidth:0
+					        					}]}>
 
-										{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:10, fontSize:12, textAlign: textline}} onPress={()=>console.log("echo")}>{I18n.t('venderregister.selectcountry', { locale: lang })}</Text>: undefined}
-										<Picker
-											style=
-											{{
-												width: !this.state.selectCountry? width-50 : width-100, // width-50,
-												height: 40,
-												position:'relative',
-												zIndex:1
-											}}
-											mode="dropdown"
-											selectedValue={this.state.selectCountry}
-											onValueChange={(itemValue, itemIndex) =>
-												// console.log("(itemValue, itemIndex):=",itemValue,itemIndex)
-												this.setState({
-													selectCountry: itemValue
-												})
-											}
-											>
+						{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
+							resizeMode = 'center'
+							resizeMethod = 'resize'
+							source={{uri : selCountryObj ? selCountryObj.flag : "" }}
+							onLoadEnd={() => {  }}
+							/>
+						}
 
-											{this.loadUserTypes()}
+						<Text style={{ }} >{this.state.selectCountry? selCountryObj.country_name  : this.state.selectCountry }</Text>
+						<FontAwesome
+                            name="chevron-down"
+                            size={20}
+                            color="#000"
+                            style={{padding:5, marginRight:5}}/>
 
-										</Picker>
-									</TouchableOpacity>
-								</View>
-			<Text style={{ paddingTop:5,paddingBottom:5, textAlign: textline }}>{I18n.t('venderregister.addsocialmedia', { locale: lang })}</Text>
-				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
-				<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
-					<Ionicons name="sc-facebook" size={25} color="#3b5998"  style={commonStyles.social}/>
+						{/* <Picker
+							style={{
+								width: !this.state.selectCountry? width-50 : width-100, //width-50,
+								height: 40
+							}}
+							// style=
+							// {{
+							// 	width: !this.state.selectCountry? width-50 : width-100, // width-50,
+							// 	height: 40,
+							// 	position:'relative',
+							// 	zIndex:999
+							// }}
+                            mode="dropdown"
+                            selectedValue={this.state.selectCountry}
+                            onValueChange={(itemValue, itemIndex) =>
+                            this.setState({selectCountry: itemValue})}>
+                                {this.loadUserTypes()}
+
+                            </Picker> */}
+
+							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
+                    </TouchableOpacity>
+					{/* </View> */}
+					<ActionSheet
+                        ref={o => this.countrySheet = o}
+                        // title={!this.state.selectCountry? this.state.selectCountry : selCountryObj.country_name  }
+                        options={this.state.countries}
+                        cancelButtonIndex={CANCEL_INDEX}
+                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                        onPress={this.handlePress}/>
+				</View>
+				<Text style={{ paddingTop:5,paddingBottom:5, textAlign: textline}}>{I18n.t('venderregister.addsocialmedia', { locale: lang })}</Text>
+				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
+					<View style ={[commonStyles.iconusername, { alignItems : 'center', flexDirection:direction,}]}>
+							<Ionicons name="sc-facebook" size={25} color="#3b5998"  style={commonStyles.social}/>
 						<TextInput
 							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
 							value={this.state.facebook_id}

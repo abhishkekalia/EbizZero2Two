@@ -17,7 +17,6 @@ function dispatchToProps(dispatch) {
         languageChange : authActions.languageChange,
         changeLanguage: (newLang) =>
         SettingsActions.changeLanguage(newLang)
-
     }, dispatch);
 }
 

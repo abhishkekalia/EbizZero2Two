@@ -319,7 +319,8 @@ Forgotpassword(){
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignItems: 'center',
-				marginTop: 10
+				// marginTop: 10,
+				// paddingTop: 10
 	}}>
 		<Text style={{ fontSize : 10, width : '100%', textAlign:'center'}}>
 		By Signing in you are agreeing to our
@@ -505,7 +506,8 @@ Forgotpassword(){
 		flexDirection: 'column',
 		justifyContent: 'center',
 		alignItems: 'center',
-				marginTop: 10
+				marginTop: 10,
+				paddingTop: 10
 	}}>
 		<Text style={{ fontSize : 10, width : '100%', textAlign:'center'}}>
 			{I18n.t('login.privacypolicy1', { locale: language })}
