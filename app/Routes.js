@@ -11,13 +11,13 @@ import {
   Drawer,
   Stack,
   Lightbox,
+
 } from "react-native-router-flux";
 import I18n from 'react-native-i18n'
-import { Text, View, StyleSheet, Easing } from 'react-native';
+import { Text, View, StyleSheet, Easing ,Platform} from 'react-native';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
 
 import MessageBar from './common/MessageBar';
-
 import {connect} from "react-redux";
 import Register from "./Signup/register";
 import Vendorreg from "./Signup/Vendor";
@@ -116,7 +116,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                         key="drawer"
                         drawer ={true}
                         type="overlay"
-                        // drawerImage={MenuIcon}
+                        drawerImage={MenuIcon}
                         contentComponent={Menu}
                         styles={drawerStyles.drawer}
                         drawerPosition={I18n.t('home.sidemenu', { locale: lang })}
@@ -137,7 +137,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 key="tabbar"
                                 swipeEnabled={false}
                                 initial={!needSignIn}
-                                navBar={HomeNavBar}
+                                // navBar={HomeNavBar}
                                 // hideNavBar={true}
                                 showLabel={false}
                                 tabBarStyle={styles.tabBarStyle}
@@ -340,7 +340,13 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     component={AddressBook}
                     title="Select Address"
                     hideNavBar={false}
-                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15,marginTop:10}}/>}
+                    renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={Platform.OS === 'ios' ?
+                        {
+                        padding:15,
+                        marginTop:10,
+                    } : {
+                    alignSelf: 'center'
+                }}/>}
                     />
                 </Stack>
                 <Stack key="deascriptionPage" renderTitle >
@@ -484,7 +490,18 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                 key="getmyaddress"
                 hideTabBar={true}
                 titleStyle={{alignSelf: 'center'}}
-                renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={{padding:15,marginTop:10}}/>}
+                renderRightButton={() => <Ionicons
+                    name="plus"
+                    size={25}
+                    onPress={()=> Actions.newaddress({isFromEdit:false})}
+                    color="#fff"
+                    style={Platform.OS === 'ios' ?
+                        {
+                        padding:15,
+                        marginTop:10,
+                    } : {
+                    alignSelf: 'center'
+                }}/>}
                 >
                     <Scene
                     key="getmyaddress"

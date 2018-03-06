@@ -11,6 +11,8 @@ import {
   AsyncStorage
 } from "react-native";
 import Modal from 'react-native-modal';
+import {connect} from "react-redux";
+import I18n from 'react-native-i18n'
 
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -25,7 +27,7 @@ import EventEmitter from "react-native-eventemitter";
 const { width } = Dimensions.get('window')
 const ICON_SIZE = 24
 
-export default class AddressBook extends Component {
+class AddressBook extends Component {
     constructor(props) {
         super(props);
         this.getKey = this.getKey.bind(this);
@@ -56,7 +58,7 @@ export default class AddressBook extends Component {
         EventEmitter.removeAllListeners("reloadAddressList");
         EventEmitter.on("reloadAddressList", (value)=>{
             console.log("reloadAddressList", value);
-            this.fetchAddress()    
+            this.fetchAddress()
         });
     }
     getItems (delivery_address_id){
@@ -89,43 +91,6 @@ export default class AddressBook extends Component {
         this.addToOrder(Select)
         .done()
     }
-
-    // removeFromCart(value){
-    //     try {
-    //         const { u_id, country } = this.state;
-    //         let formData = new FormData();
-    //         formData.append('u_id', String(u_id));
-    //         formData.append('country', String(country));
-    //         formData.append('order_detail', JSON.stringify(value));
-    //         formData.append('amount', String(this.props.totalAmount));
-    //         const config = {
-    //                method: 'POST',
-    //                headers: {
-    //                     'Accept': 'application/json',
-    //                     'Content-Type': 'multipart/form-data;',
-    //                },
-    //                body: formData,
-    //           }
-    //         fetch(Utils.gurl('addToOrder'), config)
-    //         .then((response) => response.json())
-    //         .then((responseData) => {
-    //         if(responseData.status){
-    //         console.warn("calling my Fatureh")
-    //           routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
-    //           }else{
-    //             this.removeLoader
-    //         }
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         })
-    //     .done();
-    //
-    //     } catch (error) {
-    //         console.log("Error retrieving data" + error);
-    //     }
-    //
-    // }
 
     async getKey() {
         try {
@@ -164,10 +129,10 @@ export default class AddressBook extends Component {
                 var data = ({
                     uri : responseData.data.url,
                     order_id : responseData.data.order_id,
-                }) 
+                })
                 routes.pop()
                 EventEmitter.emit("redirectToFaturah",data)
-                
+
             //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
               }else{
                 this.removeLoader
@@ -252,8 +217,6 @@ export default class AddressBook extends Component {
             console.log(error);
         })
         .done();
-
-
     }
     onEdit (data) {
         routes.newaddress({
@@ -323,6 +286,10 @@ export default class AddressBook extends Component {
     }
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
         return (
         <View
             style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff',flexDirection:'row' }}
@@ -331,19 +298,19 @@ export default class AddressBook extends Component {
             style={{justifyContent: 'flex-end'}}
             onSelect = {(sectionID, value) => this.onSelect(sectionID, data.address_id)}
             >
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: direction }}>
                     <View style={{ flexDirection: 'column' }}>
-                        <View style={{ width: width-125, flexDirection: 'row' , justifyContent: 'space-between'}}>
-                            <View style={{ flexDirection: 'row'}}>
-                            <Text style={{ fontSize : 15, color : '#a9d5d1'}}>Name: </Text>
-                            <Text style={{ fontSize: 15, color: '#000'}}>{data.full_name}</Text>
+                        <View style={{ width: width-125, flexDirection: direction , justifyContent: 'space-between'}}>
+                            <View style={{ flexDirection: direction}}>
+                            <Text style={{ fontSize : 15, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.name', { locale: lang })} </Text>
+                            <Text style={{ fontSize: 15, color: '#000',  textAlign: textline}}>{data.full_name}</Text>
                             </View>
                         </View>
-                        <View style={{ flexDirection: 'row'}}>
-                        <Text style={{ fontSize : 10, color : '#a9d5d1'}}>M: </Text>
-                        <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
+                        <View style={{ flexDirection: direction}}>
+                        <Text style={{ fontSize : 10, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.mobile', { locale: lang })}</Text>
+                        <Text style={{ fontSize : 10,  textAlign: textline}}>{data.mobile_number}</Text>
                         </View>
-                        <Text style={{fontSize:12}}>
+                        <Text style={{fontSize:12,  textAlign: textline}}>
                         {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
                     data.jadda,"\n",data.city," ",data.direction]}
                     </Text>
@@ -421,3 +388,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     }
 });
+
+function mapStateToProps(state) {
+	return {
+		lang: state.auth.lang,
+	};
+}
+export default connect(mapStateToProps)(AddressBook);

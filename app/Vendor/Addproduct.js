@@ -29,6 +29,10 @@ import GetImage from './imageSlider';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
+import { SegmentedControls } from 'react-native-radio-buttons';
 
 import RNFetchBlob from 'react-native-fetch-blob';
 const CANCEL_INDEX = 0
@@ -40,7 +44,9 @@ import SelectedImage from './SelectedImage';
 const { width, height } = Dimensions.get('window');
 
 const INITIAL_STATE = { quantity: '',  Size: ''}
-export default class AddProduct extends Component {
+
+
+class AddProduct extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -49,6 +55,7 @@ export default class AddProduct extends Component {
             avatarSource: null,
             product_category: '',
             options : ['0','1'],
+            optionsAvailable: [],
             u_id: null,
             user_type : null,
             country : null,
@@ -66,7 +73,8 @@ export default class AddProduct extends Component {
             sizeRows : [],
             rows : [] ,
             Imagepath : [],
-            is_feature : 0
+            is_feature : 0,
+            gender : ''
         }
     this.inputs = {};
     this.chips = {};
@@ -158,7 +166,8 @@ export default class AddProduct extends Component {
                     }
 
                     this.setState({
-                        options : optionsList
+                        options : optionsList,
+                        optionsAvailable : responseData.response.data
                     })
                 }
             })
@@ -258,15 +267,16 @@ export default class AddProduct extends Component {
 
     uploadTocloud(){
         const {
-            product_category , productname,
+            productname,
             shortdescription, detaildescription, price,
             discount,final_price, quantityRows,
-            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, u_id, country} = this.state;
-        if(this.validate()) {
-            this.setState({
-                visibleModal : true
-            });
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, u_id, country, gender} = this.state;
 
+            var product_category = this.state.optionsAvailable.find(x => x.category_name === this.state.options[this.state.product_category]).category_id;
+            if(this.validate()) {
+                this.setState({
+                    visibleModal : true
+                });
             RNFetchBlob.fetch('POST', Utils.gurl('productAdd'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
@@ -361,6 +371,12 @@ export default class AddProduct extends Component {
                 }
         });
     }
+    setSelectedOption(option){
+       this.setState({
+           gender: option,
+       });
+   }
+
     productCont(){
         Keyboard.dismiss();
 
@@ -384,6 +400,16 @@ export default class AddProduct extends Component {
     }
     render() {
         const { imageSelect, quantityRows, sizeRows} = this.state;
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left',
+        options = [
+			{ label:I18n.t('userregister.male', { locale: lang }), value: I18n.t('userregister.male', { locale: lang })},
+			{ label:I18n.t('userregister.female', { locale: lang }), value: I18n.t('userregister.female', { locale: lang })},
+			// { label:I18n.t('userregister.other', { locale: lang }), value: I18n.t('userregister.other', { locale: lang })},
+		];
+
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
 
         let is_feature;
@@ -400,9 +426,11 @@ export default class AddProduct extends Component {
             horizontal = {false}
             ref={'scrView'}
             >
+            <KeyboardAwareScrollView>
+
                 <View style={commonStyles.ImageAdd}>
-                    <Text style={{color: borderColorImage, marginBottom : 10}}>Select Product Image</Text>
-                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Product Picture</Text>
+                    <Text style={{color: borderColorImage, marginBottom : 10, textAlign: textline}}>{I18n.t('vendoraddproduct.selectprodimg', { locale: lang })}</Text>
+                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5,textAlign: textline}}>{I18n.t('vendoraddproduct.clickimgtoupload', { locale: lang })}</Text>
                     <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
                         <Feather onPress={this.selectPhotoTapped.bind(this)}
                             name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} />
@@ -415,7 +443,7 @@ export default class AddProduct extends Component {
                         }
                     </View>
                     <TouchableOpacity style={commonStyles.addCat} onPress={this.showActionSheet}>
-                        <Text>{ this.state.product_category ? this.state.options[this.state.product_category] : "Add Product category"}</Text>
+                        <Text style={{textAlign: textline}}>{ this.state.product_category ? this.state.options[this.state.product_category] : I18n.t('vendoraddproduct.addproductcategory', { locale: lang })}</Text>
                         {/* <ActionSheet
                         ref={o => this.ActionSheet = o}
                         title={title}
@@ -436,14 +464,17 @@ export default class AddProduct extends Component {
                 </View>
                 <View style={commonStyles.formItems}>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Name *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.productname}
                         // onFocus={()=>this.hidetab()}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
-                        placeholder="Product name"
+                        placeholder={I18n.t('vendoraddproduct.productname', { locale: lang })}
                         maxLength={140}
                         onSubmitEditing={() => {
                             this.focusNextField('two');
@@ -456,14 +487,17 @@ export default class AddProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Short Description *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.shortdesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.shortdescription}
-                        onFocus={this.textInputFocused.bind(this)}
+                        // onFocus={this.textInputFocused.bind(this)}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
-                        placeholder="Short Description "
+                        placeholder={I18n.t('vendoraddproduct.shortdesc', { locale: lang })}
                         maxLength={140}
                         onSubmitEditing={() => {
                             this.focusNextField('three');
@@ -476,15 +510,18 @@ export default class AddProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Detail Description  *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.detaildesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height)}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: textline}]}
                         value={this.state.detaildescription}
                         numberOfLines={3}
                         multiline
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
-                        placeholder="Detail Description "
+                        placeholder={I18n.t('vendoraddproduct.detaildesc', { locale: lang })}
                         maxLength={140}
                         onSubmitEditing={() => {
                             this.focusNextField('four');
@@ -500,14 +537,17 @@ export default class AddProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
-                        placeholder="Price "
+                        placeholder={I18n.t('vendoraddproduct.price', { locale: lang })}
                         maxLength={7}
                         onSubmitEditing={() => {
                             this.focusNextField('five');
@@ -520,14 +560,17 @@ export default class AddProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Special Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.special}
                         underlineColorAndroid = 'transparent'
                         keyboardType={'numeric'}
                         autoCorrect={false}
-                        placeholder="Special Price"
+                        placeholder={I18n.t('vendoraddproduct.spprice', { locale: lang })}
                         maxLength={7}
                         returnKeyType={"done" }
                         ref={ input => {
@@ -536,9 +579,43 @@ export default class AddProduct extends Component {
                         onChangeText={(special) => this.setState({special})}
                         />
                     </View>
-                    <View style={[commonStyles.feature,{paddingTop:10,paddingRight:10}]}
+                    <View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
+                                        <Text/>
+
+                        <SegmentedControls
+                            tint= {'#a9d5d1'}
+                            selectedTint= {'white'}
+                            backTint= {'#fff'}
+                            optionStyle= {{
+                            fontSize: 15,
+                            fontWeight: 'bold',
+                            // fontFamily: 'Snell Roundhand'
+                             alignItems: align
+                          }}
+                          containerStyle= {{
+                            marginLeft: 10,
+                            marginRight: 10,
+                          }}
+                          options={ options }
+                          onSelection={ this.setSelectedOption.bind(this) }
+                          selectedOption={ this.state.gender }
+                          extractText={ (option) => option.label }
+                          testOptionEqual={ (a, b) => {
+                            if (!a || !b) {
+                              return false;
+                            }
+                            return a.label === b.label
+                          }}
+                        />
+                        <Text/>
+                    </View>
+
+                    <View style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]}
                     >
-                        <Text style={commonStyles.label}>Product Is Feature *</Text>
+                    <View style={{ flexDirection: direction}}>
+                        <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddproduct.isfeature', { locale: lang })}</Text>
+                        <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
+                        </View>
                         <Switch
                         value={is_feature}
                         onValueChange={(val) =>
@@ -553,17 +630,19 @@ export default class AddProduct extends Component {
                         circleInActiveColor={'#000000'}/>
 
                     </View>
-                    <Text style={commonStyles.label}>
-                        Please enter size,quantity inputs respectively.ex Size: 8yr,10yr,12yr Quantity: 50,120,100
+                    <Text style={[commonStyles.label, {textAlign: textline}]}>
+                        {I18n.t('vendoraddproduct.sizequantitymsg', { locale: lang })}
                     </Text>
-                    <View style={commonStyles.chip}>
+                    <View style={[commonStyles.chip, { flexDirection: direction}]}>
                         <View>
-                            <View style={commonStyles.textField}>
-                                <Text style={commonStyles.label}>Quantity *</Text>
+                            <View style={[commonStyles.textField, {flexDirection: direction}]}>
+                                <Text style={commonStyles.label}>{I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}</Text>
+                                    <Text style={commonStyles.label}>*</Text>
                                 <Text style={{ color : '#000', left : 20 }}>{quantityRows.toString()}</Text>
                             </View>
-                            <View style={commonStyles.textField}>
-                                <Text style={commonStyles.label}>Size *</Text>
+                            <View style={[commonStyles.textField, {flexDirection: direction}]}>
+                                <Text style={commonStyles.label}>{I18n.t('vendoraddproduct.sizelbl', { locale: lang })}</Text>
+                                    <Text style={commonStyles.label}>*</Text>
                                 <Text style={{ color : '#000',left : 20}}>{sizeRows.toString()}</Text>
                             </View>
                         </View>
@@ -574,17 +653,20 @@ export default class AddProduct extends Component {
                             top : 5
                         }}
                         onPress={() => this.setState({ additional: true,})}>
-                            <Text style={{fontSize : 12}}>Add Quantity & Size</Text>
+                            <Text style={{fontSize : 12, textAlign: textline}}>{I18n.t('vendoraddproduct.sizequantitybtn', { locale: lang })}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
                     <Modal isVisible={this.state.additional}>
-                    <View style={{alignItems : 'center', padding:10, backgroundColor : '#fff'}}>
-                        <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10}}>Please Enter Quantity and Size Of Items</Text>
-                        <Text style={{color :"#a9d5d1" , width : width/2,bottom : 10}}>Quantity :</Text>
+                    <View style={{ padding:10, backgroundColor : '#fff'}}>
+                        <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center'}}>{I18n.t('vendoraddproduct.sizequantitybtn', { locale: lang })}</Text>
+                        <View style={{flexDirection: direction, width: '90%'}}>
+                            <Text style={{color :"#a9d5d1" ,bottom : 10}}>{I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}</Text>
+                            <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
+                        </View>
                         <TextInput
-                            style={[commonStyles.inputs, { bottom : 20}]}
+                            style={[commonStyles.inputs, { bottom : 20,  textAlign: textline, width: '90%'}]}
                             value={this.state.quantity}
                             underlineColorAndroid = 'transparent'
                             autoCorrect={false}
@@ -600,9 +682,12 @@ export default class AddProduct extends Component {
                             }}
                             onChangeText={(quantity) => this.setState({quantity})}
                         />
-                        <Text style={{color :"#a9d5d1", width : width/2, bottom : 10}}>Size :</Text>
+                    <View style={{flexDirection: direction, width: '90%'}}>
+                            <Text style={{color :"#a9d5d1" ,bottom : 10}}>{I18n.t('vendoraddproduct.sizelbl', { locale: lang })}</Text>
+                            <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
+                        </View>
                         <TextInput
-                            style={[commonStyles.inputs, {bottom : 20}]}
+                            style={[commonStyles.inputs, {bottom : 20,  textAlign: textline, width: '90%'}]}
                             value={this.state.Size}
                             underlineColorAndroid = 'transparent'
                             autoCorrect={false}
@@ -617,8 +702,12 @@ export default class AddProduct extends Component {
                             }}
                             onChangeText={(Size) => this.setState({Size})}
                         />
-
-                        <Button title="submit" onPress={()=>this.productCont()} color="#a9d5d1"/>
+                    <View style={{flexDirection: direction, justifyContent: 'space-around'}}>
+                        <Button title={I18n.t('vendoraddproduct.cancel', { locale: lang })} onPress={()=>this.setState({
+                                    additional : false
+                                })} color="#a9d5d1"/>
+                            <Button title={I18n.t('vendoraddproduct.submit', { locale: lang })}  onPress={()=>this.productCont()} color="#a9d5d1"/>
+                            </View>
                 </View>
             </Modal>
                 <Modal isVisible={this.state.visibleModal}>
@@ -628,8 +717,16 @@ export default class AddProduct extends Component {
                 </View>
             </Modal>
             <KeyboardSpacer/>
+            </KeyboardAwareScrollView>
 
             </ScrollView>
         )
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(AddProduct);

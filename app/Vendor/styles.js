@@ -9,7 +9,6 @@ export default StyleSheet.create({
         padding :10
     },
     inputs : {
-        width : width/2,
         paddingLeft: 0,
         height : 40,
         borderBottomWidth : 1,
@@ -17,7 +16,6 @@ export default StyleSheet.create({
         color: '#424242',
     },
     feature : {
-        flexDirection : 'row',
         justifyContent : 'space-between'
     },
     avatarContainer: {
@@ -61,20 +59,19 @@ export default StyleSheet.create({
     	// backgroundColor : '#ccc'
     },
     inputusername : {
-    	width : width/1.1-30,
+    	width : '100%',
     	height : 40,
-    	borderWidth : 1,
+    	borderWidth : StyleSheet.hairlineWidth,
     	paddingLeft: 20,
     	borderColor: '#ccc',
     	color: '#424242',
-    	left : 10
+    	// left : 10
     },
     label : {
     	left : 10,
     	color : '#a9d5d1'
     },
     chip : {
-        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
     },

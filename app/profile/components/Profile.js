@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
 import { Actions} from "react-native-router-flux";
 import Feather from 'react-native-vector-icons/Feather';
+import I18n from 'react-native-i18n'
 
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -94,33 +95,34 @@ class Profile extends Component {
     }
 
     address(address){
+		const { lang } = this.props;
 		if(this.state.address == '') {
 			return (
 				<View style={{padding:10}}>
-					<Text  style={{ fontSize :15, color:'#696969'}}>
-					There is no address.
+					<Text  style={{ fontSize :15, color:'#696969', textAlign: lang == 'ar'? 'right' :'left'}}>
+						{I18n.t('profile.addressbook', { locale: lang })}
 					</Text>
 				</View>
 			)
 		}else {
 			return (
 					<View style={{padding:10}}>
-							<Text style={{ fontSize: 15, color:'#696969'}}>
+							<Text style={{ fontSize: 15, color:'#696969', textAlign: lang == 'ar' ? 'right' : 'left'}}>
 							{address.full_name}
 							</Text>
-							<View style={{flexDirection:'row'}}>
-							<Text style={{ fontSize : 10, color:'#a9d5d1'}}>
+							<View style={{flexDirection: lang == 'ar' ? 'row-reverse': 'row'}}>
+							<Text style={{ fontSize : 10, color:'#a9d5d1', textAlign: lang == 'ar' ? 'right' : 'left'}}>
 							M
 							</Text>
-							<Text style={{ fontSize : 10, color:'#fbcdc5'}}>
+							<Text style={{ fontSize : 10, color:'#fbcdc5', }}>
 							{' '}:{' '}
 							</Text>
-							<Text style={{ fontSize : 10, color:'#696969'}}>
+							<Text style={{ fontSize : 10, color:'#696969', textAlign: lang == 'ar' ? 'right' : 'left'}}>
 							{address.mobile_number}
 							</Text>
 
 							</View>
-							<Text style={{fontSize:12, color:'#696969'}}>
+							<Text style={{fontSize:12, color:'#696969', textAlign: lang == 'ar' ? 'right' : 'left'}}>
 							{[address.block_no ," ", address.street , " ", address.houseno,"\n", address.appartment, " ",address.floor, " ",
                     address.jadda,"\n",address.city," ",address.direction]}
 							</Text>
@@ -128,13 +130,13 @@ class Profile extends Component {
 		}
 	}
 	render() {
-		const {identity, logout} = this.props;
+		const {identity, logout, lang} = this.props;
 		const {data, u_id, address, dataSource} = this.state;
 
 		return (
 			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
-				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
-					<View style={{ flexDirection : 'row', }}>
+				<View style={[styles.content, {flexDirection :lang == 'ar' ? 'row-reverse' : 'row', justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
+					<View style={{ flexDirection :  lang == 'ar' ? 'row-reverse' : 'row' }}>
 						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'rgba(240,241,243,1)'}}>
 							<Entypo
 							name="user"
@@ -149,9 +151,9 @@ class Profile extends Component {
 						</View>
 
 						<View style={{flexDirection : 'column',marginTop:3}}>
-							<Text style={[styles.label, { color : '#696969', fontSize:17}]}>{dataSource.fullname}</Text>
-							<Text style={[styles.label, { color : '#696969'}]}>{this.state.email}</Text>
-							<Text style={[styles.label, { color : '#fbcdc5'}]}>Contact: {dataSource.mobile}</Text>
+							<Text style={[styles.label, { color : '#696969', fontSize:17, textAlign: lang == 'ar' ? 'right' : 'left'}]}>{dataSource.fullname}</Text>
+							<Text style={[styles.label, { color : '#696969', textAlign: lang == 'ar' ? 'right' : 'left'}]}>{this.state.email}</Text>
+							<Text style={[styles.label, { color : '#fbcdc5', textAlign: lang == 'ar' ? 'right' : 'left'}]}>Contact: {dataSource.mobile}</Text>
 						</View>
 					</View>
 
@@ -173,7 +175,7 @@ class Profile extends Component {
 
 					<View style={{ padding : 0, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
 						<TouchableOpacity style={{
-							flexDirection : 'row',
+							flexDirection : lang == 'ar' ? 'row-reverse' : 'row',
 							justifyContent: 'space-between',
 							alignItems : 'center',
 							paddingRight:15,
@@ -182,18 +184,18 @@ class Profile extends Component {
 							borderColor : '#ccc',
 							height :40
 						}}  onPress={()=>Actions.getmyaddress()} >
-							<Text style={{ fontSize : 13, color:"#fbcdc5"}}>My Address Book</Text>
+							<Text style={{ fontSize : 13, color:"#fbcdc5", textAlign: lang == 'ar' ? 'right' : 'left'}}>{I18n.t('profile.addressbook', { locale: lang })}</Text>
 
-									<Ionicons name="ios-arrow-forward" size={20} color="#ccc" style={{ justifyContent: 'center', alignItems : 'center' }} />
+									<Ionicons name="ios-arrow-forward" size={20} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''} />
 						</TouchableOpacity>
 					{this.address(address)}
 
 				</View>
 				</View>
 				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
-				<TouchableOpacity onPress={()=>Actions.settings({is_notification : this.state.dataSource.is_notification})} style={styles.setings}>
-					<Text style={{fontSize:12, color:'#696969'}}>Settings</Text>
-					<Ionicons name="ios-arrow-forward" size={20} color="#ccc"/>
+				<TouchableOpacity onPress={()=>Actions.settings({is_notification : this.state.dataSource.is_notification})} style={[styles.setings, {flexDirection: lang == 'ar' ? 'row-reverse' : 'row'}]}>
+					<Text style={{fontSize:12, color:'#696969', textAlign: lang == 'ar' ? 'right' : 'left'}}>{I18n.t('profile.settings', { locale: lang })}</Text>
+					<Ionicons name="ios-arrow-forward" size={20} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
 				</TouchableOpacity>
 			</View>
 		)
@@ -214,7 +216,7 @@ const styles = StyleSheet.create({
 		// top : 5,
 		backgroundColor : '#fff',
 		padding : 10,
-		flexDirection: "row",
+		// flexDirection: "row",
 		justifyContent: "space-between",
 		borderWidth : 0.5,
 		borderColor :'#ccc',

@@ -5,7 +5,8 @@ import * as authActions from "app/auth/auth.actions";
 
 function mapStateToProps(state) {
 	return {
-		identity: state.identity
+		identity: state.identity,
+		lang: state.auth.lang,
 	}
 }
 
@@ -14,4 +15,3 @@ function dispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, dispatchToProps)(Profile);
-

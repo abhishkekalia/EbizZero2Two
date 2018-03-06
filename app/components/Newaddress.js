@@ -11,6 +11,9 @@ import {
   AsyncStorage,
   Image
 } from 'react-native';
+import {connect} from "react-redux";
+import I18n from 'react-native-i18n'
+
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,9 +33,8 @@ Geocoder.setApiKey('AIzaSyD4T7njRubC7I7zYNwE5wnuTw0X5E_1Cc4');
 
 const { width, height } = Dimensions.get('window')
 
-export default class Newaddress extends Component<{}> {
+class Newaddress extends Component<{}> {
     constructor(props) {
-        console.log("isFromEdit:=",props.isFromEdit);
         super(props);
         this.getKey = this.getKey.bind(this);
         this.state={
@@ -392,6 +394,10 @@ export default class Newaddress extends Component<{}> {
     }
 
     render() {
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
 
         var selCountryObj = null
       for (let index = 0; index < this.state.countryList.length; index++) {
@@ -404,25 +410,25 @@ export default class Newaddress extends Component<{}> {
     return (
         <View style={{ flex : 1}}>
             <View style={ {
-                height : 59,
+                height: (Platform.OS === 'ios') ? 64 : 54,
                 backgroundColor : '#a9d5d1',
-                flexDirection : 'row',
+                flexDirection : direction,
                 justifyContent:"space-between",
-                alignItems : 'center',
+                alignItems : (Platform.OS === 'ios') ? 'flex-end' :'center',
             }}>
-            <Ionicons name="ios-arrow-back" size={25} style={{ color:'#fff',paddingLeft: 10, top : 10}} onPress={()=> routes.pop()}/>
+            <Ionicons name="ios-arrow-back" size={25} color='#fff' style={lang == 'ar' ? {transform: [{ rotate: '180deg'}], padding: 10 }: {paddingLeft: (Platform.OS === 'ios') ? 10 : 10 , alignSelf: 'center'} } onPress={()=> routes.pop()}/>
 
-            <Text style={{color:'#fff' ,top:10}}>{ this.props.address_id ? 'Update Address' : 'Add New Address'}</Text>
+            <Text style={{color:'#fff'}}>{ this.props.address_id ? I18n.t('newAddress.updateaddr', { locale: lang }) : I18n.t('newAddress.newaddrtitle', { locale: lang })}</Text>
 
-            <TouchableOpacity style={{ backgroundColor:'transparent', top : 15, marginBottom : 10 ,padding: 10}} onPress={()=> this.props.isFromEdit ? this.editAddressAPICall() : this.submit()}>
-                <Text style={{ color:'#fff',padding:5, borderColor:'#fff', borderWidth:1, borderRadius : 10}}>Save</Text>
+            <TouchableOpacity style={{ backgroundColor:'transparent'}} onPress={()=> this.props.isFromEdit ? this.editAddressAPICall() : this.submit()}>
+                <Text style={{ color:'#fff',padding:5}}>{I18n.t('newAddress.savebtn', { locale: lang })}</Text>
             </TouchableOpacity>
         </View>
-        <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
+        <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}>
             <View style={{ margin: 0}}>
 
-                <TextInput style={ styles.input}
-                    placeholder='Full Name *'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.fullname', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     // keyboardType='email-address'
@@ -438,8 +444,8 @@ export default class Newaddress extends Component<{}> {
                     onChangeText={(text) => this.setState({ full_name: text })}
                 />
 
-                <TextInput style={ styles.input}
-                    placeholder='Contact Number *'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.contactnumber', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.mobile_number}
@@ -455,20 +461,20 @@ export default class Newaddress extends Component<{}> {
                 />
 
                 <View style={{
-                    flexDirection : 'row',
+                    flexDirection : direction,
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     borderBottomWidth: StyleSheet.hairlineWidth,
                     borderColor: '#bbb'
                 }}>
-                    <Text style={{ fontSize: 13, color:'#696969', left: 0}}>Select Country</Text>
+                    <Text style={{ fontSize: 13, color:'#696969', left: 0}}>{I18n.t('newAddress.selectcountry', { locale: lang })}</Text>
                     {!this.state.country? undefined: <Image style={{height:30, width:40}}
-                                        resizeMode = 'center'
-                                        resizeMethod = 'resize'
-                                        source={{uri : selCountryObj ? selCountryObj.flag : "" }}
-                                        onLoadEnd={() => {  }}
-                                        />
-                                    }
+                        resizeMode = 'center'
+                        resizeMethod = 'resize'
+                        source={ selCountryObj ? {uri : selCountryObj.flag } : require('app/images/country_icon.png')}
+                        onLoadEnd={() => {  }}
+                        />
+                    }
                     <Picker
                     mode="dropdown"
                     style={{height: 40, width: 100 }}
@@ -477,8 +483,8 @@ export default class Newaddress extends Component<{}> {
                         {this.loadCountry()}
                     </Picker>
                 </View>
-                <TextInput style={ styles.input}
-                    placeholder='City'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.city', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.city}
@@ -492,8 +498,8 @@ export default class Newaddress extends Component<{}> {
                     onChangeText={(text) => this.setState({ city: text })}
                 />
 
-                <TextInput style={ styles.input}
-                    placeholder='Block Number *'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.blockno', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.block_no}
@@ -509,8 +515,8 @@ export default class Newaddress extends Component<{}> {
                     onChangeText={(text) => this.setState({ block_no: text })}
                 />
 
-                <TextInput style={ styles.input}
-                    placeholder='street'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.street', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.street}
@@ -523,8 +529,8 @@ export default class Newaddress extends Component<{}> {
                     }}
                     onChangeText={(text) => this.setState({ street: text })}
                 />
-                <TextInput style={ styles.input}
-                    placeholder='House/Building Number *'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.houseno', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.houseno}
@@ -539,8 +545,8 @@ export default class Newaddress extends Component<{}> {
                     }}
                     onChangeText={(text) => this.setState({ houseno: text })}
                 />
-                <TextInput style={ styles.input}
-                    placeholder='Appartment/Office (Optional)'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.appartment', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.appartment}
@@ -553,10 +559,8 @@ export default class Newaddress extends Component<{}> {
                     }}
                     onChangeText={(text) => this.setState({ appartment: text })}
                 />
-
-
-                <TextInput style={ styles.input}
-                    placeholder='Floor'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.floor', { locale: lang })}
                     autoCapitalize='none'
                     keyboardType={'numeric'}
                     underlineColorAndroid = 'transparent'
@@ -570,9 +574,8 @@ export default class Newaddress extends Component<{}> {
                     }}
                     onChangeText={(text) => this.setState({ floor: text })}
                 />
-
-                <TextInput style={ styles.input}
-                    placeholder='Jaddah'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.jadda', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.jadda}
@@ -585,10 +588,8 @@ export default class Newaddress extends Component<{}> {
                     }}
                     onChangeText={(text) => this.setState({ jadda: text })}
                 />
-
-
-                <TextInput style={ styles.input}
-                    placeholder='Extra Direction'
+                <TextInput style={[ styles.input, {textAlign: textline}]}
+                    placeholder={I18n.t('newAddress.extradir', { locale: lang })}
                     autoCapitalize='none'
                     underlineColorAndroid = 'transparent'
                     value={this.state.direction}
@@ -600,34 +601,34 @@ export default class Newaddress extends Component<{}> {
                     }}
                     onChangeText={(text) => this.setState({ direction: text })}
                 />
-            <MapView
-                style = {{height:200, width:width, marginRight:0, marginBottom:10, marginLeft:-20, marginTop:5}}
-                region={this.state.region}
-                onRegionChange={this.onRegionChange.bind(this)}
-            >
-                <Marker draggable
-                    coordinate={this.state.coordinate}
-                    onDragEnd={(e) => this.setState({
-                        coordinate: e.nativeEvent.coordinate,
-                        region: {
-                            latitude:e.nativeEvent.coordinate.latitude,
-                            longitude:e.nativeEvent.coordinate.longitude,
-                            latitudeDelta: this.state.region.latitudeDelta,
-                            longitudeDelta: this.state.region.longitudeDelta,
-                        }
-                     })}
-                />
-                </MapView>
-
-            <TouchableOpacity style={{ backgroundColor:'transparent', top : 0, marginBottom:10, alignItems:'center'}} onPress={()=>
-                this.loadAddressFromMap()
-            }>
-            <View style={{borderWidth:1, borderColor:'#ccc',height:40, width:width, justifyContent:'center', alignItems:'center'}}>
-                    <Text style={{ color:'grey',padding:0, borderColor:'grey', borderWidth:0, borderRadius : 10, padding:10}} textAlign='center'>Pick location from map</Text>
+            <View style={{ flex: 1}}>
+                    <MapView
+                    style = {{height:200, marginRight:0, marginBottom:10,  marginTop:5,}}
+                    region={this.state.region}
+                    onRegionChange={this.onRegionChange.bind(this)}
+                    >
+                        <Marker draggable
+                        coordinate={this.state.coordinate}
+                        onDragEnd={(e) => this.setState({
+                            coordinate: e.nativeEvent.coordinate,
+                            region: {
+                                latitude:e.nativeEvent.coordinate.latitude,
+                                longitude:e.nativeEvent.coordinate.longitude,
+                                latitudeDelta: this.state.region.latitudeDelta,
+                                longitudeDelta: this.state.region.longitudeDelta
+                            }
+                        })}/>
+                    </MapView>
+                </View>
+                <TouchableOpacity style={{
+                    borderWidth:1, borderColor:'#ccc',height:40, justifyContent:'center', alignItems:'center',
+                    backgroundColor:'transparent', top : 0, marginBottom:10, alignItems:'center'}} onPress={()=>
+                    this.loadAddressFromMap()
+                }>
+                    <Text style={{ color:'grey',padding:0, borderColor:'grey', padding:10}} textAlign='center'>{I18n.t('newAddress.picklocation', { locale: lang })}</Text>
+                </TouchableOpacity>
             </View>
-            </TouchableOpacity>
-            </View>
-        <KeyboardSpacer/>
+            <KeyboardSpacer/>
         </ScrollView>
         </View>
     );
@@ -698,7 +699,7 @@ const styles = StyleSheet.create({
     height : 40,
     borderColor : "#ccc",
     borderBottomWidth :StyleSheet.hairlineWidth,
-    width :width,
+    width :width-40,
     // textAlign: 'center',
   },
   instructions: {
@@ -707,3 +708,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+function mapStateToProps(state) {
+	return {
+		lang: state.auth.lang,
+	};
+}
+export default connect(mapStateToProps)(Newaddress);

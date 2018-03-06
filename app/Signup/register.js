@@ -10,6 +10,7 @@ import {
 	Platform,
 	Keyboard,
 	Dimensions,
+	StyleSheet,
 	Image,
 	// Picker
 } from "react-native";
@@ -17,7 +18,8 @@ import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
@@ -36,13 +38,8 @@ const INITIAL_STATE = {
 	country: '',
 	address: ''
 };
-const options = [
-	{ label:'Male', value: 'male' },
-    { label:'Female', value: 'female'},
-    { label:'Other', value: 'other' }];
 
 class Register extends Component {
-
 	constructor(props) {
 		super(props);
 		this.toggleSwitch = this.toggleSwitch.bind(this);
@@ -66,18 +63,14 @@ class Register extends Component {
 			os : (Platform.OS === 'ios') ? 2 : 1,
 		};
 	    this.inputs = {};
-
 	}
 	componentDidMount(){
         this.fetchData();
         this.gettermandcondition()
-
     }
-
     focusNextField(id) {
     	this.inputs[id].focus();
     }
-
     eye() {
     	this.setState({
     		hidden : !this.state.hidden
@@ -104,8 +97,6 @@ class Register extends Component {
             console.log(error);
         }).done();
     }
-
-
     fetchData(){
         fetch(Utils.gurl('countryList'),{
              method: "GET", headers: {
@@ -125,7 +116,6 @@ class Register extends Component {
             console.log(error);
         }).done();
     }
-
 	toggleSwitch() {
 	 	this.setState({ showPassword: !this.state.showPassword });
 	 }
@@ -139,31 +129,35 @@ class Register extends Component {
             <Picker.Item key={user.country_id} label={user.country_name} value={user.country_id} />
         ))
     }
-
 	render() {
-		        let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked' ;
-				// let icon = this.state.hidden ? 'ios-eye' : 'ios-eye-off';
-				
-				var selCountryObj = null
-				for (let index = 0; index < this.state.userTypes.length; index++) {
-					let element = this.state.userTypes[index];
-					if (element.country_id == this.state.selectCountry) {
-						selCountryObj = element
-					}
-				}
+		const { lang , errorStatus, loading} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+		textline = lang == 'ar'? 'right': 'left',
+		align = lang == 'ar'? 'flex-end': 'flex-start',
+		options = [
+			{ label:I18n.t('userregister.male', { locale: lang }), value: I18n.t('userregister.male', { locale: lang })},
+			{ label:I18n.t('userregister.female', { locale: lang }), value: I18n.t('userregister.female', { locale: lang })},
+			// { label:I18n.t('userregister.other', { locale: lang }), value: I18n.t('userregister.other', { locale: lang })},
+		];
+		let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked';
+		var selCountryObj = null
+		for (let index = 0; index < this.state.userTypes.length; index++) {
+			let element = this.state.userTypes[index];
+			if (element.country_id == this.state.selectCountry) {
+				selCountryObj = element
+			}
+		}
 
-		const {errorStatus, loading} = this.props;
 		return (
 			<ScrollView style={[ commonStyles.content,{marginTop:0,marginBottom:0,paddingTop:20,paddingBottom:20}]} testID="Login" keyboardShouldPersistTaps={'handled'}>
 				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
 					<View style ={commonStyles.iconusername}>
-
 						<TextInput
-							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10, height:40}]}
+							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10, height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
 							value={this.state.fullname}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Fullname"
+							placeholder={I18n.t('userregister.fullname', { locale: lang })}
 							maxLength={140}
           					onSubmitEditing={() => {
           						this.focusNextField('two');
@@ -180,11 +174,11 @@ class Register extends Component {
 					<View style ={commonStyles.iconusername}>
 
 						<TextInput
-							style={[commonStyles.inputpassword,{ height:40}]}
+							style={[commonStyles.inputpassword,{ height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
 							value={this.state.email}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Email Address"
+							placeholder={I18n.t('userregister.emailaddress', { locale: lang })}
 							maxLength={140}
           					onSubmitEditing={() => {
           						this.focusNextField('three');
@@ -197,15 +191,15 @@ class Register extends Component {
 							onChangeText={(email) => this.setState({email})}
 						/>
 					</View>
-					<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
+					<View style ={[commonStyles.iconusername, { alignItems: align}]}>
 
 						<TextInput
-							style={[commonStyles.inputpassword,{height:40}]}
+							style={[commonStyles.inputpassword,{height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
                            	secureTextEntry={this.state.hidden}
                            	value={this.state.password}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Password"
+							placeholder={I18n.t('userregister.password', { locale: lang })}
 							maxLength={140}
           					onSubmitEditing={() => {
           						this.focusNextField('four');
@@ -218,9 +212,15 @@ class Register extends Component {
 						/>
 
 					</View>
-					<TouchableOpacity style ={[commonStyles.show, { flexDirection: 'row', alignItems: 'center',borderBottomColor:'#fbcdc5'}]} onPress={()=> this.eye()}>
-							<Icon name= {icon} size={25} style={{ right : 20}}/>
-							<Text>Show Password </Text>
+					<TouchableOpacity style ={{ flexDirection: direction, borderBottomColor:'#fbcdc5',
+						// justifyContent: 'center',
+					    alignItems: 'center',
+					    padding: 10,
+					   	borderBottomWidth: StyleSheet.hairlineWidth,
+						borderColor: '#ccc',
+					}} onPress={()=> this.eye()}>
+							<Icon name= {icon} size={25} color="#FFCC7D" style={ lang == 'ar' ? { right : 10} :{ right : 10}  }/>
+							<Text style={{textAlign: textline}}>{I18n.t('userregister.showpassword', { locale: lang })}</Text>
 					</TouchableOpacity>
 
  				<View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
@@ -231,9 +231,10 @@ class Register extends Component {
         			  	selectedTint= {'white'}
         			  	backTint= {'#fff'}
         			  	optionStyle= {{
-        			    fontSize: 12,
+        			    fontSize: 15,
         			    fontWeight: 'bold',
-        			    fontFamily: 'Snell Roundhand'
+        			    // fontFamily: 'Snell Roundhand'
+						 alignItems: align
         			  }}
         			  containerStyle= {{
         			    marginLeft: 10,
@@ -256,11 +257,11 @@ class Register extends Component {
 				<View style ={commonStyles.iconusername}>
 
 						<TextInput
-							style={[commonStyles.inputusername,{height:40}]}
+							style={[commonStyles.inputusername,{height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
 							value={this.state.contact}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Mobile Number For (Order Update)"
+							placeholder={I18n.t('userregister.mobilenumber', { locale: lang })}
 							maxLength={140}
 							keyboardType={'numeric'}
           					onSubmitEditing={() => {
@@ -275,21 +276,12 @@ class Register extends Component {
 					</View>
 
 					<TouchableOpacity style={[commonStyles.iconusername, {
-					        				flexDirection: 'row',
+					        				flexDirection: direction,
 					        				justifyContent: 'space-between',
 					        				alignItems: 'center' ,
 											marginBottom : 5,
 											paddingLeft:5
 					        					}]}>
-					{/* <View style={{flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center' ,
-		marginLeft: 5,
-	}}
-		>					 */}
-
-						
-						
 						{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
 						resizeMode = 'center'
 						resizeMethod = 'resize'
@@ -298,44 +290,44 @@ class Register extends Component {
 						/>
 						}
 
-						<Picker
-							style=
-							{{
-								width: !this.state.selectCountry? width-50 : width-100, // width-50, 
-								height: 40, 
-								position:'relative', 
-								zIndex:999
-							}}
-                            mode="dropdown"
-                            selectedValue={this.state.selectCountry}
-							onValueChange={(itemValue, itemIndex) =>
-							// console.log("(itemValue, itemIndex):=",itemValue,itemIndex)
-							this.setState({
-								selectCountry: itemValue
-							})
-						}
-						>
-							
-							{this.loadUserTypes()}
+							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:10, fontSize:12, textAlign: textline}} onPress={()=>console.log("echo")}>{I18n.t('userregister.selectcountry', { locale: lang })}</Text>: undefined}
+							<Picker
+								style=
+								{{
+									width: !this.state.selectCountry? width-50 : width-100, // width-50,
+									height: 40,
+									position:'relative',
+									zIndex:1
+								}}
+								mode="dropdown"
+								selectedValue={this.state.selectCountry}
+								onValueChange={(itemValue, itemIndex) =>
+									// console.log("(itemValue, itemIndex):=",itemValue,itemIndex)
+									this.setState({
+										selectCountry: itemValue
+									})
+								}
+								>
 
-                            </Picker>
+								{this.loadUserTypes()}
 
-							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:10, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
+							</Picker>
+
 
 						</TouchableOpacity>
 						{/* </View> */}
 
 					<View style={[{
-					flexDirection: 'row',
+					flexDirection: direction,
 					// justifyContent: 'center',
 					// alignItems: 'center' ,
 						}]}>
 						<TextInput
-    						style={[commonStyles.inputpassword,{height:40}] }
+    						style={[commonStyles.inputpassword,{height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}] }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Address"
+							placeholder={I18n.t('userregister.address', { locale: lang })}
 							maxLength={140}
           					returnKeyType={ "done" }
  					        ref={ input => {
@@ -353,14 +345,14 @@ class Register extends Component {
   				/> */}
 				  <TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
 					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
-							 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
+							 <Text  style = {{color:"#FFFFFF", textAlign:textline}}>{I18n.t('userregister.createbtn', { locale: lang })}</Text>
 					</View>
 				</TouchableOpacity>
 
   				<View style={{flexDirection : 'column', alignItems : 'center', flex: 1}}>
   					<TouchableOpacity style={{padding :20}}
   					onPress={()=> routes.registerVendor()}>
-  					<Text >If you are vendor ? Register Here</Text>
+  					<Text style={{textAlign: textline}} >{I18n.t('userregister.venderregister', { locale: lang })}</Text>
   					</TouchableOpacity>
   					{/* <Text style={{ padding : 20}}>By Signing in You are agreeing to Our </Text>
 
@@ -372,7 +364,6 @@ class Register extends Component {
   					<Text> Terms and
   					Conditions of Use and Privacy Policy</Text>
 					  </TouchableOpacity> */}
-
 					<View style={{
 						flex: 1,
 						flexDirection: 'column',
@@ -380,27 +371,27 @@ class Register extends Component {
 						alignItems: 'center',
 						marginTop:20
 					}}>
-						<Text style={{ fontSize : 12, width : '80%',}}>
-						By Signing in you are agreeing to our
+						<Text style={{ fontSize : 12, width : '80%', textAlign: textline}}>
+						{I18n.t('userregister.privacypolicy1', { locale: lang })}
 						</Text>
-						<View style={{flexDirection:'row'}}>
+						<View style={{flexDirection: direction}}>
 						<TouchableOpacity
 						onPress={()=> routes.terms({
 							title: this.state.termsandcondition_title,
 							description: this.state.termsandcondition_description
 						})}>
-						<Text style={{color :'#a9d5d1', fontSize : 12, }}>
-						terms and conditions
+						<Text style={{color :'#a9d5d1', fontSize : 12, textAlign: textline}}>
+							{I18n.t('userregister.privacypolicy2', { locale: lang })}
 						</Text>
 						</TouchableOpacity>
-						<Text style={{color :'black', fontSize : 12, }}> of use and </Text>
+						<Text style={{color :'black', fontSize : 12, textAlign: textline}}> {I18n.t('userregister.privacypolicy3', { locale: lang })} </Text>
 						<TouchableOpacity
 						onPress={()=> routes.terms({
 							title: this.state.termsandcondition_title,
 							description: this.state.termsandcondition_description
 						})}>
-						<Text style={{color :'#fbcdc5', fontSize : 12, }}>
-						Privacy Policy
+						<Text style={{color :'#fbcdc5', fontSize : 12,textAlign: textline }}>
+							{I18n.t('userregister.privacypolicy4', { locale: lang })}
 						</Text>
 						</TouchableOpacity>
 					</View>
@@ -408,7 +399,6 @@ class Register extends Component {
 			<View style={{height:40,width:'100%'}}></View>
   			</View>
 
-			<KeyboardSpacer/>
 			</ScrollView>
 		);
 	}
@@ -484,10 +474,8 @@ validate(){
 	}
 		return true;
 }
-
 onSubmit() {
 		Keyboard.dismiss();
-
 		const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
 
 			let formData = new FormData();
@@ -506,10 +494,6 @@ onSubmit() {
 			formData.append('twitter_id', String('fsdfsd'));
 			formData.append('instagram_id', String('sdfsdf'));
 			formData.append('snapchat_id', String('dfdsf'));
-			// formData.append('card_number', String('343454645664'));
-			// formData.append('expiry_month', String('3'));
-			// formData.append('expiry_year', String('20'));
-			// formData.append('cvv', String('456'));
 		if(this.validate()) {
 		this.setState({...INITIAL_STATE, loading: true});
 
@@ -541,5 +525,10 @@ onSubmit() {
 		}
 	}
 }
+function mapStateToProps(state) {
+	return {
+		lang: state.auth.lang,
+	};
+}
 
-export default Register;
+export default connect(mapStateToProps)(Register);

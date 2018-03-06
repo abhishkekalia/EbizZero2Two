@@ -10,11 +10,12 @@ import {connect} from 'react-redux';
 
 class CustomGenNavBar extends React.Component {
     _renderLeft() {
+        const { lang } = this.props;
         if (Actions.currentScene === 'homePage') {
             return (
                 <TouchableOpacity
                   onPress={() => console.log('Hamburger button pressed')}
-                  style={[styles.navBarItem, { paddingLeft: 10 }]}>
+                  style={[styles.navBarItem, ]}>
                   <EvilIcons name= "navicon" color="#fff" size={25} />
                 </TouchableOpacity>
             )
@@ -26,10 +27,12 @@ class CustomGenNavBar extends React.Component {
                     [styles.navBarItem,
                 { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 ,
                 width:'15%',
-                height: (Platform.OS === 'ios') ? '80%' : '100%'
+                height: (Platform.OS === 'ios') ? '80%' : '100%',
+                justifyContent: 'center'
+                // transform: lang == 'ar'? [{ rotate: '180deg'}] : null
             }
                 ]}>
-                    <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25}/>
+                    <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25} style={{ alignSelf: 'center'}}/>
                 </TouchableOpacity>
             )
         }
@@ -51,22 +54,17 @@ class CustomGenNavBar extends React.Component {
         )
     }
 
-    _renderRight(name) {
+    _renderRight() {
         return (
             <View style={
-                [styles.navBarItem,
-                {top: (Platform.OS === 'ios') ? 12 : 0,
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                width:'15%',
-                height: (Platform.OS === 'ios') ? '80%' : '100%'
-            }
-            ]}>
-                <TouchableOpacity
-                onPress={() => console.log('Share')}
-                style={{ paddingRight: 10}}>
-                    <Octicons name={name} size={25} color="#fff" />
-                </TouchableOpacity>
+            { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 ,
+            width:'15%',
+            height: (Platform.OS === 'ios') ? '80%' : '100%',
+            justifyContent: 'center'
+
+        }
+            }>
+            {this.props.renderRightButton ? this.props.renderRightButton(): undefined}
             </View>
         )
     }
@@ -79,7 +77,7 @@ class CustomGenNavBar extends React.Component {
             <View style={[styles.container, dinamicStyle, {flexDirection: (lang == 'ar')? "row-reverse" : "row"}]}>
                 { this._renderLeft() }
                 { this._renderMiddle() }
-                {renderRight}
+                {this._renderRight()}
             </View>
         )
     }

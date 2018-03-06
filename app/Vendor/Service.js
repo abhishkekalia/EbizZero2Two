@@ -8,6 +8,8 @@ import {
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import AddService from "./AddService";
 import MyService from "./MyService";
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
 class Service extends Component {
     constructor(props) {
@@ -54,7 +56,7 @@ class Service extends Component {
     render() {
         return (
             <View style={styles.container}>
-          
+
 
                 <SegmentedControlTab
                     values={['My Services', 'Add Service']}
@@ -116,5 +118,9 @@ const styles = StyleSheet.create({
 })
 
 
-
-export default Service
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(Service);

@@ -10,6 +10,7 @@ import {
 	Platform,
 	Dimensions,
 	Keyboard,
+	StyleSheet,
 	Image
 } from "react-native";
 import {Loader} from "app/common/components";
@@ -22,6 +23,8 @@ import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Picker } from 'react-native-picker-dropdown';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
 const { width, height } = Dimensions.get('window')
 
@@ -40,10 +43,10 @@ const INITIAL_STATE = {
 	instagram_id : '',
 	snapchat_id	: '',
 };
-const options = [
-	{ label:'Male', value: 'male' },
-    { label:'Female', value: 'female'},
-    { label:'Other', value: 'other' }];
+// const options = [
+// 	{ label:'Male', value: 'male' },
+//     { label:'Female', value: 'female'},
+//     { label:'Other', value: 'other' }];
 
 class Vendorreg extends Component {
 
@@ -119,9 +122,16 @@ class Vendorreg extends Component {
     }
 
 	render() {
-		        let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked' ;
-		const {errorStatus, loading} = this.props;
-
+		const { lang , errorStatus, loading} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+		textline = lang == 'ar'? 'right': 'left',
+		align = lang == 'ar'? 'flex-end': 'flex-start',
+		options = [
+			{ label:I18n.t('userregister.male', { locale: lang }), value: I18n.t('userregister.male', { locale: lang })},
+			{ label:I18n.t('userregister.female', { locale: lang }), value: I18n.t('userregister.female', { locale: lang })},
+			// { label:I18n.t('userregister.other', { locale: lang }), value: I18n.t('userregister.other', { locale: lang })},
+		];
+		let icon = this.state.hidden ? 'checkbox-blank-outline' : 'checkbox-marked' ;
 		var selCountryObj = null
 		for (let index = 0; index < this.state.userTypes.length; index++) {
 			let element = this.state.userTypes[index];
@@ -136,15 +146,14 @@ class Vendorreg extends Component {
 			testID="Login"
 			keyboardShouldPersistTaps={'handled'}>
 			<View>
-				<View style ={[commonStyles.registerContent]}>
-					<View style ={commonStyles.iconusername}>
-
+				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
+					<View style ={[commonStyles.iconusername, { borderColor : '#fbcdc5'}]}>
 						<TextInput
-							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10, height:40}]}
+							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10, height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
 							value={this.state.company}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Company"
+							placeholder={I18n.t('venderregister.company', { locale: lang })}
 							maxLength={140}
           					onSubmitEditing={() => {
           						this.focusNextField('two');
@@ -156,193 +165,192 @@ class Vendorreg extends Component {
 
 							onChangeText={(company) => this.setState({company})}
 						/>
-					</View>
-
-					<View style ={commonStyles.iconusername}>
-
-						<TextInput
-							style={[commonStyles.inputpassword,{ height:40}]}
-							value={this.state.representative_name}
-							underlineColorAndroid = 'transparent'
-							autoCorrect={false}
-							placeholder="Representative Name"
-							maxLength={140}
-          					onSubmitEditing={() => {
-          						this.focusNextField('three');
-          					}}
-          					returnKeyType={ "next" }
- 					        ref={ input => {
- 					        	this.inputs['two'] = input;
- 					        }}
-							onChangeText={(representative_name) => this.setState({representative_name})}
+				</View>
+				<View style ={commonStyles.iconusername}>
+					<TextInput
+						style={[commonStyles.inputusername, {  height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
+						value={this.state.representative_name}
+						underlineColorAndroid = 'transparent'
+						autoCorrect={false}
+						placeholder={I18n.t('venderregister.representative_name', { locale: lang })}
+						maxLength={140}
+          				onSubmitEditing={() => {
+          					this.focusNextField('three');
+          				}}
+          				returnKeyType={ "next" }
+ 					       ref={ input => {
+ 					       	this.inputs['two'] = input;
+ 					       }}
+						onChangeText={(representative_name) => this.setState({representative_name})}
 						/>
-					</View>
-					<View style ={commonStyles.iconusername}>
-
-							<TextInput
-								style={[commonStyles.inputusername,{ height:40}]}
-								value={this.state.contact}
-								underlineColorAndroid = 'transparent'
-								autoCorrect={false}
-								placeholder="Mobile Number"
-								maxLength={140}
-								keyboardType={'numeric'}
-          						onSubmitEditing={() => {
-          							this.focusNextField('four');
-          						}}
-          						returnKeyType={ "next" }
- 						        ref={ input => {
- 						        	this.inputs['three'] = input;
- 						        }}
- 						        onChangeText={(contact) => this.setState({contact})}
-							/>
-					</View>
-					<View style ={commonStyles.iconusername}>
-
-						<TextInput
-							style={[commonStyles.inputusername,{ height:40}]}
-							value={this.state.email}
-							underlineColorAndroid = 'transparent'
-							autoCorrect={false}
-							placeholder="Email"
-							maxLength={140}
-							keyboardType={'email-address'}
-          					onSubmitEditing={() => {
-          						this.focusNextField('five');
-          					}}
-          					returnKeyType={ "next" }
- 						       ref={ input => {
- 						       	this.inputs['four'] = input;
- 						       }}
- 						       onChangeText={(email) => this.setState({email})}
+				</View>
+				<View style ={commonStyles.iconusername}>
+					<TextInput
+						style={[commonStyles.inputusername, {  height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
+						value={this.state.contact}
+						underlineColorAndroid = 'transparent'
+						autoCorrect={false}
+						placeholder={I18n.t('venderregister.mobilenumber', { locale: lang })}
+						maxLength={140}
+						keyboardType={'numeric'}
+          				onSubmitEditing={() => {
+          					this.focusNextField('four');
+          				}}
+          				returnKeyType={ "next" }
+ 						      ref={ input => {
+ 						      	this.inputs['three'] = input;
+ 						      }}
+ 						onChangeText={(contact) => this.setState({contact})}
 						/>
-					</View>
-					<View style ={commonStyles.iconusername}>
-
-							<TextInput
-								style={[commonStyles.inputusername,{ height:40}]}
-								value={this.state.address}
-								underlineColorAndroid = 'transparent'
-								autoCorrect={false}
-								placeholder="Address"
-								maxLength={140}
-          						onSubmitEditing={() => {
-          							this.focusNextField('Six');
-          						}}
-          						returnKeyType={ "next" }
- 						        ref={ input => {
- 						        	this.inputs['five'] = input;
- 						        }}
- 						        onChangeText={(address) => this.setState({address})}
-							/>
-					</View>
-					<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
-
-						<TextInput
-							style={[commonStyles.inputpassword,{ height:40}]}
-                           	secureTextEntry={this.state.hidden}
-                           	value={this.state.password}
-							underlineColorAndroid = 'transparent'
-							autoCorrect={false}
-							placeholder="Password"
-							maxLength={140}
-          					onSubmitEditing={() => {
-          						this.focusNextField('seven');
-          					}}
-          					returnKeyType={ "next" }
- 					        ref={ input => {
- 						        	this.inputs['Six'] = input;
- 					        }}
- 					        onChangeText={ (password) => this.setState({ password }) }
+				</View>
+				<View style ={commonStyles.iconusername}>
+					<TextInput
+						style={[commonStyles.inputusername, {  height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
+						value={this.state.email}
+						underlineColorAndroid = 'transparent'
+						autoCorrect={false}
+						placeholder={I18n.t('venderregister.email', { locale: lang })}
+						maxLength={140}
+						keyboardType={'email-address'}
+          				onSubmitEditing={() => {
+          					this.focusNextField('five');
+          				}}
+          				returnKeyType={ "next" }
+ 						     	ref={ input => {
+ 						     		this.inputs['four'] = input;
+ 						     	}}
+ 						onChangeText={(email) => this.setState({email})}
 						/>
-
-					</View>
-					<TouchableOpacity style ={[commonStyles.show, { flexDirection: 'row'}]} onPress={()=> this.eye()}>
-							<Icon name= {icon} size={25} style={{ right : 20}}/>
-							<Text>Show Password </Text>
-					</TouchableOpacity>
-
- 					<View style={{borderBottomWidth: 0.5, borderColor: '#ccc'}}>
- 				       	<Text/>
-        				<SegmentedControls
-        				  tint= {'#a9d5d1'}
-        				  selectedTint= {'white'}
-        				  backTint= {'#fff'}
-        				  optionStyle= {{
-        				    fontSize: 12,
-        				    fontWeight: 'bold',
-        				    fontFamily: 'Snell Roundhand'
-        				  }}
-        				  containerStyle= {{
-        				    marginLeft: 10,
-        				    marginRight: 10,
-        				  }}
-        				  options={ options }
-        				  onSelection={ this.setSelectedOption.bind(this) }
-        				  selectedOption={ this.state.gender }
-        				  extractText={ (option) => option.label }
-        				  testOptionEqual={ (a, b) => {
-        				    if (!a || !b) {
-        				      return false;
-        				    }
-        				    return a.label === b.label
-        				  }}
+				</View>
+				<View style ={commonStyles.iconusername}>
+					<TextInput
+						style={[commonStyles.inputusername, {  height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
+						value={this.state.address}
+						underlineColorAndroid = 'transparent'
+						autoCorrect={false}
+						placeholder={I18n.t('venderregister.address', { locale: lang })}
+						maxLength={140}
+          				onSubmitEditing={() => {
+          					this.focusNextField('Six');
+          				}}
+          				returnKeyType={ "next" }
+ 						      ref={ input => {
+ 						      	this.inputs['five'] = input;
+ 						      }}
+ 						onChangeText={(address) => this.setState({address})}
+						/>
+				</View>
+				<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
+					<TextInput
+						style={[commonStyles.inputusername, {  height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
+                        secureTextEntry={this.state.hidden}
+                        value={this.state.password}
+						underlineColorAndroid = 'transparent'
+						autoCorrect={false}
+						placeholder={I18n.t('venderregister.password', { locale: lang })}
+						maxLength={140}
+          				onSubmitEditing={() => {
+          					this.focusNextField('seven');
+          				}}
+          				returnKeyType={ "next" }
+ 					       ref={ input => {
+ 						       	this.inputs['Six'] = input;
+ 					       }}
+ 					    onChangeText={ (password) => this.setState({ password }) }
+						/>
+				</View>
+				<TouchableOpacity style ={{flexDirection: direction, borderBottomColor:'#fbcdc5',
+					// justifyContent: 'center',
+					alignItems: 'center',
+					padding: 10,
+					borderBottomWidth: StyleSheet.hairlineWidth,
+					borderColor: '#ccc',
+				}} onPress={()=> this.eye()}>
+				<Icon name= {icon} size={25} color="#FFCC7D" style={ lang == 'ar' ? { right : 10} :{ right : 10}  }/>
+					<Text style={{textAlign: textline}}>{I18n.t('userregister.showpassword', { locale: lang })}</Text>
+				</TouchableOpacity>
+ 				<View style={{borderBottomWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5'}}>
+					<Text/>
+        			<SegmentedControls
+        				tint= {'#a9d5d1'}
+        				selectedTint= {'white'}
+        				backTint= {'#fff'}
+        				optionStyle= {{
+        			  	fontSize: 12,
+        			  	fontWeight: 'bold',
+        			  	fontFamily: 'Snell Roundhand'
+        				}}
+        				containerStyle= {{
+        			  	marginLeft: 10,
+        			  	marginRight: 10,
+        				}}
+        				options={ options }
+        				onSelection={ this.setSelectedOption.bind(this) }
+        				selectedOption={ this.state.gender }
+        				extractText={ (option) => option.label }
+        				testOptionEqual={ (a, b) => {
+        			  	if (!a || !b) {
+        			    	return false;
+        			  	}
+        			  	return a.label === b.label
+        				}}
         				/>
-        				<Text/>
-        			</View>
-					{/* <View style={{
+        			<Text/>
+        		</View>
+				{/* <View style={{
 					        	flexDirection: 'row',
 					        	justifyContent: 'center',
 					        	alignItems: 'center' ,
 					        	}}>				 */}
-					<View style={{flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center' ,
-		marginLeft: 5
-	}}
-		>
+								<TouchableOpacity style={[commonStyles.iconusername, {
+														flexDirection: direction,
+														justifyContent: 'space-between',
+														alignItems: 'center' ,
+														marginBottom : 5,
+														paddingLeft:5
+															}]}>
+									{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
+									resizeMode = 'center'
+									resizeMethod = 'resize'
+									source={{uri : selCountryObj ? selCountryObj.flag : "" }}
+									onLoadEnd={() => {  }}
+									/>
+									}
 
-						{!this.state.selectCountry? undefined: <Image style={{height:40, width:40}}
-							resizeMode = 'center'
-							resizeMethod = 'resize'
-							source={{uri : selCountryObj ? selCountryObj.flag : "" }}
-							onLoadEnd={() => {  }}
-							/>
-						}
-		
-						<Picker
-							style={{
-								width: !this.state.selectCountry? width-50 : width-100, //width-50, 
-								height: 40
-							}}
-							// style=
-							// {{
-							// 	width: !this.state.selectCountry? width-50 : width-100, // width-50, 
-							// 	height: 40, 
-							// 	position:'relative', 
-							// 	zIndex:999
-							// }}
-                            mode="dropdown"
-                            selectedValue={this.state.selectCountry}
-                            onValueChange={(itemValue, itemIndex) =>
-                            this.setState({selectCountry: itemValue})}>
-                                {this.loadUserTypes()}
+										{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:10, fontSize:12, textAlign: textline}} onPress={()=>console.log("echo")}>{I18n.t('venderregister.selectcountry', { locale: lang })}</Text>: undefined}
+										<Picker
+											style=
+											{{
+												width: !this.state.selectCountry? width-50 : width-100, // width-50,
+												height: 40,
+												position:'relative',
+												zIndex:1
+											}}
+											mode="dropdown"
+											selectedValue={this.state.selectCountry}
+											onValueChange={(itemValue, itemIndex) =>
+												// console.log("(itemValue, itemIndex):=",itemValue,itemIndex)
+												this.setState({
+													selectCountry: itemValue
+												})
+											}
+											>
 
-                            </Picker>
+											{this.loadUserTypes()}
 
-							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
-                    </View>
-				</View>
-				<Text style={{ paddingTop:5,paddingBottom:5}}>Add Social Media Acount</Text>
-				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
-					<View style ={[commonStyles.iconusername, { alignItems : 'center'}]}>
-							<Ionicons name="sc-facebook" size={25} color="#3b5998"  style={commonStyles.social}/>
+										</Picker>
+									</TouchableOpacity>
+								</View>
+			<Text style={{ paddingTop:5,paddingBottom:5, textAlign: textline }}>{I18n.t('venderregister.addsocialmedia', { locale: lang })}</Text>
+				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
+				<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
+					<Ionicons name="sc-facebook" size={25} color="#3b5998"  style={commonStyles.social}/>
 						<TextInput
-							style={[commonStyles.socialInput,{ height:40}]}
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
 							value={this.state.facebook_id}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Add Facebook Business Page"
+							placeholder={I18n.t('venderregister.fb_page', { locale: lang })}
 							maxLength={140}
 							keyboardType={'default'}
           					onSubmitEditing={() => {
@@ -354,15 +362,15 @@ class Vendorreg extends Component {
  						       }}
  						       onChangeText={(facebook_id) => this.setState({facebook_id})}
 						/>
-					</View>
-					<View style ={[commonStyles.iconusername, { alignItems : 'center'}]}>
-							<Icon name="twitter" size={25} color="#0084b4"  style={commonStyles.social}/>
+				</View>
+				<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
+					<Icon name="twitter" size={25} color="#0084b4"  style={commonStyles.social}/>
 						<TextInput
-							style={[commonStyles.socialInput,{ height:40}]}
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
 							value={this.state.twitter_id}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Add Twitter Business Page"
+							placeholder={I18n.t('venderregister.twitter_page', { locale: lang })}
 							maxLength={140}
 							keyboardType={'default'}
           					onSubmitEditing={() => {
@@ -374,15 +382,15 @@ class Vendorreg extends Component {
  						       }}
  						       onChangeText={(twitter_id) => this.setState({twitter_id})}
 						/>
-					</View>
-					<View style ={[commonStyles.iconusername, { alignItems : 'center'}]}>
-							<Icon name="instagram" size={25} color="#a9d5d1"  style={commonStyles.social}/>
+				</View>
+				<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
+					<Icon name="instagram" size={25} color="#a9d5d1"  style={commonStyles.social}/>
 						<TextInput
-							style={[commonStyles.socialInput,{ height:40}]}
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
 							value={this.state.instagram_id}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Add Instagram Business Page"
+							placeholder={I18n.t('venderregister.insta_page', { locale: lang })}
 							maxLength={140}
 							keyboardType={'default'}
           					onSubmitEditing={() => {
@@ -394,17 +402,17 @@ class Vendorreg extends Component {
  						       }}
  						       onChangeText={(instagram_id) => this.setState({instagram_id})}
 						/>
-					</View>
-					<View style ={{ flexDirection: 'row',
+				</View>
+				<View style ={{ flexDirection:direction,
 					backgroundColor : 'transparent',
 					alignItems : 'center'}}>
-							<Icon name="snapchat" size={25} color="orange"  style={commonStyles.social}/>
+					<Icon name="snapchat" size={25} color="#FFCC7D"  style={commonStyles.social}/>
 						<TextInput
-							style={[commonStyles.socialInput,{ height:40}]}
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
 							value={this.state.snapchat_id }
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
-							placeholder="Add Snapchat Business Page"
+							placeholder={I18n.t('venderregister.snap_page', { locale: lang })}
 							maxLength={140}
 							keyboardType={'default'}
           					onSubmitEditing={() => {
@@ -416,21 +424,21 @@ class Vendorreg extends Component {
  						       }}
  						       onChangeText={(snapchat_id) => this.setState({snapchat_id})}
 						/>
-					</View>
 				</View>
-				</View>
-				{/* <Button
-				onPress = {this.onSubmit.bind(this)}
-  				title="Create Acount"
-  				color="orange"
-  				// style={{bottom:50}}
-				  /> */}
-				  <TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
-					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
-							 <Text style = {{color:"#FFFFFF"}}>Create An Acount</Text>
-					</View>
-				</TouchableOpacity>
-			</ScrollView>
+			</View>
+		</View>
+		{/* <Button
+		onPress = {this.onSubmit.bind(this)}
+  		title="Create Acount"
+  		color="orange"
+  		// style={{bottom:50}}
+		 /> */}
+		<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#fbcdc5', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
+		<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+			<Text style = {{color:"#FFFFFF"}}>{I18n.t('venderregister.createbtn', { locale: lang })}</Text>
+		</View>
+		</TouchableOpacity>
+		</ScrollView>
 		);
 	}
 
@@ -599,5 +607,9 @@ onSubmit() {
 		}
 	}
 }
-
-export default Vendorreg;
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(Vendorreg);

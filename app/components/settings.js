@@ -11,6 +11,9 @@ import {
   Image,
 //   Picker
 } from 'react-native';
+import {connect} from "react-redux";
+import I18n from 'react-native-i18n'
+
 import Utils from 'app/common/Utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Actions as routes} from "react-native-router-flux";
@@ -22,7 +25,7 @@ import { Picker } from 'react-native-picker-dropdown';
 
 const is_notification = '0'
 
-export default class Settings extends Component {
+class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -181,11 +184,11 @@ export default class Settings extends Component {
         .done();
     }
 
-    fetchData(){
+    fetchData(itemValue){
         const { u_id,country, is_notification } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
+        formData.append('country', String(itemValue));
         formData.append('is_notification', String(is_notification));
 
 
@@ -276,6 +279,9 @@ export default class Settings extends Component {
     }
 
     render() {
+        const { lang} = this.props ,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
       let notify = (this.state.is_notification === "1") ? true : false
       var selCountryObj = null
       for (let index = 0; index < this.state.countryList.length; index++) {
@@ -286,8 +292,8 @@ export default class Settings extends Component {
       }
         return (
             <View style={styles.container}>
-                <View style={styles.notify}>
-                    <Text>Notification</Text>
+                <View style={[styles.notify, {flexDirection: direction}]}>
+                    <Text style={{ textAlign: textline}}>{I18n.t('settings.notification', { locale: lang })}</Text>
                       <Switch
                       onValueChange={ (value) =>
                         this.setState({ is_notification : notify ? "0" : "1"},()=>this.fetchData())
@@ -309,62 +315,63 @@ export default class Settings extends Component {
                         padding : 10,
                         justifyContent:"space-between",
                         // top : 10,
-                        flexDirection: 'row',
+                        flexDirection: direction,
                         backgroundColor: '#fff',
                         alignItems: 'center'
                     }}>
-                        <Text style={{width:'40%'}}>Country</Text>
+                        <Text style={{width:'40%', textAlign: textline}}>{I18n.t('settings.country', { locale: lang })}</Text>
                         {!this.state.country? undefined: <Image style={{height:30, width:40}}
 							resizeMode = 'center'
 							resizeMethod = 'resize'
-							source={{uri : selCountryObj ? selCountryObj.flag : "" }}
+							source={ selCountryObj ? {uri : selCountryObj.flag }: undefined}
 							onLoadEnd={() => {  }}
 							/>
 						}
                         <Picker
                         mode="dropdown"
-                        style={{width : width/3}}
+                        style={{width : width/3, alignSelf: 'center'}}
                         selectedValue={this.state.country}
-                        onValueChange={(itemValue, itemIndex) => this.setState({country: itemValue})}>
+                        onValueChange={(itemValue, itemIndex) => {
+                            this.setState({country: itemValue},()=>this.fetchData(itemValue))}}>
                             {this.loadCountry()}
                         </Picker>
                     </View>
                     <TouchableOpacity style={styles.locact} onPress={()=>this.clearOrderHistory()}>
-                        <Text>Clear Order Hostory</Text>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.clearorderhistory', { locale: lang })}</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={{flexDirection : 'column', top : 5 }}>
 
-                    <TouchableOpacity style={styles.locact} onPress={()=> this.getprivacypolicy()}>
-                        <Text>Privacy</Text>
-                        <Icon name="keyboard-arrow-right" size={25} color="#ccc"/>
+                    <TouchableOpacity style={[styles.locact, {flexDirection: direction}]} onPress={()=> this.getprivacypolicy()}>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.privacy', { locale: lang })}</Text>
+                            <Icon name="keyboard-arrow-right" size={25} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.locact} onPress={()=> this.getlegalnotice()}>
-                        <Text>Legal Notice</Text>
-                        <Icon name="keyboard-arrow-right" size={25} color="#ccc"/>
+                    <TouchableOpacity style={[styles.locact, {flexDirection: direction}]} onPress={()=> this.getlegalnotice()}>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.legal', { locale: lang })}</Text>
+                            <Icon name="keyboard-arrow-right" size={25} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.locact} onPress={()=> this.gettermandcondition()}>
-                        <Text>Terms and Conditions</Text>
-                        <Icon name="keyboard-arrow-right" size={25} color="#ccc"/>
+                    <TouchableOpacity style={[styles.locact, {flexDirection: direction}]} onPress={()=> this.gettermandcondition()}>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.terms', { locale: lang })}</Text>
+                            <Icon name="keyboard-arrow-right" size={25} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.locact} onPress={()=> this.getreturnpolicy()}>
-                        <Text>Return Policy</Text>
-                        <Icon name="keyboard-arrow-right" size={25} color="#ccc"/>
+                    <TouchableOpacity style={[styles.locact, {flexDirection: direction}]} onPress={()=> this.getreturnpolicy()}>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.returnpolicy', { locale: lang })}</Text>
+                            <Icon name="keyboard-arrow-right" size={25} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.locact} onPress={()=> this.getshipmentpolicy()}>
-                        <Text>Shipment Policy</Text>
-                        <Icon name="keyboard-arrow-right" size={25} color="#ccc"/>
+                    <TouchableOpacity style={[styles.locact, {flexDirection: direction}]} onPress={()=> this.getshipmentpolicy()}>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.shipment', { locale: lang })}</Text>
+                            <Icon name="keyboard-arrow-right" size={25} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.locact} onPress={()=> this.getaboutus()}>
-                        <Text>About Us</Text>
-                        <Icon name="keyboard-arrow-right" size={25} color="#ccc"/>
+                    <TouchableOpacity style={[styles.locact, {flexDirection: direction}]} onPress={()=> this.getaboutus()}>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.about', { locale: lang })}</Text>
+                        <Icon name="keyboard-arrow-right" size={25} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
                     </TouchableOpacity>
-                    <View style={styles.locact}>
-                        <Text>Version</Text>
+                    <View style={[styles.locact, {flexDirection: direction}]}>
+                        <Text style={{ textAlign: textline}}>{I18n.t('settings.version', { locale: lang })}</Text>
                         <Text>1.0.0</Text>
                     </View>
                 </View>
@@ -384,7 +391,6 @@ const styles = StyleSheet.create({
     notify: {
         padding : 10,
         justifyContent:"space-between",
-        flexDirection: 'row',
         backgroundColor: '#fff',
         alignItems: 'center'
     },
@@ -400,3 +406,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 });
+function mapStateToProps(state) {
+	return {
+		lang: state.auth.lang,
+	};
+}
+export default connect(mapStateToProps)(Settings);

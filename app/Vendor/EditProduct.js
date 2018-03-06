@@ -5,6 +5,7 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
+    TouchableNativeFeedback,
     Dimensions,
     Button,
     Keyboard,
@@ -25,12 +26,15 @@ import Modal from 'react-native-modal';
 import commonStyles from "./styles";
 import GetImage from './imageSlider';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-
 import RNFetchBlob from 'react-native-fetch-blob';
 import Editimage from './Editimage';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
+import { SegmentedControls } from 'react-native-radio-buttons';
+
 const { width, height } = Dimensions.get('window');
 
-export default class EditProduct extends Component {
+class EditProduct extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -70,6 +74,11 @@ export default class EditProduct extends Component {
       product_category: i
     })
   }
+  setSelectedOption(option){
+     this.setState({
+         gender: option,
+     });
+ }
 
   componentDidMount(){
     var Items = this.props.productImages,
@@ -322,6 +331,17 @@ export default class EditProduct extends Component {
 
     render() {
         const { imageSelect, quantityRows, sizeRows} = this.state;
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left',
+        options = [
+            { label:I18n.t('userregister.male', { locale: lang }), value: I18n.t('userregister.male', { locale: lang })},
+            { label:I18n.t('userregister.female', { locale: lang }), value: I18n.t('userregister.female', { locale: lang })},
+            // { label:I18n.t('userregister.other', { locale: lang }), value: I18n.t('userregister.other', { locale: lang })},
+        ];
+
+
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
 
         let is_feature;
@@ -336,9 +356,12 @@ export default class EditProduct extends Component {
 
                 <View style={commonStyles.formItems}>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Name *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.productname}
                         // onFocus={()=>this.hidetab()}
                         underlineColorAndroid = 'transparent'
@@ -356,9 +379,12 @@ export default class EditProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Short Description *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.shortdesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.shortdescription}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
@@ -375,9 +401,12 @@ export default class EditProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Detail Description  *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.detaildesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height)}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: textline}]}
                         value={this.state.detaildescription}
                         numberOfLines={3}
                         multiline
@@ -399,9 +428,12 @@ export default class EditProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
                         underlineColorAndroid = 'transparent'
@@ -419,9 +451,12 @@ export default class EditProduct extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Special Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.special}
                         underlineColorAndroid = 'transparent'
                         keyboardType={'numeric'}
@@ -435,8 +470,42 @@ export default class EditProduct extends Component {
                         onChangeText={(special) => this.setState({special})}
                         />
                     </View>
-                    <View style={commonStyles.feature}>
-                        <Text style={commonStyles.label}>Product Is Feature *</Text>
+                    <View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
+                                        <Text/>
+
+                        <SegmentedControls
+                            tint= {'#a9d5d1'}
+                            selectedTint= {'white'}
+                            backTint= {'#fff'}
+                            optionStyle= {{
+                            fontSize: 15,
+                            fontWeight: 'bold',
+                            // fontFamily: 'Snell Roundhand'
+                             alignItems: align
+                          }}
+                          containerStyle= {{
+                            marginLeft: 10,
+                            marginRight: 10,
+                          }}
+                          options={ options }
+                          onSelection={ this.setSelectedOption.bind(this) }
+                          selectedOption={ this.state.gender }
+                          extractText={ (option) => option.label }
+                          testOptionEqual={ (a, b) => {
+                            if (!a || !b) {
+                              return false;
+                            }
+                            return a.label === b.label
+                          }}
+                        />
+                        <Text/>
+                    </View>
+
+                    <View style={[commonStyles.feature, { flexDirection: direction}]}>
+                        <View style={{ width: '80%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.isfeature', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <Switch
                         value={is_feature}
                         onValueChange={(val) =>
@@ -451,20 +520,18 @@ export default class EditProduct extends Component {
                         circleInActiveColor={'#000000'}/>
                     </View>
 
-                    <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
-
-                    {Platform.OS === 'ios' ? 
+                    <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
+                    {Platform.OS === 'ios' ?
                         <TouchableOpacity
                         onPress={this.selectPhotoTapped.bind(this)}>
-    
+
                         <View style={{ }}>
                         <Feather
                             name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                            <Text>Click here</Text>
+                            <Text>{I18n.t('vendoraddproduct.click', { locale: lang })}</Text>
                     </View>
                     </TouchableOpacity>
-                        
-                    : 
+                    :
                     <TouchableNativeFeedback
                     onPress={this.selectPhotoTapped.bind(this)}
                     background={TouchableNativeFeedback.SelectableBackground()}>
@@ -472,10 +539,10 @@ export default class EditProduct extends Component {
                     <View style={{ justifyContent: 'center'}}>
                     <Feather
                             name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                            <Text>Click here</Text>
+                            <Text>{I18n.t('vendoraddproduct.click', { locale: lang })}</Text>
                     </View>
                     </TouchableNativeFeedback>
-                        
+
                     }
                         <Editimage
                             productImages={this.state.rows}
@@ -504,3 +571,9 @@ export default class EditProduct extends Component {
         )
     }
 }
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(EditProduct);

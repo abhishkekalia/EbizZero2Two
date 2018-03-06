@@ -185,7 +185,7 @@ Forgotpassword(){
 				<View style={{ flexDirection: (language === 'ar') ? 'row' : 'row-reverse', zIndex: 1}}>
 					{ Object.keys(I18n.translations).map((item, key)=>(
 						language === item ? undefined: <Text
-						style={{ bottom:  5}}
+						style={{ bottom:  5, color: '#fff'}}
 						key={key}
 						// {I18n.translations[item].id }
 						onPress={ this.SampleFunction.bind(this, item) }>
@@ -422,10 +422,10 @@ Forgotpassword(){
 					<Ionicons name="ios-mail-outline"
 					size={30}
 					color="#fbcdc5"
-					style= {{ padding: 10}}
+					style= {{ padding: 10, width: '20%'}}
 					/>
 					<TextInput
-						style={[commonStyles.inputusername,{left:6.5, textAlign: (this.props.language == 'ar') ? 'right' : 'left'}]}
+						style={[commonStyles.inputusername,{ textAlign: (this.props.language == 'ar') ? 'right' : 'left', width: '80%'}]}
 						onBlur={ () => this.onBlurUser() }
 						value={this.state.email}
 						underlineColorAndroid = 'transparent'
@@ -447,10 +447,10 @@ Forgotpassword(){
 					<Ionicons name="ios-lock-outline"
 					size={30}
 					color="#fbcdc5"
-					style= {{ padding: 10}}
+					style= {{ padding: 10, width: '20%'}}
 					/>
 					<TextInput
-						style={[commonStyles.inputpassword,{textAlign: (this.props.language == 'ar') ? 'right' : 'left'}]}
+						style={[commonStyles.inputpassword,{textAlign: (this.props.language == 'ar') ? 'right' : 'left',  width: '80%'}]}
 						value={this.state.password}
 						underlineColorAndroid = 'transparent'
 						autoCorrect={false}
@@ -535,14 +535,14 @@ Forgotpassword(){
 
 	<Modal isVisible={this.state.isForgotPassword}>
 			<View style={{alignItems : 'center', padding:10, backgroundColor: '#fff'}}>
-			<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5'}]}>
+			<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5', flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row', height :40}]}>
 				<Ionicons name="ios-mail-outline"
 				size={30}
 				color="#fbcdc5"
-				style= {{ padding: 10}}
+				style= {{width: '20%', alignItems: 'center', textAlign: 'center', justifyContent: 'center'}}
 				/>
 				<TextInput
-					style={[commonStyles.inputusername,{left:6.5}]}
+					style={[commonStyles.inputusername,{width: '80%', textAlign: (this.props.language == 'ar') ? 'right' : 'left'}]}
 					onBlur={ () => this.onBlurUser() }
 					value={this.state.forgotemail}
 					underlineColorAndroid = 'transparent'
@@ -560,7 +560,7 @@ Forgotpassword(){
 				onChangeText={(forgotemail) => this.setState({forgotemail})}
 				/>
 			</View>
-			<View style={{flexDirection: 'row', height: 40}}>
+			<View style={{flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row', height: 40}}>
 			<TouchableOpacity
 			onPress={()=> this.setState({ isForgotPassword:  false})}>
 			<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>

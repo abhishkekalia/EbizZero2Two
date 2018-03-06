@@ -15,7 +15,6 @@ export default StyleSheet.create({
 		marginTop: 20
 	},
 	iconusername : {
-    	flexDirection: 'row',
     	borderBottomWidth: StyleSheet.hairlineWidth,
 		borderColor: '#ccc',
 		backgroundColor : 'transparent',
@@ -36,20 +35,20 @@ export default StyleSheet.create({
 		bottom : 10
 	},
 	inputusername: {
-		width : width/1.5,
+		width : width-40,
     	paddingLeft: 0,
     	// backgroundColor: '#fff',
     	color: '#424242',
-		left : 10,
+		// left : 10,
 		// height : 40
     },
 	inputpassword: {
 		// flex: 1,
-		width : width/1.5,
+		width : width-40,
     	paddingLeft: 0,
     	// backgroundColor: '#fff',
     	color: '#424242',
-		left : 10,
+		// left : 10,
 		height : 50
 	},
 	button : {

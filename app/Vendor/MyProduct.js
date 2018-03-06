@@ -15,10 +15,12 @@ import {
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
  const { width, height } = Dimensions.get('window')
 
-export default class MyProduct extends Component {
+class MyProduct extends Component {
    constructor(props) {
         super(props);
         this.state = {
@@ -113,6 +115,10 @@ export default class MyProduct extends Component {
     }
 
     render() {
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
         if (this.state.isLoading) {
             return (
                 <View style={{flex: 1, paddingTop: 20, justifyContent: 'center'}}>
@@ -139,7 +145,9 @@ export default class MyProduct extends Component {
     renderData(data: string, sectionID: number, rowID: number, index) {
                 let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
         return (
             <View style={{
             width : width-30,
@@ -154,9 +162,10 @@ export default class MyProduct extends Component {
                 product_category= {data.product_category}
                 u_id={this.state.u_id}
                 country={this.state.country}
+                lang={lang}
                 />
                 <TouchableOpacity style={{
-                flexDirection: 'row',
+                flexDirection: direction,
                 backgroundColor : "#fff",
                 borderBottomWidth : StyleSheet.hairlineWidth,
                 borderColor : "#ccc",
@@ -184,25 +193,29 @@ export default class MyProduct extends Component {
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <Text style={ { color:'#222',fontWeight :'bold', marginTop: 10}} >  {data.product_name} </Text>
-                        <Text style={{ fontSize : 12, color : '#222'}} > {data.short_description} </Text>
-                        <View style={{ flexDirection : "row"}}>
-                            <Text style={{color:"#a9d5d1", fontSize: 12}}> Quantity Available : {data.quantity} </Text>
+                        <Text style={ { color:'#222',fontWeight :'bold', marginTop: 10, textAlign: textline}} >  {data.product_name} </Text>
+                        <Text style={{ fontSize : 12, color : '#222',  textAlign: textline}} > {data.short_description} </Text>
+                        <View style={{ flexDirection : direction}}>
+                            <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {I18n.t('vendorproducts.quantity', { locale: lang })}</Text>
+                            <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> :</Text>
+                            <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {data.quantity} </Text>
                         </View>
                         <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>
-                            <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#fbcdc5', fontSize:12}} >Price : </Text>
-                            <Text style={{ color: '#222', fontSize:12}}> {data.price} KWD</Text>
+                            <View style={{ flexDirection : direction}}>
+                                <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}} >{I18n.t('vendorproducts.price', { locale: lang })} </Text>
+                                <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}} >: </Text>
+                                <Text style={{ color: '#222', fontSize:12,  textAlign: textline}}> {data.price} KWD</Text>
                             </View>
-
-                            <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#fbcdc5', fontSize:12}} >Special Price : </Text>
-                            <Text style={{ color: '#222', fontSize:12}}> {data.special_price} KWD</Text>
+                            <View style={{ flexDirection : direction}}>
+                                <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>{I18n.t('vendorproducts.special_price', { locale: lang })}</Text>
+                                <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>:</Text>
+                            <Text style={{ color: '#222', fontSize:12, textAlign: textline}}> {data.special_price} KWD</Text>
                             </View>
                         </View>
-                        <View style={{ flexDirection : "row"}}>
-                           <Text style={{color : '#fbcdc5', fontSize:12}}>Status : </Text>
-                           <Text style={{color: '#222',fontSize:12}}>{data.is_approved ? 'Approved' : 'Pending'} </Text>
+                        <View style={{ flexDirection : direction}}>
+                            <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>{I18n.t('vendorproducts.status', { locale: lang })}</Text>
+                            <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>:</Text>
+                           <Text style={{color: '#222',fontSize:12, textAlign: textline}}>{data.is_approved ? I18n.t('vendorproducts.aproved', { locale: lang }) : I18n.t('vendorproducts.pending', { locale: lang })} </Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -212,7 +225,8 @@ export default class MyProduct extends Component {
                     country={this.state.country}
                     is_active = {data.is_active}
                     product_id= {data.product_id}
-                    calldata = {()=>this.fetchData()}/>
+                    calldata = {()=>this.fetchData()}
+                    lang={lang}/>
             </View>
         );
     }
@@ -278,10 +292,14 @@ class Header extends Component{
     let product = this.state.product_category
     let resultObject = this.search(product_id, product);
 
+    const { lang } =this.props,
+    direction = lang == 'ar'? 'row-reverse': 'row',
+    textline = lang == 'ar'? 'right': 'left';
     return (
-      <View style={[styles.row, { borderBottomWidth: StyleSheet.hairlineWidth, borderColor:'#ccc'}]}>
-      <Text style={{ color : '#fbcdc5', padding: 10}}>Categories : </Text>
-        <Text style={{padding: 10, color:"#222"}}>{ this.state.product_category ? resultObject: undefined}
+      <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor:'#ccc', flexDirection: direction}}>
+          <Text style={{ color : '#fbcdc5', padding: 10, textAlign: textline}}>{I18n.t('vendorproducts.categories', { locale: lang })}</Text>
+              <Text style={{ color : '#fbcdc5', alignSelf: 'center'}}>:</Text>
+        <Text style={{padding: 10, color:"#222", textAlign: textline}}>{ this.state.product_category ? resultObject: undefined}
         </Text>
       </View>
     );
@@ -340,22 +358,25 @@ class Footer extends Component{
          let approved
         let approv_code
         if(this.props.is_active === '1'){
-            approved = "Deactivate";
+            approved = I18n.t('vendorproducts.deactivate', { locale: lang });
             approv_code = '0'
         }else {
-            approved = "Activate";
+            approved = I18n.t('vendorproducts.activate', { locale: lang });
             approv_code = '1'
         }
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
         return(
-        <View style={styles.bottom}>
+        <View style={[styles.bottom, { flexDirection: direction}]}>
                     <TouchableOpacity
                     style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
                     onPress={this.props.calllback}>
-                        <Text style={{ color :'#fff', fontSize: 12}}>Preview</Text>
+                        <Text style={{ color :'#fff', fontSize: 12, textAlign: textline}}>{I18n.t('vendorproducts.preview', { locale: lang })}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
                     onPress={()=>this.productActiveDeactive(this.props.product_id, approv_code)}>
-                        <Text style={{ color :'#fff', fontSize : 12}}>{approved}</Text>
+                        <Text style={{ color :'#fff', fontSize : 12, textAlign: textline}}>{approved}</Text>
                     </TouchableOpacity>
                 </View>
         )
@@ -404,7 +425,6 @@ const styles = StyleSheet.create({
         padding: 20
     },
     bottom : {
-        flexDirection : 'row',
         justifyContent : 'space-between',
         backgroundColor : "transparent",
         padding : 5
@@ -425,3 +445,10 @@ const styles = StyleSheet.create({
         fontWeight : 'bold'
     }
 });
+
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(MyProduct);

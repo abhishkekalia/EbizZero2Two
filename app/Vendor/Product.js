@@ -4,10 +4,11 @@ import {
     Text,
     View
 } from 'react-native';
-
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import AddProduct from "./Addproduct";
 import MyProduct from "./MyProduct";
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
 class Product extends Component {
     constructor(props) {
@@ -52,10 +53,11 @@ class Product extends Component {
     }
 
     render() {
+        const {lang} = this.props;
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
-                    values={[ 'My Product','Add Product']}
+                    values={[ I18n.t('vendorproducts.myproduct', { locale: lang }),I18n.t('vendoraddproduct.addproduct', { locale: lang })]}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -113,6 +115,9 @@ const styles = StyleSheet.create({
     }
 })
 
-
-
-export default Product
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(Product);

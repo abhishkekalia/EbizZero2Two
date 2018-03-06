@@ -1,16 +1,18 @@
 import React, {Component, PropTypes} from "react";
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  TouchableOpacity, 
-  UIManager, 
-  findNodeHandle, 
-  Dimensions, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  UIManager,
+  findNodeHandle,
+  Dimensions,
   ListView ,
   AsyncStorage
 } from "react-native";
 import Modal from 'react-native-modal';
+import {connect} from "react-redux";
+import I18n from 'react-native-i18n'
 
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -26,13 +28,13 @@ import EventEmitter from "react-native-eventemitter";
 const { width } = Dimensions.get('window')
 const ICON_SIZE = 24
 
-export default class AddressBook extends Component {
+class AddressBook extends Component {
     constructor(props) {
         super(props);
-        this.getKey = this.getKey.bind(this);      
+        this.getKey = this.getKey.bind(this);
         this.onSelect = this.onSelect.bind(this)
         this.state={
-            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
+            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             u_id: '',
             country : '',
             isSelected : '',
@@ -57,7 +59,7 @@ export default class AddressBook extends Component {
         EventEmitter.removeAllListeners("reloadAddressList");
         EventEmitter.on("reloadAddressList", (value)=>{
             console.log("reloadAddressList", value);
-            this.fetchAddress()    
+            this.fetchAddress()
         });
     }
     getItems (delivery_address_id){
@@ -84,39 +86,39 @@ export default class AddressBook extends Component {
                         "vendor_id":organization.vendor_id,
                         "price":organization.price,
                         "delivery_datetime": currentdate,
-                        "order_date": nextdate 
-                    })                 
+                        "order_date": nextdate
+                    })
         }
         this.addToOrder(Select)
         .done()
     }
-    
+
     removeFromCart(value){
-        try { 
+        try {
             const { u_id, country } = this.state;
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('order_detail', JSON.stringify(value));
             formData.append('amount', String(this.props.totalAmount));
-            const config = { 
-                   method: 'POST', 
-                   headers: { 
-                        'Accept': 'application/json', 
+            const config = {
+                   method: 'POST',
+                   headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data;',
                    },
                    body: formData,
               }
-            fetch(Utils.gurl('addToOrder'), config)  
+            fetch(Utils.gurl('addToOrder'), config)
             .then((response) => response.json())
-            .then((responseData) => { 
+            .then((responseData) => {
             if(responseData.status){
-            // console.warn("calling my Fatureh") 
+            // console.warn("calling my Fatureh")
               routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
               }else{
                 this.removeLoader
             }
-            }) 
+            })
             .catch((error) => {
                 console.log(error);
             })
@@ -129,39 +131,39 @@ export default class AddressBook extends Component {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
     async addToOrder(value){
-        try { 
+        try {
             const { u_id, country } = this.state;
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('order_detail', JSON.stringify(value));
             formData.append('amount', String(this.props.totalAmount));
-            const config = { 
-                   method: 'POST', 
-                   headers: { 
-                        'Accept': 'application/json', 
+            const config = {
+                   method: 'POST',
+                   headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data;',
                    },
                    body: formData,
               }
-            fetch(Utils.gurl('addToOrder'), config)  
+            fetch(Utils.gurl('addToOrder'), config)
             .then((response) => response.json())
-            .then((responseData) => { 
+            .then((responseData) => {
             if(responseData.status){
-            // console.warn("calling my Fatureh") 
+            // console.warn("calling my Fatureh")
               routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
               }else{
                 this.removeLoader
@@ -176,36 +178,36 @@ export default class AddressBook extends Component {
         }
 
     }
-    removeLoader = () => this.setState({ 
+    removeLoader = () => this.setState({
         visibleModal : false
     })
 
     fetchAddress(){
         const { u_id, country } = this.state;
-        
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
+        formData.append('country', String(country));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
         }
-        fetch(Utils.gurl('addressList'), config)  
+        fetch(Utils.gurl('addressList'), config)
         .then((response) => response.json())
-        .then((responseData) => { 
+        .then((responseData) => {
             if(responseData.status){
                 this.setState({
-                status : responseData.status, 
+                status : responseData.status,
                  dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 });
             }else{
                 this.setState({
-                status : responseData.status, 
+                status : responseData.status,
                 });
             }
         })
@@ -218,26 +220,26 @@ export default class AddressBook extends Component {
 
     onRemove (data){
         const { u_id, country } = this.state;
-          
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('address_id', String(data.address_id)); 
+        formData.append('country', String(country));
+        formData.append('address_id', String(data.address_id));
 
-        const config = { 
-             method: 'POST', 
-             headers: { 
-                  'Accept': 'application/json', 
+        const config = {
+             method: 'POST',
+             headers: {
+                  'Accept': 'application/json',
                   'Content-Type': 'multipart/form-data;',
              },
              body: formData,
         }
-        fetch(Utils.gurl('deleteAddress'), config)  
+        fetch(Utils.gurl('deleteAddress'), config)
         .then((response) => response.json())
         .then((responseData) => {
-          MessageBarManager.showAlert({ 
-          message: responseData.data.message, 
-          alertType: 'alert', 
+          MessageBarManager.showAlert({
+          message: responseData.data.message,
+          alertType: 'alert',
           title:''
           })
         })
@@ -250,20 +252,20 @@ export default class AddressBook extends Component {
 
     }
     onEdit (data) {
-        routes.newaddress({ 
-            address_id : data.address_id, 
+        routes.newaddress({
+            address_id : data.address_id,
             full_name : data.full_name,
-            alternate_number : data.alternate_number, 
-            mobile_number : data.mobile_number, 
-            address_line1 : data.address_line1, 
-            address_line2 : data.address_line2, 
-            landmark : data.landmark, 
-            town : data.town, 
-            city : data.city, 
-            state : data.state, 
-            country : data.country, 
-            pincode : data.pincode, 
-            address_type : data.address_type, 
+            alternate_number : data.alternate_number,
+            mobile_number : data.mobile_number,
+            address_line1 : data.address_line1,
+            address_line2 : data.address_line2,
+            landmark : data.landmark,
+            town : data.town,
+            city : data.city,
+            state : data.state,
+            country : data.country,
+            pincode : data.pincode,
+            address_type : data.address_type,
         });
     }
 
@@ -286,7 +288,7 @@ export default class AddressBook extends Component {
 
          if (!this.state.status) {
             return this.noItemFound();
-        } 
+        }
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -300,7 +302,7 @@ export default class AddressBook extends Component {
             );
         return (
         <View style={styles.container}>
-        
+
         {listView}
 
         <Modal isVisible={this.state.visibleModal}>
@@ -314,24 +316,29 @@ export default class AddressBook extends Component {
     }
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
+
         return (
                 <View style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff' }} >
-                    <SelectItem data={data} u_id={this.state.u_id} country={this.state.country} callback={this.fetchAddress.bind(this)}>
+                    <SelectItem data={data} u_id={this.state.u_id} country={this.state.country} callback={this.fetchAddress.bind(this)} lang={lang}>
                         <View style={{ flexDirection: 'column' }}>
-                            <View style={{ width: width-50, flexDirection: 'row' , justifyContent: 'space-between'}}>
-                                <View style={{ flexDirection: 'row'}}>
-                                <Text style={{ fontSize : 15, color : '#a9d5d1'}}>Name: </Text>
-                                <Text style={{ fontSize: 15, color: '#000'}}>{data.full_name}</Text>
+                            <View style={{ flexDirection: direction, }}>
+                                <View style={{ flexDirection: direction}}>
+                                <Text style={{ fontSize : 15, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.name', { locale: lang })}</Text>
+                                <Text style={{ fontSize: 15, color: '#000',  textAlign: textline}}>{data.full_name}</Text>
                                 </View>
                                 {/* <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} /> */}
                             </View>
 
-                            <View style={{ flexDirection: 'row'}}>
-                            <Text style={{ fontSize : 10, color : '#a9d5d1'}}>M: </Text>
-                            <Text style={{ fontSize : 10}}>{data.mobile_number}</Text>
+                            <View style={{ flexDirection: direction}}>
+                            <Text style={{ fontSize : 10, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.mobile', { locale: lang })}</Text>
+                            <Text style={{ fontSize : 10,  textAlign: textline}}>{data.mobile_number}</Text>
                             </View>
-                            <Text style={{fontSize:12}}>
-                            {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ", 
+                            <Text style={{fontSize:12,  textAlign: textline}}>
+                            {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
                         data.jadda,"\n",data.city," ",data.direction]}
                         </Text>
                         </View>
@@ -342,16 +349,16 @@ export default class AddressBook extends Component {
 }
 
 class SelectItem extends Component{
-    constructor(props) { 
-        super(props); 
-        this.state = { 
+    constructor(props) {
+        super(props);
+        this.state = {
             size : '',
             color : 'blue',
             selectSize : false
-        }; 
+        };
     }
         validate(){
-        const { color} = this.state; 
+        const { color} = this.state;
 
         if (!color.length)
         {
@@ -363,10 +370,10 @@ class SelectItem extends Component{
             return false
         }
             return true;
-    } 
-    
+    }
+
     changeSize(result){
-        this.setState({ 
+        this.setState({
             selectSize: false,
             size: result.selectedItem.label
         });
@@ -375,26 +382,26 @@ class SelectItem extends Component{
 
     onRemove (data){
         const { u_id, country } = this.state;
-          
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('address_id', String(data.address_id)); 
+        formData.append('country', String(country));
+        formData.append('address_id', String(data.address_id));
 
-        const config = { 
-             method: 'POST', 
-             headers: { 
-                  'Accept': 'application/json', 
+        const config = {
+             method: 'POST',
+             headers: {
+                  'Accept': 'application/json',
                   'Content-Type': 'multipart/form-data;',
              },
              body: formData,
         }
-        fetch(Utils.gurl('deleteAddress'), config)  
+        fetch(Utils.gurl('deleteAddress'), config)
         .then((response) => response.json())
         .then((responseData) => {
-          MessageBarManager.showAlert({ 
-          message: responseData.data.message, 
-          alertType: 'alert', 
+          MessageBarManager.showAlert({
+          message: responseData.data.message,
+          alertType: 'alert',
           title:''
           })
         })
@@ -407,21 +414,21 @@ class SelectItem extends Component{
 
     onEdit (data) {
         console.log("edit Data:=",data)
-        routes.newaddress({ 
+        routes.newaddress({
             isFromEdit:true,
-            address_id : data.address_id, 
+            address_id : data.address_id,
             full_name : data.full_name,
-            alternate_number : data.alternate_number, 
-            mobile_number : data.mobile_number, 
-            address_line1 : data.address_line1, 
-            address_line2 : data.address_line2, 
-            landmark : data.landmark, 
-            town : data.town, 
-            city : data.city, 
-            state : data.state, 
-            country : data.country, 
-            pincode : data.pincode, 
-            address_type : data.address_type, 
+            alternate_number : data.alternate_number,
+            mobile_number : data.mobile_number,
+            address_line1 : data.address_line1,
+            address_line2 : data.address_line2,
+            landmark : data.landmark,
+            town : data.town,
+            city : data.city,
+            state : data.state,
+            country : data.country,
+            pincode : data.pincode,
+            address_type : data.address_type,
             block_no: data.block_no,
             houseno: data.houseno,
             street: data.street,
@@ -433,25 +440,27 @@ class SelectItem extends Component{
     }
 
     render() {
+        const { lang } = this.props;
             let swipeBtns = [{
-            text: 'Edit',
+            text: I18n.t('addressbook.edit', { locale: lang }),
             backgroundColor: '#a9d5d1',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => {
                 this.onEdit(this.props.data)}
            // onPress: () => {this.editWishlist(data.product_id)}
          },{
-            text: 'Delete',
+            text: I18n.t('addressbook.delete', { locale: lang }),
             backgroundColor: '#f53d3d',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => {this.onRemove(this.props.data)}
          }];
 
         return(
-            <Swipeout 
+            <Swipeout
+                left={swipeBtns}
                 right={swipeBtns}
                 autoClose={true}
-                backgroundColor= 'transparent'> 
+                backgroundColor= 'transparent'>
                 {this.props.children}
             </Swipeout>
         )
@@ -523,3 +532,9 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     }
 });
+function mapStateToProps(state) {
+	return {
+		lang: state.auth.lang,
+	};
+}
+export default connect(mapStateToProps)(AddressBook);
