@@ -12,23 +12,24 @@ import {
 import Utils from 'app/common/Utils';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import I18n from 'react-native-i18n';
 
-export default class ProductOrder extends Component<{}> {
+class ProductOrder extends Component{
      constructor(props) {
         super(props);
         this.state = this.getInitialState();
-        this.bindMethods();
+        // this.bindMethods();
     }
 
-    bindMethods() {
-        if (!this.bindableMethods) {
-            return;
-        }
-
-        for (var methodName in this.bindableMethods) {
-            this[methodName] = this.bindableMethods[methodName].bind(this);
-        }
-    }
+    // bindMethods() {
+    //     if (!this.bindableMethods) {
+    //         return;
+    //     }
+    //
+    //     for (var methodName in this.bindableMethods) {
+    //         this[methodName] = this.bindableMethods[methodName].bind(this);
+    //     }
+    // }
 
     getInitialState() {
         var getSectionData = (dataBlob, sectionID) => {
@@ -51,7 +52,7 @@ export default class ProductOrder extends Component<{}> {
             })
         }
     }
-        componentWillMount() {
+    componentWillMount() {
         routes.refresh({ right: undefined , left : undefined});
     }
 
@@ -101,7 +102,6 @@ export default class ProductOrder extends Component<{}> {
             });
         })
         .done();
-
     }
     fetchData () {
         const { u_id,country, } = this.state;
@@ -165,6 +165,7 @@ export default class ProductOrder extends Component<{}> {
         .done();
     }
     noItemFound(){
+        const { lang} = this.props;
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
                 <Text>You Have No Itmes In Ordered</Text>
@@ -211,8 +212,8 @@ export default class ProductOrder extends Component<{}> {
                 <ListView
                     dataSource = {this.state.dataSource}
                     style      = {styles.listview}
-                    renderRow  = {this.renderRow}
-                    renderSectionHeader = {this.renderSectionHeader}
+                    renderRow  = {this.renderRow.bind(this)}
+                    renderSectionHeader = {this.renderSectionHeader.bind(this)}
                     enableEmptySections = {true}
                     automaticallyAdjustContentInsets={false}
                     renderSeparator={this._renderSeparator}
@@ -223,77 +224,81 @@ export default class ProductOrder extends Component<{}> {
     }
 
     renderSectionHeader(sectionData, sectionID) {
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
         return (
-            <View style={styles.section}>
-                <View style={{flexDirection :'row'}}>
-                <Text style={styles.label}>Vendor Id :</Text>
-                <Text style={styles.text}>{sectionData}</Text>
+            <View style={[styles.section, { flexDirection: direction}]}>
+                <View style={{flexDirection :direction}}>
+                    <Text style={styles.label}>{I18n.t('productorder.vendorid', { locale: lang })}</Text>
+                    <Text style={styles.label}>:</Text>
+                    <Text style={styles.text}>{sectionData}</Text>
                 </View>
-                <View style={{flexDirection :'row'}}>
-                <Text style={styles.label}>Order Id :</Text>
-
-                <Text style={styles.text}>{sectionID}</Text>
+                <View style={{flexDirection :direction}}>
+                    <Text style={styles.label}>{I18n.t('productorder.orderid', { locale: lang })}</Text>
+                    <Text style={styles.label}>:</Text>
+                    <Text style={styles.text}>{sectionID}</Text>
+                </View>
+            </View>
+        );
+    }
+    renderRow (rowData, sectionID, rowID) {
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
+        let label,
+        ord_status;
+        if(rowID.order_status === '1'){
+            label = 'Pending';
+            ord_status = 0;
+        }
+        else if(rowID.order_status === '0'){
+        label = 'Complete';
+        ord_status = 1;
+    }
+        return (
+            <View style={styles.row}>
+                <View style={{ flexDirection : direction, backgroundColor:'#fff'}}>
+                    <Text style={styles.label}>{I18n.t('productorder.productid', { locale: lang })} </Text>
+                        <Text style={styles.label}>:</Text>
+                    <Text style={[styles.rowText, { alignSelf: 'center'}]}>{rowID.product_id} </Text>
+                </View>
+                <View style={{ flexDirection : direction}}>
+                <Text style={[styles.rowText, {color : '#222', textAlign: textline, alignSelf: 'center'}]}>{rowID.product_name} </Text>
+                </View>
+                <View style={{ flexDirection : direction}}>
+                    <Text style={[styles.rowText, { color : '#a9d5d1',  textAlign: textline, alignSelf: 'center'}]}>{I18n.t('productorder.qty', { locale: lang })}</Text>
+                    <Text style={[styles.rowText, { color : '#a9d5d1', textAlign: textline, alignSelf: 'center'}]}>:</Text>
+                    <Text style={[styles.rowText, { color : '#ccc',  textAlign: textline, alignSelf: 'center'}]}>{rowID.quantity} </Text>
+                </View>
+                <View style={{ flexDirection : direction}}>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>{I18n.t('productorder.price', { locale: lang })}</Text>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>:</Text>
+                    <Text style={styles.rowText}>{rowID.price} </Text>
+                </View>
+                <View style={{ flexDirection : direction}}>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>{I18n.t('productorder.specialprice', { locale: lang })}</Text>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>:</Text>
+                    <Text style={styles.rowText}>{rowID.special_price} </Text>
+                </View>
+                <View style={[styles.footer, { flexDirection: direction}]}>
+                    <View style={{ flexDirection : direction}}>
+                        <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'} ]}>{I18n.t('productorder.orderstatus', { locale: lang })} </Text>
+                        <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status)}>
+                        <Text style={[styles.rowText, { color : '#a9d5d1', textAlign: textline, alignSelf: 'center'}]}>{label} </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ flexDirection : direction}}>
+                        <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>{I18n.t('productorder.orderstatus', { locale: lang })}</Text>
+                        <Text style={styles.rowText}>{ rowID.order_date} </Text>
+                    </View>
                 </View>
             </View>
         );
     }
 };
-
-Object.assign(ProductOrder.prototype, {
-    bindableMethods : {
-        renderRow : function (rowData, sectionID, rowID) {
-            let label,
-            ord_status;
-            if(rowID.order_status === '1'){
-                label = 'Pending';
-                ord_status = 0;
-            }
-            else if(rowID.order_status === '0'){
-            label = 'Complete';
-            ord_status = 1;
-        }
-            return (
-                <View style={styles.row}>
-                    <View style={{ flexDirection : 'row', backgroundColor:'#fff'}}>
-                        <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Product ID : </Text>
-                        <Text style={styles.rowText}>{rowID.product_id} </Text>
-                    </View>
-                    <View style={{ flexDirection : 'row'}}>
-                        <Text style={[styles.rowText, {color : '#222'} ]}>{rowID.product_name} </Text>
-                    </View>
-                    <View style={{ flexDirection : 'row'}}>
-                        <Text style={[styles.rowText, { color : '#a9d5d1'}]}>Qty :</Text>
-                        <Text style={[styles.rowText, { color : '#ccc'}]}>{rowID.quantity} </Text>
-                    </View>
-                    <View style={{ flexDirection : 'row'}}>
-
-                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Price: </Text>
-                        <Text style={styles.rowText}>{rowID.price} </Text>
-                    </View>
-                    <View style={{ flexDirection : 'row'}}>
-                        <Text style={[styles.rowText, {color : '#fbcdc5'}]}>Special Price: </Text>
-                        <Text style={styles.rowText}>{rowID.special_price} </Text>
-                    </View>
-                    <View style={styles.footer}>
-                        <View style={{ flexDirection : 'row'}}>
-
-                            <Text style={[styles.rowText, {color : '#fbcdc5'} ]}>Order Status : </Text>
-                            <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status )}>
-                            <Text style={[styles.rowText, { color : '#a9d5d1'}]}>{label} </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ flexDirection : 'row'}}>
-
-                            <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>Order Date : </Text>
-                            <Text style={styles.rowText}>{ rowID.order_date} </Text>
-                        </View>
-                    </View>
-                </View>
-            );
-        }
-    }
-});
-
 var styles = StyleSheet.create({
     activityIndicator: {
         alignItems: 'center',
@@ -331,7 +336,6 @@ var styles = StyleSheet.create({
             borderRadius : 2
     },
     footer : {
-        flexDirection : 'row',
         justifyContent : 'space-between',
         borderWidth : StyleSheet.hairlineWidth,
         borderColor : '#ccc',
@@ -410,3 +414,4 @@ var styles = StyleSheet.create({
         fontWeight : 'bold'
 }
 });
+export default ProductOrder

@@ -13,7 +13,7 @@ import {
       RefreshControl
   } from 'react-native';
 import { Actions} from "react-native-router-flux";
-
+import I18n from 'react-native-i18n';
 import Utils from 'app/common/Utils';
 
 export default class ServiceOrder extends Component {
@@ -36,13 +36,13 @@ export default class ServiceOrder extends Component {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-            }); 
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -50,19 +50,19 @@ export default class ServiceOrder extends Component {
 
      _onRefresh () {
     this.setState({refreshing: true}, ()=> {this.fetchData()});
-            
+
   }
 
     fetchData (){
-        const { u_id,country, } = this.state; 
+        const { u_id,country, } = this.state;
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('country', String(country));
+        const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
@@ -91,14 +91,14 @@ export default class ServiceOrder extends Component {
                 status     : false
             });
         })
-        .done();        
+        .done();
 
     }
     noItemFound(){
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
                 <Text>You Have No Itmes In Service</Text>
-            </View> 
+            </View>
         );
     }
 
@@ -118,22 +118,22 @@ export default class ServiceOrder extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
-                renderSeparator= {this.ListViewItemSeparator} 
+                renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
         return (
         <View style={{marginBottom : 60}}>
             {listView}
         </View>
- 
+
         );
     }
 
     renderLoadingView() {
         return (
-            <ActivityIndicator  
+            <ActivityIndicator
             style={[styles.centering]}
-            color="#1e90ff" 
+            color="#1e90ff"
             size="large"/>
             );
     }
@@ -141,37 +141,54 @@ export default class ServiceOrder extends Component {
         let color = data.serviceDetail.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.serviceDetail.special_price ? 'line-through' : 'none';
 
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
+
+
         return (
-            <TouchableOpacity  
-            style={{ flexDirection : 'column'}} 
-            key={rowID} 
-            data={rowData} 
+            <TouchableOpacity
+            style={{ flexDirection : 'column'}}
+            key={rowID}
+            data={rowData}
             onPress={()=>Actions.servicecustomer({
                 title :data.userDetail.fullname,
                 addressDetail : data.addressDetail,
             })}>
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>Booking Date: {data.service_datetime}</Text>
-                    <Text style={styles.headerText}>Amount : {data.amount}</Text>
+                <View style={[styles.header, { flexDirection: direction}]}>
+                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                        <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.bookingdt', { locale: lang })}</Text>
+                            <Text style={styles.label}>:</Text>
+                        <Text style={styles.bodyText}>{data.service_datetime}</Text>
+                    </View>
+                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                        <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.amount', { locale: lang })}</Text>
+                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.bodyText}>{data.amount}</Text>
+                    </View>
                 </View>
-                <View style={{ flexDirection : 'column', left : 10}} >
-                    <View style={styles.row}>
-                    <Text style={styles.label}>Service Name : </Text>
-                    <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
-
+                <View style={lang == 'ar'? { right : 10}: { left : 10}} >
+                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                        <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.servicenm', { locale: lang })}</Text>
+                            <Text style={styles.label}>:</Text>
+                        <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
                     </View>
-                    <View style={styles.row}>
-                    <Text style={styles.label}>Customer Name : </Text>
-                    <Text style={styles.bodyText}>{data.userDetail.fullname}</Text>
+                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                        <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.customername', { locale: lang })}</Text>
+                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.bodyText}>{data.userDetail.fullname}</Text>
                     </View>
-                    <View style={styles.row}>
-                    <Text style={[styles.label]}>Customer Email : </Text>
-                    <Text style={styles.bodyText}>{data.userDetail.email}</Text>
+                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                        <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.customeremail', { locale: lang })}</Text>
+                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.bodyText}>{data.userDetail.email}</Text>
                     </View>
-                    <View style={styles.row}>
-                    <Text style={styles.label}>Price : </Text>
-                    <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
-                    <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
+                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                        <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.price', { locale: lang })}</Text>
+                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
+                        <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
                     </View>
                 </View>
 
@@ -207,7 +224,6 @@ var styles = StyleSheet.create({
     },
     header: {
         height : 40,
-        flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems : 'center',
         backgroundColor: '#fff',

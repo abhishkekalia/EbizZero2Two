@@ -48,7 +48,6 @@ class MainView extends Component {
     constructor(props) {
         super(props);
         this.fetchData = this.fetchData.bind(this);
-        this.getKey= this.getKey.bind(this);
         this.state={
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
@@ -82,18 +81,14 @@ class MainView extends Component {
     }
 
     componentDidMount(){
-        this.getKey()
+        this.loadData()
         .then( ()=>this.fetchData())
         .then( ()=> this.fetchService())
-        // .then( ()=>this.fetchAllShop())
-        .then( ()=>this.loadData())
         .then( ()=>this.loadServiceData())
         .done();
-
         EventEmitter.removeAllListeners("applyCategoryFilter");
         EventEmitter.on("applyCategoryFilter", (value)=>{
             console.log("applyCategoryFilter", value);
-
             if (value.selCategory.length > 0) {
                 this.setState({
                     loaded:false,
@@ -103,8 +98,7 @@ class MainView extends Component {
                     isFilterProduct : true
                 })
                 this.filterByCategory(value.selCategory,value.selGender)
-            }
-            else {
+            }else {
                 this.setState({
                     arrSelectedCategory:value.selCategory,
                     arrSelectedGender:value.selGender,
@@ -112,192 +106,168 @@ class MainView extends Component {
                 })
             }
         });
-
         EventEmitter.removeAllListeners("reloadProducts");
         EventEmitter.on("reloadProducts", (value)=>{
-            // console.log("reloadProducts", value);
             this.fetchData()
         });
-
     }
     componentWillMount() {
         Actions.refresh({ right: this._renderRightButton, left: this._renderLeftButton,});
     }
     _renderLeftButton = () => {
-         return(
-             <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
-         );
-     };
-
-   _renderRightButton = () => {
         return(
-            <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10}}/>
+            <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
         );
     };
-
-  onCancel() {
-    console.log("CANCEL")
-    this.setState({visible:false});
-  }
-  onOpen(product_name, product_id, url) {
-    console.log("OPEN")
-    this.setState({
-        visible:true,
-        product_name : product_name,
-        product_id : product_id,
-        url : url
-    });
-  }
-
-    _onRefresh() {
-    this.setState({
-        refreshing: true,
-        dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
-    });
-            this.fetchData();
-    }
-
-
-    async getKey() {
-        try {
-            const value = await AsyncStorage.getItem('data');
-            var response = JSON.parse(value);
-            this.setState({
-                u_id: response.userdetail.u_id ,
-                country: response.userdetail.country ,
-                user_type: response.userdetail.user_type
-            });
+   _renderRightButton = () => {
+       return(
+           <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10}}/>
+       );
+   };
+   onCancel() {
+       console.log("CANCEL")
+       this.setState({visible:false});
+   }
+   onOpen(product_name, product_id, url) {
+       console.log("OPEN")
+       this.setState({
+           visible:true,
+           product_name : product_name,
+           product_id : product_id,
+           url : url
+       });
+   }
+   _onRefresh() {
+       this.setState({
+           refreshing: true,
+           dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+       });
+       this.fetchData();
+   }
+   modal = () => this.setState({
+       isModalVisible: !this.state.isModalVisible
+   })
+   filterbyShop = () => {
+       if (this.state.rows.length == 0) {
+           this.state.isModalVisible = !this.state.isModalVisible
+           this.state.isFilterProduct = true
+           this.fetchData()
+           return
+       }
+       this.setState({
+           isModalVisible: !this.state.isModalVisible,
+           loaded : false,
+           isFilterProduct : true
+       },this.fetchDataByShop())
+   }
+   fetchDataByShop(){
+       const { rows } = this.state;
+       const {u_id, country, deviceId } = this.props;
+       let un_id= (u_id === undefined) ? '' : u_id;
+       let formData = new FormData();
+       formData.append('u_id', String(un_id));
+       formData.append('country', String(country));
+       formData.append('vendor_id', String(rows));
+       formData.append('device_uid', String(deviceId));
+       const config = {
+           method: 'POST',
+           headers: {
+               'Accept': 'application/json',
+               'Content-Type': 'multipart/form-data;',
+           },
+           body: formData,
+       }
+       fetch(Utils.gurl('filterByShop'), config)
+       .then((response) => response.json())
+       .then((responseData) => {
+           this.setState({
+               dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+               status : responseData.status,
+               loaded: true,
+               refreshing: false
+           });
+       })
+       .catch((error) => {
+           console.log(error);
+       })
+       .done();
+   }
+   renderLoadingView() {
+       return (
+           <ActivityIndicator
+               style={[styles.centering]}
+               color="#a9d5d1"
+               size="large"/>
+       );
+   }
+   renderLoadingView() {
+       return (
+           <ActivityIndicator
+               style={[styles.centering]}
+               color="#a9d5d1"
+               size="large"/>
+       );
+   }
+   blur() {
+       const {dataSource } = this.state;
+       dataSource && dataSource.blur();
+   }
+   focus() {
+       const {dataSource } = this.state;
+       dataSource && dataSource.focus();
+   }
+   async loadData (){
+       try {
+           const {u_id, country, deviceId } = this.props;
+           let formData = new FormData();
+            // formData.append('u_id', String(user_type));
+            formData.append('country', String(country));
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+            fetch(Utils.gurl('listOfAllShop'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.setState({
+                    dataArray: responseData.data,
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
-
-    modal = () => this.setState({
-        isModalVisible: !this.state.isModalVisible
-    })
-
-    filterbyShop = () => {
-        if (this.state.rows.length == 0) {
-            this.state.isModalVisible = !this.state.isModalVisible
-            this.state.isFilterProduct = true
-            this.fetchData()
-            return
-        }
-        this.setState({
-            isModalVisible: !this.state.isModalVisible,
-            loaded : false,
-            isFilterProduct : true
-        },this.fetchDataByShop() )
-    }
-
-    fetchDataByShop(){
-        const {u_id, country, rows } = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        formData.append('vendor_id', String(rows));
-        console.log("request:=",formData)
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-
-        fetch(Utils.gurl('filterByShop'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                status : responseData.status,
-                loaded: true,
-                refreshing: false
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
-    renderLoadingView() {
-        return (
-            <ActivityIndicator
-            style={[styles.centering]}
-            color="#a9d5d1"
-            size="large"/>
-        );
-    }
-    renderLoadingView() {
-        return (
-            <ActivityIndicator
-            style={[styles.centering]}
-            color="#a9d5d1"
-            size="large"/>
-        );
-    }
-
-
-    blur() {
-        const {dataSource } = this.state;
-        dataSource && dataSource.blur();
-    }
-
-    focus() {
-        const {dataSource } = this.state;
-        dataSource && dataSource.focus();
-    }
-
-    loadData (){
-        const {u_id, country, user_type } = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(user_type));
-        formData.append('country', String(country));
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        fetch(Utils.gurl('listOfAllShop'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            this.setState({
-                dataArray: responseData.data,
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
     onClick(data) {
-        // console.log("before onClick:=",this.state.rows)
         data.checked = !data.checked;
         data.checked ? this.check(data) : this.unCheck(data)
-        // console.log("after onClick:=",this.state.rows)
     }
-
     check (data){
         console.log("this.state.rows:=",this.state.rows)
         var newStateArray = this.state.rows.slice();
         console.log("newStateArray:=",newStateArray)
-
+        newStateArray.push(data.u_id);
+        this.setState({
+            rows: newStateArray,
+        });
         // var indexOfObj = -1
         // for (var i = 0; i < newStateArray.length; i++) {
-        //     if (newStateArray[i] == data.u_id) {
-        //         indexOfObj = i
-        //     }
+            // if (newStateArray[i] == data.u_id) {
+                // indexOfObj = i
+            // }
         // }
         // console.log("indexOfObj:=",indexOfObj)
         // if (indexOfObj == -1) {
-        //     newStateArray.push(data.u_id);
+            // newStateArray.push(data.u_id);
         // }
 
-        newStateArray.push(data.u_id);
 
         // data.checked = !data.checked;
         // console.log("data.checked:=",data.checked)
@@ -310,36 +280,19 @@ class MainView extends Component {
         //         arrData[i] = data
         //     }
         // }
-
-        this.setState({
-            rows: newStateArray,
-            // dataArray: arrData
-        });
     }
-
     unCheck(data){
-            // var index = this.state.rows.indexOf(data.u_id);
-            // if (index > -1) {
-            //     var newArray =  this.state.rows.splice(index, 1);
-            //     this.setState({
-            //         rows: newArray
-            //     });
-
-            // }
-
-            var newStateArray = this.state.rows.slice();
-            var index = newStateArray.indexOf(data.u_id);
-            console.log("index:=",index)
-            if (index > -1) {
-                newStateArray.splice(index, 1);
-                // this.setState({
-                //     rows: newStateArray
-                // });
-            }
-
+        var newStateArray = this.state.rows.slice();
+        var index = newStateArray.indexOf(data.u_id);
+        if (index > -1) {
+            newStateArray.splice(index, 1);
+        }
+        this.setState({
+            // dataArray: arrData,
+            rows: newStateArray
+        });
             // data.checked = !data.checked;
             // console.log("unCheck rows:=",this.state.rows)
-
         // var arrData = this.state.dataArray
         // for (var i = 0; i < arrData.length; i++) {
         //     if (arrData[i].u_id == data.u_id) {
@@ -347,12 +300,7 @@ class MainView extends Component {
         //         arrData[i] = data
         //     }
         // }
-        this.setState({
-            // dataArray: arrData,
-            rows: newStateArray
-        });
     }
-
     renderView() {
         if (!this.state.dataArray || this.state.dataArray.length === 0)return;
         var len = this.state.dataArray.length;
@@ -377,7 +325,6 @@ class MainView extends Component {
         )
         return views;
     }
-
     renderCheckBox(data) {
         const { lang } = this.props;
         var leftText = data.ShopName;
@@ -393,45 +340,15 @@ class MainView extends Component {
             />
         );
     }
-
     sharing(product_id){
         console.warn(product_id);
     }
-
-    // fetchAllShop(){
-    //     const {u_id, country, user_type } = this.state;
-
-    //     let formData = new FormData();
-    //     formData.append('u_id', String(user_type));
-    //     formData.append('country', String(country));
-
-    //     const config = {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Accept': 'application/json',
-    //                 'Content-Type': 'multipart/form-data;',
-    //             },
-    //             body: formData,
-    //         }
-    //     fetch(Utils.gurl('listOfAllShop'), config)
-    //     .then((response) => response.json())
-    //     .then((responseData) => {
-    //         this.setState({
-    //         data: responseData.data
-    //     });
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //     })
-    //     .done();
-    // }
-
     fetchData(){
-        const {u_id, country, user_type } = this.state;
+        const {u_id, country, deviceId } = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
-
+        formData.append('device_uid', String(deviceId));
         const config = {
             method: 'POST',
             headers: {
@@ -440,7 +357,6 @@ class MainView extends Component {
             },
             body: formData,
         }
-
         fetch(Utils.gurl('allProductItemList'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -463,14 +379,12 @@ class MainView extends Component {
             console.log(error);
         })
         .done();
-
     }
     fetchService(){
-        const {u_id, country } = this.state;
+        const {country} = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
-
         const config = {
             method: 'POST',
             headers: {
@@ -478,50 +392,44 @@ class MainView extends Component {
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-            }
+        }
         fetch(Utils.gurl('serviceList'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
                 this.setState({
-                dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
-                isLoading : false
+                    dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
+                    isLoading : false
                 });
             }
             else{
                 this.setState({
-                isLoading : false
+                    isLoading : false
                 })
             }
         })
         .catch((error) => {
-          console.log(error);
+            console.log(error);
         })
         .done();
-
     }
-
     filterByCategory(selectedCategory,selectedGender){
         const {u_id, country, user_type,rows } = this.state;
         var venderIds = this.state.rows.slice();
-
         if(venderIds.length == 0) {
             for (var i = 0; i < this.state.dataArray.length; i++) {
                 venderIds.push(parseInt(this.state.dataArray[i].u_id,10))
             }
         }
-
         console.log("venderIds:=",venderIds)
         var selCat = [];
         for (var i = 0; i < selectedCategory.length; i++) {
             selCat.push(parseInt(selectedCategory[i],10))
         }
-
         var selGen = [];
         for (var i = 0; i < selectedGender.length; i++) {
             selGen.push(parseInt(selectedGender[i],10))
         }
-
         let type_ids = 1;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -531,7 +439,6 @@ class MainView extends Component {
         formData.append('vendor_id', String(venderIds));
         formData.append('type_id', 1);
         formData.append('gender',String(selGen));
-
         console.log("request:=",formData);
         const config = {
             method: 'POST',
@@ -567,8 +474,7 @@ class MainView extends Component {
         .done();
 
     }
-        Description (service_id, product_name, productImages ,
-            short_description, detail_description, price ,special_price){
+    Description( service_id, product_name, productImages , short_description, detail_description, price ,special_price){
         Actions.vendordesc({
             is_user : true,
             service_id : service_id,
@@ -581,7 +487,6 @@ class MainView extends Component {
             special_price : special_price,
         })
     }
-
     renderLoadingView() {
         return (
             <ActivityIndicator
@@ -590,9 +495,10 @@ class MainView extends Component {
             size="large"/>
             );
     }
-
     render() {
-
+        const {u_id, country, deviceId ,lang} = this.props;
+        // console.warn(this.props.deviceId);
+        // console.warn(this.props.country);
         this.fetchData = this.fetchData.bind(this);
         if (!this.state.loaded) {
             return this.renderLoadingView();
@@ -600,122 +506,87 @@ class MainView extends Component {
         if (!this.state.status) {
             return this.noItemFound();
         }
-
-
         return (
-        <View style={{backgroundColor: '#f9f9f9'}}>
-            {this.renderFilterOptions()}
-            <ScrollView
-            contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 50}}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="always">
-                <StatusBar
-                hidden={false}
-                backgroundColor="#a9d5d1"
-                barStyle="light-content"/>
-                <GetMarketing/>
+            <View style={{backgroundColor: '#f9f9f9'}}>
+                {this.renderFilterOptions()}
+                <ScrollView
+                    contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 50}}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="always">
+                    <StatusBar
+                        hidden={false}
+                        backgroundColor="#a9d5d1"
+                        barStyle="light-content"/>
+                    <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
 
-                {this.renderListData()}
-                {this.renderAllShopViews()}
-                {this.renderAllServiceViews()}
+                    {this.renderListData()}
+                    {this.renderAllShopViews()}
+                    {this.renderAllServiceViews()}
 
-            </ScrollView>
-            {this.renderShareSheet()}
+                </ScrollView>
+                {this.renderShareSheet()}
             </View>
         );
     }
-
     renderShareSheet() {
         let shareOptions = {
             title: this.state.product_name,
             message: this.state.product_id,
             url: this.state.url,
             subject: "Share Link" //  for email
-          };
+        };
         return(
             <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-          <Button iconSrc={{ uri: TWITTER_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "twitter"
-                }));
-              },300);
-            }}>Twitter</Button>
-          <Button iconSrc={{ uri: FACEBOOK_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "facebook"
-                }));
-              },300);
-            }}>Facebook</Button>
-          <Button iconSrc={{ uri: WHATSAPP_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "whatsapp"
-                }));
-              },300);
-            }}>Whatsapp</Button>
-          <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "googleplus"
-                }));
-              },300);
-            }}>Google +</Button>
-          <Button iconSrc={{ uri: EMAIL_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "email"
-                }));
-              },300);
-            }}>Email</Button>
-          <Button
-            iconSrc={{ uri: CLIPBOARD_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                if(typeof shareOptions["url"] !== undefined) {
-                  Clipboard.setString(shareOptions["url"]);
-                  if (Platform.OS === "android") {
-                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
-                  } else if (Platform.OS === "ios") {
-                    AlertIOS.alert('Link Copied to Clipboard');
-                  }
-                }
-              },300);
-            }}>Copy Link</Button>
-          <Button iconSrc={{ uri: MORE_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.open(shareOptions)
-              },300);
-            }}>More</Button>
-            <View style={{paddingBottom:40}}/>
-        </ShareSheet>
+                <Button
+                    iconSrc={{ uri: TWITTER_ICON }}
+                    onPress={()=>{this.onCancel(); setTimeout(() => { Share.shareSingle(Object.assign(shareOptions, { "social": "twitter"}));},300);}}>Twitter
+                </Button>
+                <Button
+                    iconSrc={{ uri: FACEBOOK_ICON }}
+                    onPress={()=>{ this.onCancel(); setTimeout(() => { Share.shareSingle(Object.assign(shareOptions, { "social": "facebook"}));},300);}}>Facebook
+                </Button>
+                <Button
+                    iconSrc={{ uri: WHATSAPP_ICON }}
+                    onPress={()=>{ this.onCancel(); setTimeout(() => { Share.shareSingle(Object.assign(shareOptions, { "social": "whatsapp"}));},300);}}>Whatsapp
+                </Button>
+                <Button
+                    iconSrc={{ uri: GOOGLE_PLUS_ICON }}
+                    onPress={()=>{ this.onCancel(); setTimeout(() => { Share.shareSingle(Object.assign(shareOptions, { "social": "googleplus" }));},300);}}>Google +
+                </Button>
+                <Button
+                    iconSrc={{ uri: EMAIL_ICON }}
+                    onPress={()=>{ this.onCancel(); setTimeout(() => { Share.shareSingle(Object.assign(shareOptions, { "social": "email"}));},300);}}>Email
+                </Button>
+                <Button
+                    iconSrc={{ uri: CLIPBOARD_ICON }}
+                    onPress={()=>{ this.onCancel(); setTimeout(() => {
+                        if(typeof shareOptions["url"] !== undefined) {
+                            Clipboard.setString(shareOptions["url"]);
+                            if (Platform.OS === "android") {
+                                ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
+                            } else if (Platform.OS === "ios") {
+                                AlertIOS.alert('Link Copied to Clipboard');
+                            }}},300);}}>Copy Link
+                        </Button>
+                <Button
+                    iconSrc={{ uri: MORE_ICON }}
+                    onPress={()=>{ this.onCancel(); setTimeout(() => { Share.open(shareOptions) },300);}}>More
+                </Button>
+                <View style={{paddingBottom:40}}/>
+            </ShareSheet>
         );
     }
-
     renderListData(){
         const { lang} = this.props;
-
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang == 'ar')? 'right': 'left';
         let listView = (<View></View>);
-            listView = (
-                <ListView
+        listView = (
+            <ListView
                 refreshControl={
                     <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh} />
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh} />
                 }
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource}
@@ -724,14 +595,14 @@ class MainView extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 />
-            );
+        );
         let serviceListview = (<View></View>);
-            serviceListview = (
-                <ListView
+        serviceListview = (
+            <ListView
                 refreshControl={
                     <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh} />
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh} />
                 }
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource2}
@@ -740,225 +611,186 @@ class MainView extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 />
-            );
-
-            if (this.state.arrSelectedType.length == 1) {
-                if (this.state.arrSelectedType[0] == 1) {
-                    return(
-                        <View>
-                            {
-                                Platform.OS === 'ios' ?
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-                                :
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-                            }
-                            <View>
-                            {
-                                listView
-                            }
-                            </View>
-                        </View>
-                    );
-                    console.log("product product product")
-                }
-                else {
-                    console.log("service service service")
-                    return(
-                        <View>
-                        {
-                            Platform.OS === 'ios' ?
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-                            :
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-                        }
-                        <View>
-                        {
-                            serviceListview
-                        }
-                        </View>
-                    </View>
-                    );
-                }
-            }
-            else if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
+        );
+        if (this.state.arrSelectedType.length == 1) {
+            if (this.state.arrSelectedType[0] == 1) {
                 return(
-                    this.state.isFilterProduct ?
-
-                    <View>
-                            {
-                                Platform.OS === 'ios' ?
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-                                :
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left',  fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-                            }
-                            <View>
-                            {
-                                listView
-                            }
-                            </View>
-                            {
-                                Platform.OS === 'ios' ?
-                                    <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-                                :
-                                    <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-                            }
-                            <View>
-                            {
-                                serviceListview
-                            }
-                            </View>
-                    </View>
-
-                    :
-
                     <View>
                         {
                             Platform.OS === 'ios' ?
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                             :
-                                <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                         }
                         <View>
-                        {
-                            serviceListview
-                        }
+                            {listView}
                         </View>
-
+                    </View>
+                );
+                console.log("product product product")
+            } else {
+                console.log("service service service")
+                return(
+                    <View>
                         {
                             Platform.OS === 'ios' ?
-                            <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                             :
-                            <Text style={{  textAlign: (lang == 'ar')? 'right': 'left', fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                         }
                         <View>
-                        {
-                            listView
-                        }
+                            {serviceListview}
                         </View>
-
                     </View>
-
                 );
             }
+        }
+        else if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
+            return(
+                this.state.isFilterProduct ?
+                <View>
+                    {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align,  fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                    }
+                    <View>
+                        {listView}
+                    </View>
+                    {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                    }
+                    <View>
+                        {serviceListview}
+                    </View>
+                </View>
+                :
+                <View>
+                    {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                    }
+                    <View>
+                        {serviceListview}
+                    </View>
+                    {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                    }
+                    <View>
+                        {listView}
+                    </View>
+                </View>
+            );
+        }
     }
-
     renderService(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         const { lang} = this.props;
-
-       return (
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        service_name = (lang == 'ar')? data.service_name_in_arabic : data.service_name,
+        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
+        detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
+        price = (lang == 'ar')? data.price_in_arabic : data.price,
+        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
+        return (
             <View style={styles.row} >
-                <View style={{flexDirection: 'row', justifyContent: "center"}}>
-
+                <View style={{flexDirection: direction, justifyContent: "center"}}>
                     <TouchableOpacity
-                    onPress={()=> this.Description(data.service_id, data.service_name, data.serviceImages ,
-                    data.short_description, data.detail_description, data.price ,data.special_price)}>
-
-
-                <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages}/>
-
+                        onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price)}>
+                        <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages}/>
                     </TouchableOpacity>
                 </View>
-
                 <View style={{ padding :15}}>
-                <TouchableOpacity  style={styles.name}
-                // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
-                >
-
-                <Text style={{fontSize : 13, color :'#000' ,textAlign:(lang === 'ar') ?  'right': 'left'}}>{data.service_name}</Text>
-                </TouchableOpacity>
-                <Text style={[styles.description, {textAlign:(lang === 'ar') ?  'right': 'left'}]}>{data.short_description}</Text>
-                <View style={{
-                    flex: 0,
-                    flexDirection: (lang === 'ar') ?  'row-reverse': 'row',
-                    justifyContent: 'space-between',
-                    top : 5
-                }}>
-                    <Text style={styles.special_price}>{data.special_price} KWD</Text>
-                    <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} KWD</Text>
+                    <TouchableOpacity  style={styles.name}
+                        // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
+                        >
+                        <Text style={{fontSize : 13, color :'#000' ,textAlign:align }}>{service_name}</Text>
+                    </TouchableOpacity>
+                    <Text style={[styles.description, {textAlign:align }]}>{short_description}</Text>
+                    <View style={{
+                            flex: 0,
+                            flexDirection: direction,
+                            justifyContent: 'space-between',
+                            top : 5
+                        }}>
+                        <Text style={styles.special_price}>{special_price} KWD</Text>
+                        <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{price} KWD</Text>
+                    </View>
                 </View>
+            </View>
+        );
+    }
+    renderFilterOptions() {
+        const { lang} = this.props;
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left';
+        return(
+            <View style={{ flexDirection : direction}}>
+                <View style={ {
+                        flex : 0.5,
+                        height : 40,
+                        justifyContent : "space-around",
+                        backgroundColor : '#fff',
+                        padding : 2}
+                    }>
+                    <TouchableOpacity onPress={this.modal} style={[styles.allshop, {flexDirection : direction}]} >
+                        <Text style={{textAlign: align}}>{I18n.t('home.allshop', { locale: lang })}</Text>
+                        <Ionicons name="md-arrow-dropdown" size={20} color="#a9d5d1" />
+                    </TouchableOpacity>
+                </View>
+                <View style={{ flex : 0.5,
+                        height : 40,
+                        justifyContent : "space-around",
+                        backgroundColor : '#fff',
+                        padding : 2}
+                    }>
+                    <TouchableOpacity onPress={this.Service} style={[styles.allshop, {flexDirection : direction}]}>
+                        <Text style={{textAlign: align}}>{I18n.t('home.services', { locale: lang })}</Text>
+                        <Ionicons name="md-arrow-dropdown" size={20} color="#a9d5d1"/>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
     }
 
-    renderFilterOptions() {
-        const { lang} = this.props;
-        return(
-        <View style={{ flexDirection : (lang === 'ar') ? 'row-reverse' : 'row'}}>
-                    <View style={ {
-                        flex : 0.5,
-                        // width : width/2,
-                        height : 40,
-                        justifyContent : "space-around",
-                        backgroundColor : '#fff',
-                        padding : 2}}>
-
-                        <TouchableOpacity
-                        onPress={this.modal} style={[styles.allshop, {flexDirection : (lang === 'ar') ? 'row-reverse' : 'row'}]}
-                        >
-                            <Text>{I18n.t('home.allshop', { locale: lang })}</Text>
-                            <Ionicons
-                            name="md-arrow-dropdown"
-                            size={20}
-                            color="#a9d5d1"
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={ {
-                    flex : 0.5,
-                        // width : width/2,
-                        height : 40,
-                        justifyContent : "space-around",
-                        backgroundColor : '#fff',
-                        padding : 2}}>
-                        <TouchableOpacity onPress={this.Service} style={[styles.allshop, {flexDirection : (lang === 'ar') ? 'row-reverse' : 'row'}]}>
-                            <Text>{I18n.t('home.services', { locale: lang })}</Text>
-                            <Ionicons
-                            name="md-arrow-dropdown"
-                            size={20}
-                            color="#a9d5d1"
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-        );
-    }
-
     renderAllShopViews() {
         const { lang} = this.props;
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        position = (lang === 'ar') ?  'left': 'right';
         return(
             <ModalWrapper
-                containerStyle={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: 'flex-end' }}
+                containerStyle={{ flexDirection: direction, justifyContent: 'flex-end' }}
                 onRequestClose={() => this.setState({ isModalVisible: false })}
-                position={(lang === 'ar') ? 'left' : 'right'}
+                position={position}
                 style={styles.sidebar}
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isModalVisible}>
-                <View style={{
-                    height:54,
-                    flexDirection : (lang === 'ar') ? 'row-reverse' : 'row',
-                    alignItems:'center',
-                    justifyContent : 'space-between',
-                    backgroundColor:'#a9d5d1'
-                }}>
-                        <Text>{null}</Text>
-                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>{I18n.t('home.allshop', { locale: lang })}</Text>
-                        <TouchableOpacity
-                        underlayColor ={"#fff"}
-                        onPress={()=>this.filterbyShop()}
-                        >
-                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff',marginLeft:10}}>Done</Text>
-                        </TouchableOpacity>
+                <View style={{height:54,flexDirection : direction ,alignItems:'center',justifyContent : 'space-between',backgroundColor:'#a9d5d1'}}>
+                    <Text>{null}</Text>
+                    <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>{I18n.t('home.allshop', { locale: lang })}</Text>
+                    <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyShop()} >
+                        <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10, textAlign: align} : {color:'#fff',marginLeft:10}}>{I18n.t('home.done', { locale: lang })}</Text>
+                    </TouchableOpacity>
 
                     </View>
                     <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row-reverse' : 'row', justifyContent:'space-between', alignItems:'center'}}>
+                    <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}>
                     <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text>
                     {this.state.rows.length == 0 ?
-                        <Ionicons name="ios-checkmark" size={30} color="green"  style={{ paddingRight : 10}}/>
+                        <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
                     :
                         undefined
                     }
@@ -972,59 +804,46 @@ class MainView extends Component {
     }
 
     renderAllServiceViews() {
-        const { lang } = this.props;
+        const { lang} = this.props;
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        position = (lang === 'ar') ?  'left': 'right';
+
         return(
             <ModalWrapper
-                containerStyle={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: 'flex-end' }}
+                containerStyle={{ flexDirection: direction, justifyContent: 'flex-end' }}
                 onRequestClose={() => this.setState({ isService: false })}
-                position={(lang === 'ar') ? 'left' : 'right'}
+                position={position}
                 style={styles.sidebar}
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isService}>
-
-                <View style={{
-                    height:54,
-                    flexDirection : (lang === 'ar') ? 'row-reverse' : 'row',
-                    alignItems:'center',
-                    justifyContent : 'space-between',
-                    backgroundColor:'#a9d5d1'
-                }}>
-                        <Text>{null}</Text>
-                        <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>{I18n.t('home.allservice', { locale: lang })}</Text>
-                        <TouchableOpacity
-                        underlayColor ={"#fff"}
-                        onPress={()=>this.filterbyService()}
-                        >
-                            <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10} : {color:'#fff', marginLeft:10}}>{I18n.t('home.done', { locale: lang })}</Text>
-                        </TouchableOpacity>
-
-                    </View>
-                    <ScrollView contentContainerStyle={styles.contentContainer}
-                    showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row-reverse' : 'row', justifyContent:'space-between', alignItems:'center'}}>
-                    <Text style={{ padding : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-                    {this.state.servicerows.length == 0 ?
-                        <Ionicons name="ios-checkmark" size={30} color="green"  style={{ paddingRight : 10}}/>
-                    :
-                        undefined
-                    }
-
+                <View style={{ height:54, flexDirection : direction, alignItems:'center', justifyContent : 'space-between', backgroundColor:'#a9d5d1'}}>
+                    <Text>{null}</Text>
+                    <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10, textAlign: align} : {fontSize:15, color:'#fff',textAlign: align }}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                    <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyService()} >
+                        <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10 ,textAlign: align} : {color:'#fff', marginLeft:10, textAlign: align}}>{I18n.t('home.done', { locale: lang })}</Text>
                     </TouchableOpacity>
-                        {this.renderServiceView()}
-                    </ScrollView>
-
+                </View>
+                <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+                    <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}>
+                        <Text style={{ padding : 10, textAlign: align}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                            {this.state.servicerows.length == 0 ?
+                                <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
+                                :
+                                undefined
+                            }
+                    </TouchableOpacity>
+                    {this.renderServiceView()}
+                </ScrollView>
             </ModalWrapper>
         )
     }
-
        // service  filter
-
     Service = () => this.setState({ isService: !this.state.isService })
-
     loadServiceData (){
-        const {u_id, country, user_type } = this.state;
+        const {u_id, country} = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         // formData.append('u_id', String(user_type));
         const config = {
@@ -1047,29 +866,20 @@ class MainView extends Component {
             console.log(error);
         })
         .done();
-
     }
-
     filterbyService () {
-        // this.setState({ isService: !this.state.isService }, fetchDataByService())
-        // this.fetchDataByShop()
-
         if (this.state.servicerows.length == 0) {
             this.state.isService = !this.state.isService
             this.state.isFilterProduct = false
             this.fetchService()
             return
         }
-
         this.setState({
             isService: !this.state.isService,
             loaded : false,
             isFilterProduct : false
         },this.fetchDataByService() )
-
-        // this.fetchDataByService()
     }
-
     fetchDataByService (){
         const {u_id, country, user_type, servicerows } = this.state;
         let formData = new FormData();
@@ -1091,55 +901,41 @@ class MainView extends Component {
             if(responseData.status){
                 console.log("status true")
                 this.setState({
-                dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
-                status : responseData.status,
-                loaded: true,
-                refreshing: false
-
-
-
+                    dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
+                    status : responseData.status,
+                    loaded: true,
+                    refreshing: false
                 });
-            }
-            else{
+            } else {
                 console.log("status false")
                 this.setState({
-                isLoading : false,
-                status : responseData.status,
-                loaded: true,
-                refreshing: false
+                    isLoading : false,
+                    status : responseData.status,
+                    loaded: true,
+                    refreshing: false
                 })
             }
         })
         .catch((error) => {
-          console.log(error);
+            console.log(error);
         })
         .done();
     }
-
     onServiceClick(data) {
-        // var newStateArray = this.state.servicerows.slice();
-        // newStateArray.push(data.service_id);
-        // this.setState({
-        //     servicerows: newStateArray
-        // });
-
         data.checked = !data.checked;
         data.checked ? this.checkService(data) : this.unCheckService(data)
         let msg=data.checked? 'you checked ':'you unchecked '
     }
-
     checkService (data){
         console.log("this.state.rows:=",this.state.servicerows)
         var newStateArray = this.state.servicerows.slice();
         console.log("newStateArray:=",newStateArray)
 
         newStateArray.push(data.service_id);
-
         this.setState({
             servicerows: newStateArray,
         });
     }
-
     unCheckService(data){
         var newStateArray = this.state.servicerows.slice();
         var index = newStateArray.indexOf(data.service_id);
@@ -1147,19 +943,15 @@ class MainView extends Component {
         if (index > -1) {
             newStateArray.splice(index, 1);
         }
-
         this.setState({
             servicerows: newStateArray
         });
     }
-
-
     cancelService(){
         this.setState({
             isService : !this.state.isService
         })
     }
-
     renderServiceView() {
         if (!this.state.serviceArray || this.state.serviceArray.length === 0)return;
         var len = this.state.serviceArray.length;
@@ -1183,22 +975,19 @@ class MainView extends Component {
             </View>
         )
         return views;
-
     }
     noServiceFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text> No Item Found In Your Service</Text>
+                <Text> {I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );
     }
-
     renderServiceChec(data) {
         const { lang } = this.props;
         if (!this.state.serviceArrayStatus) {
             return this.noServiceFound();
         }
-
         var leftText = data.service_name;
         return (
             <CheckBox
@@ -1208,7 +997,8 @@ class MainView extends Component {
                 isChecked={data.checked}
                 leftText={leftText}
                 lang={lang}
-            />);
+                />
+        );
     }
     moveToDesc(title, product_id, is_wishlist){
         Actions.deascriptionPage({
@@ -1218,67 +1008,73 @@ class MainView extends Component {
             updateState : this._onRefresh.bind(this)
         })
     }
-
     noItemFound(){
+        const { lang , deviceId, country, u_id} = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
+
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 {this.renderFilterOptions()}
                 {this.renderAllShopViews()}
                 {this.renderAllServiceViews()}
-                <Text style={{marginTop:10}}> No Item Found </Text>
+                <Text style={{marginTop:10, textAlign: align}}>{I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );
     }
-
 // Service filter complete here
-
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-        const { lang } = this.props;
+        const { lang , deviceId, country, u_id} = this.props;
         let color = data.special_price ? '#696969' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-        let url =  data.productImages[0] ? data.productImages[0].image : "null"
-
-       return (
+        let url =  data.productImages[0] ? data.productImages[0].image : "null";
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        product_name = (lang == 'ar')? data.product_name_in_arabic : data.product_name,
+        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
+        detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
+        price = (lang == 'ar')? data.price_in_arabic : data.price,
+        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
+        return (
             <View style={styles.row} >
-                <View style={{flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}}>
+                <View style={{flexDirection: direction , justifyContent: "center"}}>
                     <TouchableOpacity
-                    onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}>
+                    onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}>
                         <LoadImage productImages={data.productImages}/>
                     </TouchableOpacity>
                     <EvilIcons style={{ position : 'absolute', left : 5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
                         name="share-google"
                         size={25}
                         color="#a9d5d1"
-                        onPress={()=>this.onOpen(data.product_name, data.product_id , url )}/>
+                        onPress={()=>this.onOpen(product_name, data.product_id , url )}/>
                         <Editwish
-                        u_id={this.state.u_id}
-                        country={this.state.country}
+                        u_id={u_id}
+                        country={country}
                         is_wishlist={data.is_wishlist}
                         product_id={data.product_id}
-                        fetchData={()=>this.fetchData()}/>
+                        fetchData={()=>this.fetchData()}
+                        deviceId={deviceId}
+                        lang={lang}/>
                 </View>
-
                 <View style={{ padding :10}}>
                     <TouchableOpacity  style={styles.name}
-                    onPress={()=> this.moveToDesc(data.product_name, data.product_id, data.is_wishlist)}
+                    onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}
                     >
-                    <Text style={{fontSize : 10, color :'#989898', textAlign:(lang === 'ar') ?  'right': 'left'}}>{data.product_name}</Text>
+                    <Text style={{fontSize : 10, color :'#989898', textAlign: align }}>{product_name}</Text>
                     </TouchableOpacity>
                     <View style={styles.description}>
                         <Header
                         product_category= {data.product_category}
-                        u_id={this.state.u_id}
-                        country={this.state.country}
+                        u_id={u_id}
+                        country={country}
                         lang={lang}/>
                     </View>
                     <View style={{
-                        flex: 0,
-                        flexDirection: (lang === 'ar') ? 'row-reverse' :'row',
+                        flexDirection: direction,
                         justifyContent: 'space-between',
                         marginTop : 10
                     }}>
-                        <Text style={styles.special_price}>{data.special_price} KWD</Text>
-                        <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} KWD</Text>
+                        <Text style={[styles.special_price,{ textAlign:align}]}>{data.special_price} KWD</Text>
+                        <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine, textAlign: align}}>{data.price} KWD</Text>
                     </View>
                 </View>
             </View>
@@ -1293,11 +1089,9 @@ class Header extends Component{
             isLoading : true
         }
     }
-
     componentDidMount(){
         this.fetchData();
     }
-
     search = (nameKey, myArray)=>{
         for (var i = 0; i < myArray.length; i++) {
             if (myArray[i].category_id === nameKey) {
@@ -1305,56 +1099,49 @@ class Header extends Component{
             }
         }
     }
-
     fetchData(){
         const {u_id, country } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
-
         const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
         fetch(Utils.gurl('getFilterMenu'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
                 this.setState({
-                product_category: responseData.data.category,
+                    product_category: responseData.data.category,
                 });
-            }
-            else{
+            }else{
                 this.setState({
-                isLoading : false
+                    isLoading : false
                 })
             }
         })
         .catch((error) => {
-          console.log(error);
+            console.log(error);
         })
         .done();
-
     }
-
-  render() {
-      const { lang } = this.props;
-    let product_id = this.props.product_category
-    let product = this.state.product_category
-
-    let resultObject = this.search(product_id, product);
-
-    return (
-        <Text style={[styles.category, {textAlign:(lang === 'ar') ?  'right': 'left'}]}>{ this.state.product_category ? resultObject: undefined}
-        </Text>
-    );
-  }
+    render() {
+        const { lang } = this.props;
+        let product_id = this.props.product_category;
+        let product = this.state.product_category
+        let resultObject = this.search(product_id, product);
+        return (
+            <Text style={[styles.category, {textAlign:(lang === 'ar') ?  'right': 'left'}]}>
+                { this.state.product_category ? resultObject: undefined}
+            </Text>
+        );
+    }
 }
-
 var styles = StyleSheet.create({
     contentContainer: {
         paddingVertical: 10
@@ -1502,6 +1289,9 @@ class LoadImage extends Component {
 function mapStateToProps(state) {
     return {
         lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
     }
 }
 export default connect(mapStateToProps)(MainView);

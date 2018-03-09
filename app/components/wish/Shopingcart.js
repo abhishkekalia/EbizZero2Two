@@ -27,15 +27,13 @@ import { material } from 'react-native-typography';
 import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window');
-
 // const SHORT_LIST = ['Small', 'Medium', 'Large'];
 
 class Shopingcart extends Component {
     constructor(props) {
         super(props);
-        this.getKey = this.getKey.bind(this);
+        // this.getKey = this.getKey.bind(this);
         this.fetchData = this.fetchData.bind(this);
-
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
             ShopingItems : null,
@@ -45,38 +43,30 @@ class Shopingcart extends Component {
             subtotalamount : '',
             Quentity : 0,
             color: 'blue',
-            u_id: null,
+            // u_id: null,
             product_id : '',
             user_type : null,
             selectSize : false,
-            country : null,
+            // country : null,
             status : false
         };
-
     }
     componentDidMount(){
-        this.getKey()
-        .then(()=>this.fetchData())
-        .done()
-
+        this.fetchData()
         EventEmitter.removeAllListeners("reloadCartlist");
         EventEmitter.on("reloadCartlist", (value)=>{
             console.log("reloadCartlist", value);
             this.fetchData()
         });
-
         EventEmitter.removeAllListeners("redirectToFaturah");
         EventEmitter.on("redirectToFaturah", (value)=>{
             console.log("redirectToFaturah", value);
-
             routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura})
         });
     }
-
     callBackFitura() {
-        console.log("Callback from fitura")
+        console.log("Callback from faturah")
     }
-
     componentWillMount() {
         routes.refresh({ left: this._renderLeftButton, right: this._renderRightButton,});
     }
@@ -85,66 +75,61 @@ class Shopingcart extends Component {
              <Feather name="menu" size={20} onPress={()=> routes.drawerOpen()} color="#fff" style={{ padding : 10}}/>
          );
      };
-
-   _renderRightButton = () => {
+     _renderRightButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
         );
     };
+    // async getKey() {
+    //     try {
+    //         const value = await AsyncStorage.getItem('data');
+    //         var response = JSON.parse(value);
+    //         this.setState({
+    //             u_id: response.userdetail.u_id ,
+    //             country: response.userdetail.country ,
+    //             user_type: response.userdetail.user_type
+    //         });
+    //     } catch (error) {
+    //         console.log("Error retrieving data" + error);
+    //     }
+    // }
 
-    async getKey() {
-        try {
-            const value = await AsyncStorage.getItem('data');
-            var response = JSON.parse(value);
-            this.setState({
-                u_id: response.userdetail.u_id ,
-                country: response.userdetail.country ,
-                user_type: response.userdetail.user_type
-            });
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-    }
-
-    addtoWishlist(product_id){
-        const {u_id, country, user_type } = this.state;
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        formData.append('product_id', String(product_id));
-        const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-        fetch(Utils.gurl('addToWishlist'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            MessageBarManager.showAlert({
-                message: responseData.data.message,
-                alertType: 'alert',
-                stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
-                animationType: 'SlideFromLeft',
-                title:''
-            })
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .done();
-    }
-
+    // addtoWishlist(product_id){
+    //     const {u_id, country, user_type } = this.state;
+    //     let formData = new FormData();
+    //     formData.append('u_id', String(u_id));
+    //     formData.append('country', String(country));
+    //     formData.append('product_id', String(product_id));
+    //     const config = {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //                 'Content-Type': 'multipart/form-data;',
+    //             },
+    //             body: formData,
+    //         }
+    //     fetch(Utils.gurl('addToWishlist'), config)
+    //     .then((response) => response.json())
+    //     .then((responseData) => {
+    //         MessageBarManager.showAlert({
+    //             message: responseData.data.message,
+    //             alertType: 'alert',
+    //             stylesheetWarning : { backgroundColor : '#ff9c00', strokeColor : '#fff' },
+    //             animationType: 'SlideFromLeft',
+    //             title:''
+    //         })
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     })
+    //     .done();
+    // }
     fetchData(){
-        const {u_id, country, user_type } = this.state;
-
+        const {u_id, country, lang ,deviceId } = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
-
+        formData.append('device_uid', String(deviceId));
         const config = {
             method: 'POST',
             headers: {
@@ -162,26 +147,22 @@ class Shopingcart extends Component {
                 Select =[],
                 user,
                 i;
-
             var today = new Date();
             var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-
             currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
             nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
-
             for (i = 0; i < length; i++) {
                 organization = Items[i];
                 Select.push ({
-                            "product_id": organization.product_id,
-                            "size": organization.size,
-                            "quantity": organization.quantity,
-                            "cart_id" : organization.cart_id,
-                            "price":organization.price,
-                            "delivery_datetime": currentdate,
-                            "order_date": nextdate
-                        })
+                    "product_id": organization.product_id,
+                    "size": organization.size,
+                    "quantity": organization.quantity,
+                    "cart_id" : organization.cart_id,
+                    "price":organization.price,
+                    "delivery_datetime": currentdate,
+                    "order_date": nextdate
+                })
             }
-
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
@@ -192,7 +173,6 @@ class Shopingcart extends Component {
                     subtotalamount : responseData.subtotalamount,
                     refreshing : false,
                     status : responseData.status
-
                 });
             }else {
                 this.setState({
@@ -201,21 +181,23 @@ class Shopingcart extends Component {
             }
         })
         .catch((error) => {
-          console.log(error);
+            console.log(error);
         })
         .done();
     }
-
-
     validate(){
         const { ShopingItems} = this.state;
+        const { lang, country, u_id, deviceId } = this.props;
+        align = (lang === 'ar') ?  'right': 'left';
 
         if (!ShopingItems.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Select Items For Your Cart",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('cart.pleaseselectitems', { locale: lang }),
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
@@ -227,7 +209,6 @@ class Shopingcart extends Component {
     getColor(color){
         this.setState({color});
     }
-
     procedToCheckout(){
         if (this.validate()) {
             routes.AddressLists({
@@ -237,37 +218,34 @@ class Shopingcart extends Component {
             })
         }
     }
-
     renderFooter(itemcount, totalamount, subtotalamount){
-        const {lang} = this.props;
+        let {lang} = this.props,
+        direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        position = (lang === 'ar') ?  'left': 'right';
         return(
-        <View
-                style={{
-                    flexDirection : "column",
-                }}>
-                <View
-                    style={{
-                        flexDirection : (lang == 'ar')? "row-reverse" :"row",
+            <View style={{ flexDirection : "column"}}>
+                <View style={{
+                        flexDirection : direction,
                         justifyContent: "space-between",
                         alignItems:'center',
                         padding : 5,
-                        flex : 0}}>
-                <Text style={{ textAlign: (lang == 'ar')? "right" : "left"}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
-                <Text style={{textAlign: (lang == 'ar')? "right" : "left"}}> KWD {totalamount}</Text>
+                        flex : 0}
+                    }>
+                    <Text style={{ textAlign: align}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
+                    <Text style={{textAlign: align}}> KWD {totalamount}</Text>
                 </View>
-                <View
-                    style={{
-                        flexDirection : (lang == 'ar')? "row-reverse" :"row",
+                <View style={{
+                        flexDirection : direction,
                         justifyContent: "space-between",
                         alignItems:'center',
                         padding : 5,
-                        flex : 0}}>
-                <Text style={{ color : "#87cefa", textAlign: (lang == 'ar')? "right" : "left"}} >{I18n.t('cart.crtsubtotal', { locale: lang })}</Text>
-                <Text style={{ color : "#87cefa", textAlign: (lang == 'ar')? "right" : "left"}}> KWD {subtotalamount}</Text>
+                        flex : 0}
+                    }>
+                    <Text style={{ color : "#87cefa", textAlign: align}} >{I18n.t('cart.crtsubtotal', { locale: lang })}</Text>
+                    <Text style={{ color : "#87cefa", textAlign: align}}> KWD {subtotalamount}</Text>
                 </View>
             </View>
-
-
         )
     }
     noItemFound(){
@@ -275,14 +253,11 @@ class Shopingcart extends Component {
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', alignContent:'center',flex:1}}>
                 <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
-               </View> );
-    }
-
-
+            </View> );
+        }
     render() {
         const { itemcount, totalamount, subtotalamount } = this.state;
         const { lang } = this.props;
-
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -299,282 +274,282 @@ class Shopingcart extends Component {
             return this.noItemFound();
         }
         return (
-        <View style={{flex: 1, flexDirection: 'column'}}>
-            {listView}
-        {this.renderFooter(itemcount, totalamount, subtotalamount)}
-
-        <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
-                <TouchableHighlight
-                underlayColor ={"#fff"}
-                style={[styles.shoping]}
-                onPress={()=>routes.homePage()}>
-                <Text style={{ color :'#fff'}}>{I18n.t('cart.shoping', { locale: lang })}</Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                underlayColor ={"#fff"}
-                style={[styles.checkout]}
-                onPress={()=> this.procedToCheckout()}>
-                <Text style={{ color : '#fff'}}>{I18n.t('cart.checkout', { locale: lang })}</Text>
-                </TouchableHighlight>
+            <View style={{flex: 1, flexDirection: 'column'}}>
+                {listView}
+                {this.renderFooter(itemcount, totalamount, subtotalamount)}
+                <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
+                    <TouchableHighlight
+                        underlayColor ={"#fff"}
+                        style={[styles.shoping]}
+                        onPress={()=>routes.homePage()}>
+                        <Text style={{ color :'#fff'}}>{I18n.t('cart.shoping', { locale: lang })}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        underlayColor ={"#fff"}
+                        style={[styles.checkout]}
+                        onPress={()=> this.procedToCheckout()}>
+                        <Text style={{ color : '#fff'}}>{I18n.t('cart.checkout', { locale: lang })}</Text>
+                    </TouchableHighlight>
+                </View>
             </View>
-        </View>
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-        const{ lang}= this.props;
+        const { lang, country, u_id, deviceId } = this.props;
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        product_name = (lang == 'ar')? data.product_name_in_arabic : data.product_name,
+        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
+        size = (lang == 'ar')? data.size_in_arabic : data.size,
+        price = (lang == 'ar')? data.price_in_arabic : data.price,
+        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
+
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         return (
             <View style={{
-            flexDirection: 'column',
-            marginTop : 2,
-            borderWidth : StyleSheet.hairlineWidth,
-            borderColor : "#ccc",
-            borderRadius : 5}}>
+                    flexDirection: 'column',
+                    marginTop : 2,
+                    borderWidth : StyleSheet.hairlineWidth,
+                    borderColor : "#ccc",
+                    borderRadius : 5}
+                }>
                 <View style={{
-                flexDirection: 'row',
-                backgroundColor : "transparent"}}>
-
+                        flexDirection: direction,
+                        backgroundColor : "transparent"}
+                    }>
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <View style={{ flexDirection:(lang == 'ar')? "row-reverse" :"row" , backgroundColor : "#fff", justifyContent : 'space-between', alignItems : 'center'}}>
-
+                        <View style={{ flexDirection:direction , backgroundColor : "#fff", justifyContent : 'space-between', alignItems : 'center'}}>
                             <Image style={[styles.thumb, {margin: 10}]}
-                            source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}/>
-                        <View style={{flexDirection : 'column'}}>
-                                <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: (lang == 'ar')? "right":"left"}}> {data.product_name} </Text>
-                                <Text style={{ fontSize:10, color:'#696969', marginBottom:5, textAlign: (lang == 'ar')? "right":"left"}}> {data.short_description} </Text>
-
-                            <View style={{ flexDirection :(lang == 'ar')?"row-reverse" :"row",  width:width/1.5}}>
-                                <Text style={{paddingRight : 10, textAlign: (lang == 'ar')? "right":"left", alignSelf: 'center'}}> {I18n.t('cart.quantity', { locale: lang })} </Text>
+                                source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}/>
+                            <View style={{flexDirection : 'column'}}>
+                                <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}> {product_name} </Text>
+                                <Text style={{ fontSize:10, color:'#696969', marginBottom:5, textAlign: align}}> {short_description} </Text>
+                                <View style={{ flexDirection :direction,  width:width/1.5}}>
+                                    <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center'}}> {I18n.t('cart.quantity', { locale: lang })} </Text>
+                                        <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center'}}> : </Text>
                                     <Countmanager
-                                    quantity={data.quantity}
-                                    u_id={this.state.u_id}
-                                    product_id={data.product_id}
-                                    updatetype={"1"}
-                                    country={this.state.country}
-                                    callback={this.fetchData.bind(this)}
-                                    />
-                            </View>
-                            <View style={{ flexDirection : (lang === 'ar') ?  'row-reverse': 'row',justifyContent: 'flex-start'}}>
-                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}>{I18n.t('cart.size', { locale: lang })}</Text>
-                                <Text style={{ fontSize:13, color:'#696969', paddingRight: 5,marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}>{data.size}</Text>
-                            </View>
-                            <View style={{ flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent:"space-between"}}>
-                                <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}> {data.special_price} KWD</Text>
-                                <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine, textAlign:(lang === 'ar') ?  'right': 'left'}}> {data.price} KWD</Text>
-                            </View>
-                            <View style={{ flexDirection : (lang === 'ar') ?  'row-reverse': 'row'}}>
-                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign:(lang === 'ar') ?  'right': 'left'}}>{I18n.t('cart.subtotal', { locale: lang })}</Text>
-                                <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}}>{ data.quantity*data.special_price}</Text>
+                                        quantity={data.quantity}
+                                        u_id={this.state.u_id}
+                                        product_id={data.product_id}
+                                        updatetype={"1"}
+                                        country={this.state.country}
+                                        callback={this.fetchData.bind(this)}
+                                        />
+                                </View>
+                                <View style={{ flexDirection : direction ,justifyContent: 'flex-start'}}>
+                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign: align}}>{I18n.t('cart.size', { locale: lang })}</Text>
+                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign: align}}>:</Text>
+                                    <Text style={{ fontSize:13, color:'#696969', paddingRight: 5,marginBottom:5, textAlign:align}}>{size}</Text>
+                                </View>
+                                <View style={{ flexDirection : direction, justifyContent:"space-between"}}>
+                                    <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign: align}}> {data.special_price} KWD</Text>
+                                    <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine, textAlign: align}}> {data.price} KWD</Text>
+                                </View>
+                                <View style={{ flexDirection : direction}}>
+                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: align}}>{I18n.t('cart.subtotal', { locale: lang })}</Text>
+                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: align}}>:</Text>
+                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign: align}}>{ data.quantity*data.special_price}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
                 </View>
-            </View>
-            <Footer  product_id={data.product_id}
-                u_id={this.state.u_id}
-                cart_id={data.cart_id}
-                country={this.state.country}
-                callback={this.fetchData.bind(this)}
-                size_arr={data.size_arr}
-                lang={lang}/>
+                <Footer  product_id={data.product_id}
+                    u_id={u_id}
+                    cart_id={data.cart_id}
+                    country={country}
+                    callback={this.fetchData.bind(this)}
+                    size_arr={data.size_arr}
+                    lang={lang}
+                    deviceId={deviceId}/>
             </View>
         )
     }
 }
 class Footer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        size : '',
-        color : 'blue',
-        selectSize : false,
-        SHORT_LIST : ['0']
-    };
-  }
-  openDialog(product_id){
-      this.setState({
-          selectSize : true,
-          product_id : product_id
-      })
-  }
-  changeSize(result){
-      this.setState({
-          selectSize: false,
-          size: result.selectedItem.label
-      });
-      this.editWishlist(result.selectedItem.label)
-  }
-  componentDidMount(){
-    var data =this.props.size_arr,
+    constructor(props) {
+        super(props);
+        this.state = {
+            size : '',
+            color : 'blue',
+            selectSize : false,
+            SHORT_LIST : ['0']
+        };
+    }
+    openDialog(product_id){
+        this.setState({
+            selectSize : true,
+            product_id : product_id
+        })
+    }
+    changeSize(result){
+        this.setState({
+            selectSize: false,
+            size: result.selectedItem.label
+        });
+        this.editCart(result.selectedItem.label)
+    }
+    componentDidMount(){
+        var data =this.props.size_arr,
         length = data.length,
         sizeList= []
-
-            for(var i=0; i < length; i++) {
-                order = data[i];
-                // console.warn(order);
-                sizeof = order.size;
-                sizeList.push(sizeof);
-            }
-            // console.warn(sizeList);
-            this.setState({
-              SHORT_LIST: sizeList,
+        for(var i=0; i < length; i++) {
+            order = data[i];
+            // console.warn(order);
+            sizeof = order.size;
+            sizeList.push(sizeof);
+        }
+        // console.warn(sizeList);
+        this.setState({
+            SHORT_LIST: sizeList,
+        })
+    }
+    removeFromCart(cart_id, product_id){
+        const {u_id, country, user_type ,deviceId, lang} = this.props;
+        align = (lang === 'ar') ?  'right': 'left';
+        let formData = new FormData();
+        // formData.append('u_id', String(u_id));
+        formData.append('country', String(country));
+        formData.append('product_id', String(product_id));
+        formData.append('cart_id', String(cart_id));
+        formData.append('device_uid', String(deviceId));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        fetch(Utils.gurl('removeFromCart'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            MessageBarManager.showAlert({
+                message: I18n.t('cart.removeitem', { locale: lang }),
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
-  }
-
-  removeFromCart(cart_id, product_id){
-      const {u_id, country, user_type } = this.props;
-
-      let formData = new FormData();
-      formData.append('u_id', String(u_id));
-      formData.append('country', String(country));
-      formData.append('product_id', String(product_id));
-      formData.append('cart_id', String(cart_id));
-
-      const config = {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'multipart/form-data;',
-          },
-          body: formData,
-      }
-      fetch(Utils.gurl('removeFromCart'), config)
-      .then((response) => response.json())
-      .then((responseData) => {
-
-          MessageBarManager.showAlert({
-              message: responseData.data.message,
-              alertType: 'alert',
-              stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-              title:''
-          })
-      })
-      .then(()=>this.props.callback)
-      .catch((error) => {
-        console.log(error);
-      })
-      .done();
-  }
-  editWishlist(size){
-    const { color } = this.state;
-      const {u_id, country, product_id } = this.props;
-
-      let formData = new FormData();
-      formData.append('u_id', String(u_id));
-      formData.append('country', String(country));
-      formData.append('product_id', String(product_id));
-      formData.append('size', String(size));
-      formData.append('color', String(color));
-      const config = {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'multipart/form-data;',
-          },
-          body: formData,
-      }
-          fetch(Utils.gurl('editWishlist'), config)
-          .then((response) => response.json())
-          .then((responseData) => {
-              MessageBarManager.showAlert({
-                      message: responseData.data.message,
-                      alertType: 'alert',
-                      stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                      title:''
-                  })
-          })
-          .then(()=>this.props.callback())
-          .catch((error) => {
+        })
+        .then(()=>this.props.callback())
+        .catch((error) => {
             console.log(error);
-          })
-          .done();
-  }
-
-  render(){
-      const{lang} =this.props;
-    let {product_id,cart_id } = this.props
-    let {SHORT_LIST } = this.state
-    return(
-      <View style={[styles.bottom, {flexDirection: (lang === 'ar') ?  'row-reverse': 'row'}]}>
-          <TouchableOpacity
-          onPress={()=> this.removeFromCart( cart_id, product_id)}
-          style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}>
-              <Entypo name="cross" size={20} color="#a9d5d1"/>
-              <Text style={{ left : 5}}>{I18n.t('cart.remove', { locale: lang })}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}
-              onPress={()=>this.openDialog(product_id)}>
-              <Entypo name="edit" size={20} color="#a9d5d1"/>
-              <Text style={{ left :5}}>{I18n.t('cart.edit', { locale: lang })}</Text>
-          </TouchableOpacity>
-          <SinglePickerMaterialDialog
-                title={I18n.t('cart.selectsize', { locale: lang })}
-                items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
-                visible={this.state.selectSize}
-                selectedItem={this.state.singlePickerSelectedItem}
-                onCancel={() => this.setState({ selectSize: false })}
-                onOk={result => this.changeSize(result)}
-                cancelLabel={I18n.t('cart.cancel', { locale: lang })}
-                okLabel={I18n.t('cart.ok', { locale: lang })}
-              />
-      </View>
-
-    )
-  }
+        })
+        .done();
+    }
+    editCart(size){
+        const { color } = this.state;
+        const {u_id, country, cart_id , lang} = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
+        let formData = new FormData();
+        // formData.append('u_id', String(u_id));
+        formData.append('size', String(size));
+        formData.append('color', String(color));
+        formData.append('cart_id', String(cart_id));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        fetch(Utils.gurl('editCart'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status) {
+                MessageBarManager.showAlert({
+                    message: I18n.t('cart.cartUpdate', { locale: lang }),
+                    title:'',
+                    alertType: 'extra',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+            }else{
+                MessageBarManager.showAlert({
+                    message: I18n.t('cart.somethingwentswrong', { locale: lang }),
+                    title:'',
+                    alertType: 'extra',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+            }
+        })
+        .then(()=>this.props.callback())
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+    }
+    render(){
+        const{lang} =this.props;
+        let {product_id,cart_id } = this.props
+        let {SHORT_LIST } = this.state
+        return(
+            <View style={[styles.bottom, {flexDirection: (lang === 'ar') ?  'row-reverse': 'row'}]}>
+                <TouchableOpacity
+                    onPress={()=> this.removeFromCart( cart_id, product_id)}
+                    style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}>
+                    <Entypo name="cross" size={20} color="#a9d5d1"/>
+                    <Text style={{ left : 5}}>{I18n.t('cart.remove', { locale: lang })}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}
+                    onPress={()=>this.openDialog(product_id)}>
+                    <Entypo name="edit" size={20} color="#a9d5d1"/>
+                    <Text style={{ left :5}}>{I18n.t('cart.edit', { locale: lang })}</Text>
+                </TouchableOpacity>
+                <SinglePickerMaterialDialog
+                    title={I18n.t('cart.selectsize', { locale: lang })}
+                    items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
+                    visible={this.state.selectSize}
+                    selectedItem={this.state.singlePickerSelectedItem}
+                    onCancel={() => this.setState({ selectSize: false })}
+                    onOk={result => this.changeSize(result)}
+                    cancelLabel={I18n.t('cart.cancel', { locale: lang })}
+                    okLabel={I18n.t('cart.ok', { locale: lang })}
+                    />
+            </View>
+        )
+    }
 }
 const styles = StyleSheet.create ({
     container: {
-        // flex: 1,
         flexDirection: 'column',
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // backgroundColor: '#ccc',
         padding : 10
-
     },
-
     row: {
         flexDirection: 'row',
-        // justifyContent: 'center',
-        // padding: 10,
-        // backgroundColor: '#F6F6F6',
         marginTop : 1
     },
     qtybutton: {
         paddingLeft: 10,
         paddingRight: 10,
-
         alignItems: 'center',
         borderWidth : StyleSheet.hairlineWidth,
         borderColor : "#ccc",
         shadowOpacity: 0.2,
         shadowRadius: 2,
-        // shadowOffset:{width:2,height:4}
     },
-
     wishbutton :{
         alignItems : 'center',
         width : width/2-10,
         borderWidth : StyleSheet.hairlineWidth,
         borderColor : "#ccc",
         padding : 5
-
     },
-
     thumb: {
         width   : '20%',
         height  :'50%' ,
         resizeMode: 'center'
     },
-
     textQue :{
         flex: 1,
         fontSize: 18,
         fontWeight: '400',
         left : 5
     },
-
     centering: {
         flex:1,
         alignItems: 'center',
@@ -587,7 +562,6 @@ const styles = StyleSheet.create ({
         justifyContent : 'space-around',
         backgroundColor : "#fff"
     },
-
     headline: {
         paddingTop : 10,
         paddingBottom : 10,
@@ -619,6 +593,9 @@ const styles = StyleSheet.create ({
 function mapStateToProps(state) {
     return {
         lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
     }
 }
 export default connect(mapStateToProps)(Shopingcart);

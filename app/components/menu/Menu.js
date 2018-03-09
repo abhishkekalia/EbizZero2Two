@@ -169,7 +169,11 @@ class Menu extends React.Component {
                 style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={()=>( Utils.logout()),logout}
+                onPress={
+                    ()=>{ Utils.logout()
+                    .then(logout)
+                    .done()
+                }}
                 style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}</Text>
                 {this.renderShareSheet()}
             </ScrollView>

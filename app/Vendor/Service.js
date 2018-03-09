@@ -10,7 +10,6 @@ import AddService from "./AddService";
 import MyService from "./MyService";
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
-
 class Service extends Component {
     constructor(props) {
         super(props)
@@ -54,12 +53,11 @@ class Service extends Component {
     }
 
     render() {
+        const { lang } = this.props;
         return (
             <View style={styles.container}>
-
-
                 <SegmentedControlTab
-                    values={['My Services', 'Add Service']}
+                    values={[ I18n.t('vendorservice.myservice', { locale: lang }),I18n.t('vendoraddservice.addservice', { locale: lang })]}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}

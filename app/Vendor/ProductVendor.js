@@ -19,7 +19,6 @@ import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modal';
-
 import { BubblesLoader } from 'react-native-indicator';
 import Ionicons from 'react-native-vector-icons/MaterialIcons';
 import Utils from 'app/common/Utils';
@@ -28,10 +27,12 @@ import DatePicker from 'react-native-datepicker';
 import Share, {ShareSheet} from 'react-native-share';
 import {CirclesLoader} from 'react-native-indicator';
 import EventEmitter from "react-native-eventemitter";
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
 const {width,height} = Dimensions.get('window');
 
-export default class ProductVendor extends Component {
+class ProductVendor extends Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -150,9 +151,6 @@ export default class ProductVendor extends Component {
         })
         .done();
     }
-
-
-
     fetchAddress(){
         const { u_id, country } = this.state;
 
@@ -186,10 +184,6 @@ export default class ProductVendor extends Component {
           console.log(error);
         })
         .done();
-
-    }
-    sizechart(){
-        console.warn("size chart");
     }
     validate(){
         const { date_in } = this.state;
@@ -210,12 +204,9 @@ export default class ProductVendor extends Component {
     }
     order (){
         const{ data , size, color, count , address_id } = this.state;
-            var Select =[];
-
+        var Select =[];
         var today = new Date();
-
         currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
-
             this.addToOrder(address_id)
             .then(()=>this.setState({
                 // visibleModal: true,
@@ -254,7 +245,7 @@ export default class ProductVendor extends Component {
                 service_id : this.props.service_id,
                 price : this.props.special_price,
                 callback: this.removeLoader
-            })
+            })``
               }else{
                 this.removeLoader
             }
@@ -291,6 +282,10 @@ export default class ProductVendor extends Component {
         const { date_in, count } = this.state;
         let color = this.props.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = this.props.special_price ? 'line-through' : 'none';
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
 
         let listView = (<View></View>);
             listView = (
@@ -323,8 +318,8 @@ export default class ProductVendor extends Component {
                     }}>
 
                     <View >
-                        <Text style={{ padding : 10, color : '#696969', fontSize:15}}>{this.props.product_name}</Text>
-                        <View style={{flexDirection: 'row', justifyContent:'space-between', marginBottom : 10}}>
+                        <Text style={{ padding : 10, color : '#696969', fontSize:15, textAlign: textline}}>{this.props.product_name}</Text>
+                        <View style={{flexDirection: direction, justifyContent:'space-between', marginBottom : 10}}>
                             <Text style={{color : '#a9d5d1', fontWeight:'bold' }}>  {this.props.special_price} KWD</Text>
                             <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5}}>{this.props.price} KWD</Text>
                         </View>
@@ -337,7 +332,7 @@ export default class ProductVendor extends Component {
                         title= "Book Now"
                         color="#fbcdc5"
                         />
-                    <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
+                    <View style= {{ flexDirection :direction, justifyContent: "space-between", padding : 5}}>
                         <Ionicons name ="date-range" size={25} style={{ padding :5}} color="#a9d5d1"/>
                         <DatePicker
                             style ={{ width : width-50}}
@@ -434,18 +429,14 @@ export default class ProductVendor extends Component {
 
                         : undefined }
 
-                        <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 10, paddingRight:10, backgroundColor:'#fff'}}>
-                            <Text style={{ height : 30, color:'#696969', paddingTop:10}}> Product Information</Text>
-                            <View style={{ marginLeft:5,width : 140, borderWidth:StyleSheet.hairlineWidth, borderColor:'#FFCC7D'}}/>
-                            <Text style={{ color:'#696969', marginTop:5}}> {this.props.short_description}
+                        <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20, backgroundColor:'#fff'}}>
+                            <Text style={{ height : 30 , color:'#FFCC7D', paddingTop:10, textAlign: (lang === 'ar') ? 'right': 'left' ,textDecorationLine : 'underline'}}>{I18n.t('productdetail.productinfo', { locale: lang })}</Text>
+                            <Text style={{ color:'#696969', marginTop:5,textAlign: (lang === 'ar') ? 'right': 'left'}}> {this.props.short_description}
                             </Text>
-                            <Text style={{ color:'#696969', marginTop:5,marginBottom:20}}> {this.props.detail_description}
+                            <Text style={{ color:'#696969', marginBottom:10, textAlign: (lang === 'ar') ? 'right': 'left'}}>{this.props.detail_description}
                             </Text>
-
                         </View>
-
                     </View>
-
                 </View>
             </ScrollView>
                  <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
@@ -600,3 +591,9 @@ container: {
         alignItems: 'center',
     }
 }
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(ProductVendor);

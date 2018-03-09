@@ -13,6 +13,7 @@
     "react-native": "0.51.0",
     "react-native-actionsheet": "2.3.0",
     "react-native-datepicker": "1.6.0",
+    "react-native-device-info": "^0.17.3",
     "react-native-drawer": "2.5.0",
     "react-native-elements": "0.18.5",
     "react-native-eventemitter": "0.0.1",

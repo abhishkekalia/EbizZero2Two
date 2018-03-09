@@ -5,6 +5,7 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
+    TouchableNativeFeedback,
     Dimensions,
     Button,
     Keyboard,
@@ -25,12 +26,14 @@ import Modal from 'react-native-modal';
 import commonStyles from "./styles";
 import GetImage from './imageSlider';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-
 import RNFetchBlob from 'react-native-fetch-blob';
 import Editimage from './Editimage';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
+
 const { width, height } = Dimensions.get('window');
 
-export default class EditService extends Component {
+class EditService extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -298,8 +301,12 @@ export default class EditService extends Component {
     }
 
     render() {
-        const { imageSelect, quantityRows, sizeRows} = this.state;
-        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
+        const { lang } =this.props,
+        { imageSelect, quantityRows, sizeRows} = this.state,
+        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d',
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
 
         let is_feature;
         if(this.state.is_feature === '0' ){
@@ -313,9 +320,12 @@ export default class EditService extends Component {
 
                 <View style={[commonStyles.formItems, { paddingRight : 25}]}>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Service Type *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.service_type}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
@@ -332,9 +342,12 @@ export default class EditService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Name *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.servicenamelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.service_name}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
@@ -351,9 +364,12 @@ export default class EditService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Short Description *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.shortdesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.short_description}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
@@ -370,9 +386,12 @@ export default class EditService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Detail Description  *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.detaildesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height)}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: textline}]}
                         value={this.state.detail_description}
                         numberOfLines={3}
                         multiline
@@ -394,9 +413,12 @@ export default class EditService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.pricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
                         underlineColorAndroid = 'transparent'
@@ -414,9 +436,12 @@ export default class EditService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Special Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.special_price}
                         underlineColorAndroid = 'transparent'
                         keyboardType={'numeric'}
@@ -432,10 +457,10 @@ export default class EditService extends Component {
                     </View>
 
 
-                    <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
+                    <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
 
                         {
-                            Platform.OS === 'ios' ? 
+                            Platform.OS === 'ios' ?
                             <TouchableOpacity
                             onPress={this.selectPhotoTapped.bind(this)}>
                             <View style={{ }}>
@@ -469,7 +494,7 @@ export default class EditService extends Component {
                 alignItems :'center',
                 backgroundColor:'#a9d5d1'
             }} >
-            <Text style={{color : '#fff', fontWeight:'bold'}}>Edit Service</Text>
+            <Text style={{color : '#fff', fontWeight:'bold'}}>{I18n.t('vendoraddservice.editButton', { locale: lang })}</Text>
             </TouchableOpacity>
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
@@ -482,3 +507,9 @@ export default class EditService extends Component {
         )
     }
 }
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(EditService);

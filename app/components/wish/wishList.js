@@ -30,10 +30,9 @@ import { Actions } from 'react-native-router-flux';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import  Countmanager  from './Countmanager';
 import {
-  SinglePickerMaterialDialog,
+    SinglePickerMaterialDialog,
 } from 'react-native-material-dialog';
 import { material } from 'react-native-typography';
-
 import Share, {ShareSheet, Button} from 'react-native-share';
 import EventEmitter from "react-native-eventemitter";
 
@@ -42,7 +41,6 @@ const { width, height } = Dimensions.get('window');
 class WishList extends Component {
     constructor(props) {
         super(props);
-        this.getKey = this.getKey.bind(this);
         this.fetchData = this.fetchData.bind(this);
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
@@ -57,16 +55,12 @@ class WishList extends Component {
         };
     }
     componentDidMount(){
-        this.getKey()
-        .then( ()=>this.fetchData())
-        .done()
-
+        this.fetchData()
         EventEmitter.removeAllListeners("reloadWishlist");
         EventEmitter.on("reloadWishlist", (value)=>{
             console.log("reloadWishlist")
             this.fetchData()
         });
-        console.log("componentDidMount")
     }
     componentWillMount() {
         Actions.refresh({ left: this._renderLeftButton, right: this._renderRightButton,});
@@ -77,29 +71,13 @@ class WishList extends Component {
              <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
          );
      };
-
    _renderRightButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
         );
     };
-
-
-    async getKey() {
-        try {
-            const value = await AsyncStorage.getItem('data');
-            var response = JSON.parse(value);
-            this.setState({
-                u_id: response.userdetail.u_id ,
-                country: response.userdetail.country
-            });
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-    }
     refreshfromCount(){
         this.fetchData()
-
     }
     onCancel() {
         console.log("CANCEL")
@@ -110,12 +88,13 @@ class WishList extends Component {
         console.log("OPEN")
         this.setState({visible:true});
     }
-
-
     fetchData(){
-        const {u_id, country, user_type } = this.state;
+        const {u_id, country, deviceId } = this.props;
+        // console.warn(this.props.country);
+        // console.warn(this.props.deviceId);
+
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        formData.append('device_uid', String(deviceId));
         formData.append('country', String(country));
 
         const config = {
@@ -126,7 +105,6 @@ class WishList extends Component {
             },
             body: formData,
         }
-
         fetch(Utils.gurl('wishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -152,30 +130,32 @@ class WishList extends Component {
 
     }
     validate(size){
-
+        const { lang } = this.props;
         if (!size.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Select Items For Your Cart",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('wishlist.pleaseselectitems', { locale: lang }),
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
             return true;
     }
-
     addtoCart(count, product_id, size){
-        const { color, u_id, country, user_type  } = this.state;
-
+        const { color} = this.state,
+        {u_id, country, deviceId, lang} = this.props;
+        align = (lang === 'ar') ?  'right': 'left';
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('size', String(size));
-        formData.append('color', String(color));
+        formData.append('color', String("blue"));
         formData.append('quantity', String(count));
-
+        formData.append('device_uid', String(deviceId));
         const config = {
             method: 'POST',
             headers: {
@@ -190,22 +170,23 @@ class WishList extends Component {
             .then((responseData) => {
                 if(responseData.status){
                     MessageBarManager.showAlert({
-                        message: responseData.data.message,
-                        alertType: 'alert',
-                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                        title:''
+                        message: I18n.t('wishlist.productadded', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                     })
                 }else {
                     MessageBarManager.showAlert({
-                        message: responseData.data.message,
-                        alertType: 'alert',
-                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                        title:''
+                        message: I18n.t('wishlist.somedatamissing', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                     })
                 }
             })
             .then(()=>this.removeWishlist(product_id))
-            .then(()=> this.fetchData())
             .catch((error) => {
               console.log(error);
             })
@@ -213,12 +194,12 @@ class WishList extends Component {
         }
     }
     removeWishlist(product_id){
-        const {u_id, country} = this.state;
+        let {country, u_id, deviceId, lang} = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
-
+        formData.append('device_uid', String(deviceId));
         const config = {
             method: 'POST',
             headers: {
@@ -227,7 +208,6 @@ class WishList extends Component {
             },
             body: formData,
         }
-
         fetch(Utils.gurl('removeFromWishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -235,6 +215,7 @@ class WishList extends Component {
                 console.log(responseData);
             }
         })
+        .then(()=> this.fetchData())
         .catch((error) => {
           console.log(error);
         })
@@ -261,7 +242,7 @@ class WishList extends Component {
     }
     renderLoadingView() {
         return (
-            <ActivityIndicator
+                <ActivityIndicator
             style={styles.centering}
             color="#a9d5d1"
             size="small"/>
@@ -380,34 +361,46 @@ class WishList extends Component {
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
-        const { lang } = this.props;
+        let {country, u_id, deviceId, lang} = this.props,
+        direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang == 'ar')? 'right': 'left';
+
         let color = data.special_price ? '#a9d5d1' : '#000';
-        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        let textDecorationLine = data.special_price ? 'line-through' : 'none',
+        product_name = (lang == 'ar')? data.product_name_in_arabic : data.product_name,
+        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
+        detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
+        price = (lang == 'ar')? data.price_in_arabic : data.price,
+        size = (lang == 'ar')? data.size_in_arabic : data.size,
+        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
+
         return (
             <View style={{
-            flexDirection: 'column-reverse' ,
-            marginTop : 2,
-            borderWidth : 0.5,
-            borderColor : "#ccc",
-            borderRadius : 5}}>
-
-            <SelectItem product_id={data.product_id} u_id={this.state.u_id} country={this.state.country} callback={this.refreshfromCount.bind(this)} size_arr={data.size_arr}>
-
-                <View style={{
-                flexDirection: (lang === 'ar') ? 'row-reverse' : 'row',
-                backgroundColor : "#fff", alignItems : 'center'}}>
-                    <Image style={[styles.thumb]}
-                    source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
-                    />
+                    flexDirection: 'column-reverse' ,
+                    marginTop : 2,
+                    borderWidth : 0.5,
+                    borderColor : "#ccc",
+                    borderRadius : 5}
+                }>
+                <SelectItem product_id={data.product_id} u_id={u_id} deviceId= {deviceId} country={country} callback={this.refreshfromCount.bind(this)} size_arr={data.size_arr} lang={lang}>
+                    <View style={{
+                            flexDirection: direction,
+                            backgroundColor : "#fff", alignItems : 'center'}
+                        }>
+                        <Image style={[styles.thumb]}
+                            source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
+                            />
                         <View style={{flexDirection: 'column', justifyContent : 'space-between', marginLeft: 10}}>
-                        <TouchableOpacity onPress={()=>Actions.deascriptionPage({
-                            title: data.product_name,
-                            product_id : data.product_id})}>
-                                <Text style={{fontSize: 13, color: '#696969', marginTop: 10, marginBottom:5 ,textAlign:(lang === 'ar') ?  'right': 'left'}} > {data.product_name} </Text>
-                        </TouchableOpacity>
-                            <Text style={{ fontSize : 10, color : '#696969',bottom:5, textAlign:(lang === 'ar') ?  'right': 'left'}} > {data.short_description} </Text>
-                            <View style={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}}>
-                                <Text style={{fontSize: 13 ,alignSelf: 'center'}}> Quantity  </Text>
+                            <TouchableOpacity onPress={()=>Actions.deascriptionPage({
+                                    title: data.product_name,
+                                    product_id : data.product_id})
+                                }>
+                                <Text style={{fontSize: 13, color: '#696969', marginTop: 10, marginBottom:5 ,textAlign:align}} > {product_name} </Text>
+                            </TouchableOpacity>
+                            <Text style={{ fontSize : 10, color : '#696969',bottom:5, textAlign:align}} > {short_description} </Text>
+                            <View style={{ flexDirection: direction}}>
+                                <Text style={{fontSize: 13 ,alignSelf: 'center'}}> {I18n.t('wishlist.quantity', { locale: lang })}  </Text>
+                                <Text style={{fontSize: 13 ,alignSelf: 'center'}}> : </Text>
                                 <Countmanager
                                 quantity={data.quantity}
                                 u_id={this.state.u_id}
@@ -417,66 +410,62 @@ class WishList extends Component {
                                 callback={this.refreshfromCount.bind(this)}
                                 />
                             </View>
-                            <View style={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}}>
+                            <View style={{ flexDirection: direction}}>
                                 <Text style={{fontSize :12}}>{I18n.t('wishlist.sizelbl', { locale: lang })} </Text>
-                                <Text style={{fontSize:12}}> {data.size}</Text>
+                                <Text style={{fontSize :12}}> : </Text>
+                                <Text style={{fontSize:12}}> {size}</Text>
                             </View>
-                            <View style={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent:"space-between"}}>
-                            <View style={{ flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}}>
-                                <Text style={{fontWeight :'bold'}}> {data.special_price} </Text>
+                            <View style={{ flexDirection: direction, justifyContent:"space-between"}}>
+                            <View style={{ flexDirection: direction}}>
+                                <Text style={{fontWeight :'bold'}}> {special_price} </Text>
                                 <Text style={{fontWeight:'bold'}}> KWD</Text>
                             </View>
                             </View>
                         </View>
                     </View>
-                <View style={[styles.bottom, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}]}>
-                    <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
-                    <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
-                        <Text style={{ left : 5}}>{I18n.t('wishlist.share', { locale: lang })}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]}
-                    onPress={()=>this.addtoCart(data.quantity, data.product_id, data.size)}>
-                    <Image source={require('../../images/cart_icon.png')} style={{ width:"10%", height : "100%"}}/>
-                        <Text style={{ left :5}}>{I18n.t('wishlist.movetocart', { locale: lang })}</Text>
-                    </TouchableOpacity>
-                </View>
+                    <View style={[styles.bottom, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}]}>
+                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
+                            <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
+                            <Text style={{ left : 5}}>{I18n.t('wishlist.share', { locale: lang })}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]}
+                            onPress={()=>this.addtoCart(data.quantity, data.product_id, data.size)}>
+                            <Image source={require('../../images/cart_icon.png')} style={{ width:"10%", height : "100%"}}/>
+                            <Text style={{ left :5}}>{I18n.t('wishlist.movetocart', { locale: lang })}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </SelectItem>
             </View>
         )
     }
 }
-
 class SelectItem extends Component{
-  constructor(props) {
-      super(props);
-      this.state = {
-          size : '',
-          color : 'blue',
-          selectSize : false,
-          SHORT_LIST : ['0']
-
-      };
-  }
-  componentDidMount(){
-    var data =this.props.size_arr,
+    constructor(props) {
+        super(props);
+        this.state = {
+            size : '',
+            color : 'blue',
+            selectSize : false,
+            SHORT_LIST : ['0']
+        };
+    }
+    componentDidMount(){
+        var data =this.props.size_arr,
         length = data.length,
-        sizeList= []
-
-            for(var i=0; i < length; i++) {
-                order = data[i];
-                // console.warn(order);
-                sizeof = order.size;
-                sizeList.push(sizeof);
-            }
-            // console.warn(sizeList);
-            this.setState({
-              SHORT_LIST: sizeList,
-            })
-
-  }
-        validate(){
+        sizeList= [];
+        for(var i=0; i < length; i++) {
+            order = data[i];
+            // console.warn(order);
+            sizeof = order.size;
+            sizeList.push(sizeof);
+        }
+        // console.warn(sizeList);
+        this.setState({
+            SHORT_LIST: sizeList,
+        })
+    }
+    validate(){
         const { color} = this.state;
-
         if (!color.length)
         {
             MessageBarManager.showAlert({
@@ -488,18 +477,15 @@ class SelectItem extends Component{
         }
             return true;
     }
-
     editWishlist(size){
         const { color, } = this.state;
         const {u_id, country, product_id } = this.props;
-
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('size', String(size));
         formData.append('color', String(color));
-
         const config = {
             method: 'POST',
             headers: {
@@ -514,9 +500,9 @@ class SelectItem extends Component{
             .then((responseData) => {
                 MessageBarManager.showAlert({
                         message: responseData.data.message,
+                        title:'',
                         alertType: 'alert',
                         stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                        title:''
                     })
             })
             .then(()=>this.props.callback())
@@ -527,12 +513,12 @@ class SelectItem extends Component{
         }
     }
     removeWishlist(){
-        const {u_id, country, product_id } = this.props;
+        const {u_id, country, product_id, deviceId } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
-
+        formData.append('device_uid', String(deviceId));
         const config = {
             method: 'POST',
             headers: {
@@ -541,7 +527,6 @@ class SelectItem extends Component{
             },
             body: formData,
         }
-
         fetch(Utils.gurl('removeFromWishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -562,11 +547,10 @@ class SelectItem extends Component{
         });
         this.editWishlist(result.selectedItem.label)
     }
-
     render(){
         const {lang }  = this.props;
-      let { SHORT_LIST } = this.state;
-            let swipeBtns = [{
+        let { SHORT_LIST } = this.state;
+        let swipeBtns = [{
             text: I18n.t('wishlist.edit', { locale: lang }),
             backgroundColor: '#a9d5d1',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
@@ -576,18 +560,16 @@ class SelectItem extends Component{
             })}
          },{
              text: I18n.t('wishlist.delete', { locale: lang }),
-            backgroundColor: '#f53d3d',
-            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {this.removeWishlist()}
+             backgroundColor: '#f53d3d',
+             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+             onPress: () => {this.removeWishlist()}
          }];
-
         return(
             <Swipeout
                 right={swipeBtns}
                 autoClose={true}
                 backgroundColor= 'transparent'>
                 {this.props.children}
-
                 <SinglePickerMaterialDialog
                   title={I18n.t('wishlist.selectsize', { locale: lang })}
                   items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
@@ -628,8 +610,6 @@ const styles = StyleSheet.create ({
         height:40,
         padding :10
     },
-
-
     wishbutton :{
         alignItems : 'center',
         width : width/2-10,
@@ -637,35 +617,30 @@ const styles = StyleSheet.create ({
         borderColor : "#ccc",
         padding : 5
     },
-
     thumb: {
       resizeMode: 'center',
         width   : '20%',
         height  :'50%' ,
         marginLeft : 10
     },
-
     textQue :{
         flex: 1,
         fontSize: 18,
         fontWeight: '400',
         left : 5
     },
-
     centering: {
         flex:1,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20
     },
-
     bottom : {
         borderBottomLeftRadius : 10,
         borderBottomRightRadius : 10,
         justifyContent : 'space-around',
         backgroundColor : "#fff"
     },
-
     headline: {
         paddingTop : 10,
         paddingBottom : 10,
@@ -710,6 +685,9 @@ const REACT_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAA
 function mapStateToProps(state) {
     return {
         lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
     }
 }
 export default connect(mapStateToProps)(WishList);

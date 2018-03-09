@@ -28,7 +28,9 @@ export default function auth(state = INITIAL_STATE, action) {
 			return {
 				...state,
 				token: null,
-				user_type : null
+				user_type : null,
+				// country : null,
+				deviceId : null
 			};
 		case types.CHANGE_LANGUAGE:
 				return {
@@ -36,7 +38,16 @@ export default function auth(state = INITIAL_STATE, action) {
 					errorStatus: '',
 					lang: action.payload,
 				};
-
+		case types.SKIP_SIGNIN:
+				return {
+					...state,
+					errorStatus: '',
+					deviceId: action.payload,
+				};
+		case types.SET_COUNTRY:
+				return {
+					country: action.payload,
+				};
 		default:
 			return state;
 	}

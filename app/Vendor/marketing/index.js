@@ -8,12 +8,13 @@ import {
     ListView,
     Dimensions
 } from 'react-native';
-
+import I18n from 'react-native-i18n';
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import FeaturedProduct from './FeaturedProduct'
 import Feather from 'react-native-vector-icons/Feather';
 import { Actions} from "react-native-router-flux";
- const { width, height } = Dimensions.get('window')
+
+const { width, height } = Dimensions.get('window')
 
 class Marketing extends Component {
     constructor(props) {
@@ -58,10 +59,11 @@ class Marketing extends Component {
     }
 
     render() {
+        const {lang} = this.props;
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
-                    values={['Featured Product', 'Marketing Campaign']}
+                    values={[I18n.t('venderprofile.featuredproducttab', { locale: lang }), I18n.t('venderprofile.marketingtab', { locale: lang })]}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -71,9 +73,9 @@ class Marketing extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <FeaturedProduct data={this.props.data} status={this.props.status}/>}
+                    <FeaturedProduct data={this.props.data} status={this.props.status} lang={lang}/>}
                 {this.state.customStyleIndex === 1 &&
-                    <UploadAdd marketing_campaign={this.props.marketing_campaign}/>}
+                    <UploadAdd marketing_campaign={this.props.marketing_campaign} lang={lang}/>}
 
             </View>
         );
@@ -100,7 +102,7 @@ class UploadAdd extends Component {
             dataSource: this.state.dataSource.cloneWithRows(nextProps.marketing_campaign),
         })
     }
-    
+
     ListViewItemSeparator = () => {
         return (
             <View
@@ -129,7 +131,10 @@ class UploadAdd extends Component {
         );
     }
     render(){
-
+        const {lang} = this.props,
+		direction = lang == 'ar'? 'row-reverse': 'row',
+		align = lang == 'ar'? 'flex-end': 'flex-start',
+		textline = lang == 'ar'? 'right': 'left';
         let listView = (<View></View>);
             listView = (
                <ListView
@@ -137,10 +142,10 @@ class UploadAdd extends Component {
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
-                renderSeparator= {this.ListViewItemSeparator} 
+                renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
-        return ( 
+        return (
         <View style={{
             flex: 1,
             justifyContent: 'space-between',
@@ -149,7 +154,7 @@ class UploadAdd extends Component {
         }}>
             <TouchableOpacity style={styles.upload} onPress={()=> Actions.marketingcompaign()}>
             <Feather name="upload-cloud" size= {20} color="#fff" />
-            <Text style={{color : '#fff'}}>Upload Add</Text>
+            <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
             </TouchableOpacity>
             <View style={{
                 flex: 1,
@@ -161,18 +166,18 @@ class UploadAdd extends Component {
             </View>
         )
     }
-        renderData(data: string, sectionID: number, rowID: number, index) { 
+        renderData(data: string, sectionID: number, rowID: number, index) {
         if (this.state.dataSource.getRowCount() === 0 ) {
             return this.noItemFound();
-        }     
+        }
         return (
-        <View style={{ 
+        <View style={{
             flex : 1,
             // justifyContent: 'center',
             padding: 10,
             // backgroundColor: '#fff'
         }}>
-        <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-around' }}>
+        <View style={{flex: 1, flexDirection: direction, justifyContent:'space-around' }}>
             <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >Ad Price : { (data.ad_type === '1' ) ? "1KWD" : "1.5KWD"} </Text>
             <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >User Id:  {data.u_id} </Text>
         </View>

@@ -6,17 +6,21 @@ import {
   Text,
   View
 } from 'react-native';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 const { width, height } = Dimensions.get('window')
 
-export default class ServiceCustomer extends Component{
+class ServiceCustomer extends Component{
     constructor(props) {
         super(props);
         this.state = {
         }
     }
-
     render() {
-        const {addressDetail} = this.props;
+        const {addressDetail, lang} = this.props;
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
         return (
             <View style={styles.container}>
 
@@ -24,28 +28,31 @@ export default class ServiceCustomer extends Component{
                 borderWidth : 1,
                 borderColor : '#ccc',
                 width: width ,
-                flexDirection : 'row',
+                flexDirection : direction,
                 backgroundColor: '#FFCC7D',
 
            }}>
                 <View style ={{flexDirection : 'column', width : width/2-10}}>
-                    <View style={{flexDirection : 'row'}}>
-                        <Text style={[styles.label ,{color : '#a9d5d1'}]}> Full Name : </Text>
-                        <Text style={styles.contentbody}> {addressDetail.full_name}</Text>
+                    <View style={{flexDirection : direction}}>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.fullname', { locale: lang })}</Text>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
+                        <Text style={[styles.contentbody, {textAlign: textline}]}> {addressDetail.full_name}</Text>
                     </View>
-                    <View style={{flexDirection : 'row'}}>
-                        <Text style={[styles.label ,{color : '#a9d5d1'}]}> Mobile Number : </Text>
+                    <View style={{flexDirection : direction}}>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.mobileno', { locale: lang })}</Text>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
                         <Text style={styles.contentbody}> {addressDetail.mobile_number}</Text>
                     </View>
-                    <View style={{flexDirection : 'row'}}>
-                        <Text style={[styles.label ,{color : '#a9d5d1'}]}> Alternate Number : </Text>
+                    <View style={{flexDirection : direction}}>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.alternativeno', { locale: lang })}</Text>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
                         <Text style={styles.contentbody}> {addressDetail.mobile_number}</Text>
                     </View>
                 </View>
-
-                <View style={{flexDirection : 'row', width : width/2-30}}>
-                    <Text style={[styles.label ,{color : '#a9d5d1'}]}>Address : </Text>
-                    <Text style={[styles.contentbody, { width : width/2.5-20}]}>
+                <View style={{flexDirection : direction}}>
+                    <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.address', { locale: lang })}</Text>
+                    <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
+                    <Text style={[styles.contentbody, { width : width/2.5-20,  textAlign: textline}]}>
                     {addressDetail.block_no} {" "}
                     {addressDetail.houseno}{" "}
                     {addressDetail.street}{" "}
@@ -84,3 +91,10 @@ const styles = StyleSheet.create({
     fontSize : 11
   }
 });
+
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(ServiceCustomer);

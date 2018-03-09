@@ -16,8 +16,9 @@ function mapDispatchToProps(dispatch) {
 	return bindActionCreators({
 		login: actions.login,
 		languageChange : actions.languageChange,
-		changeLanguage: (newLang) =>
-		SettingsActions.changeLanguage(newLang)
+		skipSignIN : actions.skipSignIN,
+		// changeLanguage: (newLang) =>
+		// SettingsActions.changeLanguage(newLang)
 	}, dispatch);
 }
 
