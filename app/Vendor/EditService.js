@@ -12,7 +12,8 @@ import {
     TextInput,
     Image,
     Alert,
-    Switch
+    Switch,
+    TouchableNativeFeedback
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
 
@@ -435,7 +436,7 @@ export default class EditService extends Component {
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:'row'}}>
 
                         {
-                            Platform.OS === 'ios' ? 
+                            Platform.OS === 'ios' ?
                             <TouchableOpacity
                             onPress={this.selectPhotoTapped.bind(this)}>
                             <View style={{ }}>

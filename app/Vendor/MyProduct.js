@@ -74,10 +74,11 @@ class MyProduct extends Component {
         fetch(Utils.gurl('productList'), config)
         .then((response) => response.json())
         .then((responseData) => {
+
             if(responseData.status){
                 this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                isLoading : false
+                  dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                  isLoading : false
                 });
             }
             else{
@@ -143,6 +144,7 @@ class MyProduct extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
+        
                 let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         const { lang } =this.props,

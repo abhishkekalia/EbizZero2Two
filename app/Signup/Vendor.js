@@ -280,7 +280,17 @@ class Vendorreg extends Component {
 						maxLength={140}
 						keyboardType={'email-address'}
           				onSubmitEditing={() => {
+										let emailarr = this.state.email.split('.');
+										 //[emailarr.lengrth- 1]
+										if(emailarr[emailarr.length- 1] !== "com"){
+											MessageBarManager.showAlert({
+													message: "mail domain name must be .com",
+													alertType: 'alert',
+													title:''
+											});
+										}
           					this.focusNextField('five');
+
           				}}
           				returnKeyType={ "next" }
  						     	ref={ input => {
@@ -537,6 +547,7 @@ validate(){
 	const {company, representative_name, contact, email,
 		address, password, gender,  selectCountry,
 		facebook_id, twitter_id, instagram_id, snapchat_id } = this.state;
+		const emailArr = email.split('.');
 	if (!company.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Company Name",
@@ -572,6 +583,16 @@ validate(){
          })
 		return false;
 	}
+
+	if(emailarr[emailarr.length- 1] !== "com"){
+		MessageBarManager.showAlert({
+				message: "mail domain name must be .com",
+				alertType: 'alert',
+				title:''
+		});
+	}
+
+
 	if (!address.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Address",

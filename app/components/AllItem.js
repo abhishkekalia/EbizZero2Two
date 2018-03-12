@@ -1,15 +1,15 @@
 import React, { Component ,PropTypes } from 'react';
 import {
-    ActivityIndicator, 
+    ActivityIndicator,
     FlatList,
     ListView,
-    TouchableOpacity, 
+    TouchableOpacity,
     StyleSheet,
     Dimensions,
-    AsyncStorage, 
-    Text, 
+    AsyncStorage,
+    Text,
     View,
-    Image 
+    Image
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
@@ -22,9 +22,9 @@ const { width, height } = Dimensions.get('window')
 
 export default class AllItem extends Component {
     constructor(props) {
-        super(props);        
-        this.state={ 
-            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }), 
+        super(props);
+        this.state={
+            dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
             u_id: null,
             country : null
@@ -37,35 +37,37 @@ export default class AllItem extends Component {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
 
-    fetchData(){ 
-        const {u_id, country } = this.state; 
-        let formData = new FormData();
+    fetchData(){
+      const {u_id, country } = this.state;
+      const {vendor_id} = this.props;
+      let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country)); 
-        formData.append('category_id', String(this.props.product_category)); 
-
-    const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+        formData.append('country', String(country));
+        formData.append('category_id', String(this.props.product_category));
+        //CHIRAG
+        formData.append('vendor_id', String(vendor_id));
+    const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
-    fetch(Utils.gurl('moreProduct'), config) 
+    fetch(Utils.gurl('moreProduct'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -87,9 +89,9 @@ export default class AllItem extends Component {
 
     }
     moveToDesc(title, product_id, is_wishlist){
-        Actions.deascriptionPage({ 
-            title: title, 
-            product_id : product_id , 
+        Actions.deascriptionPage({
+            title: title,
+            product_id : product_id ,
             is_wishlist : is_wishlist,
         })
     }
@@ -118,24 +120,24 @@ export default class AllItem extends Component {
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-        
+
        return (
-            <View style={styles.row} > 
+            <View style={styles.row} >
                 <View style={{flexDirection: 'row', justifyContent: "center", overflow:'hidden', paddingTop:15}}>
-                    
-                            <TouchableOpacity 
+
+                            <TouchableOpacity
                             onPress={()=> this.moveToDesc(data.product_name, data.product_id, null) }
                             // onPress={()=>Actions.deascriptionPage({ title: data.product_id, product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}
                             >
-                            <Image style={styles.thumb} 
+                            <Image style={styles.thumb}
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}
                                 resizeMethod = 'resize'
                                 />
                                 </TouchableOpacity>
                 </View>
-                
+
                 <View style={{ padding :15,paddingTop:0}}>
-                <TouchableOpacity  style={styles.name} 
+                <TouchableOpacity  style={styles.name}
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
 
@@ -144,11 +146,11 @@ export default class AllItem extends Component {
 
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
-                    flex: 0, 
-                    flexDirection: 'row', 
+                    flex: 0,
+                    flexDirection: 'row',
                     justifyContent: 'space-between',
                     top : 5
-                }}> 
+                }}>
                     <Text style={styles.special_price}>{data.special_price} Aed</Text>
                     <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} Aed</Text>
                 </View>
@@ -166,7 +168,7 @@ var styles =StyleSheet.create({
         backgroundColor: '#F5FCFF'
     },
     list: {
-        // borderWidth: 1, 
+        // borderWidth: 1,
         // borderColor: '#CCC',
         flexDirection: 'row',
         flexWrap: 'wrap'
@@ -192,16 +194,16 @@ var styles =StyleSheet.create({
         width : width/3-20,
         alignItems : 'center',
         padding : 10,
-        borderTopWidth : 0.5, 
+        borderTopWidth : 0.5,
         borderColor :'#ccc',
         borderLeftWidth : 0.5
     },
-    allshop :{ 
-        flex:1, 
-        justifyContent : "space-around", 
-        flexDirection: 'row', 
-        borderWidth : 0.5, 
-        borderColor: "#ccc", 
+    allshop :{
+        flex:1,
+        justifyContent : "space-around",
+        flexDirection: 'row',
+        borderWidth : 0.5,
+        borderColor: "#ccc",
         alignItems: 'center'
     },
 

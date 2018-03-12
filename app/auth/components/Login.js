@@ -153,7 +153,7 @@ Forgotpassword(){
 		if(reg.test(email) === false)
 			{
 			MessageBarManager.showAlert({
-            message: "Plese Enter Valid Email",
+            message: "Please Enter Email Address",
 			alertType: 'alert',
 			title:''
             })

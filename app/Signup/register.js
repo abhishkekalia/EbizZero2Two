@@ -250,7 +250,17 @@ class Register extends Component {
 							placeholder={I18n.t('userregister.emailaddress', { locale: lang })}
 							maxLength={140}
           					onSubmitEditing={() => {
+											let emailarr = this.state.email.split('.');
+											 //[emailarr.lengrth- 1]
+											if(emailarr[emailarr.length- 1] !== "com"){
+												MessageBarManager.showAlert({
+														message: "mail domain name must be .com",
+														alertType: 'alert',
+														title:''
+												});
+											}
           						this.focusNextField('three');
+
           					}}
           					returnKeyType={ "next" }
  					        ref={ input => {
@@ -515,6 +525,8 @@ class Register extends Component {
 
 validate(){
 	const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
+	const emailArr = email.split('.');
+
 	if (!fullname.length){
 		MessageBarManager.showAlert({
             message: "Plese Enter Your Fullname",
@@ -532,6 +544,15 @@ validate(){
 		   alertType: 'alert',
 		   title:''
          })
+		return false;
+	}
+
+	if(emailArr[emailArr.length- 1] !== "com"){
+		MessageBarManager.showAlert({
+			message: "mail domain name must be .com",
+			alertType: 'alert',
+			title:''
+		});
 		return false;
 	}
 

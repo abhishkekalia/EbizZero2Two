@@ -15,7 +15,7 @@ import {
     Alert,
     Switch
 } from 'react-native'
-import {Actions as routes} from "react-native-router-flux";
+import {Actions as routes,Tabs as tabs} from "react-native-router-flux";
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -103,13 +103,27 @@ class AddProduct extends Component {
   }
 
   componentDidMount(){
-        this.getKey()
-        .then(()=>this.getCategory())
-        .done();
-    }
-    componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
-    }
+    this.getKey()
+    .then(()=>this.getCategory())
+    .done();
+  }
+  componentWillMount() {
+    routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+
+  }
+  componentWillUnmount () {
+     this.keyboardDidShowListener.remove();
+     this.keyboardDidHideListener.remove();
+   }
+  _keyboardDidShow () {
+    // console.warn(tabs);
+  }
+
+  _keyboardDidHide () {
+    // console.warn(tabs);
+  }
    _renderLeftButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
@@ -418,7 +432,7 @@ class AddProduct extends Component {
         return (
             <ScrollView
             contentContainerStyle={{backgroundColor: 'transparent',
-            margin :10,paddingBottom:30}}//commonStyles.container}
+            margin :10,paddingBottom:30}}//commonStyles.container} paddingBottom:30
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'handled'}
             automaticallyAdjustContentInsets={false}

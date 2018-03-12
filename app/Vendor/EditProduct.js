@@ -16,9 +16,9 @@ import {
     Switch
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
-
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import ImagePicker from 'react-native-image-picker'
 import Utils from 'app/common/Utils';
 import {CirclesLoader} from 'react-native-indicator';
@@ -45,6 +45,7 @@ class EditProduct extends Component {
             u_id: this.props.u_id,
             country : this.props.country,
             visibleModal: false,
+            editSizeModal:false,
             height : '',
             productname : this.props.product_name,
             detaildescription : this.props.detail_description,
@@ -57,36 +58,35 @@ class EditProduct extends Component {
             rows : [] ,
             Imagepath : [],
             is_feature : this.props.is_feature ,
-            removed_images : []
+            removed_images : [],
+            selSize:[]
         }
-    this.inputs = {};
-
-
-    this.handlePress = this.handlePress.bind(this)
-  }
-
+        this.inputs = {};
+        this.handlePress = this.handlePress.bind(this)
+    // this.editSize = this.editSize.bind(this);
+    }
     focusNextField(id) {
         this.inputs[id].focus();
     }
 
-  handlePress(i) {
-    this.setState({
-      product_category: i
-    })
-  }
-  setSelectedOption(option){
-     this.setState({
-         gender: option,
-     });
- }
+    handlePress(i) {
+        this.setState({
+            product_category: i
+        })
+    }
+    setSelectedOption(option){
+        this.setState({
+            gender: option,
+        });
+    }
 
-  componentDidMount(){
-    var Items = this.props.productImages,
-            length = Items.length,
-            organization,
-            Select =[],
-            user,
-            i;
+    componentDidMount(){
+        var Items = this.props.productImages,
+        length = Items.length,
+        organization,
+        Select =[],
+        user,
+        i;
 
         for (i = 0; i < length; i++) {
             organization = Items[i];
@@ -95,17 +95,16 @@ class EditProduct extends Component {
         this.setState({
             rows : Select
         })
-
     }
     componentWillMount() {
         // routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
     }
-   _renderLeftButton = () => {
+    _renderLeftButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
         );
     };
-   _renderRightButton = () => {
+    _renderRightButton = () => {
         return(
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
             <Text style={{color : '#fff'}}>Upload</Text>
@@ -119,140 +118,142 @@ class EditProduct extends Component {
             discount,final_price, quantityRows,
             Size, quantity, is_feature, Imagepath , special, rows ,sizeRows} = this.state;
 
-        let path = rows.length
-        if(path < 1){
-            MessageBarManager.showAlert({
-                message: "Plese Select At Lest Single Image",
-                alertType: 'warning',
-                title:''
+            let path = rows.length
+            if(path < 1){
+                MessageBarManager.showAlert({
+                    message: "Plese Select At Lest Single Image",
+                    alertType: 'warning',
+                    title:''
                 })
-            return false
+                return false
             }
-        if (!productname.length){
-            MessageBarManager.showAlert({
-                message: "Plese Insert Product Name",
-                alertType: 'warning',
+            if (!productname.length){
+                MessageBarManager.showAlert({
+                    message: "Plese Insert Product Name",
+                    alertType: 'warning',
 
-                title:''
+                    title:''
                 })
-            return false
-        }
-        if (!shortdescription.length){
-            MessageBarManager.showAlert({
-                message: "Plese Insert Short Description Of Product",
-                alertType: 'warning',
-                title:''
+                return false
+            }
+            if (!shortdescription.length){
+                MessageBarManager.showAlert({
+                    message: "Plese Insert Short Description Of Product",
+                    alertType: 'warning',
+                    title:''
                 })
-            return false
-        }
-        if (!detaildescription.length){
-            MessageBarManager.showAlert({
-                message: "Plese Insert Detail description Of Product",
-                alertType: 'warning',
-                title:''
+                return false
+            }
+            if (!detaildescription.length){
+                MessageBarManager.showAlert({
+                    message: "Plese Insert Detail description Of Product",
+                    alertType: 'warning',
+                    title:''
                 })
-            return false
-        }
-        if (!price){
-            MessageBarManager.showAlert({
-                message: "Plese Insert Price",
-                alertType: 'warning',
-                title:''
+                return false
+            }
+            if (!price){
+                MessageBarManager.showAlert({
+                    message: "Plese Insert Price",
+                    alertType: 'warning',
+                    title:''
                 })
-            return false
-        }
-        if (!special){
-            MessageBarManager.showAlert({
-                message: "Plese Insert special Price",
-                alertType: 'warning',
-                title:''
+                return false
+            }
+            if (!special){
+                MessageBarManager.showAlert({
+                    message: "Plese Insert special Price",
+                    alertType: 'warning',
+                    title:''
                 })
-            return false
+                return false
 
-        }
-        if ( special > price){
-            MessageBarManager.showAlert({
-                message: "Special Price cannot be greater than Price",
-                alertType: 'warning',
-                title:''
+            }
+            if ( special > price){
+                MessageBarManager.showAlert({
+                    message: "Special Price cannot be greater than Price",
+                    alertType: 'warning',
+                    title:''
                 })
-            return false
+                return false
+            }
+
+            return true;
         }
 
-        return true;
-    }
+        uploadTocloud(){
+            const {
+                product_category , productname,
+                shortdescription, detaildescription, price,
+                discount,final_price, quantityRows,
+                Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images} = this.state;
 
-    uploadTocloud(){
-        const {
-            product_category , productname,
-            shortdescription, detaildescription, price,
-            discount,final_price, quantityRows,
-            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images} = this.state;
-        const { u_id, country } = this.props;
-        if(this.validate()) {
-            this.setState({
-                visibleModal : true
-            });
-
-            RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{
-                Authorization : "Bearer access-token",
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            [...Imagepath,
-            { name : 'u_id', data: String(u_id)},
-            { name : 'country', data: String(country)},
-            { name : 'product_category', data: String(product_category)},
-            { name : 'product_name', data: String(productname)},
-            { name : 'short_description', data: String(shortdescription)},
-            { name : 'detail_description', data: String(detaildescription)},
-            { name : 'price', data: String(price)},
-            { name : 'special_price', data: String(special)},
-            { name : 'discount', data: String(10)},
-            { name : 'final_price', data: String(special)},
-            { name : 'product_id', data: String(this.props.product_id)},
-            { name : 'removed_images', data: removed_images.toString()},
-            { name : 'quantity', data: quantityRows.toString()},
-            { name : 'size_id', data: sizeRows.toString()},
-            { name : 'size', data: sizeRows.toString()},
-            { name : 'quantity', data: sizeRows.toString()},
-            { name : 'is_feature', data: String(is_feature)},
-            { name : 'gender', data: String(1)},
-            ])
-            .uploadProgress((written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%')
-            })
-            .then((res)=>{
-                var getdata = JSON.parse(responseData.data);
-               if(getdata.status){
-                    MessageBarManager.showAlert({
-                        message: "Product Update Successfully",
-                        alertType: 'warning',
-                        title:''
-                    })
+                const { u_id, country } = this.props;
+                if(this.validate()) {
                     this.setState({
-                        visibleModal : false
+                        visibleModal : true
+                    });
+
+                    RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{
+                        Authorization : "Bearer access-token",
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data;',
+                    },
+                    [...Imagepath,
+                        { name : 'u_id', data: String(u_id)},
+                        { name : 'country', data: String(country)},
+                        { name : 'product_category', data: String(product_category)},
+                        { name : 'product_name', data: String(productname)},
+                        { name : 'short_description', data: String(shortdescription)},
+                        { name : 'detail_description', data: String(detaildescription)},
+                        { name : 'price', data: String(price)},
+                        { name : 'special_price', data: String(special)},
+                        { name : 'discount', data: String(10)},
+                        { name : 'final_price', data: String(special)},
+                        { name : 'product_id', data: String(this.props.product_id)},
+                        { name : 'removed_images', data: removed_images.toString()},
+                        { name : 'quantity', data: quantityRows.toString()},
+                        { name : 'size_id', data: sizeRows.toString()},
+                        { name : 'size', data: sizeRows.toString()},
+                        { name : 'quantity', data: sizeRows.toString()},
+                        { name : 'is_feature', data: String(is_feature)},
+                        { name : 'gender', data: String(1)},
+                    ])
+                    .uploadProgress((written, total) => {
+                        console.log('uploaded', Math.floor(written/total*100) + '%')
                     })
-                }else{
-                    MessageBarManager.showAlert({
-                        message: "Product Upload Failed",
-                        alertType: 'warning',
-                        title:''
+                    .then((res)=>{
+
+                        var getdata = JSON.parse(res.data);
+                        if(getdata.status){
+                            MessageBarManager.showAlert({
+                                message: "Product Update Successfully",
+                                alertType: 'warning',
+                                title:''
+                            })
+                            this.setState({
+                                visibleModal : false
+                            })
+                        }else{
+                            MessageBarManager.showAlert({
+                                message: "Product Upload Failed",
+                                alertType: 'warning',
+                                title:''
+                            })
+                            this.setState({
+                                visibleModal : false
+                            })
+                        }
                     })
-                    this.setState({
-                        visibleModal : false
+                    .then(()=>routes.product())
+                    .catch((errorMessage, statusCode) => {
+                        this.setState({
+                            visibleModal : false
+                        })
                     })
+                    .done();
                 }
-            })
-            .then(()=>routes.product())
-            .catch((errorMessage, statusCode) => {
-                this.setState({
-                        visibleModal : false
-                    })
-            })
-            .done();
-        }
-    }
+            }
     selectPhotoTapped() {
         const options = {
             quality: 1.0,
@@ -328,9 +329,25 @@ class EditProduct extends Component {
         arrayvar.push(result)
         this.setState({ removed_images: arrayvar })
     }
+    // renderSizeTable(){
+    //   render() {
+    //     // const {Size} = this.state;
+    //     return (
+    //       <Text style={[commonStyles.label,{ textAlign: textline}]}> this.state.Size </Text>
+    //     )
+    //   }
+    //
+    // }
+    editSize(selSizeData){
+      this.setState({
+        selSize:selSizeData,
+        editSizeModal:true
+      });
+    }
 
     render() {
         const { imageSelect, quantityRows, sizeRows} = this.state;
+
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
@@ -347,6 +364,12 @@ class EditProduct extends Component {
         let is_feature;
         if(this.state.is_feature === '0' ){
             is_feature = false} else { is_feature = true}
+
+        let sizeArr = [];
+        const size = this.state.sizeRows;
+        var selSize= this.state.selSize;
+
+
 
         return (
             <ScrollView
@@ -519,6 +542,42 @@ class EditProduct extends Component {
                         circleActiveColor={'#30a566'}
                         circleInActiveColor={'#000000'}/>
                     </View>
+                    <View>
+                        <View style={{flex:1,flexDirection:'row'}}>
+                            <View style={{padding:5}}>
+                                <Text> #Id</Text>
+                            </View>
+                            <View style={{padding:5}}>
+                                <Text> Size </Text>
+                            </View>
+                            <View style={{padding:5}}>
+                                <Text> Quantity </Text>
+                            </View>
+
+                        </View>
+                      {size.map((prop, key) => {
+                        return (
+
+                          <View style={{flex:1,flexDirection:'row'}}>
+                                  <View style={{padding:5}}>
+                                      <Text> {prop.size_id} </Text>
+                                  </View>
+                                  <View style={{padding:5}}>
+                                      <Text> {prop.size} </Text>
+                                  </View>
+                                  <View style={{padding:5}}>
+                                      <Text> {prop.quantity} </Text>
+                                  </View>
+                                  <View>
+                                    <TouchableOpacity
+                                    onPress={() => this.editSize(prop)}>
+                                        <Icon style={{padding:5}} name='create' size={25}  />
+                                    </TouchableOpacity>
+                                  </View>
+                              </View>
+                        );
+                     })}
+                    </View>
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
                     {Platform.OS === 'ios' ?
@@ -563,9 +622,74 @@ class EditProduct extends Component {
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                     <CirclesLoader />
-
                 </View>
             </Modal>
+            <View>
+              <Modal isVisible={this.state.editSizeModal}>
+                  <View style={{ padding:10, backgroundColor : '#fff'}}>
+                      <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center'}}>Edit Quantity & Size</Text>
+                      <View style={{flexDirection: direction, width: '90%'}}>
+                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>Quantity</Text>
+                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
+                      </View>
+                        <TextInput
+                          style={[commonStyles.inputs, { bottom : 20,  textAlign: textline, width: '90%'}]}
+                          value={this.state.selSize.quantity}
+                          underlineColorAndroid = 'transparent'
+                          autoCorrect={false}
+                          keyboardType={'numeric'}
+                          placeholder="Quantity"
+                          maxLength={3}
+                          onChangeText={(quantity) => this.setState({
+                            selSize:{
+                                    size:this.state.selSize.size,
+                                    quantity:quantity
+                            }
+                          })}
+                          onSubmitEditing={() => {
+                              this.focusNextField('two');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => {
+                              this.inputs['one'] = input;
+                            }}
+
+                              />
+                  <View style={{flexDirection: direction, width: '90%'}}>
+                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>Size</Text>
+                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
+                      </View>
+                      <TextInput
+                          style={[commonStyles.inputs, {bottom : 20,  textAlign: textline, width: '90%'}]}
+                          value={this.state.selSize.size}
+                          underlineColorAndroid = 'transparent'
+                          autoCorrect={false}
+                          keyboardType={'default'}
+                          placeholder="Size"
+                          maxLength={15}
+
+                          returnKeyType={ "done" }
+                          ref={ input => {
+                              this.inputs['two'] = input;
+                          }}
+                          onChangeText={(Size) => this.setState({
+                            selSize:{
+                                    size:Size,
+                                    quantity:this.state.selSize.quantity
+
+                            }
+                          })}
+                      />
+                  <View style={{flexDirection: direction, justifyContent: 'space-around'}}>
+                      <Button title="Cancel" onPress={()=>this.setState({
+                                  editSizeModal : false
+                              })} color="#a9d5d1"/>
+                      <Button title={I18n.t('vendoraddproduct.submit', { locale: lang })}   color="#a9d5d1"  onPress={()=>this.setState({ editSizeModal : false })}
+                              />
+                  </View>
+              </View>
+              </Modal>
+            </View>
 
             </ScrollView>
         )

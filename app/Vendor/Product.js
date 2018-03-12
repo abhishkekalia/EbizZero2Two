@@ -70,7 +70,6 @@ class Product extends Component {
                     <MyProduct/>}
                 {this.state.customStyleIndex === 1 &&
                     <AddProduct/>}
-
             </View>
         );
     }
