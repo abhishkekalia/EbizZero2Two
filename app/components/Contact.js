@@ -33,16 +33,13 @@ class Contact extends Component<{}> {
             country : '',
         }
         this.inputs = {};
-
     }
     focusNextField(id) {
         this.inputs[id].focus();
     }
-
     componentDidMount(){
         this.getKey()
         .done()
-
         // var o = {"0":"1","1":"2","2":"3","3":"abhi"};
         // var arr = Object.keys(o).map(function(k) { return o[k] });
         // console.warn(arr)
@@ -64,47 +61,57 @@ class Contact extends Component<{}> {
     }
     validate(){
         const {name, email, issue,message } = this.state;
+        const { lang } =this.props,
+        align = lang == 'ar'? 'right': 'left';
+
         if (!name.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Enter Your Name",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('contact.entername', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
         if (!email.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Enter Your Email",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('contact.enteremail', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
         if (!issue.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Select Your Issue",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('contact.selectissue', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
         if (!message.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Enter Your Message",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('contact.entermsg', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
             return true;
     }
     contactUS(){
-            Keyboard.dismiss();
-
+        Keyboard.dismiss();
         const { u_id,country, name, email , issue, message } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -113,39 +120,36 @@ class Contact extends Component<{}> {
         formData.append('email', String(email));
         formData.append('issue_type', String(issue));
         formData.append('message', String(message));
-            const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data;'
-                },
-                body: formData,
-            }
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;'
+            },
+            body: formData,
+        }
         if (this.validate()) {
-        fetch(Utils.gurl('contactUs'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-           MessageBarManager.showAlert({
-                message: responseData.data.message,
-                alertType: 'alert',
-                title:''
+            fetch(Utils.gurl('contactUs'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    alertType: 'alert',
+                    title:''
+                })
+                this.setState({message : '', issue : ''})
             })
-           this.setState({message : '', issue : ''})
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
+        }
     }
-    }
-
     render() {
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
-
         return (
             <ScrollView style={styles.container}>
                 <TextInput
@@ -153,32 +157,32 @@ class Contact extends Component<{}> {
                     value={this.state.name}
                     underlineColorAndroid = 'transparent'
                     autoCorrect={false}
-                    placeholder="Name"
+                    placeholder={I18n.t('contact.name', { locale: lang })}
                     fontSize={13}
                     maxLength={140}
-                            onSubmitEditing={() => {
-                                this.focusNextField('two');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['one'] = input;
-                            }}
+                    onSubmitEditing={() => {
+                        this.focusNextField('two');
+                    }}
+                    returnKeyType={ "next" }
+                    ref={ input => {
+                        this.inputs['one'] = input;
+                    }}
                     onChangeText={(name) => this.setState({name})}/>
                 <TextInput
                     style={[styles.input, {textAlign: textline}]}
                     value={this.state.email}
                     underlineColorAndroid = 'transparent'
                     autoCorrect={false}
-                    placeholder="Email Address"
+                    placeholder={I18n.t('contact.emailaddress', { locale: lang })}
                     fontSize={13}
                     maxLength={140}
-                            onSubmitEditing={() => {
-                                this.focusNextField('three');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['two'] = input;
-                            }}
+                    onSubmitEditing={() => {
+                        this.focusNextField('three');
+                    }}
+                    returnKeyType={ "next" }
+                    ref={ input => {
+                        this.inputs['two'] = input;
+                    }}
                     onChangeText={(email) => this.setState({email})}/>
                 <View style={{
                     borderWidth : 1,
@@ -187,14 +191,11 @@ class Contact extends Component<{}> {
                     margin: 5,
                     height:40,
                     alignItems :'center',
-                    justifyContent:'center'
-                }}>
+                    justifyContent:'center'}}>
                     <Picker
-                    mode="dropdown"
-                    selectedValue={this.state.issue}
-                    onValueChange={(itemValue, itemIndex) => this.setState({issue: itemValue})}
-
-                    >
+                        mode="dropdown"
+                        selectedValue={this.state.issue}
+                        onValueChange={(itemValue, itemIndex) => this.setState({issue: itemValue})}>
                         <Picker.Item label={I18n.t('contact.issuelabel', { locale: lang })} value="" />
                         <Picker.Item label={I18n.t('contact.issue1', { locale: lang })} value="1" />
                         <Picker.Item label={I18n.t('contact.issue2', { locale: lang })} value="2" />
@@ -207,39 +208,35 @@ class Contact extends Component<{}> {
                     value={this.state.message}
                     underlineColorAndroid = 'transparent'
                     autoCorrect={false}
-                    placeholder="Message"
+                    placeholder={I18n.t('contact.msg', { locale: lang })}
                     multiline={true}
                     fontSize={13}
                     maxLength={140}
-
-                            returnKeyType={ "done" }
-                            ref={ input => {
-                                this.inputs['three'] = input;
-                            }}
-                    onChangeText={(message) => this.setState({message})}
-                    />
+                    returnKeyType={ "done" }
+                    ref={ input => {
+                        this.inputs['three'] = input;
+                    }}
+                    onChangeText={(message) => this.setState({message})}/>
                 {/* <Button title="Send Request" onPress={()=> this.contactUS()}/> */}
-
                 <TouchableOpacity style ={{alignSelf:"center", backgroundColor:"#a9d5d1", width:'95%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.contactUS()}>
-                             <Text style = {{color:"#FFFFFF"}}>Submit</Text>
+                    <Text style = {{color:"#FFFFFF"}}>{I18n.t('contact.submitbtn', { locale: lang })}</Text>
                 </TouchableOpacity>
-
-
                 <Text style={{ padding : 10, fontSize :15, borderBottomWidth:0.5, borderColor : '#ccc', textAlign: textline}}>{I18n.t('contact.customerservice', { locale: lang })}</Text>
                 <Text style={{ paddingLeft : 10, color : '#a9d5d1' , fontSize : 15, textAlign: textline}}>{I18n.t('contact.contactus24/7', { locale: lang })}</Text>
                 <View style={{ flexDirection: direction, alignItems:'center', paddingLeft:10,marginTop:10}}>
-                    <Feather name="phone-call" size={13} color="#900"/>
+                    <Feather name="phone-call" size={13} color="#900" style={lang == 'ar' ? {transform: [{ rotate: '250deg'}]}: ''}/>
+                    <Text style={{paddingLeft:10}}>:</Text>
                     <Text style={{paddingLeft:10}}>+971 55 123456789</Text>
                 </View>
                 <View style={{ flexDirection: direction, alignItems :'center', paddingLeft:10, marginTop:5}}>
                     <Ionicons name="ios-stopwatch-outline" size={15} color="#900"/>
-                    <Text style={{paddingLeft:10}}>Daily, 8 AM to 12 PM</Text>
+                    <Text style={{paddingLeft:10}}>:</Text>
+                    <Text style={{paddingLeft:10}}>{I18n.t('contact.timings', { locale: lang })}</Text>
                 </View>
             </ScrollView>
         );
     }
 }
-
 const styles = StyleSheet.create({
     container: {
       flex: 1,

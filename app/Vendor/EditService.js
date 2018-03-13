@@ -30,6 +30,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import Editimage from './Editimage';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
+import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
 
 const { width, height } = Dimensions.get('window');
 
@@ -52,25 +53,27 @@ class EditService extends Component {
             special_price : this.props.special_price,
             rows : [] ,
             Imagepath : [],
-            removed_images : []
+            removed_images : [],
+            languageChoose: ''
         }
-    this.inputs = {};
-
-  }
-
+        this.inputs = {};
+        this.onSelect = this.onSelect.bind(this)
+    }
+    onSelect(index, value){
+        this.setState({
+            languageChoose: value
+        })
+    }
     focusNextField(id) {
         this.inputs[id].focus();
     }
-
-
-  componentDidMount(){
-    var Items = this.props.serviceImages,
-            length = Items.length,
-            organization,
-            Select =[],
-            user,
-            i;
-
+    componentDidMount(){
+        var Items = this.props.serviceImages,
+        length = Items.length,
+        organization,
+        Select =[],
+        user,
+        i;
         for (i = 0; i < length; i++) {
             organization = Items[i];
             Select.push ({uri:organization.image});
@@ -78,147 +81,166 @@ class EditService extends Component {
         this.setState({
             rows : Select
         })
-
     }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
     }
-   _renderLeftButton = () => {
+    _renderLeftButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
         );
     };
-   _renderRightButton = () => {
+    _renderRightButton = () => {
         return(
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-            <Text style={{color : '#fff'}}>Upload</Text>
+                <Text style={{color : '#fff'}}>Upload</Text>
             </TouchableOpacity>
         );
     };
-
     validate(){
         const { service_type , service_name,
             short_description, detail_description, price,
-            special_price,Imagepaths, Imagepath} = this.state;
+            special_price,Imagepaths, Imagepath
+        } = this.state;
+        const { lang } = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
 
         let path = Imagepath.length
         if(path < 1){
             MessageBarManager.showAlert({
-                message: "Plese Select At Lest Single Image",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.imageuploaderr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
             }
 
         if (!service_type.length){
             MessageBarManager.showAlert({
-                message: "Plese Insert Service Type",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
         }
         if (!service_name.length){
             MessageBarManager.showAlert({
-                message: "Plese Insert Service Name",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.servicenameerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
         }
         if (!short_description.length){
             MessageBarManager.showAlert({
-                message: "Plese Insert Short description Of Product",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.shortdescerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
         }
         if (!detail_description.length){
             MessageBarManager.showAlert({
-                message: "Plese Insert Detail description Of Product",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.detaildescerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
         }
         if (!price){
             MessageBarManager.showAlert({
-                message: "Plese Insert Price",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
         }
         if (!special_price){
             MessageBarManager.showAlert({
-                message: "Plese Insert special Price",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
 
         }
         if ( special_price > price){
             MessageBarManager.showAlert({
-                message: "Special Price cannot be greater than Price",
-                alertType: 'warning',
-                title:''
-                })
+                message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
             return false
         }
         return true;
     }
-
-
     uploadTocloud(){
-               const { service_type , service_name,
+        const { service_type , service_name,
             short_description, detail_description, price,
-            special_price, Imagepath, removed_images} = this.state;
-
-        const { u_id, country } = this.props;
+            special_price, Imagepath, removed_images
+        } = this.state;
+        const { u_id, country, lang } = this.props;
         if(this.validate()) {
             this.setState({
                 visibleModal : true
             });
-
             RNFetchBlob.fetch('POST', Utils.gurl('editService'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             [...Imagepath,
-            { name : 'u_id', data: String(u_id)},
-            { name : 'country', data: String(country)},
-            { name : 'service_type', data: String(service_type)},
-            { name : 'service_name', data: String(service_name)},
-            { name : 'short_description', data: String(short_description)},
-            { name : 'detail_description', data: String(detail_description)},
-            { name : 'price', data: String(price)},
-            { name : 'special_price', data: String(special_price)},
-            { name : 'service_id', data: String(this.props.service_id)},
-            { name : 'removed_images', data: removed_images.toString()},
+                { name : 'u_id', data: String(u_id)},
+                { name : 'country', data: String(country)},
+                { name : 'service_type', data: String(service_type)},
+                { name : 'service_name', data: String(service_name)},
+                { name : 'short_description', data: String(short_description)},
+                { name : 'detail_description', data: String(detail_description)},
+                { name : 'price', data: String(price)},
+                { name : 'special_price', data: String(special_price)},
+                { name : 'service_id', data: String(this.props.service_id)},
+                { name : 'removed_images', data: removed_images.toString()},
             ])
             .uploadProgress((written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%')
+                console.log('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((res)=>{
                 var getdata = JSON.parse(responseData.data);
-               if(getdata.status){
+                if(getdata.status){
                     MessageBarManager.showAlert({
-                        message: "Product Update Successfully",
-                        alertType: 'warning',
-                        title:''
+                        message: I18n.t('vendoraddservice.updateSuccess', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                     })
                     this.setState({
                         visibleModal : false
                     })
+                    routes.service();
                 }else{
                     MessageBarManager.showAlert({
-                        message: "Product Upload Failed",
-                        alertType: 'warning',
-                        title:''
+                        message: I18n.t('vendoraddservice.updateSuccess', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                     })
                     this.setState({
                         visibleModal : false
@@ -226,14 +248,15 @@ class EditService extends Component {
                 }
             })
             .catch((errorMessage, statusCode) => {
-                routes.service();
+                // routes.service();
                 // message: "Failed Due to Some communication Error",
                 // MessageBarManager.showAlert({
                 // alertType: 'warning',
                 // })
-                this.setState({
-                        visibleModal : false
-                    })
+                // this.setState({
+                //     visibleModal : false
+                // })
+                console.log(errorMessage);
             })
             .done();
         }
@@ -302,7 +325,7 @@ class EditService extends Component {
 
     render() {
         const { lang } =this.props,
-        { imageSelect, quantityRows, sizeRows} = this.state,
+        { imageSelect, quantityRows, sizeRows, languageChoose} = this.state,
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d',
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
@@ -317,145 +340,326 @@ class EditService extends Component {
             contentContainerStyle={commonStyles.container}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'handled'}>
+            <RadioGroup
+                size={15}
+                thickness={1}
+                color='#a9d5d1'
+                highlightColor='transparent'
+                // selectedIndex={langIndex}
+                onSelect = {(index, value) => this.onSelect(index, value)}
+                style={{flexDirection: 'row', justifyContent: 'space-around'}}
+                >
+
+                <RadioButton value='en' >
+                    <Text>English</Text>
+                </RadioButton>
+                <RadioButton value='ar'>
+                    <Text>Arabic</Text>
+                </RadioButton>
+            </RadioGroup>
 
                 <View style={[commonStyles.formItems, { paddingRight : 25}]}>
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                    {/* --------------------------service Type start-----------*/}
+                    {(languageChoose === 'ar') ?
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                                style={[commonStyles.inputusername, { borderRadius : 5,textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.service_type}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddservice.servicetype', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('two');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['one'] = input;
+                                }}
+                                onChangeText={(service_type) => this.setState({service_type})}
+                                />
                         </View>
-                        <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
-                        value={this.state.service_type}
-                        underlineColorAndroid = 'transparent'
-                        autoCorrect={false}
-                        placeholder="Service Type"
-                        maxLength={140}
-                        onSubmitEditing={() => {
-                            this.focusNextField('two');
-                        }}
-                        returnKeyType={ "next" }
-                        ref={ input => {
-                            this.inputs['one'] = input;
-                        }}
-                        onChangeText={(service_type) => this.setState({service_type})}
-                        />
-                    </View>
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.servicenamelbl', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        :
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.service_type}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddservice.servicetype', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('two');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['one'] = input;
+                                }}
+                                onChangeText={(service_type) => this.setState({service_type})}
+                                />
                         </View>
-                        <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
-                        value={this.state.service_name}
-                        underlineColorAndroid = 'transparent'
-                        autoCorrect={false}
-                        placeholder="Service name"
-                        maxLength={140}
-                        onSubmitEditing={() => {
-                            this.focusNextField('three');
-                        }}
-                        returnKeyType={ "next" }
-                        ref={ input => {
-                            this.inputs['two'] = input;
-                        }}
-                        onChangeText={(service_name) => this.setState({service_name})}
-                        />
-                    </View>
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.shortdesclbl', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                    }
+                    {/* --------------------------service Type end-----------*/}
+                    {/* --------------------------service name start-----------*/}
+                    {(languageChoose === 'ar') ?
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicenamelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                                style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.service_name_in_arabic}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddservice.servicename', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('three');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['two'] = input;
+                                }}
+                                onChangeText={(service_name_in_arabic) => this.setState({service_name_in_arabic})}
+                                />
                         </View>
-                        <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
-                        value={this.state.short_description}
-                        underlineColorAndroid = 'transparent'
-                        autoCorrect={false}
-                        placeholder="Short Description "
-                        maxLength={140}
-                        onSubmitEditing={() => {
-                            this.focusNextField('four');
-                        }}
-                        returnKeyType={ "next" }
-                        ref={ input => {
-                            this.inputs['three'] = input;
-                        }}
-                        onChangeText={(short_description) => this.setState({short_description})}
-                        />
-                    </View>
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.detaildesclbl', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        :
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicenamelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.service_name}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddservice.servicename', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('three');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['two'] = input;
+                                }}
+                                onChangeText={(service_name) => this.setState({service_name})}
+                                />
                         </View>
-                        <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: textline}]}
-                        value={this.state.detail_description}
-                        numberOfLines={3}
-                        multiline
-                        underlineColorAndroid = 'transparent'
-                        autoCorrect={false}
-                        placeholder="Detail Description "
-                        maxLength={140}
-                        onSubmitEditing={() => {
-                            this.focusNextField('five');
-                        }}
-                        returnKeyType={ "next" }
-                        ref={ input => {
-                            this.inputs['four'] = input;
-                        }}
-                        onContentSizeChange={(event) => {
-                            this.setState({height: event.nativeEvent.contentSize.height});
-                        }}
-                        onChangeText={(detail_description) => this.setState({detail_description})}
-                        />
-                    </View>
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.pricelbl', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                    }
+                    {/* --------------------------service name end-----------*/}
+                    {/* --------------------------service short description start-----------*/}
+                    {(languageChoose === 'ar') ?
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.shortdesclbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.short_description_in_arabic}
+                            underlineColorAndroid = 'transparent'
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.shortdesc', { locale: languageChoose })}
+                            maxLength={140}
+                            onSubmitEditing={() => {
+                                this.focusNextField('four');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => {
+                                this.inputs['three'] = input;
+                            }}
+                            onChangeText={(short_description_in_arabic) => this.setState({short_description_in_arabic})}
+                            />
                         </View>
-                        <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
-                        value={this.state.price}
-                        keyboardType={'numeric'}
-                        underlineColorAndroid = 'transparent'
-                        autoCorrect={false}
-                        placeholder="Price "
-                        maxLength={7}
-                        onSubmitEditing={() => {
-                            this.focusNextField('six');
-                        }}
-                        returnKeyType={ "next" }
-                        ref={ input => {
-                            this.inputs['five'] = input;
-                        }}
-                        onChangeText={(price) => this.setState({price})}
-                        />
-                    </View>
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        :
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.shortdesclbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.short_description}
+                            underlineColorAndroid = 'transparent'
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.shortdesc', { locale: languageChoose })}
+                            maxLength={140}
+                            onSubmitEditing={() => {
+                                this.focusNextField('four');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => {
+                                this.inputs['three'] = input;
+                            }}
+                            onChangeText={(short_description) => this.setState({short_description})}
+                            />
                         </View>
-                        <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
-                        value={this.state.special_price}
-                        underlineColorAndroid = 'transparent'
-                        keyboardType={'numeric'}
-                        autoCorrect={false}
-                        placeholder="Special Price"
-                        maxLength={7}
-                        returnKeyType={"done" }
-                        ref={ input => {
-                            this.inputs['six'] = input;
-                        }}
-                        onChangeText={(special_price) => this.setState({special_price})}
-                        />
-                    </View>
-
+                    }
+                    {/* --------------------------service short description ens-----------*/}
+                    {/* --------------------------service detail description start-----------*/}
+                    {(languageChoose === 'ar') ?
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.detaildesclbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.detail_description_in_arabic}
+                            numberOfLines={3}
+                            multiline
+                            underlineColorAndroid = 'transparent'
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.detaildesc', { locale: languageChoose })}
+                            maxLength={140}
+                            onSubmitEditing={() => {
+                                this.focusNextField('five');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => {
+                                this.inputs['four'] = input;
+                            }}
+                            onContentSizeChange={(event) => {
+                                this.setState({height: event.nativeEvent.contentSize.height});
+                            }}
+                            onChangeText={(detail_description_in_arabic) => this.setState({detail_description_in_arabic})}
+                            />
+                        </View>
+                        :
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.detaildesclbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.detail_description}
+                            numberOfLines={3}
+                            multiline
+                            underlineColorAndroid = 'transparent'
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.detaildesc', { locale: languageChoose })}
+                            maxLength={140}
+                            onSubmitEditing={() => {
+                                this.focusNextField('five');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => {
+                                this.inputs['four'] = input;
+                            }}
+                            onContentSizeChange={(event) => {
+                                this.setState({height: event.nativeEvent.contentSize.height});
+                            }}
+                            onChangeText={(detail_description) => this.setState({detail_description})}
+                            />
+                        </View>
+                    }
+                    {/* --------------------------service price start-----------*/}
+                    {(languageChoose === 'ar') ?
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.pricelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.price_in_arabic}
+                            keyboardType={'numeric'}
+                            underlineColorAndroid = 'transparent'
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.price', { locale: languageChoose })}
+                            maxLength={7}
+                            onSubmitEditing={() => {
+                                this.focusNextField('six');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => {
+                                this.inputs['five'] = input;
+                            }}
+                            onChangeText={(price_in_arabic) => this.setState({price_in_arabic})}
+                            />
+                        </View>
+                        :
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.pricelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.price}
+                            keyboardType={'numeric'}
+                            underlineColorAndroid = 'transparent'
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.price', { locale: languageChoose })}
+                            maxLength={7}
+                            onSubmitEditing={() => {
+                                this.focusNextField('six');
+                            }}
+                            returnKeyType={ "next" }
+                            ref={ input => {
+                                this.inputs['five'] = input;
+                            }}
+                            onChangeText={(price) => this.setState({price})}
+                            />
+                        </View>
+                    }
+                    {/* --------------------------service price end-----------*/}
+                    {/* --------------------------service special start-----------*/}
+                    {(languageChoose === 'ar') ?
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.special_price_in_arabic}
+                            underlineColorAndroid = 'transparent'
+                            keyboardType={'numeric'}
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.spprice', { locale: languageChoose })}
+                            maxLength={7}
+                            returnKeyType={"done" }
+                            ref={ input => {
+                                this.inputs['six'] = input;
+                            }}
+                            onChangeText={(special_price_in_arabic) => this.setState({special_price_in_arabic})}
+                            />
+                        </View>
+                        :
+                        <View style={commonStyles.textField}>
+                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                            </View>
+                            <TextInput
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            value={this.state.special_price}
+                            underlineColorAndroid = 'transparent'
+                            keyboardType={'numeric'}
+                            autoCorrect={false}
+                            placeholder={I18n.t('vendoraddservice.spprice', { locale: languageChoose })}
+                            maxLength={7}
+                            returnKeyType={"done" }
+                            ref={ input => {
+                                this.inputs['six'] = input;
+                            }}
+                            onChangeText={(special_price) => this.setState({special_price})}
+                            />
+                        </View>
+                    }
+                    {/* --------------------------service special price end-----------*/}
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
 

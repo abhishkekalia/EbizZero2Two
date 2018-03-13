@@ -140,7 +140,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 // navBar={HomeNavBar}
                                 // hideNavBar={true}
                                 showLabel={false}
-                                tabBarStyle={styles.tabBarStyle}
+                                tabBarStyle={[styles.tabBarStyle, { flexDirection: lang === 'ar'? 'row-reverse': 'row'}]}
                                 // tabBarSelectedItemStyle={styles.tabBarSelectedItemStyle}
                                 tabBarPosition={'bottom'}
                                 activeBackgroundColor='#fff'
@@ -153,6 +153,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     title="Home"
                                     icon={TabIcon}
                                     iconName="home"
+                                    hideNavBar={true}
                                     // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1', }}
                                     onRight={ ()=> console.log("")}

@@ -187,7 +187,7 @@ class Shopingcart extends Component {
     }
     validate(){
         const { ShopingItems} = this.state;
-        const { lang, country, u_id, deviceId } = this.props;
+        const { lang, country, u_id, deviceId } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
 
         if (!ShopingItems.length)

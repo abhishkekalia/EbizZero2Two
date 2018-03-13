@@ -13,7 +13,6 @@ import Modal from 'react-native-modal';
 class Profile extends Component {
 	constructor(props) {
         super(props);
-
         this.getKey = this.getKey.bind(this);
         this.state={
         	dataSource: [],
@@ -28,9 +27,10 @@ class Profile extends Component {
     }
 
     componentDidMount(){
-	    this.getKey()
-	    .then(()=>this.getAddress())
-		.done()
+	    // this.getKey()
+	    // .then(()=>this.getAddress())
+		// .done()
+		this.getAddress()
 
 		EventEmitter.removeAllListeners("reloadAddressProfile");
         EventEmitter.on("reloadAddressProfile", (value)=>{
@@ -69,7 +69,7 @@ class Profile extends Component {
         }
     }
     getAddress(){
-    	const { u_id, country } = this.state;
+    	const { u_id, country } = this.props;
     	let formData = new FormData();
     	formData.append('u_id', String(u_id));
     	formData.append('country', String(country));
@@ -137,7 +137,10 @@ class Profile extends Component {
 		direction = lang == 'ar'? 'row-reverse': 'row',
 		align = lang == 'ar'? 'flex-end': 'flex-start',
 		textline = lang == 'ar'? 'right': 'left';
-
+		fullname = lang == 'ar'? dataSource.fullname: dataSource.fullname;
+		acount_name = dataSource.fullname ? fullname : I18n.t('profile.guest', { locale: lang })
+		email = lang == 'ar'? dataSource.email_arabic: dataSource.email;
+		mobile = lang == 'ar'? dataSource.mobile: dataSource.mobile;
 		return (
 			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
 				<View style={[styles.content, {flexDirection :direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
@@ -156,34 +159,50 @@ class Profile extends Component {
 						</View>
 
 						<View style={{flexDirection : 'column',marginTop:3}}>
-							<Text style={[styles.label, { color : '#696969', fontSize:17, textAlign: lang == 'ar' ? 'right' : 'left'}]}>{dataSource.fullname}</Text>
-							<Text style={[styles.label, { color : '#696969', textAlign: lang == 'ar' ? 'right' : 'left'}]}>{this.state.email}</Text>
-							<Text style={[styles.label, { color : '#fbcdc5', textAlign: lang == 'ar' ? 'right' : 'left'}]}>Contact: {dataSource.mobile}</Text>
+							<Text style={[styles.label, { color : '#696969', fontSize:17, textAlign: lang == 'ar' ? 'right' : 'left'}]}>{acount_name}</Text>
+								{
+									dataSource.length < 1 ? undefined :
+									<View style={{flexDirection: direction}}>
+										<Text style={[styles.label, { color : '#fbcdc5', textAlign: lang == 'ar' ? 'right' : 'left'}]}>{I18n.t('profile.email', { locale: lang })}</Text>
+										<Text style={[styles.label, { color : '#fbcdc5', textAlign: lang == 'ar' ? 'right' : 'left'}]}>:</Text>
+										<Text style={[styles.label, { textAlign: lang == 'ar' ? 'right' : 'left'}]}>{email}</Text>
+									</View>
+								}
+								{
+									dataSource.length < 1 ? undefined :
+									<View style={{flexDirection: direction}}>
+										<Text style={[styles.label, { color : '#fbcdc5', textAlign: lang == 'ar' ? 'right' : 'left'}]}>{I18n.t('profile.mobileno', { locale: lang })}</Text>
+										<Text style={[styles.label, { color : '#fbcdc5', textAlign: lang == 'ar' ? 'right' : 'left'}]}>:</Text>
+										<Text style={[styles.label, { textAlign: lang == 'ar' ? 'right' : 'left'}]}>{mobile}</Text>
+									</View>
+								}
 						</View>
 					</View>
+					{
+						dataSource.length < 1 ? undefined :
+						<TouchableOpacity style={{right:-10  ,width :60, height:60, justifyContent: 'center', alignItems : 'center' }}
+						onPress={()=> Actions.editProfile({
+							title : this.state.dataSource.fullname,
+							fullname : this.state.dataSource.fullname ,
+							representative_name : this.state.dataSource.representative_name,
+							address : this.state.dataSource.address,
+							gender : this.state.dataSource.gender,
+							mobile : this.state.dataSource.mobile,
+							email : this.state.dataSource.email
+						})} >
+							<Entypo name="edit" size={20} color="#a9d5d1"/>
+						</TouchableOpacity >
+					}
 
-					<TouchableOpacity style={{right:-10  ,width :60, height:60, justifyContent: 'center', alignItems : 'center' }}
-					onPress={()=> Actions.editProfile({
-						title : this.state.dataSource.fullname,
-						fullname : this.state.dataSource.fullname ,
-						representative_name : this.state.dataSource.representative_name,
-						address : this.state.dataSource.address,
-						gender : this.state.dataSource.gender,
-						mobile : this.state.dataSource.mobile,
-						email : this.state.dataSource.email
-					})} >
-						<Entypo name="edit" size={20} color="#a9d5d1"/>
-					</TouchableOpacity >
 				</View>
 				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
-					<TouchableOpacity style={{ justifyContent: 'center', alignItems : 'center' }}
+					<TouchableOpacity style={{ justifyContent: 'center', alignItems : 'flex-end'}}
 					onPress={()=> this.setState({
 						visibleModal:true
 					})} >
-					<Text>Change Password</Text>
+					<Text style={{padding: 5,borderWidth: StyleSheet.hairlineWidth, borderColor: "#fbcdc5"}}>{I18n.t('profile.resetPass', { locale: lang })}</Text>
 					</TouchableOpacity >
 					<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
-
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
 					<View style={{ padding : 0, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>

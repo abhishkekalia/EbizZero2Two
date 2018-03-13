@@ -158,8 +158,12 @@ export default class FeaturedProduct extends Component {
         const { lang} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
-        textline = lang == 'ar'? 'right': 'left';
-
+        textline = lang == 'ar'? 'right': 'left',
+        product_name = (lang == 'ar')? data.product_name_in_arabic : data.product_name,
+        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
+        detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
+        price = (lang == 'ar')? data.price_in_arabic : data.price,
+        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
 
         return (
             <View style={{
@@ -185,6 +189,9 @@ export default class FeaturedProduct extends Component {
                     product_name: data.product_name,
                     detail_description: data.detail_description,
                     short_description: data.short_description,
+                    product_name_in_arabic: data.product_name_in_arabic,
+                    short_description_in_arabic: data.short_description_in_arabic,
+                    detail_description_in_arabic: data.detail_description_in_arabic,
                     price: data.price,
                     special_price: data.special_price,
                     quantity: data.quantity,
@@ -199,13 +206,13 @@ export default class FeaturedProduct extends Component {
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <Text style={[styles.row, { color:'#000',fontWeight :'bold', textAlign: textline}]} > {data.product_name} </Text>
+                        <Text style={[styles.row, { color:'#000',fontWeight :'bold', textAlign: textline}]} > {product_name} </Text>
+                        <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline}} > {short_description} </Text>
                         <View style={{ flexDirection:direction}}>
                             <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >{I18n.t('venderprofile.quantity', { locale: lang })}</Text>
                                 <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >: </Text>
                         <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} > {data.quantity} </Text>
                         </View>
-                        <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline}} > {data.short_description} </Text>
                         <View style={{ flexDirection : direction, justifyContent : 'space-between'}}>
                             <View style={{ flexDirection : direction}}>
                                 <Text style={{color : '#fbcdc5', textAlign: textline}} >{I18n.t('venderprofile.price', { locale: lang })}</Text>

@@ -13,7 +13,6 @@ import {
 import Modal from 'react-native-modal';
 import {connect} from "react-redux";
 import I18n from 'react-native-i18n'
-
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';

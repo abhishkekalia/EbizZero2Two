@@ -20,7 +20,6 @@ class ProductOrder extends Component{
         this.state = this.getInitialState();
         // this.bindMethods();
     }
-
     // bindMethods() {
     //     if (!this.bindableMethods) {
     //         return;
@@ -248,6 +247,7 @@ class ProductOrder extends Component{
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
+        product_name = lang == 'ar'? rowID.product_name_in_arabic: rowID.product_name;
         let label,
         ord_status;
         if(rowID.order_status === '1'){
@@ -266,7 +266,7 @@ class ProductOrder extends Component{
                     <Text style={[styles.rowText, { alignSelf: 'center'}]}>{rowID.product_id} </Text>
                 </View>
                 <View style={{ flexDirection : direction}}>
-                <Text style={[styles.rowText, {color : '#222', textAlign: textline, alignSelf: 'center'}]}>{rowID.product_name} </Text>
+                <Text style={[styles.rowText, {color : '#222', textAlign: textline, alignSelf: 'center'}]}>{product_name} </Text>
                 </View>
                 <View style={{ flexDirection : direction}}>
                     <Text style={[styles.rowText, { color : '#a9d5d1',  textAlign: textline, alignSelf: 'center'}]}>{I18n.t('productorder.qty', { locale: lang })}</Text>

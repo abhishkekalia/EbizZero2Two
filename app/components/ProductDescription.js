@@ -103,7 +103,7 @@ class ProductDescription extends Component {
         }
     }
     validate(){
-        const { size, count, color} = this.state;
+        const { size, count} = this.state;
         const{ lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
 
@@ -118,17 +118,17 @@ class ProductDescription extends Component {
             })
             return false
         }
-        if (!color.length)
-        {
-            MessageBarManager.showAlert({
-                message: I18n.t('productdetail.colorerr', { locale: lang }),
-                title:'',
-                alertType: 'extra',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-            return false
-        }
+        // if (!color.length)
+        // {
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('productdetail.colorerr', { locale: lang }),
+        //         title:'',
+        //         alertType: 'extra',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        // }
         return true;
     }
     async getKey() {
@@ -457,7 +457,7 @@ class ProductDescription extends Component {
                                         size={25}
                                         color="#FFCC7D"
                                         />
-                                    <Text style={{color:'#a9d5d1', textAlign: align}}>{I18n.t('productdetail.selctsize', { locale: lang })}</Text>
+                                    <Text style={{color:'#a9d5d1', textAlign: align, alignSelf: 'center'}}>{I18n.t('productdetail.selctsize', { locale: lang })}</Text>
                                 </View>
                                 <View style={{flexDirection : direction, justifyContent: 'space-around'}}>
                                     {renderedButtons}
@@ -546,7 +546,11 @@ class ProductDescription extends Component {
     }
 
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-        const {lang} = this.props
+        const {lang} = this.props,
+        direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left';
+
+
         if (!this.state.addressStatus) {
             return this.noItemFound();
         }
