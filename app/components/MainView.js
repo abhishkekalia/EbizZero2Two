@@ -112,7 +112,7 @@ class MainView extends Component {
         });
     }
     componentWillMount() {
-        Actions.refresh({ right: this._renderRightButton, left: this._renderLeftButton,});
+        Actions.refresh({ right: this._renderRightButton, left: this._renderLeftButton});
     }
     _renderLeftButton = () => {
         return(
@@ -509,6 +509,13 @@ class MainView extends Component {
         }
         return (
             <View style={{backgroundColor: '#f9f9f9'}}>
+                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    {this._renderLeftButton()}
+                    <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                        resizeMode = 'contain'
+                        resizeMethod = 'resize'/>
+                    {this._renderRightButton()}
+                </View>
                 {this.renderFilterOptions()}
                 <ScrollView
                     contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 50}}
@@ -1079,7 +1086,7 @@ class MainView extends Component {
                         size={25}
                         color="#a9d5d1"
                         onPress={()=>this.onOpen(product_name, data.product_id , url )}/>
-                        <Editwish
+                    <Editwish
                         u_id={u_id}
                         country={country}
                         is_wishlist={data.is_wishlist}
@@ -1244,10 +1251,12 @@ var styles = StyleSheet.create({
     },
 
     thumb: {
-        width: width/3-10,
-        height: width/3+30,
+        width: width/2-10,
+        height: height/3,
+        borderTopLeftRadius: 2,
+        borderTopRightRadius: 2
         // resizeMode : 'center',
-        top : 15
+        // top : 20
     },
 
     text: {
@@ -1294,28 +1303,46 @@ class LoadImage extends Component {
             loaded: false
         }
     }
-
     render(){
         console.log(this.props.productImages[0])
         var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
-
         return (
             imgUrl == "null" ?
-
-                <Image style={styles.thumb}
-                resizeMode = 'center'
-                resizeMethod = 'resize'
-                source={require('../images/no-image.jpg')}
-                onLoadEnd={() => { this.setState({ loaded: true }); }}
+            <IconBadge
+                MainElement={
+                    <Image style={[styles.thumb, { alignSelf: 'center',}]}
+                        resizeMode = {'stretch'|| "contain"}
+                        resizeMethod = 'resize'
+                        source={require('../images/no-image.jpg')}
+                        onLoadEnd={() => { this.setState({ loaded: true }); }}
+                        />
+                }
+                BadgeElement={
+                    <Text style={{color:'#FFFFFF'}}>{"125"}</Text>
+                }
+                IconBadgeStyle={
+                    {
+                        // position:'absolute',
+                        opacity: 0.5,
+                        top:height/3-20,
+                        left : width/4,
+                        // minWidth:20,
+                        // height:20,
+                        borderRadius: null,
+                        // alignItems: 'center',
+                        // justifyContent: 'flex-start',
+                        backgroundColor: '#000'
+                    }
+                }
+                Hidden={this.state.BadgeCount==0}
                 />
             :
-                <Image style={styles.thumb}
-                resizeMode = 'center'
+            <Image style={[styles.thumb, { alignSelf: 'center',}]}
+                resizeMode = 'stretch'
                 resizeMethod = 'resize'
                 source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
                 onLoadEnd={() => { this.setState({ loaded: true }); }}
                 />
-
         )
     }
 }

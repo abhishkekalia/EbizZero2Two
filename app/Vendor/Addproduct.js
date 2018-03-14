@@ -104,7 +104,7 @@ class AddProduct extends Component {
         .done();
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
+        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton, hideNavBar: false });
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
     }
@@ -281,6 +281,36 @@ class AddProduct extends Component {
             })
             return false
         }
+        if (!product_name_in_arabic.length > 0){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddproduct.productname_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!short_description_in_arabic.length > 0){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddproduct.shortdesc_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!detail_description_in_arabic.length > 0){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddproduct.detaildesc_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
         return true;
     }
     uploadTocloud(){
@@ -293,59 +323,60 @@ class AddProduct extends Component {
             product_name_in_arabic, short_description_in_arabic,
             detail_description_in_arabic,price_in_arabic, special_price_in_arabic
         } = this.state;
-        const { lang} = this.props;
+        const { lang } = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
+
             if(this.validate()) {
                 var productcategory = product_category ? this.state.optionsAvailable.find(x => x.category_name === this.state.options[this.state.product_category]).category_id : null;
                 this.setState({
                     visibleModal : true
                 });
 
-            RNFetchBlob.fetch('POST', Utils.gurl('productAdd'),{
-                Authorization : "Bearer access-token",
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            [...Imagepath,
-            { name : 'u_id', data: String(u_id)},
-            { name : 'country', data: String(country)},
-            { name : 'product_category', data: String(productcategory)},
-            { name : 'product_name', data: String(productname)},
-            { name : 'product_name_in_arabic', data: String(product_name_in_arabic)},
-            { name : 'short_description', data: String(shortdescription)},
-            { name : 'short_description_in_arabic', data: String(short_description_in_arabic)},
-            { name : 'detail_description', data: String(detaildescription)},
-            { name : 'detail_description_in_arabic', data: String(detail_description_in_arabic)},
-            { name : 'price', data: String(price)},
-            { name : 'price_in_arabic', data: String(price_in_arabic)},
-            { name : 'special_price', data: String(special)},
-            { name : 'special_price_in_arabic', data: String(special_price_in_arabic)},
-            { name : 'discount', data: String(10)},
-            { name : 'final_price', data: String(special)},
-            { name : 'quantity', data: quantityRows.toString()},
-            { name : 'size', data: sizeRows.toString()},
-            { name : 'is_feature', data: String(is_feature)},
-            { name : 'gender', data: String(1)},
-            ])
-            .uploadProgress((written, total) => {
-            console.log('uploaded', Math.floor(written/total*100) + '%')
-            })
-            .then((res)=>{
-            console.warn("Product added");
-              MessageBarManager.showAlert({
-                  message: I18n.t('vendoraddproduct.productadded', { locale: lang }),
-                  alertType: 'extra',
-                  title:'',
-                  titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                  messageStyle: { color: 'white', fontSize: 16 , textAlign:'center'}
-              })
-            })
-            .then(()=> this.setState({
-                      visibleModal : false
-                      })
+                RNFetchBlob.fetch('POST', Utils.gurl('productAdd'),{
+                    Authorization : "Bearer access-token",
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;',
+                },
+                [...Imagepath,
+                    { name : 'u_id', data: String(u_id)},
+                    { name : 'country', data: String(country)},
+                    { name : 'product_category', data: String(productcategory)},
+                    { name : 'product_name', data: String(productname)},
+                    { name : 'product_name_in_arabic', data: String(product_name_in_arabic)},
+                    { name : 'short_description', data: String(shortdescription)},
+                    { name : 'short_description_in_arabic', data: String(short_description_in_arabic)},
+                    { name : 'detail_description', data: String(detaildescription)},
+                    { name : 'detail_description_in_arabic', data: String(detail_description_in_arabic)},
+                    { name : 'price', data: String(price)},
+                    { name : 'price_in_arabic', data: String(price)},
+                    { name : 'special_price', data: String(special)},
+                    { name : 'special_price_in_arabic', data: String(special)},
+                    { name : 'discount', data: String(10)},
+                    { name : 'final_price', data: String(special)},
+                    { name : 'quantity', data: quantityRows.toString()},
+                    { name : 'size', data: sizeRows.toString()},
+                    { name : 'is_feature', data: String(is_feature)},
+                    { name : 'gender', data: String(1)},
+                ])
+                .uploadProgress((written, total) => {
+                    console.log('uploaded', Math.floor(written/total*100) + '%')
+                })
+                .then((res)=>{
+                    MessageBarManager.showAlert({
+                        message: I18n.t('vendoraddproduct.productadded', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                    })
+                })
+                .then(()=> this.setState({
+                    visibleModal : false
+                })
             )
             .then(()=>routes.product())
             .catch((errorMessage, statusCode) => {
-              console.log(errorMessage);
+                console.log(errorMessage);
             })
             .done();
         }
@@ -500,7 +531,7 @@ class AddProduct extends Component {
                     </RadioGroup>
                     <View style={commonStyles.formItems}>
                         {/* --------------------------Product name start-----------*/}
-                        {(languageChoose === 'ar' || lang === 'ar') ?
+                        {(languageChoose === 'ar') ?
                             <View style={commonStyles.textField}>
                                 <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: languageChoose })}</Text>
@@ -526,12 +557,12 @@ class AddProduct extends Component {
                             </View>
                             :
                             <View style={commonStyles.textField}>
-                                <View style={{ width: '100%', flexDirection: direction}}>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: languageChoose })}</Text>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                                <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                    <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: languageChoose })}</Text>
+                                    <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
                                     value={this.state.productname}
                                     // onFocus={()=>this.hidetab()}
                                     underlineColorAndroid = 'transparent'
@@ -551,7 +582,7 @@ class AddProduct extends Component {
                         }
                         {/* --------------------------Product name end-----------*/}
                         {/* --------------------------short description start-----------*/}
-                        {   languageChoose === 'ar' ?
+                        {(languageChoose === 'ar') ?
                             <View style={commonStyles.textField}>
                                 <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                     <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.shortdesclbl', { locale: languageChoose })}</Text>
@@ -577,12 +608,12 @@ class AddProduct extends Component {
                             </View>
                             :
                             <View style={commonStyles.textField}>
-                                <View style={{ width: '100%', flexDirection: direction}}>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.shortdesclbl', { locale: languageChoose })}</Text>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                                <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                    <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.shortdesclbl', { locale: languageChoose })}</Text>
+                                    <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
                                     value={this.state.shortdescription}
                                     // onFocus={this.textInputFocused.bind(this)}
                                     underlineColorAndroid = 'transparent'
@@ -632,12 +663,12 @@ class AddProduct extends Component {
                             </View>
                             :
                             <View style={commonStyles.textField}>
-                                <View style={{ width: '100%', flexDirection: direction}}>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.detaildesclbl', { locale: languageChoose })}</Text>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                                <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                                    <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.detaildesclbl', { locale: languageChoose })}</Text>
+                                    <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: textline}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
                                     value={this.state.detaildescription}
                                     numberOfLines={3}
                                     multiline
@@ -661,7 +692,6 @@ class AddProduct extends Component {
                         }
                         {/* --------------------------detail description end-----------*/}
                         {/* --------------------------Price start-----------*/}
-                        {(languageChoose === 'ar' || lang === 'ar') ?
                             <View style={commonStyles.textField}>
                                 <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: languageChoose })}</Text>
@@ -669,30 +699,6 @@ class AddProduct extends Component {
                                 </View>
                                 <TextInput
                                     style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                                    value={this.state.price_in_arabic}
-                                    keyboardType={'numeric'}
-                                    underlineColorAndroid = 'transparent'
-                                    autoCorrect={false}
-                                    placeholder={I18n.t('vendoraddproduct.price', { locale: languageChoose })}
-                                    maxLength={7}
-                                    onSubmitEditing={() => {
-                                        this.focusNextField('five');
-                                    }}
-                                    returnKeyType={ "next" }
-                                    ref={ input => {
-                                        this.inputs['four'] = input;
-                                    }}
-                                    onChangeText={(price_in_arabic) => this.setState({price_in_arabic})}
-                                    />
-                            </View>
-                            :
-                            <View style={commonStyles.textField}>
-                                <View style={{ width: '100%', flexDirection: direction}}>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: languageChoose })}</Text>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
-                                </View>
-                                <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                                     value={this.state.price}
                                     keyboardType={'numeric'}
                                     underlineColorAndroid = 'transparent'
@@ -709,10 +715,8 @@ class AddProduct extends Component {
                                     onChangeText={(price) => this.setState({price})}
                                     />
                             </View>
-                        }
                         {/* --------------------------Price end-----------*/}
                         {/* --------------------------Special price start-----------*/}
-                        {(languageChoose === 'ar' || lang === 'ar') ?
                             <View style={commonStyles.textField}>
                                 <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: languageChoose })}</Text>
@@ -720,27 +724,6 @@ class AddProduct extends Component {
                                 </View>
                                 <TextInput
                                     style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                                    value={this.state.special_price_in_arabic}
-                                    underlineColorAndroid = 'transparent'
-                                    keyboardType={'numeric'}
-                                    autoCorrect={false}
-                                    placeholder={I18n.t('vendoraddproduct.spprice', { locale: languageChoose })}
-                                    maxLength={7}
-                                    returnKeyType={"done" }
-                                    ref={ input => {
-                                        this.inputs['five'] = input;
-                                    }}
-                                    onChangeText={(special_price_in_arabic) => this.setState({special_price_in_arabic})}
-                                    />
-                            </View>
-                            :
-                            <View style={commonStyles.textField}>
-                                <View style={{ width: '100%', flexDirection: direction}}>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: languageChoose })}</Text>
-                                    <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
-                                </View>
-                                <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                                     value={this.state.special}
                                     underlineColorAndroid = 'transparent'
                                     keyboardType={'numeric'}
@@ -754,7 +737,6 @@ class AddProduct extends Component {
                                     onChangeText={(special) => this.setState({special})}
                                     />
                             </View>
-                        }
                         {/* --------------------------Special price end-----------*/}
 
                         <View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>

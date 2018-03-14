@@ -42,7 +42,7 @@ export default StyleSheet.create({
       	borderColor : '#ccc',
     	borderWidth :1,
         backgroundColor: '#fff',
-        top : 10,
+        // top : 10,
         padding :10,
         borderRadius : 5
 

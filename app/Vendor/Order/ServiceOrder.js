@@ -144,7 +144,8 @@ export default class ServiceOrder extends Component {
         const { lang} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
-        textline = lang == 'ar'? 'right': 'left';
+        textline = lang == 'ar'? 'right': 'left',
+        service_name = lang == 'ar'? data.serviceDetail.service_name_in_arabic: data.serviceDetail.service_name;
 
 
         return (
@@ -172,7 +173,7 @@ export default class ServiceOrder extends Component {
                     <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.servicenm', { locale: lang })}</Text>
                             <Text style={styles.label}>:</Text>
-                        <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
+                        <Text style={styles.bodyText}>{service_name}</Text>
                     </View>
                     <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.customername', { locale: lang })}</Text>

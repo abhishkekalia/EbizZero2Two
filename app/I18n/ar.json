@@ -26,6 +26,7 @@
           "skip":"تخطى التسجيل",
           "internetconnection":"لا يوجد أتصال بسبكة الأنترنت",
           "pleaseenteremail":"الرجاء تعبئة البريد الألكتروني",
+          "pleaseenter_validemail":"Please Enter Valid Email Address",
           "pleaseenterpwd":"الرجاء ادخال كلمة السر",
           "passwordvalidation":"كلمة السر يجب أن تتكون من 6 أحرف أو أرقام",
           "cancel":"الغاء",
@@ -396,7 +397,14 @@
           "detaildescerr":"الرجاء تعبئة الوصف المطول",
           "priceerr":"الرجاء تحديد السعر",
           "specialpriceerr":"الرجاء أختيار سعر بعد الخصم",
-          "specialpriceerr1":"سعر الخصم يجب أن يكون أقل من السعر الأساسي"
+          "specialpriceerr1":"سعر الخصم يجب أن يكون أقل من السعر الأساسي",
+          "servicename_ar_err":"Plese Insert Service Name in arabic",
+          "shortdesc_ar_err":"Plese Insert arabic Short description",
+          "detaildesc_ar_err":"Plese Insert arabic Detail description",
+          "updateSuccess":"Product Update Successfully",
+          "updatefail":"Product Upload Failed",
+          "editButton" : "Update",
+          "weekendlabel" : "Are You Working on Weekends"
         },
         "productorder":{
           "product":"المنتج",

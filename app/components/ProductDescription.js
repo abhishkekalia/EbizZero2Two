@@ -457,7 +457,7 @@ class ProductDescription extends Component {
                                         size={25}
                                         color="#FFCC7D"
                                         />
-                                    <Text style={{color:'#a9d5d1', textAlign: align}}>{I18n.t('productdetail.selctsize', { locale: lang })}</Text>
+                                    <Text style={{color:'#a9d5d1', textAlign: align, alignSelf: 'center'}}>{I18n.t('productdetail.selctsize', { locale: lang })}</Text>
                                 </View>
                                 <View style={{flexDirection : direction, justifyContent: 'space-around'}}>
                                     {renderedButtons}

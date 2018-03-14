@@ -12,8 +12,8 @@ import {
 //   Picker
 } from 'react-native';
 import {connect} from "react-redux";
-import I18n from 'react-native-i18n'
-
+import I18n from 'react-native-i18n';
+import DeviceInfo from 'react-native-device-info';
 import Utils from 'app/common/Utils';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Actions as routes} from "react-native-router-flux";
@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get('window');
 import EventEmitter from "react-native-eventemitter";
 
 import { Picker } from 'react-native-picker-dropdown';
-
+const version = DeviceInfo.getVersion();
 const is_notification = '0'
 
 class Settings extends Component {
@@ -374,7 +374,7 @@ class Settings extends Component {
                     </TouchableOpacity>
                     <View style={[styles.locact, {flexDirection: direction}]}>
                         <Text style={{ textAlign: textline}}>{I18n.t('settings.version', { locale: lang })}</Text>
-                        <Text>1.0.0</Text>
+                        <Text>{version}</Text>
                     </View>
                 </View>
             </View>

@@ -34,9 +34,6 @@ class MyProduct extends Component {
         }
         this.arrayholder = [] ;
     }
-    GetItem (flower_name) {
-        alert(flower_name);
-    }
     componentDidMount(){
         // this.getKey()
         // .then( ()=>this.fetchData())

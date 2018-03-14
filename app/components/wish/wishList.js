@@ -130,7 +130,8 @@ class WishList extends Component {
 
     }
     validate(size){
-        const { lang } = this.props;
+        const { lang } = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
         if (!size.length)
         {
             MessageBarManager.showAlert({
