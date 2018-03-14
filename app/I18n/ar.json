@@ -9,7 +9,7 @@
           "internetconnection":"لا يوجد أتصال بسبكة الأنترنت"
         },
         "login": {
-            "language": "arabic",
+            "language": "العربية",
           "logintitle":"تسجيل الدخول",
           "loginmsg":"البريد الالكتروني او كلمة السر  غيد صحيح",
           "emailaddress":"البريد الالكتروني",
@@ -64,7 +64,7 @@
           "pleaseselectcountry":"الرجاء أختيار دولة",
           "pleaseenteraddr":"الرجاء تعبئة العنوان",
           "pleaseenterusertype":"الرجاء أختيار نوع المستخدم",
-          "greetings":"شكرا لأنضمامكم الى قائمة مستخدمينا"
+          "greetings":"شكرا لأنضمامكم الى قائمة مستخدميناwishlistTitle"
         },
         "venderregister":{
           "company":"اسم الشركة",
@@ -99,7 +99,7 @@
         },
         "home":{
         "sidemenu": "right",
-          "home":"انشاء حساب",
+          "homeTitle":"انشاء حساب",
           "allshop":"كل المحلات",
           "services":"خدمات",
           "noadvertise":"No Advertise For You","_comment":"not existing, it should be circles with zero2two logo",
@@ -163,6 +163,7 @@
           "logout":"تسجيل الخروج"
         },
         "wishlist":{
+            "wishlistTitle":"المفضلة",
           "noitem":"لم تتم إضافة منتج/خدمات إلى قائمة المفضلات",
           "sizelbl":"المقاس",
           "shareerr":"لا يمكن لتطبيقات تنفيذ هذا الإجراء",
@@ -205,8 +206,8 @@
           "mobileno":"اتصل",
           "addressbook":"عناويني",
           "settings":"اعدادات",
-          "resetPass":"Password Reset",
-          "guest":"Guest Acount",
+          "resetPass":"إعادة ضبط كلمة المرور",
+          "guest":"ضيف",
           "email":"بريد الالكتروني",
         },
         "addressbook":{
@@ -317,6 +318,7 @@
           "address":"العنوان"
         },
         "vendorproducts":{
+            "productTitle":"المنتج",
           "myproduct":"منتجاتي",
           "categories":"الأقسام",
           "quantity":"الكمية متاحة",
@@ -366,6 +368,7 @@
 
         },
         "vendorservice":{
+        "serviceTitle":"الخدمة",
           "myservice":"خدماتي",
           "categories":"الأقسام",
           "price":"القيمة",
@@ -407,6 +410,7 @@
           "weekendlabel" : "Are You Working on Weekends"
         },
         "productorder":{
+        "orderTitle":"Order",
           "product":"المنتج",
           "vendorid":"رقم تسلسل البائع",
           "orderid":"رقم الطلب",
@@ -464,5 +468,8 @@
           "categoryerr":"الرجاء أختيار صنف الأعلان",
           "online":"يوجد أتصال بالأنترنت",
           "offline":"ليس هناك شبكة أنترنت متاحة"
-        }
+      },
+      "scheduleService":{
+          "serviceTitle":"جدول",
+      }
     }

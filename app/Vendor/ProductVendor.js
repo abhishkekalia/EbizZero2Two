@@ -352,7 +352,7 @@ class ProductVendor extends Component {
                             }}
                             cancelBtnText="Cancel"
                             confirmBtnText="OK"
-                            placeholder="Select Date"
+                            placeholder="Date and Time"
                         onDateChange={(date_in) => {this.setState({date_in: date_in});}}/>
                         </View>
 

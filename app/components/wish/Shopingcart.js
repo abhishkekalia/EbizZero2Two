@@ -233,7 +233,7 @@ class Shopingcart extends Component {
                         flex : 0}
                     }>
                     <Text style={{ textAlign: align}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
-                    <Text style={{textAlign: align}}> KWD {totalamount}</Text>
+                    {/*<Text style={{textAlign: align}}> KWD {totalamount}</Text>*/}
                 </View>
                 <View style={{
                         flexDirection : direction,
