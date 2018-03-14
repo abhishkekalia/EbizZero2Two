@@ -12,7 +12,7 @@
     "react": "16.0.0",
     "react-native": "0.51.0",
     "react-native-actionsheet": "2.3.0",
-    "react-native-calendars": "^1.17.3",
+    "react-native-calendars": "^1.17.4",
     "react-native-datepicker": "1.6.0",
     "react-native-device-info": "^0.17.4",
     "react-native-drawer": "2.5.0",

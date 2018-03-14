@@ -11,12 +11,10 @@ import {
   Drawer,
   Stack,
   Lightbox,
-
 } from "react-native-router-flux";
-import I18n from 'react-native-i18n'
+import I18n from 'react-native-i18n';
 import { Text, View, StyleSheet, Easing ,Platform} from 'react-native';
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
-
 import MessageBar from './common/MessageBar';
 import {connect} from "react-redux";
 import Register from "./Signup/register";
@@ -33,7 +31,6 @@ import Terms from './components/Terms';
 import CustomNavBar from "./components/navbar/CustomNavBar";
 import CustomGenNavBar from "./components/navbar/CustomGenNavBar";
 import HomeNavBar from "./components/navbar/HomeNavBar";
-
 import Notification from "./components/Notification";
 import TabIcon from './components/TabIcon';
 import WelcomeScreen from './components/WelcomeScreen';
@@ -54,7 +51,6 @@ import MyAdfaturah from './components/MyAdfaturah';
 import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
 import ServiceUser from './components/Order/ServiceUser'
-
 import Filter from './components/Filter';
 import MenuIcon from './images/imgpsh.png';
 
@@ -67,9 +63,8 @@ import Order from './Vendor/Order';
 import ProductVendor from './Vendor/ProductVendor';
 import ServiceCustomer from './Vendor/Order/ServiceCustomer'
 import ProfileVendor from "./vendorprofile/ProfileVendor";
-import ScheduleCalender from "./Vendor/Schedule/ScheduleCalender";
 import MarketingCompaign from "./Vendor/marketing/MarketingCompaign";
-
+import ScheduleCalender from "./Vendor/Schedule/ScheduleCalender";
 import EventEmitter from "react-native-eventemitter";
 
 // import AddProduct from "./app/Vendor/Addproduct";
@@ -151,7 +146,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 >
                                     <Stack
                                     key="Home"
-                                    title="Home"
+                                    title={"home.homeTitle"}
                                     icon={TabIcon}
                                     iconName="home"
                                     hideNavBar={true}
@@ -163,7 +158,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                         key="homePage"
                                         titleStyle={{alignSelf: 'center'}}
                                         component={MainView}
-                                        title="Home"
+                                        title={I18n.t("home.homeTitle", { locale: lang })}
                                         // navigationBarStyle={{backgroundColor: '#1e2226'}}
                                         titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                         type="replace"
@@ -172,7 +167,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     </Stack>
                                     <Stack
                                     key="WishList"
-                                    title="WishList"
+                                    title={"wishlist.wishlistTitle"}
                                     icon={TabIcon}
                                     iconName="heart"
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
@@ -181,28 +176,29 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                         titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                                         component={wishList}
-                                        title="WishList"
+                                        title={I18n.t("wishlist.wishlistTitle", { locale: lang })}
                                         onEnter={()=> EventEmitter.emit("reloadWishlist")}
                                         />
                                     </Stack>
                                     <Stack
                                     key="Cart"
-                                    title="Cart"
+                                    title={"cart.carttitle"}
                                     icon={TabIcon}
-                                    iconName="opencart"
+                                    is_vector={true}
+                                    iconName= {require('./images/cart_icon.png')}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                                         <Scene
                                         key="shopingCart"
                                         titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                                         component={Shopingcart}
-                                        title="Cart"
+                                        title={I18n.t("cart.carttitle", { locale: lang })}
                                         onEnter={()=> EventEmitter.emit("reloadCartlist")}
                                         />
                                     </Stack>
                                     <Stack
                                     key="profile"
-                                    title="Profile"
+                                    title={"profile.profiletitle"}
                                     icon={TabIcon}
                                     iconName="users"
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
@@ -210,7 +206,8 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                         titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                         key="profilePage"
                                         component={ProfilePage}
-                                        title="Profile"/>
+                                        title={I18n.t("profile.profiletitle", { locale: lang })}
+                                        />
                                     </Stack>
                                 </Tabs>
                             </Scene>
@@ -227,7 +224,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                             swipeEnabled={false}
                             initial={!needSignIn}
                             showLabel={false}
-                            tabBarStyle={styles.tabBarStyle}
+                            tabBarStyle={[styles.tabBarStyle, { flexDirection: lang === 'ar'? 'row-reverse': 'row'}]}
                             tabBarPosition={'bottom'}
                             gestureEnabled={false}
                             activeBackgroundColor='#fff'
@@ -237,7 +234,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                             >
                                 <Stack
                                 key="Product"
-                                title="Product"
+                                title={"vendorproducts.productTitle"}
                                 icon={TabIcon}
                                 iconName="tag"
                                 // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
@@ -250,7 +247,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     key="product"
                                     titleStyle={{alignSelf: 'center'}}
                                     component={Product}
-                                    title="PRODUCT"
+                                    title={I18n.t("vendorproducts.productTitle", { locale: lang })}
                                     // navigationBarStyle={{backgroundColor: '#1e2226'}}
                                     titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                     type="replace"
@@ -260,7 +257,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 </Stack>
                                 <Stack
                                 key="Service"
-                                title="Service"
+                                title={"vendorservice.serviceTitle"}
                                 icon={TabIcon}
                                 iconName="tag"
                                 navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
@@ -269,14 +266,14 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                                     component={Service}
-                                    title="SERVICE"
+                                    title={I18n.t("vendorservice.serviceTitle", { locale: lang })}
                                     onRight={ ()=> console.log("")}
                                     rightTitle={null}
                                 />
                                 </Stack>
                                 <Stack
                                 key="order"
-                                title="Orders"
+                                title={"productorder.orderTitle"}
                                 icon={TabIcon}
                                 iconName="align-right"
                                 navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
@@ -285,37 +282,38 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                                     component={Order}
-                                    title="ORDERS"
+                                    title={I18n.t("productorder.orderTitle", { locale: lang })}
                                     // rightTitle={undefined}
                                     />
                                 </Stack>
                                 <Stack
                                 key="vendorprofile"
-                                title="Profile"
+                                title={"profile.profiletitle"}
                                 icon={TabIcon}
-                                iconName="user-secret"
+                                iconName="user"
                                 navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                                 lazy>
                                     <Scene
                                     titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                     key="ProfileVendor"
                                     component={ProfileVendor}
-                                    title="Profile"/>
+                                    title={I18n.t("profile.profiletitle", { locale: lang })}
+                                    />
                                 </Stack>
                                 <Stack
-                                key="vendorschedule"
-                                title="Schedule"
-                                icon={TabIcon}
-                                iconName="circle"
-                                navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
-                                lazy>
+                                    key="vendorschedule"
+                                    title={"scheduleService.serviceTitle"}
+                                    icon={TabIcon}
+                                    iconName="calendar"
+                                    navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                                    lazy>
                                     <Scene
-                                    titleStyle={{color : "#FFF", alignSelf: 'center'}}
-                                    key="ScheduleCalender"
-                                    component={ScheduleCalender}
-                                    title="Schedule"/>
+                                        titleStyle={{color : "#FFF", alignSelf: 'center'}}
+                                        key="ScheduleCalender"
+                                        component={ScheduleCalender}
+                                        title={I18n.t("scheduleService.serviceTitle", { locale: lang })}
+                                        />
                                 </Stack>
-
                             </Tabs>
                         </Scene>
                     </Stack>
