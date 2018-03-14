@@ -23,11 +23,14 @@ import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
+
 const videoIcon = '../../images/videoIcon.png';
 // const INITIAL_STATE = {avatarSource: '', ad_category: ''};
 import { Picker } from 'react-native-picker-dropdown';
 
-export default class MarketingCompaign extends Component {
+class MarketingCompaign extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -356,11 +359,15 @@ onCancelPress(){
         const { imageSelect , videoSelect} = this.state;
         borderColorImage= imageSelect ? "#a9d5d1" : '#fbcdc5'
         borderColorVideo= videoSelect ? "#a9d5d1" : '#fbcdc5'
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
 
         return (
             <View style={[styles.container, { padding : 10}]}>
-            <TouchableOpacity style={{ alignItems : 'flex-end'}} onPress={()=>this.uploadTocloud()}>
-            <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5, marginBottom: 5}}>Upload</Text>
+            <TouchableOpacity style={{ alignItems : align}} onPress={()=>this.uploadTocloud()}>
+            <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5, marginBottom: 5,color: '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
             </TouchableOpacity>
                 <View style={{ flex:1,
                     borderColor : '#ccc',
@@ -369,13 +376,13 @@ onCancelPress(){
                     justifyContent: 'space-around',
                     padding : 10
                 }}>
-                    <Text style={{ textAlign: 'center'}}>Select files To upload </Text>
-                        <View style={{justifyContent : "space-around",flexDirection: 'row',}}>
+                    <Text style={{ textAlign: 'center'}}>{I18n.t('venderprofile.selectfiletoupload', { locale: lang })}</Text>
+                        <View style={{justifyContent : "space-around",flexDirection: direction,}}>
                         { this.state.avatarSource === null ? <Feather name="upload-cloud" size= {30} style={{padding :20 }} /> :
                             <Image style={styles.avatar} source={this.state.avatarSource} />
                         }
                         </View>
-                    <View style={{justifyContent : "space-around",flexDirection: 'row',}}>
+                    <View style={{justifyContent : "space-around",flexDirection: direction,}}>
                         <Entypo
                             name="image"
                             size= {30}
@@ -394,26 +401,23 @@ onCancelPress(){
                     mode={"dropdown"}
                     selectedValue={this.state.ad_category}
                     onValueChange={(itemValue, itemIndex) => this.setState({ad_category: itemValue})}>
-                    <Picker.Item label="Select Ad Category" value="" />
-                    <Picker.Item label="Products" value="1" />
-                    <Picker.Item label="accessories" value="2" />
-                    <Picker.Item label="Services" value="3" />
-                    <Picker.Item label="External" value="4" />
+                    <Picker.Item label={I18n.t('venderprofile.selectcategory', { locale: lang })} value="" />
+                    <Picker.Item label={I18n.t('venderprofile.adcategory1', { locale: lang })} value="1" />
+                    <Picker.Item label={I18n.t('venderprofile.adcategory2', { locale: lang })} value="2" />
+                    <Picker.Item label={I18n.t('venderprofile.adcategory3', { locale: lang })} value="3" />
+                    <Picker.Item label={I18n.t('venderprofile.adcategory4', { locale: lang })} value="4" />
                     </Picker>
                     </View>
-                    <Text style={{ width: width-50 ,textAlign: 'center', fontSize: 14, }}>
-                    Raise your awareness about your brand by promoting video and images
-                    that show behind the scene footage, product lounches or customer Stories
-
+                    <Text style={{ width: width-50 ,alignSelf: 'center', fontSize: 14, textAlign: textline}}>{I18n.t('venderprofile.addesc', { locale: lang })}
                     </Text>
 
                 </View>
-                <Text style={{ fontSize : 20, textAlign : 'center', color : '#a9d5d1', padding : 10}}>Help And Suggestion</Text>
+                <Text style={{ fontSize : 20, textAlign : 'center', color : '#a9d5d1', padding : 10}}>{I18n.t('venderprofile.suggestion', { locale: lang })}</Text>
                 <Text style={{ fontSize : 10, textAlign : 'center'}}>
-                want to upload videos longer than 15 Secounds
+                    {I18n.t('venderprofile.want_to_upload_videos_longer', { locale: lang })}
                 </Text>
                 <View style={styles.cost}>
-                <Text >Cost Per Advertisement</Text>
+                <Text>{I18n.t('venderprofile.costperad', { locale: lang })}</Text>
                 <Text style={{color : '#a9d5d1',}}>{this.state.amount} KWD</Text>
                 </View>
                 <Modal isVisible={this.state.visibleModal}>
@@ -455,3 +459,9 @@ const styles = StyleSheet.create({
     }
 
 })
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(MarketingCompaign);

@@ -125,7 +125,7 @@ class AddressBook extends Component {
             .then((response) => response.json())
             .then((responseData) => {
             if(responseData.status){
-            // console.warn("calling my Fatureh")
+            // console.log("calling my Fatureh")
                 var data = ({
                     uri : responseData.data.url,
                     order_id : responseData.data.order_id,
@@ -232,7 +232,7 @@ class AddressBook extends Component {
             state : data.state,
             country : data.country,
             pincode : data.pincode,
-            address_type : data.address_type,
+            address_type : data.address_type
         });
     }
 

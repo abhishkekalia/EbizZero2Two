@@ -15,10 +15,12 @@ import {
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Utils from 'app/common/Utils';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
  const { width, height } = Dimensions.get('window')
 
-export default class MyService extends Component {
+class MyService extends Component {
    constructor(props) {
         super(props);
         this.state = {
@@ -115,6 +117,10 @@ export default class MyService extends Component {
     }
 
     render() {
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
         if (this.state.isLoading) {
             return (
                 <View style={{flex: 1, paddingTop: 20}}>
@@ -139,6 +145,10 @@ export default class MyService extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
 
@@ -151,9 +161,9 @@ export default class MyService extends Component {
             borderColor : "#ccc",
             borderRadius : 5
         }}>
-                <Header service_type= {data.service_type}/>
+                <Header service_type= {data.service_type} lang={lang}/>
                 <TouchableOpacity style={{
-                flexDirection: 'row',
+                flexDirection: direction,
                 backgroundColor : "#fff",
                 borderBottomWidth : 1,
                 borderColor : "#ccc",
@@ -177,19 +187,27 @@ export default class MyService extends Component {
                     />
 
                     <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-                        <Text style={{ color:'#222',fontWeight :'bold', marginTop: 10}} > {data.service_name}</Text>
+                        <Text style={{ color:'#222',fontWeight :'bold', marginTop: 10, textAlign: textline}} > {data.service_name}</Text>
                             <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>
-                            <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#696969', fontSize: 10}} >Price : </Text>
-                            <Text style={{ color: '#696969', fontSize: 10}}>{data.price} KWD</Text>
+                            <View style={{ flexDirection : direction}}>
+                                <View style={{ flexDirection : direction}}>
+                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {I18n.t('vendorservice.price', { locale: lang })}</Text>
+                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> :</Text>
+                                    <Text style={{ color: '#696969', fontSize: 10}}>{data.price} KWD</Text>
+                                </View>
                             </View>
-                            <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#696969', fontSize: 10}} >Special Price : </Text>
-                            <Text style={{color : '#696969', fontSize: 10}} >{data.special_price} KWD</Text>
+                            <View style={{ flexDirection : direction}}>
+                                <View style={{ flexDirection : direction}}>
+                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {I18n.t('vendorservice.spprice', { locale: lang })}</Text>
+                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> :</Text>
+                                        <Text style={{color : '#696969', fontSize: 10}} >{data.special_price} KWD</Text>
+                                </View>
                             </View>
-                            <View style={{ flexDirection : "row"}}>
-                               <Text style={{color : '#696969', fontSize: 10}} >Status : </Text>
-                               <Text style={{color : '#696969', fontSize: 10}} > {data.is_approved ? 'approved' : 'pending'} </Text>
+                            <View style={{ flexDirection : direction}}>
+                                <View style={{ flexDirection : direction}}>
+                                    <Text style={{color : '#696969', fontSize: 10}} >{I18n.t('vendorservice.status', { locale: lang })}</Text>
+                                        <Text style={{color : '#696969', fontSize: 10}} >:</Text>
+                               </View>
                             </View>
 
                         </View>
@@ -200,7 +218,8 @@ export default class MyService extends Component {
                     data.short_description, data.detail_description, data.price ,data.special_price)}
                     is_approved = {data.is_approved}
                     product_id= {data.product_id}
-                    calldata = {()=>this.fetchData()}/>
+                    calldata = {()=>this.fetchData()}
+                    lang={lang}/>
             </View>
         );
     }
@@ -215,11 +234,17 @@ class Header extends Component{
     }
 
   render() {
+      const { lang } =this.props,
+      direction = lang == 'ar'? 'row-reverse': 'row',
+      textline = lang == 'ar'? 'right': 'left';
+
     return (
-      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc'}]}>
-      <Text style={{ color : '#fbcdc5', padding: 10}}>Categories : </Text>
-        <Text style={{padding: 10, color:"#222"}}>{ this.props.service_type ? this.props.service_type: undefined}
-        </Text>
+      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc', flexDirection: direction}]}>
+          <View style={{ flexDirection : direction, height: 40}}>
+              <Text style={{color:"#fbcdc5", fontSize: 12, textAlign: textline, alignSelf: 'center'}}> {I18n.t('vendorservice.categories', { locale: lang })}</Text>
+              <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline ,  alignSelf: 'center'}}> :</Text>
+              <Text style={{ color:"#222", fontSize: 12,textAlign: textline,alignSelf: 'center'}}>{ this.props.service_type ? this.props.service_type: undefined} </Text>
+          </View>
       </View>
     );
   }
@@ -270,22 +295,25 @@ componentWillReceiveProps(){
 }
 
     render(){
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
          let approved
         let approv_code
         if(this.state.is_approved === '1'){
-            approved = "Deactivate";
+            approved = I18n.t('vendorservice.approved', { locale: lang });
             approv_code = '0'
         }else {
-            approved = "Activate";
+            approved = I18n.t('vendorservice.pending', { locale: lang });
             approv_code = '1'
-
         }
         return(
-        <View style={styles.bottom}>
+        <View style={[styles.bottom, {flexDirection: direction}]}>
                     <TouchableOpacity
                     style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
                     onPress={this.props.calllback}>
-                        <Text style={{ color :'#fff', fontSize: 12}}>Preview</Text>
+                        <Text style={{ color :'#fff', fontSize: 12}}>{I18n.t('vendorservice.previewbtn', { locale: lang })}</Text>
                     </TouchableOpacity>
 
                 </View>
@@ -299,7 +327,6 @@ const styles = StyleSheet.create({
     },
 
     row: {
-        flexDirection: 'row',
         marginTop : 1
     },
     qtybutton: {
@@ -346,7 +373,6 @@ const styles = StyleSheet.create({
         padding: 20
     },
     bottom : {
-        flexDirection : 'row',
         justifyContent : 'space-between',
         backgroundColor : "transparent",
         padding : 5
@@ -367,3 +393,9 @@ const styles = StyleSheet.create({
         fontWeight : 'bold'
     }
 });
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(MyService);

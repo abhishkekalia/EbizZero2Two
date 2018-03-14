@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
+import I18n from 'react-native-i18n';
 const { width, height } = Dimensions.get('window')
 
 export default class FeaturedProduct extends Component {
@@ -119,6 +120,11 @@ export default class FeaturedProduct extends Component {
 
 
     render() {
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
+
         if (this.state.isLoading) {
             return (
                 <View style={{flex: 1, paddingTop: 20}}>
@@ -149,6 +155,11 @@ export default class FeaturedProduct extends Component {
     renderData(data: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
+
 
         return (
             <View style={{
@@ -159,9 +170,9 @@ export default class FeaturedProduct extends Component {
             borderColor : "#ccc",
             borderRadius : 2
             }}>
-                <Header product_id= {data.product_id}/>
+                <Header product_id= {data.product_id} lang={lang}/>
                 <TouchableOpacity style={{
-                flexDirection: 'row',
+                flexDirection: direction,
                 backgroundColor : "#fff",
                 borderBottomWidth : 1,
                 borderColor : "#ccc",
@@ -188,17 +199,19 @@ export default class FeaturedProduct extends Component {
                     source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                     />
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.product_name} </Text>
-                        <View style={{ flexDirection:'row'}}>
-                        <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >Quantity: </Text>
+                        <Text style={[styles.row, { color:'#000',fontWeight :'bold', textAlign: textline}]} > {data.product_name} </Text>
+                        <View style={{ flexDirection:direction}}>
+                            <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >{I18n.t('venderprofile.quantity', { locale: lang })}</Text>
+                                <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >: </Text>
                         <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} > {data.quantity} </Text>
                         </View>
-                        <Text style={{ fontSize : 12, color : '#ccc'}} > {data.short_description} </Text>
-                        <View style={{ flexDirection : "row", justifyContent : 'space-between'}}>
-                            <View style={{ flexDirection : "row"}}>
-                            <Text style={{color : '#fbcdc5'}} >Price : </Text>
+                        <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline}} > {data.short_description} </Text>
+                        <View style={{ flexDirection : direction, justifyContent : 'space-between'}}>
+                            <View style={{ flexDirection : direction}}>
+                                <Text style={{color : '#fbcdc5', textAlign: textline}} >{I18n.t('venderprofile.price', { locale: lang })}</Text>
+                                <Text style={{color : '#fbcdc5',textAlign: textline}} >:</Text>
                             <Text> {data.special_price} </Text>
-                            <Text style={{ color: color, textDecorationLine: textDecorationLine}}> {data.price} </Text>
+                            <Text style={{ color: color, textDecorationLine: textDecorationLine, textAlign: textline}}> {data.price} </Text>
                             </View>
                                 <Text style={{color : '#ccc'}} >KWD</Text>
 
@@ -206,7 +219,7 @@ export default class FeaturedProduct extends Component {
                     </View>
                 </TouchableOpacity>
                 <Footer
-                    inserted_date = {data.inserted_date}/>
+                    inserted_date = {data.inserted_date} lang={lang}/>
             </View>
         );
     }
@@ -214,11 +227,15 @@ export default class FeaturedProduct extends Component {
 
 class Header extends Component{
   render() {
+      const { lang} = this.props,
+      direction = lang == 'ar'? 'row-reverse': 'row',
+      textline = lang == 'ar'? 'right': 'left';
 
     return (
-      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc'}]}>
-      <Text style={{ color : '#fbcdc5', paddingLeft: 10}}>Product Id : </Text>
-        <Text style={styles.welcome}>{this.props.product_id }</Text>
+      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc', flexDirection: direction}]}>
+          <Text style={{ color : '#fbcdc5', paddingLeft: 10, textAlign: textline}}>{I18n.t('venderprofile.productid', { locale: lang })}</Text>
+          <Text style={{ color : '#fbcdc5', paddingLeft: 10,  textAlign: textline}}>:</Text>
+          <Text style={[styles.welcome]}>{this.props.product_id }</Text>
       </View>
     );
   }
@@ -235,16 +252,22 @@ class Footer extends Component{
   //   // this.setState({user: nextProps.user})
   // }
     render(){
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+
         return(
-        <View style={styles.bottom}>
+        <View style={[styles.bottom, {flexDirection: direction}]}>
                     <Switch
                       // onTintColor="#00ff00"
                       thumbTintColor="#fff"
                       tintColor="#000"
                     onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
                     value={ this.state.toggled} />
-                    <View >
-                        <Text style={{ color :'#000', fontSize : 12}}>Display Date : {this.props.inserted_date}</Text>
+                    <View style={{flexDirection: direction}}>
+                        <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
+                            <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>:</Text>
+                                <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{this.props.inserted_date}</Text>
                     </View>
                 </View>
         )
@@ -257,7 +280,6 @@ const styles = StyleSheet.create({
     },
 
     row: {
-        flexDirection: 'row',
         marginTop : 1
     },
     qtybutton: {

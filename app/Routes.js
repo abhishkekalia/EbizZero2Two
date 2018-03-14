@@ -67,6 +67,7 @@ import Order from './Vendor/Order';
 import ProductVendor from './Vendor/ProductVendor';
 import ServiceCustomer from './Vendor/Order/ServiceCustomer'
 import ProfileVendor from "./vendorprofile/ProfileVendor";
+import ScheduleCalender from "./Vendor/Schedule/ScheduleCalender";
 import MarketingCompaign from "./Vendor/marketing/MarketingCompaign";
 
 import EventEmitter from "react-native-eventemitter";
@@ -300,6 +301,20 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     component={ProfileVendor}
                                     title="Profile"/>
                                 </Stack>
+                                <Stack
+                                key="vendorschedule"
+                                title="Schedule"
+                                icon={TabIcon}
+                                iconName="circle"
+                                navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
+                                lazy>
+                                    <Scene
+                                    titleStyle={{color : "#FFF", alignSelf: 'center'}}
+                                    key="ScheduleCalender"
+                                    component={ScheduleCalender}
+                                    title="Schedule"/>
+                                </Stack>
+
                             </Tabs>
                         </Scene>
                     </Stack>
@@ -575,7 +590,7 @@ function mapStateToProps(state) {
     if(state.auth.user_type === "3"){
         is_user = false
         is_vendor = true
-    }else if(state.auth.user_type === "2") {
+    }else if(state.auth.user_type === "2" || state.auth.deviceId) {
         is_user = true
         is_vendor = false
     }
@@ -585,6 +600,7 @@ function mapStateToProps(state) {
     user: is_user,
     vendor: is_vendor,
     lang : state.auth.lang,
+    deviceId : state.auth.deviceId,
   }
 }
 const mapStateToDispatch = dispatch => ({

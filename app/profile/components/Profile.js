@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage } from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage, TextInput } from "react-native";
 import { Actions} from "react-native-router-flux";
 import Feather from 'react-native-vector-icons/Feather';
 import I18n from 'react-native-i18n'
@@ -8,6 +8,7 @@ import Entypo from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
 import EventEmitter from "react-native-eventemitter";
+import Modal from 'react-native-modal';
 
 class Profile extends Component {
 	constructor(props) {
@@ -21,7 +22,8 @@ class Profile extends Component {
             address : [],
             country : null,
             email : null,
-            phone_no : null
+            phone_no : null,
+			visibleModal: false,
         };
     }
 
@@ -130,13 +132,16 @@ class Profile extends Component {
 		}
 	}
 	render() {
-		const {identity, logout, lang} = this.props;
-		const {data, u_id, address, dataSource} = this.state;
+		const {identity, logout, lang} = this.props,
+		{data, u_id, address, dataSource, chart} = this.state,
+		direction = lang == 'ar'? 'row-reverse': 'row',
+		align = lang == 'ar'? 'flex-end': 'flex-start',
+		textline = lang == 'ar'? 'right': 'left';
 
 		return (
 			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
-				<View style={[styles.content, {flexDirection :lang == 'ar' ? 'row-reverse' : 'row', justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
-					<View style={{ flexDirection :  lang == 'ar' ? 'row-reverse' : 'row' }}>
+				<View style={[styles.content, {flexDirection :direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
+					<View style={{ flexDirection : direction }}>
 						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'rgba(240,241,243,1)'}}>
 							<Entypo
 							name="user"
@@ -171,6 +176,14 @@ class Profile extends Component {
 					</TouchableOpacity >
 				</View>
 				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
+					<TouchableOpacity style={{ justifyContent: 'center', alignItems : 'center' }}
+					onPress={()=> this.setState({
+						visibleModal:true
+					})} >
+					<Text>Change Password</Text>
+					</TouchableOpacity >
+					<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
+
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
 					<View style={{ padding : 0, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
@@ -197,6 +210,51 @@ class Profile extends Component {
 					<Text style={{fontSize:12, color:'#696969', textAlign: lang == 'ar' ? 'right' : 'left'}}>{I18n.t('profile.settings', { locale: lang })}</Text>
 					<Ionicons name="ios-arrow-forward" size={20} color="#ccc" style={ lang == 'ar' ? {transform: [{ rotate: '180deg'}]}: ''}/>
 				</TouchableOpacity>
+
+				<Modal isVisible={this.state.visibleModal}>
+					<View style={{alignItems : 'center', padding:10, backgroundColor: '#fff'}}>
+					<View style ={[{borderColor:'#fbcdc5'}]}>
+						<Ionicons name="ios-mail-outline"
+						size={30}
+						color="#fbcdc5"
+						style= {{ padding: 10}}
+						/>
+						<TextInput
+							style={{left:6.5}}
+							// onBlur={ () => this.onBlurUser() }
+							value={this.state.forgotPassword}
+							underlineColorAndroid = 'transparent'
+							autoCorrect={false}
+							keyboardType={'email-address'}
+							placeholder="Change Password"
+							maxLength={140}
+							// onSubmitEditing={() => {
+							// 				this.focusNextField('two');
+							// 			}}
+							// 			returnKeyType={ "next" }
+							// 		ref={ input => {
+							// 			this.inputs['one'] = input;
+							// 		}}
+							onChangeText={(forgotemail) => this.setState({forgotemail})}
+						/>
+					</View>
+					<View style={{flexDirection: direction, height: 40}}>
+					<TouchableOpacity
+					onPress={()=> this.setState({ visibleModal:  false})}>
+					<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+					 Cancel
+					</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+					onPress={()=> this.Forgotpassword()}>
+					<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+					 Submit
+					</Text>
+					</TouchableOpacity>
+					</View>
+					</View>
+			</Modal>
+
 			</View>
 		)
 	}

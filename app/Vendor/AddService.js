@@ -29,8 +29,10 @@ import GetImage from './imageSlider';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 import RNFetchBlob from 'react-native-fetch-blob';
+
 const CANCEL_INDEX = 0
 const DESTRUCTIVE_INDEX = 4
 const title = 'Select Category'
@@ -41,7 +43,7 @@ const { width, height } = Dimensions.get('window');
 
 const INITIAL_STATE = { quantity: '',  Size: ''}
 
-export default class AddService extends Component {
+class AddService extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -274,22 +276,37 @@ export default class AddService extends Component {
         });
     }
     render() {
-        const { imageSelect, quantityRows, sizeRows, Imagepath} = this.state;
-
+        const { imageSelect, quantityRows, sizeRows, Imagepath} = this.state,
+        { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
 
         return (
             <ScrollView
-            contentContainerStyle={commonStyles.container}
+            contentContainerStyle={{
+                backgroundColor: 'transparent',
+            paddingBottom:30,
+            width: width,
+            padding: 10
+            }}//commonStyles.container}
             showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'handled'}>
+            keyboardShouldPersistTaps={'handled'}
+            automaticallyAdjustContentInsets={false}
+            directionalLockEnabled = {true}
+            horizontal = {false}
+            ref={'scrView'}
+            >
                 <View style={commonStyles.ImageAdd}>
                     <Text style={{color: borderColorImage, marginBottom : 10}}>Select Service Image</Text>
-                    <Text style={{color: "#696969", fontSize:12, marginBottom : 5}}>Click On Image To Upload Service Picture</Text>
+                    <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.uploadpicture', { locale: lang })}</Text>
+
                     <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
                         <Feather onPress={this.selectPhotoTapped.bind(this)}
                             name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} />
-                    </View>
+
+                        </View>
                     <View style={{  top: 10, flexDirection:'row', marginBottom :20}}>
                         { this.state.avatarSource === null ? undefined :
                             <SelectedImage
@@ -298,11 +315,14 @@ export default class AddService extends Component {
                         }
                     </View>
                 </View>
-                <View style={[commonStyles.formItems, { paddingRight : 25}]}>
+                <View style={[commonStyles.formItems, {}]}>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Service Type *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.service_type}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
@@ -319,9 +339,12 @@ export default class AddService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Name *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.servicenamelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.service_name}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
@@ -338,9 +361,12 @@ export default class AddService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Short Description *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.shortdesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.short_description}
                         underlineColorAndroid = 'transparent'
                         autoCorrect={false}
@@ -357,9 +383,12 @@ export default class AddService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Detail Description  *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.detaildesclbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height)}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: textline}]}
                         value={this.state.detail_description}
                         numberOfLines={3}
                         multiline
@@ -381,9 +410,12 @@ export default class AddService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.pricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
                         underlineColorAndroid = 'transparent'
@@ -401,9 +433,12 @@ export default class AddService extends Component {
                         />
                     </View>
                     <View style={commonStyles.textField}>
-                        <Text style={commonStyles.label}>Special Price *</Text>
+                        <View style={{ width: '100%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
                         <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: textline}]}
                         value={this.state.special_price}
                         underlineColorAndroid = 'transparent'
                         keyboardType={'numeric'}
@@ -421,7 +456,7 @@ export default class AddService extends Component {
 
                 </View>
 
-                <KeyboardSpacer/>
+                {Platform.OS === 'ios'? <KeyboardSpacer/> : undefined}
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                         <CirclesLoader />
@@ -431,3 +466,9 @@ export default class AddService extends Component {
         )
     }
 }
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(AddService);

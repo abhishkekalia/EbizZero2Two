@@ -8,6 +8,8 @@ export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 export const AUTH_LOGIN_FAIL = 'AUTH_LOGIN_FAIL';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
+export const SKIP_SIGNIN = 'SKIP_SIGNIN';
+export const SET_COUNTRY = 'SET_COUNTRY';
 
 const loginStart = () => {
 	return {
@@ -35,7 +37,6 @@ export const login = (username, password, os) => {
     fetch(Utils.gurl('login'), config)
     .then((response) => response.json())
     .then((responseData) => {
-
     	 if (responseData.response.status) {
     	 	AsyncStorage.setItem('data', JSON.stringify({
     	   		"userdetail" : {
@@ -51,7 +52,7 @@ export const login = (username, password, os) => {
         	}));
 					let usr_type = responseData.response.data.user_type,
 					 u_id = responseData.response.data.u_id;
-    	 	dispatch(successHome(username, password, usr_type, u_id));
+    	 	dispatch(successHome(responseData.response.data.fullname, password, usr_type, u_id));
 
          } else {
             MessageBarManager.showAlert({
@@ -71,10 +72,11 @@ export const login = (username, password, os) => {
 
 const successHome = (username, password ,usr_type, u_id) => {
  	if(usr_type === "3"){
- 	routes.vendortab()
- 	}else{
+		routes.vendortab()
+	}else{
  	 	routes.homePage();
- 	 }	return {
+ 	 }
+	 return {
 		type: AUTH_LOGIN_SUCCESS,
 		payload: {
 			token: Math.random().toString(),
@@ -111,5 +113,32 @@ const changeTo = (newLang) => {
 	return {
 		type: CHANGE_LANGUAGE,
 			payload: newLang,
+	}
+};
+
+export const skipSignIN = (deviceId) => {
+	return dispatch => {
+	dispatch(skip(deviceId));
+	};
+};
+
+const skip = (deviceId) => {
+	routes.homePage()
+	return {
+		type: SKIP_SIGNIN,
+		payload: deviceId,
+	}
+};
+
+export const SetCountry = (country) => {
+	return dispatch => {
+	dispatch(countryId(country));
+	};
+};
+
+const countryId = (country) => {
+	return {
+		type: SET_COUNTRY,
+			payload: country,
 	}
 };

@@ -203,7 +203,10 @@
           "profiletitle":"الملف الشخصي",
           "mobileno":"اتصل",
           "addressbook":"عناويني",
-          "settings":"اعدادات"
+          "settings":"اعدادات",
+          "resetPass":"Password Reset",
+          "guest":"Guest Acount",
+          "email":"بريد الالكتروني",
         },
         "addressbook":{
           "addresstitle":"عنواني",
@@ -324,6 +327,7 @@
           "deactivate":"اخفاء",
           "aproved":"تم التأكيد",
           "pending":"بانتظار التأكيد",
+          "searchHere" : "Search Here"
         },
         "vendoraddproduct":{
           "addproduct":"اضف منتج",

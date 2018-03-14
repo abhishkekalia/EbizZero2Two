@@ -16,6 +16,7 @@ import SelectMultiple from './src/SelectMultiple';
 import { Actions } from 'react-native-router-flux'
 import CheckBox from 'app/common/CheckBox';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Ionicons} from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
 import EventEmitter from "react-native-eventemitter";
 import I18n from 'react-native-i18n'
@@ -70,7 +71,14 @@ class Filter extends Component {
                 selectedIndexOfFilter:1
             })
         });
+        // Actions.refresh({ right: this._renderRightButton, hideNavBar:"false"});
     }
+    // _renderRightButton(){
+    //     return(
+    //         <Ionicons name="md-refresh" size={20} color="#a9d5d1" />
+    //         // <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
+    //     );
+    // }
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');

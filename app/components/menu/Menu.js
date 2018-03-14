@@ -68,29 +68,55 @@ class Menu extends React.Component {
     }
 
        render() {
-        const {identity, logout, lang} = this.props;
+        const {identity, logout, lang,u_id} = this.props;
+
         return (
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
-
                 <View style={styles.avatarContainer}>
-                    <TouchableOpacity
-    						onPress={Actions.profile} style={styles.username}>
-                    <View style= {styles.guest}>
-                        <Zocial name='guest' color="#000" size={15} />
-                    </View>
-                    </TouchableOpacity>
-                    <View style={{ width: width,justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 1, position: 'absolute'}}>
+
+                    {
+                        u_id == undefined ?
+                        <View style={{flex:1,flexDirection:'row', justifyContent: 'center',alignItems: 'center'}}>
+                            <TouchableOpacity  onPress={Actions.loginPage} style={{top:20}}>
+                                <Text style={styles.signinbtn}>Login</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+            						onPress={Actions.profile} style={styles.username}>
+                                <View style= {styles.guest}>
+                                    <Zocial name='guest' color="#000" size={15} />
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={Actions.register} style={{top:20}} >
+                                <Text style={styles.signinbtn}>Signup</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        :
+                        <View style={{flex:1,flexDirection:'row'}}>
+                            <TouchableOpacity
+            						onPress={Actions.profile} style={styles.username}>
+                                <View style= {styles.guest}>
+                                    <Zocial name='guest' color="#000" size={15} />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+
+
+                    }
+
+
+                    <View style={{ width: width, height: 120, justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 1, position: 'absolute'}}>
                         { Object.keys(I18n.translations).map((item, key)=>(
                             <Text
-                                style={{ fontSize: 15, color: '#fff'}}
+                                style={{ fontSize: 15, color: '#fff', alignSelf: 'flex-end'}}
                                 key={key}
                                 // {I18n.translations[item].id }
                                 onPress={ this.SampleFunction.bind(this, item) }>
                                 {I18n.translations[item].id }
                             </Text>
                         )
-                    )}
-                </View>
+                        )}
+                    </View>
                     <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:30}}>{identity.username}</Text>
                 </View>
                 <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
@@ -130,9 +156,8 @@ class Menu extends React.Component {
                         left :5,
                     }}>	{I18n.t('sidemenu.notification', { locale: lang })}</Text>
                </View>
-
-
-                <View style={{height:40}}>
+               {/* in feedback it says to remove padding b/w notification and home*/}
+                <View>
                 </View>
 
                 {/* <LinearGradient colors={['#ffffff', '#dfdfdf', '#ffffff']} style={styles.linearGradient}> */}
@@ -159,9 +184,11 @@ class Menu extends React.Component {
                 style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.share', { locale: lang })}</Text>
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
-                onPress={Actions.sync}
-                style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.rateus', { locale: lang })}</Text>
+                {/* in feedback it says to remove rate us
+                    <Text
+                    onPress={Actions.sync}
+                    style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.rateus', { locale: lang })}</Text>
+                */}
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
@@ -169,7 +196,11 @@ class Menu extends React.Component {
                 style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={()=>( Utils.logout()),logout}
+                onPress={
+                    ()=>{ Utils.logout()
+                    .then(logout)
+                    .done()
+                }}
                 style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}</Text>
                 {this.renderShareSheet()}
             </ScrollView>
@@ -306,13 +337,11 @@ const styles = StyleSheet.create({
         // flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-
     },
     seprator : {
         // borderBottomColor : "grey",
         // borderBottomWidth : 0.5
     },
-
     badge : {
         alignItems: 'center',
         justifyContent: 'center',
@@ -336,10 +365,21 @@ const styles = StyleSheet.create({
         width: width-20,
         height : 120,
         backgroundColor : '#f08080',
+        justifyContent: 'center',
         flexDirection:'column',
         alignItems:'center'
     },
+    signinbtn:{
 
+        padding:5,
+        marginLeft: 10,
+        marginRight: 10,
+        borderRadius: 10,
+        height : 30,
+        textAlign: 'center',
+        color: 'white',
+        backgroundColor: '#a9d5d1',
+    },
     avatar: {
         width :60,
         height : 60,

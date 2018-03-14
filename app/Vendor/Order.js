@@ -8,6 +8,8 @@ import {
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import ProductOrder from "./Order/ProductOrder";
 import ServiceOrder from "./Order/ServiceOrder";
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
 class Order extends Component {
     constructor(props) {
@@ -52,10 +54,11 @@ class Order extends Component {
     }
 
     render() {
+        const { lang } =this.props;
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
-                    values={['Product', 'Service']}
+                    values={[ I18n.t('productorder.product', { locale: lang }),I18n.t('serviceorder.servicetitle', { locale: lang })]}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -65,9 +68,9 @@ class Order extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <ProductOrder/>}
+                    <ProductOrder lang={lang}/>}
                 {this.state.customStyleIndex === 1 &&
-                    <ServiceOrder/>}
+                    <ServiceOrder lang={lang}/>}
             </View>
         );
     }
@@ -111,7 +114,9 @@ const styles = StyleSheet.create({
         marginTop: 24
     }
 })
-
-
-
-export default Order
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(Order);
