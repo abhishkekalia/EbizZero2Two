@@ -359,7 +359,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={Platform.OS === 'ios' ?
                         {
                         padding:15,
-                        marginTop:10,
+                        marginTop:0,
                     } : {
                     alignSelf: 'center'
                 }}/>}

@@ -410,13 +410,22 @@ class Newaddress extends Component{
                         backgroundColor : '#a9d5d1',
                         flexDirection : direction,
                         justifyContent:"space-between",
+                        // justifyContent:"center",
                         alignItems : (Platform.OS === 'ios') ? 'flex-end' :'center',
                     }
                 }>
-                <Ionicons name="ios-arrow-back" size={25} color='#fff' style={lang == 'ar' ? {transform: [{ rotate: '180deg'}], padding: 10 }: {paddingLeft: (Platform.OS === 'ios') ? 10 : 10 , alignSelf: 'center'} } onPress={()=> routes.pop()}/>
-                <Text style={{color:'#fff'}}>{ this.props.address_id ? I18n.t('newAddress.updateaddr', { locale: lang }) : I18n.t('newAddress.newaddrtitle', { locale: lang })}</Text>
+                <Ionicons name="ios-arrow-back" size={25} color='#fff' 
+                style={lang == 'ar' ? 
+                {transform: [{ rotate: '180deg'}], padding: 10 } 
+                : 
+                {paddingLeft: (Platform.OS === 'ios') ? 10 : 10, marginTop: Platform.OS === 'ios' ? 12 : 0 , alignSelf: 'center'} 
+                } 
+                
+                onPress={()=> routes.pop()}
+                />
+                <Text style={{color:'#fff', top:Platform.OS === 'ios' ? -15 : 0 }}>{ this.props.address_id ? I18n.t('newAddress.updateaddr', { locale: lang }) : I18n.t('newAddress.newaddrtitle', { locale: lang })}</Text>
                 <TouchableOpacity style={{ backgroundColor:'transparent'}} onPress={()=> this.props.isFromEdit ? this.editAddressAPICall() : this.submit()}>
-                    <Text style={{ color:'#fff',padding:5}}>{I18n.t('newAddress.savebtn', { locale: lang })}</Text>
+                    <Text style={{ color:'#fff',padding:5, top:Platform.OS === 'ios' ? -10 : 0}}>{I18n.t('newAddress.savebtn', { locale: lang })}</Text>
                 </TouchableOpacity>
             </View>
             <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}>

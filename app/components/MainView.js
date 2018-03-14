@@ -116,12 +116,12 @@ class MainView extends Component {
     }
     _renderLeftButton = () => {
         return(
-            <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
+            <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10, marginTop:Platform.OS === 'ios' ? 10 : 0}}/>
         );
     };
    _renderRightButton = () => {
        return(
-           <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10}}/>
+           <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10, marginTop:Platform.OS === 'ios' ? 10 : 0}}/>
        );
    };
    onCancel() {
@@ -509,9 +509,9 @@ class MainView extends Component {
         }
         return (
             <View style={{backgroundColor: '#f9f9f9'}}>
-                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                     {this._renderLeftButton()}
-                    <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                    <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center', marginTop:Platform.OS === 'ios' ? 10 : 0}}
                         resizeMode = 'contain'
                         resizeMethod = 'resize'/>
                     {this._renderRightButton()}

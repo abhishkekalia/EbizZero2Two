@@ -57,7 +57,7 @@ class CustomGenNavBar extends React.Component {
     _renderRight() {
         return (
             <View style={
-            { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 ,
+            { paddingLeft: 10, top: (Platform.OS === 'ios') ? 10 : 0 ,
             width:'15%',
             height: (Platform.OS === 'ios') ? '80%' : '100%',
             justifyContent: 'center'

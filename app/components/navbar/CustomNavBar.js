@@ -38,7 +38,7 @@ class CustomNavBar extends React.Component {
 
     _renderRight() {
         return (
-            <View style={[styles.navBarItem, { flexDirection: 'row',justifyContent: 'flex-end', alignItems: 'center', opacity:0 }]}>
+            <View style={[styles.navBarItem, { flexDirection: 'row',justifyContent: 'flex-end', alignItems: 'center', opacity:1 }]}>
                 <TouchableOpacity
                 onPress={() => EE12.emit("refreshFilterOption","")}
                 style={{ paddingRight: 10 }}>
