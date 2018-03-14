@@ -29,7 +29,6 @@ class Menu extends React.Component {
         super(props);
         this.state={
             visible: false,
-            // isBAse : false,
             notificationCount : 0
         }
     }
@@ -73,24 +72,21 @@ class Menu extends React.Component {
         return (
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
                 <View style={styles.avatarContainer}>
-
                     {
                         u_id == undefined ?
-                        <View style={{flex:1,flexDirection:'row', justifyContent: 'center',alignItems: 'center'}}>
-                            <TouchableOpacity  onPress={Actions.loginPage} style={{top:20}}>
-                                <Text style={styles.signinbtn}>Login</Text>
+                        <View style={{ height: 120,  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
+                            <TouchableOpacity onPress={Actions.register} style={{alignSelf: 'center'}} >
+                                <Text style={styles.signinbtn}>Signup</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
-            						onPress={Actions.profile} style={styles.username}>
+                            <TouchableOpacity onPress={Actions.profile} style={styles.username}>
                                 <View style= {styles.guest}>
                                     <Zocial name='guest' color="#000" size={15} />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={Actions.register} style={{top:20}} >
-                                <Text style={styles.signinbtn}>Signup</Text>
+                            <TouchableOpacity  onPress={Actions.loginPage} style={{alignSelf: 'center'}}>
+                                <Text style={styles.signinbtn}>Login</Text>
                             </TouchableOpacity>
                         </View>
-
                         :
                         <View style={{flex:1,flexDirection:'row'}}>
                             <TouchableOpacity
@@ -100,113 +96,101 @@ class Menu extends React.Component {
                                 </View>
                             </TouchableOpacity>
                         </View>
-
-
                     }
-
-
                     <View style={{ width: width, height: 120, justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 1, position: 'absolute'}}>
-                        { Object.keys(I18n.translations).map((item, key)=>(
-                            <Text
-                                style={{ fontSize: 15, color: '#fff', alignSelf: 'flex-end'}}
-                                key={key}
-                                // {I18n.translations[item].id }
-                                onPress={ this.SampleFunction.bind(this, item) }>
-                                {I18n.translations[item].id }
-                            </Text>
-                        )
-                        )}
+                        {
+                            Object.keys(I18n.translations).map((item, key)=>(
+                                <Text
+                                    style={{ fontSize: 15, color: '#fff', alignSelf: 'flex-end'}}
+                                    key={key}
+                                    // {I18n.translations[item].id }
+                                    onPress={ this.SampleFunction.bind(this, item) }>
+                                    {I18n.translations[item].id }
+                                </Text>
+                            ))
+                        }
                     </View>
                     <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:30}}>{identity.username}</Text>
                 </View>
                 <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
-
-                {
-                    this.state.notificationCount > 0 ?
-                    <IconBadge
-                        MainElement={
-                            <Ionicons
-                                name="ios-notifications"
-                                color="#a9d5d1" size={30}
-                                style={{ left : 5}}
+                    {
+                        this.state.notificationCount > 0 ?
+                        <IconBadge
+                            MainElement={
+                                <Ionicons
+                                    name="ios-notifications"
+                                    color="#a9d5d1" size={30}
+                                    style={{ left : 5}}
+                                    />
+                            }
+                            BadgeElement={
+                                <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
+                            }
+                            IconBadgeStyle={{
+                                width:16,
+                                height:18,
+                                // left : 10,
+                                backgroundColor: 'orange'
+                            }}
                             />
-                        }
-                        BadgeElement={
-                            <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
-                        }
-                        IconBadgeStyle={{
-                            width:16,
-                            height:18,
-                            // left : 10,
-                            backgroundColor: 'orange'
-                        }}
-                    /> :
-                    <Ionicons
-                        name="ios-notifications"
-                        color="#a9d5d1" size={30}
-                        style={{ left : 5}}
-                    />
-
-                }
+                        :
+                        <Ionicons
+                            name="ios-notifications"
+                            color="#a9d5d1" size={30}
+                            style={{ left : 5}}
+                            />
+                    }
                     <Text onPress={Actions.notificationShow}
                         style={{
-                        fontSize: 12,
-                        padding: 10,
-                        marginTop : 1,
-                        left :5,
-                    }}>	{I18n.t('sidemenu.notification', { locale: lang })}</Text>
-               </View>
-               {/* in feedback it says to remove padding b/w notification and home*/}
-                <View>
+                            fontSize: 12,
+                            padding: 10,
+                            marginTop : 1,
+                            left :5,
+                        }}>	{I18n.t('sidemenu.notification', { locale: lang })}
+                    </Text>
                 </View>
-
-                {/* <LinearGradient colors={['#ffffff', '#dfdfdf', '#ffffff']} style={styles.linearGradient}> */}
-                {/* <LinearGradient colors={['#dfdfdf', '#ffffff', '#dfdfdf']} style={styles.linearGradient} positions={10}> */}
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                {/* </LinearGradient> */}
-                <Text
-                onPress={Actions.homePage}
-                style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.home', { locale: lang })}</Text>
+                {/* in feedback it says to remove padding b/w notification and home*/}
 
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={Actions.contactUs}
-                style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.contact', { locale: lang })}</Text>
-
+                    onPress={Actions.homePage}
+                    style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.home', { locale: lang })}</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={Actions.myorder}
-                style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.order', { locale: lang })}</Text>
-
+                    onPress={Actions.contactUs}
+                    style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.contact', { locale: lang })}</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={()=>this.onOpen()}
-                style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.share', { locale: lang })}</Text>
-
+                    onPress={Actions.myorder}
+                    style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.order', { locale: lang })}</Text>
+                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                <Text
+                    onPress={()=>this.onOpen()}
+                    style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.share', { locale: lang })}</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 {/* in feedback it says to remove rate us
                     <Text
                     onPress={Actions.sync}
                     style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.rateus', { locale: lang })}</Text>
-                */}
-
+                    */
+                }
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
-                onPress={Actions.postad}
-                style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
+                    onPress={Actions.postad}
+                    style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
-                onPress={
-                    ()=>{ Utils.logout()
-                    .then(logout)
-                    .done()
-                }}
-                style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}</Text>
+                <Text onPress={
+                        ()=>{ Utils.logout()
+                            .then(logout)
+                            .done()
+                        }
+                    }
+                    style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}
+                </Text>
                 {this.renderShareSheet()}
             </ScrollView>
-        );
+        )
     }
-
     renderShareSheet() {
         let shareOptions = {
             title: "ZeroToTwo",
@@ -390,8 +374,8 @@ const styles = StyleSheet.create({
     username: {
         // flex : 1,
         // left : width/2.5,
-        top :20,
-        position: 'relative',
+        // top :20,
+        // position: 'relative',
         backgroundColor : '#fff',
         width : 55,
         height : 55,

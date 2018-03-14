@@ -326,7 +326,7 @@ class MainView extends Component {
         return views;
     }
     renderCheckBox(data) {
-        
+
         const { lang } = this.props;
         var leftText = data.ShopName;
         var icon_name = data.icon_name;
@@ -518,7 +518,7 @@ class MainView extends Component {
                 </View>
                 {this.renderFilterOptions()}
                 <ScrollView
-                    contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 50}}
+                    contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 100}}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="always">
                     <StatusBar
@@ -748,7 +748,7 @@ class MainView extends Component {
                 <View style={{flexDirection: direction, justifyContent: "center"}}>
                     <TouchableOpacity
                         onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price)}>
-                        <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages}/>
+                        <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages} special_price={special_price}/>
                     </TouchableOpacity>
                 </View>
                 <View style={{ padding :15}}>
@@ -1079,7 +1079,7 @@ class MainView extends Component {
                 <View style={{flexDirection: direction , justifyContent: "center"}}>
                     <TouchableOpacity
                     onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}>
-                        <LoadImage productImages={data.productImages}/>
+                        <LoadImage productImages={data.productImages} special_price={special_price}/>
                     </TouchableOpacity>
                     <EvilIcons style={{ position : 'absolute', left : 5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
                         name="share-google"
@@ -1311,7 +1311,7 @@ class LoadImage extends Component {
             <IconBadge
                 MainElement={
                     <Image style={[styles.thumb, { alignSelf: 'center',}]}
-                        resizeMode = {'stretch'|| "contain"}
+                        resizeMode = {"contain"}
                         resizeMethod = 'resize'
                         source={require('../images/no-image.jpg')}
                         onLoadEnd={() => { this.setState({ loaded: true }); }}
@@ -1337,11 +1337,30 @@ class LoadImage extends Component {
                 Hidden={this.state.BadgeCount==0}
                 />
             :
-            <Image style={[styles.thumb, { alignSelf: 'center',}]}
-                resizeMode = 'stretch'
-                resizeMethod = 'resize'
-                source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
-                onLoadEnd={() => { this.setState({ loaded: true }); }}
+            <IconBadge
+                MainElement={
+                    <Image style={[styles.thumb, { alignSelf: 'center',}]}
+                        resizeMode = {"contain"}
+                        resizeMethod = 'resize'
+                        source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
+                        onLoadEnd={() => { this.setState({ loaded: true }); }}
+                        />
+                }
+                BadgeElement={
+                    <Text style={{color:'#FFFFFF'}}>{this.props.special_price} KWD</Text>
+                }
+                IconBadgeStyle={
+                    {
+                        opacity: 0.5,
+                        top:height/3-20,
+                        left : width/4,
+                        borderRadius: null,
+                        // alignItems: 'center',
+                        // justifyContent: 'flex-start',
+                        backgroundColor: '#000'
+                    }
+                }
+                Hidden={this.state.BadgeCount==0}
                 />
         )
     }
