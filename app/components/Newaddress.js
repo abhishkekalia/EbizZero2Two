@@ -23,8 +23,10 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import EventEmitter from "react-native-eventemitter";
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import Geocoder from 'react-native-geocoding';
-Geocoder.setApiKey('AIzaSyDqd0y_5PDthinBVBXhmZE8sXxsy17FFpM');
+// import Geocoder from 'react-native-geocoding';
+// Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
+
+// AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8
 
 // import Geocoder from 'react-native-geocoder';
 // // simply add your google key
@@ -77,7 +79,6 @@ class Newaddress extends Component{
         // .then(()=>this.fetchData())
         // .done();
         this.fetchData()
-        console.log("componentDidMount")
         navigator.geolocation.getCurrentPosition(
             (position) => {
               this.setState({
@@ -593,7 +594,7 @@ class Newaddress extends Component{
                         onChangeText={(text) => this.setState({ direction: text })}
                         />
                     <View style={{ flex: 1}}>
-                        { /*<MapView
+                        <MapView
                             style = {{height:200, marginRight:0, marginBottom:10,  marginTop:5,}}
                             region={this.state.region}
                             onRegionChange={this.onRegionChange.bind(this)}>
@@ -608,7 +609,7 @@ class Newaddress extends Component{
                                         longitudeDelta: this.state.region.longitudeDelta
                                     }
                                 })}/>
-                            </MapView> */}
+                            </MapView>
                         </View>
                         <TouchableOpacity style={{
                                 borderWidth:1, borderColor:'#ccc',height:40, justifyContent:'center', alignItems:'center',

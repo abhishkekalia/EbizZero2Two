@@ -517,17 +517,17 @@ class MainView extends Component {
                     {this._renderRightButton()}
                 </View>
                 {this.renderFilterOptions()}
+                <StatusBar
+                    hidden={false}
+                    backgroundColor="#a9d5d1"
+                    barStyle="light-content"/>
+                <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
                 <ScrollView
                     contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 100}}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="always">
-                    <StatusBar
-                        hidden={false}
-                        backgroundColor="#a9d5d1"
-                        barStyle="light-content"/>
-                    <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
 
-                    {this.renderListData()}
+                    { this.renderListData()}
                     {this.renderAllShopViews()}
                     {this.renderAllServiceViews()}
 
@@ -1318,7 +1318,7 @@ class LoadImage extends Component {
                         />
                 }
                 BadgeElement={
-                    <Text style={{color:'#FFFFFF'}}>{"125"}</Text>
+                    <Text style={{color:'#FFFFFF'}}>{this.props.special_price} KWD</Text>
                 }
                 IconBadgeStyle={
                     {

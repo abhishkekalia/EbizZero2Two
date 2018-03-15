@@ -61,22 +61,34 @@ class ScheduleCalender extends Component {
 			.then((responseData) => {
 				if(responseData.status){
 					let	data = responseData.data;
-					let datesArray = {
-						data : {selected: true,  marked: true},
-			 			// '2018-03-22': {selected: true,},
-						// '2017-12-28': {selected: true,},
-					}
-					const selectedDate = new Date().toISOString().substring(0, 10)
-					Object.keys(datesArray).map((d, i) => {
-						if (datesArray[d].disabled === false) {
-							delete datesArray[d]
-						} else if (selectedDate !== new Date(datesArray[i])) {
-							datesArray[selectedDate] = {selected: true, marked: true, selectedColor: 'green'}
-						}
-					})
-					console.log('dates array: ', datesArray)
+					// var data = ['date1','date2','date3']
+					var arrNew = {};
+
+				   for (i=0;i<data.length;i++) {
+					   var obj = { selected: true, selectedColor: '#a9d5d1'};
+					   let strDate = data[i]
+					   var objFinal = {
+						   strDate : obj,
+					   };
+					   arrNew[strDate] = obj
+				   }
+				   // console.log("arrNew:=",arrNew);
+					// let datesArray = {
+					// 	data : {selected: true,  marked: true},
+			 		// 	// '2018-03-22': {selected: true,},
+					// 	// '2017-12-28': {selected: true,},
+					// }
+					// const selectedDate = new Date().toISOString().substring(0, 10)
+					// Object.keys(datesArray).map((d, i) => {
+					// 	if (datesArray[d].disabled === false) {
+					// 		delete datesArray[d]
+					// 	} else if (selectedDate !== new Date(datesArray[i])) {
+					// 		datesArray[selectedDate] = {selected: true, marked: true, selectedColor: 'green'}
+					// 	}
+					// })
+					// console.log('dates array: ', datesArray)
 					this.setState ({
-						ScheduleDate: datesArray,
+						ScheduleDate: arrNew,
 						status: responseData.status
 					})
 				}
@@ -103,8 +115,8 @@ class ScheduleCalender extends Component {
 		const {u_id} = this.props;
 		try {
 			let formData = new FormData();
-			formData.append('vendor_id', String(7));
-			formData.append('selected_date', String("2017-11-13"));
+			formData.append('vendor_id', String(u_id));
+			formData.append('selected_date', String(date));
 			// console.warn(formData);
 			const config = {
 				method: 'POST',
@@ -196,7 +208,7 @@ class ScheduleCalender extends Component {
 	}
 	renderData( data, rowData: string, sectionID: number, rowID: number, index) {
 		return (
-			<TouchableOpacity key={rowID} data={rowData} onPress={() => navigate('Detail', { feed: que_ans.feed, detail : que_ans.detail , source : que_ans.source, time : que_ans.time  })}>
+			<TouchableOpacity key={rowID} data={rowData} onPress={() => console.log(data.schedule_id)}>
             <View style={styles.row}>
 				<Text style={styles.textQue}>{data.schedule_id}</Text>
 				<Text style={styles.textQue}>{data.name}</Text>

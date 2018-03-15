@@ -136,6 +136,7 @@
     },
     "servicedetail":{
         "booknow":"Book Now",
+        "noaddress":"No address Found",
         "productinfo":"Product Information",
         "paymentsuccess":"Payment Success",
         "paymentfailure":"Payment Not Success"
@@ -153,7 +154,10 @@
         "type":"Type"
     },
     "sidemenu":{
+        "signup": "Signup",
+        "login": "Log in",
         "notification":"Notification",
+        "deals":"Deals and Offers",
         "home":"Home",
         "contact":"Contact Us",
         "order":"My Order",
@@ -331,6 +335,7 @@
         "deactivate":"Deactivate",
         "aproved":"Apendingproved",
         "pending":"Pending",
+        "deliverd":"Deliverd",
         "searchHere" : "Search Here"
     },
     "vendoraddproduct":{

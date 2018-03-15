@@ -136,6 +136,7 @@
     },
     "servicedetail":{
         "booknow":"احجز الان",
+        "noaddress":"No address Found",
         "productinfo":"تفاصيل الخدمة",
         "paymentsuccess":"تم قبول عملية الدفع بنجاح",
         "paymentfailure":"تم رفض عملية الدفع"
@@ -153,7 +154,10 @@
         "type":"النوع"
     },
     "sidemenu":{
+        "signup": "Signup",
+        "login": "Log in",
         "notification":"تنبيهات",
+        "deals":"Deals and Offers",
         "home":"الرئيسية",
         "contact":"اتصل بنا",
         "order":"طلباتي",
@@ -330,6 +334,7 @@
         "deactivate":"اخفاء",
         "aproved":"تم التأكيد",
         "pending":"بانتظار التأكيد",
+        "deliverd":"Deliverd",
         "searchHere" : "Search Here"
     },
     "vendoraddproduct":{
