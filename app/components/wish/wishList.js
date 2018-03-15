@@ -41,6 +41,7 @@ const { width, height } = Dimensions.get('window');
 class WishList extends Component {
     constructor(props) {
         super(props);
+
         this.fetchData = this.fetchData.bind(this);
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
@@ -285,10 +286,10 @@ class WishList extends Component {
         return (
         <View style={{flex :1}}>
         <ScrollView>
-            {listView}
-                    </ScrollView>
+        {listView}
+        </ScrollView>
 
-            <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
+        <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
           <Button iconSrc={{ uri: TWITTER_ICON }}
                   onPress={()=>{
               this.onCancel();

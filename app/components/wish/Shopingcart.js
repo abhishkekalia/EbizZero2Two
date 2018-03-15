@@ -126,6 +126,7 @@ class Shopingcart extends Component {
     // }
     fetchData(){
         const {u_id, country, lang ,deviceId } = this.props;
+        // deviceId = "fc898d3fb74399eb";
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
         formData.append('country', String(country));

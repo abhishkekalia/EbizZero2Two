@@ -196,13 +196,9 @@ class Profile extends Component {
 
 				</View>
 				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
-					<TouchableOpacity style={{ justifyContent: 'center', alignItems : 'flex-end'}}
-					onPress={()=> this.setState({
-						visibleModal:true
-					})} >
-					<Text style={{padding: 5,borderWidth: StyleSheet.hairlineWidth, borderColor: "#fbcdc5"}}>{I18n.t('profile.resetPass', { locale: lang })}</Text>
-					</TouchableOpacity >
-					<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
+
+			
+				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
 					<View style={{ padding : 0, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
@@ -232,14 +228,10 @@ class Profile extends Component {
 
 				<Modal isVisible={this.state.visibleModal}>
 					<View style={{alignItems : 'center', padding:10, backgroundColor: '#fff'}}>
-					<View style ={[{borderColor:'#fbcdc5'}]}>
-						<Ionicons name="ios-mail-outline"
-						size={30}
-						color="#fbcdc5"
-						style= {{ padding: 10}}
-						/>
+					<View style ={[{borderColor:'#fbcdc5',width:250}]}>
+
 						<TextInput
-							style={{left:6.5}}
+							// style={{left:6.5}}
 							// onBlur={ () => this.onBlurUser() }
 							value={this.state.forgotPassword}
 							underlineColorAndroid = 'transparent'
@@ -258,18 +250,18 @@ class Profile extends Component {
 						/>
 					</View>
 					<View style={{flexDirection: direction, height: 40}}>
-					<TouchableOpacity
-					onPress={()=> this.setState({ visibleModal:  false})}>
-					<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
-					 Cancel
-					</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-					onPress={()=> this.Forgotpassword()}>
-					<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
-					 Submit
-					</Text>
-					</TouchableOpacity>
+						<TouchableOpacity
+						onPress={()=> this.setState({ visibleModal:  false})}>
+							<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+						 		Cancel
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+						onPress={()=> this.Forgotpassword()}>
+							<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+							 	Submit
+							</Text>
+						</TouchableOpacity>
 					</View>
 					</View>
 			</Modal>

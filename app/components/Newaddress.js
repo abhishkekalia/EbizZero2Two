@@ -470,7 +470,7 @@ class Newaddress extends Component{
                         }
                         <Picker
                             mode="dropdown"
-                            style={{height: 40, width: 100 }}
+                            style={{height: 40, width: "50%" }}
                             selectedValue={this.state.country}
                             onValueChange={(country) => this.setState({country})}>
                             {this.loadCountry()}
