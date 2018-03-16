@@ -51,10 +51,8 @@ export default class CheckBox extends Component {
         if (!this.props.leftText)return null;
       let counting = this.props.countingItem ? <Text style={{ fontSize: 10}}> {"("} {this.props.countingItem} {")"} </Text> : null
         return (
-            <View style={{flexDirection: 'row', paddingLeft : 10, backgroundColor : 'transparent'}}>
                 <Text style={[styles.leftText, this.props.leftTextStyle]}>{this.props.leftText} {counting}</Text>
-            </View>
-        );
+                    );
     }
     _renderRight() {
         if (this.props.rightTextView)return this.props.rightTextView;
@@ -76,20 +74,22 @@ export default class CheckBox extends Component {
     }
 
     genCheckedImage() {
+        const { lang } = this.props;
         var source;
         if (this.props.isIndeterminate) {
             source = 'check-box'
         }
         else {
             source = this.state.isChecked ? 'check-box' : 'check-box-outline-blank';
-        }   
+        }
 
         return (
-            <Icon style={{ paddingRight : 5}} name={source} size={25}   />
+            <Icon style={lang === 'ar'? { marginLeft : 10}: { marginRight : 10}} name={source} size={25}   />
         );
     }
 
     render() {
+        const { lang } = this.props;
         return (
             <TouchableHighlight
                 style={this.props.style}
@@ -97,7 +97,7 @@ export default class CheckBox extends Component {
                 underlayColor='transparent'
                 disabled={this.props.disabled}
             >
-                <View style={styles.container}>
+                <View style={[styles.container, { flexDirection: (lang === 'ar') ? 'row' : 'row-reverse'}]}>
                     {this._renderLeft()}
                     {this._renderImage()}
                     {this._renderRight()}
@@ -108,7 +108,6 @@ export default class CheckBox extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
         justifyContent : 'space-around',
         alignItems: 'center'
     },

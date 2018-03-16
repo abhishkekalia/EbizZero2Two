@@ -5,43 +5,56 @@ const { width, height } = Dimensions.get('window');
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingTop: HEADER_HEIGHT + 150
+		// paddingTop: HEADER_HEIGHT + 150
 	},
 	content: {
 		flex: 1,
-		padding: 20
+		paddingLeft: 20,
+		paddingRight: 20,
+		marginBottom: 20,
+		marginTop: 20
 	},
 	iconusername : {
-    	flexDirection: 'row', 
-    	borderBottomWidth: 0.5,
-		borderColor: 'red',
+    	borderBottomWidth: StyleSheet.hairlineWidth,
+		borderColor: '#ccc',
+		backgroundColor : 'transparent',
+		borderColor:'#fbcdc5'
     },
 
 	iconpassword : {
     	flexDirection: 'row',
+    	backgroundColor : 'transparent',
+			paddingBottom: 1
     },
 
-	inputcontent : { 
-		borderColor: 'red',
-		borderWidth: 1,
+	inputcontent : {
+		borderColor: '#ccc',
+		borderWidth: StyleSheet.hairlineWidth,
 		borderStyle: 'solid',
 		borderRadius: 5,
 		bottom : 10
 	},
 	inputusername: {
-		width : width/1.5,
+		width : width-40,
     	paddingLeft: 0,
     	// backgroundColor: '#fff',
     	color: '#424242',
-    	left : 10
+		// left : 10,
+		// height : 40
     },
 	inputpassword: {
 		// flex: 1,
-		width : width/1.5,
+		width : width-40,
     	paddingLeft: 0,
     	// backgroundColor: '#fff',
     	color: '#424242',
-    	left : 10
+		// left : 10,
+		height : 50
+	},
+	button : {
+		height : 40,
+		alignItems : 'center',
+		justifyContent : 'center'
 	},
 
 	label: {
@@ -61,15 +74,29 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-   	borderBottomWidth: 0.5,
-	borderColor: 'red',
+   	borderBottomWidth: StyleSheet.hairlineWidth,
+	borderColor: '#ccc',
 
 	},
-	registerContent : { 
-		borderColor: 'red',
-		borderWidth: 0.5,
+	registerContent : {
+		borderColor: '#ccc',
+		borderWidth: StyleSheet.hairlineWidth,
 		borderStyle: 'solid',
 		borderRadius: 5,
 	},
+	social : {
+		left : 10,
+		// borderColor:"#3b5998" ,
+		height :25,
+		width :25,
+		justifyContent:'center',
+	},
+	socialInput : {
+		width : width/1.5,
+		color: '#424242',
+		left : 10,
+		justifyContent : 'center'
+
+	}
 
 });

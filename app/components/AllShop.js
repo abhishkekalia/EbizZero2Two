@@ -48,7 +48,11 @@ export default class AllShop extends Component {
                 dataArray: responseData.data,
             });
         })
+        .catch((error) => {
+            console.log(error);
+        })
         .done();
+
     }
 
     onClick(data) {
@@ -87,9 +91,6 @@ for (var j = valremove.length -1; j >= 0; j--){
 }
 
 alert(JSON.stringify(myarray)); //myarray will be [0,1,3,5,6]
-    
-
-
     }
 
 
@@ -139,8 +140,6 @@ alert(JSON.stringify(myarray)); //myarray will be [0,1,3,5,6]
     }
 
     render() {
-                console.warn(JSON.stringify(this.state.rows))
-
         return (
             <View style={styles.container}>
 
