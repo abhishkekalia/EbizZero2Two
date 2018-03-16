@@ -32,7 +32,7 @@ class CustomGenNavBar extends React.Component {
                 // transform: lang == 'ar'? [{ rotate: '180deg'}] : null
             }
                 ]}>
-                    <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25} style={{ alignSelf: 'center'}}/>
+                    <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25} style={ lang == 'ar' ? { alignSelf: 'center', transform: [{ rotate: '180deg'}]}:{ alignSelf: 'center'}}/>
                 </TouchableOpacity>
             )
         }

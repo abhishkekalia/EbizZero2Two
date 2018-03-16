@@ -50,6 +50,10 @@
         "selectcountry":"Select Country",
         "address":"Address",
         "createbtn":"Create An Acount",
+        "otplabel" : "OTP",
+        "submitbtn":"Submit",
+        "otpplchldr" : "Enter 6 Digit Otp",
+        "resendOtp": "Want to Resend Otp",
         "venderregister":"If you are vendor ? Register Here",
         "privacypolicy1":"By Signing in you are agreeing to our",
         "privacypolicy2":"Terms and Conditions",
@@ -57,6 +61,7 @@
         "privacypolicy4":"Privacy Policy",
         "pleaseenterfullname":"Plese Enter Your Fullname",
         "pleaseentervalidmail":"Plese Enter Valid Email",
+        "maildomain":"mail domain name must be .com",
         "pleaseenterpwd":"Plese Enter Your Password",
         "pleaseselectgender":"Plese Select Gender",
         "pleaseentercontact":"Plese Enter Your Contact Number",
@@ -87,6 +92,7 @@
         "pleaseenterrepresentative":"Plese Enter Representative Name",
         "pleaseentercontact":"Plese Enter Your Contact Number",
         "pleaseenteremail":"Plese Enter Valid Email",
+        "maildomain":"mail domain name must be .com",
         "pleaseenteraddr":"Plese Enter Address",
         "pleaseenterpwd":"Plese Enter Your Password",
         "pleaseselectgender":"Plese Select Gender",
@@ -171,7 +177,7 @@
         "logout":"Logout"
     },
     "wishlist":{
-        "wishlistTitle":"wishlist",
+        "wishlistTitle":"Wishlist",
         "noitem":"No Item added to your wishlist",
         "sizelbl":"Size",
         "shareerr":"No apps can perform this action.",
@@ -328,6 +334,7 @@
     },
     "vendorproducts":{
         "productTitle":"Product",
+        "producteditTitle":"Edit Product",
         "myproduct":"My Product",
         "categories":"Categories",
         "quantity":"Quantity Available",
@@ -378,10 +385,10 @@
         "productname_ar_err":"Plese Insert Service Name in arabic",
         "shortdesc_ar_err":"Plese Insert arabic Short description",
         "detaildesc_ar_err":"Plese Insert arabic Detail description",
-
     },
     "vendorservice":{
         "serviceTitle":"Service",
+        "serviceeditTitle":"Edit service",
         "myservice":"My Service",
         "categories":"Categories",
         "price":"Price",
