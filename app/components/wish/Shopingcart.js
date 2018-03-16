@@ -126,6 +126,7 @@ class Shopingcart extends Component {
     // }
     fetchData(){
         const {u_id, country, lang ,deviceId } = this.props;
+        // deviceId = "fc898d3fb74399eb";
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
@@ -233,7 +234,7 @@ class Shopingcart extends Component {
                         flex : 0}
                     }>
                     <Text style={{ textAlign: align}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
-                    <Text style={{textAlign: align}}> KWD {totalamount}</Text>
+                    {/*<Text style={{textAlign: align}}> KWD {totalamount}</Text>*/}
                 </View>
                 <View style={{
                         flexDirection : direction,

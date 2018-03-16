@@ -420,7 +420,6 @@ class ProductVendor extends Component {
                                                 />
                                         </View>
                                     </TouchableOpacity>
-
                                 </View>
                                 : undefined
                             }
@@ -555,7 +554,6 @@ class SlideshowTest extends Component {
           }, 2000)
         });
     }
-
     componentWillUnmount() {
         clearInterval(this.state.interval);
     }
@@ -570,7 +568,6 @@ class SlideshowTest extends Component {
         );
     }
 }
-
 const styles = {
     container: {
         flex: 1,

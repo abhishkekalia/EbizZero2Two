@@ -70,10 +70,11 @@ export default class Editwish extends Component {
                 if(responseData.status){
                     MessageBarManager.showAlert({
                         message: I18n.t('home.wishlistmsg1', { locale: lang }),
-                        alertType: 'extra',
+                        alertType: 'warning',
                         title:'',
                         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:'center'},
+                        // stylesheetWarning : {{ backgroundColor : '#FFC0CB'}}
                     })
                 }
             })
@@ -105,10 +106,10 @@ export default class Editwish extends Component {
         .then((responseData) => {
             MessageBarManager.showAlert({
                 message: I18n.t('home.wishlistmsg2', { locale: lang }),
-                alertType: 'extra',
+                alertType: 'warning',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'red', fontSize: 16 , textAlign:align},
+                messageStyle: { color: 'red', fontSize: 16 , textAlign:'center'},
             })
         })
         .then(()=>this.props.fetchData())

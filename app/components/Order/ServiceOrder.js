@@ -138,6 +138,7 @@ export default class ServiceOrder extends Component {
             );
     }
     renderData(data, rowData, sectionID, rowID, index) {
+        console.warn(data);
         let color = data.serviceDetail.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.serviceDetail.special_price ? 'line-through' : 'none';
 
@@ -161,7 +162,7 @@ export default class ServiceOrder extends Component {
 
                     </View>
                     <View style={styles.row}>
-                    <Text style={styles.label}>Customer Name : </Text>
+                    <Text style={styles.label}>Shop Name : </Text>
                     <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
                     </View>
                     <View style={styles.row}>
