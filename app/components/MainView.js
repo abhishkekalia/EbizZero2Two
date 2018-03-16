@@ -193,19 +193,21 @@ class MainView extends Component {
        .done();
    }
    renderLoadingView() {
+       const {lang} = this.props;
        return (
-           <ActivityIndicator
-               style={[styles.centering]}
-               color="#a9d5d1"
-               size="large"/>
-       );
-   }
-   renderLoadingView() {
-       return (
-           <ActivityIndicator
-               style={[styles.centering]}
-               color="#a9d5d1"
-               size="large"/>
+           <View style={{flex: 1}}>
+               <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                   {this._renderLeftButton()}
+                   <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                       resizeMode = 'contain'
+                       resizeMethod = 'resize'/>
+                   {this._renderRightButton()}
+               </View>
+               <ActivityIndicator
+                   style={[styles.centering]}
+                   color="#a9d5d1"
+                   size="large"/>
+           </View>
        );
    }
    blur() {
@@ -487,14 +489,6 @@ class MainView extends Component {
             price : price,
             special_price : special_price,
         })
-    }
-    renderLoadingView() {
-        return (
-            <ActivityIndicator
-            style={[styles.centering]}
-            color="#a9d5d1"
-            size="large"/>
-            );
     }
     render() {
         const {u_id, country, deviceId ,lang} = this.props;

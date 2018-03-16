@@ -8,14 +8,28 @@ import {
     View,
     Image ,
     RefreshControl,
+    Modal,
     ActivityIndicator
 } from 'react-native';
+import MapView from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
 import {connect} from "react-redux";
-import I18n from 'react-native-i18n'
-const { width, height } = Dimensions.get('window')
+import I18n from 'react-native-i18n';
+// import Modal from 'react-native-modal';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE = 22.966425;
+const LONGITUDE = 72.615933;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
+
 class Notification extends Component {
     constructor(props) {
         super(props);
@@ -25,7 +39,27 @@ class Notification extends Component {
             loaded: false,
             toggle : false,
             refreshing: false,
+            visibleMap: false,
+            coordinates: [
+              {
+                latitude: 22.966425,
+                longitude: 72.615933,
+              },
+              {
+                latitude: 22.996170,
+                longitude: 72.599584,
+              },
+            ],
         }
+        this.mapView = null;
+    }
+    onMapPress = (e) => {
+      this.setState({
+        coordinates: [
+          ...this.state.coordinates,
+          e.nativeEvent.coordinate,
+        ],
+      });
     }
     componentDidMount(){
         this.fetchData()
@@ -68,9 +102,7 @@ class Notification extends Component {
         }
     }
     render() {
-        const { lang } = this.props,
-        align = (lang === 'ar') ?  'right': 'left';
-
+        const {lang} = this.props;
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
@@ -94,6 +126,63 @@ class Notification extends Component {
         return (
             <View>
                 {listView}
+                <Modal
+                  animationType="slide"
+                  transparent={false}
+                  visible={this.state.visibleMap}
+                  onRequestClose={() => this.setState({ visibleMap :false})}>
+                    <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: 10}}>
+                        <Icon onPress ={()=>this.setState({ visibleMap :false})} name="close" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
+                    </View>
+                    <View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
+                        <MapView
+                      initialRegion={{
+                        latitude: LATITUDE,
+                        longitude: LONGITUDE,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA,
+                      }}
+                      style={StyleSheet.absoluteFill}
+                      ref={c => this.mapView = c}
+                      onPress={this.onMapPress}
+                    >
+                      {this.state.coordinates.map((coordinate, index) =>
+                        <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} >
+                            <FontAwesome name="car" size={15} color="#FFCC7D"/>
+                            </MapView.Marker>
+                      )}
+                      {(this.state.coordinates.length >= 2) && (
+                        <MapViewDirections
+                          origin={this.state.coordinates[0]}
+                          waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
+                          destination={this.state.coordinates[this.state.coordinates.length-1]}
+                          apikey={GOOGLE_MAPS_APIKEY}
+                          strokeWidth={5}
+                          strokeColor="#a9d5d1"
+                          onStart={(params) => {
+                            console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
+                          }}
+                          // onReady={(result) => {
+                          //   this.mapView.fitToCoordinates(result.coordinates, {
+                          //     edgePadding: {
+                          //       right: (width / 20),
+                          //       bottom: (height / 20),
+                          //       left: (width / 20),
+                          //       top: (height / 20),
+                          //     }
+                          //   });
+                          // }}
+                          onError={(errorMessage) => {
+                            // console.log('GOT AN ERROR');
+                          }}
+                        />
+                      )}
+                    </MapView>
+                  </View>
+
+
+                </Modal>
+
             </View>
         );
     }
@@ -106,7 +195,9 @@ class Notification extends Component {
         );
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-        const { lang } = this.props;
+        const { lang } = this.props,
+        direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left';
         let Status
         if (data.order_status == 0 ) {
             Status = I18n.t('vendorproducts.pending', { locale: lang })
@@ -114,28 +205,36 @@ class Notification extends Component {
             Status = I18n.t('vendorproducts.deliverd', { locale: lang })
         };
         return (
-            <TouchableOpacity style={styles.row}>
-                    <View style={{ flexDirection : 'row', justifyContent: 'space-between', height: 20, borderWidth: StyleSheet.hairlineWidth, alignItems: 'center', borderColor: "#fbcdc5"}}>
-                        <View style={{flexDirection: 'row'}}>
-                            <Text style={{color: "#a9d5d1"}}>Order Id</Text>
-                            <Text style={{color: "#a9d5d1"}}>:</Text>
-                            <Text style={{}}>{data.order_id}</Text>
+            <View style={styles.row}>
+                    <View style={{ flexDirection : direction, justifyContent: 'space-between', height: 20, borderWidth: StyleSheet.hairlineWidth, alignItems: 'center', borderColor: "#fbcdc5"}}>
+                        <View style={{flexDirection: direction}}>
+                            <Text style={{color: "#a9d5d1", textAlign: align}}>productId</Text>
+                            <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                            <Text style={{ textAlign: align}}>{data.product_id}</Text>
                         </View>
-                        <View style={{flexDirection: 'row'}}>
-                            <Text style={{color: "#a9d5d1"}}>Order Type</Text>
-                            <Text style={{color: "#a9d5d1"}}>:</Text>
-                            <Text>{data.type}</Text>
+                        <View style={{flexDirection: direction}}>
+                            <Text style={{color: "#a9d5d1", textAlign: align}}>orderId</Text>
+                            <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                            <Text style={{ textAlign: align}}>{data.order_id}</Text>
                         </View>
                     </View>
-                    <View style={{justifyContent:'space-between', flexDirection : 'row',alignItems: 'center', height: 40}}>
-                        <View style={{ flexDirection : 'row'}}>
-                            <Text style={{color: "#a9d5d1"}}>Delivery Status</Text>
-                            <Text style={{color: "#a9d5d1"}}>:</Text>
-                            <Text>{Status}</Text>
+                    <TouchableOpacity
+                        onPress ={()=>this.setState({
+                            visibleMap :true
+                        })}
+                        style={{justifyContent:'space-between', flexDirection : direction,alignItems: 'center', height: 30}}>
+                        <View style={{ flexDirection : direction}}>
+                            <Text style={{color: "#a9d5d1", textAlign: align}}>Delivery Status</Text>
+                            <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                            <Text style={{ textAlign: align}}>{Status}</Text>
                         </View>
-                        <Text>{data.type}</Text>
-                    </View>
-            </TouchableOpacity>
+                        <View style={{ flexDirection : direction}}>
+                            <Text style={{color: "#a9d5d1", textAlign: align}}>Type</Text>
+                            <Text style={{color: "#a9d5d1" , alignSelf: 'center'}}>:</Text>
+                            <Text  style={{ textAlign: align}}>{data.type}</Text>
+                        </View>
+                    </TouchableOpacity>
+            </View>
         );
     }
     _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {

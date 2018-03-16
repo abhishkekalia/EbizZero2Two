@@ -136,10 +136,14 @@
     },
     "servicedetail":{
         "booknow":"احجز الان",
+        "schedule":"Schedule",
+        "selectaddress":"اختر العنوان",
         "noaddress":"No address Found",
         "productinfo":"تفاصيل الخدمة",
         "paymentsuccess":"تم قبول عملية الدفع بنجاح",
-        "paymentfailure":"تم رفض عملية الدفع"
+        "paymentfailure":"تم رفض عملية الدفع",
+        "selectDate":"Plese Select Date",
+        "selectTime":"Plese Select Time Slot"
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -476,5 +480,11 @@
     },
     "scheduleService":{
         "serviceTitle":"جدول",
+    },
+    "notification":{
+        "orderId":"Order Id",
+        "orderType":"Order Type",
+        "deliveryStatus": "Delivery Status",
     }
+
 }

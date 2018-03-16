@@ -33,45 +33,39 @@ class Menu extends React.Component {
         }
     }
     componentDidMount(){
-      const {identity} = this.props;
-      let formData = new FormData();
-      formData.append('u_id', String(identity.u_id));
-
-      const config = {
-              method: 'POST',
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'multipart/form-data;',
-              },
-              body: formData,
-          }
-      fetch(Utils.gurl('getNotificationCount'), config)
-      .then((response) => response.json())
-      .then((responseData) => {
-          if(responseData.status){
-              this.setState({
-              notificationCount: responseData.data.count,
-              });
-          }
-      })
-      .catch((error) => {
-          console.log(error);
-      })
-      .done();
+        const {identity} = this.props;
+        let formData = new FormData();
+        formData.append('u_id', String(identity.u_id));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        fetch(Utils.gurl('getNotificationCount'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.status){
+                this.setState({
+                    notificationCount: responseData.data.count,
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
-
     SampleFunction=(newLang)=>{
-  	// this.props.changeLanguage(newLang)
-  	this.props.languageChange(newLang)
-
+        this.props.languageChange(newLang)
     }
-
-       render() {
+    render() {
         const {identity, logout, lang,u_id} = this.props;
-
         return (
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
-                <View style={[styles.avatarContainer,{ alignSelf: 'center'}]}>
+                <View style={[styles.avatarContainer,{ alignSelf: 'center', justifyContent: 'space-around'}]}>
                     {
                         u_id == undefined ?
                         <View style={{ height: 120, width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
@@ -88,7 +82,7 @@ class Menu extends React.Component {
                             </TouchableOpacity>
                         </View>
                         :
-                        <View style={{ flex:1,flexDirection:'row' , width: '80%'}}>
+                        <View style={{ height: 120, width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
                             <TouchableOpacity
             						onPress={Actions.profile} style={styles.username}>
                                 <View style= {styles.guest}>
@@ -110,7 +104,10 @@ class Menu extends React.Component {
                             ))
                         }
                     </View>
-                    <Text style={{ position: 'relative' , paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:30}}>{identity.username}</Text>
+                    <Text style={{
+                            // position: 'absolute' ,
+                            marginBottom: 10,
+                            paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:0}}>{identity.username}</Text>
                 </View>
                 <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
                     {
@@ -163,11 +160,9 @@ class Menu extends React.Component {
                     </View>
                 </View>
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-
                 <Text
                     onPress={Actions.homePage}
                     style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.home', { locale: lang })}</Text>
-
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <Text
                     onPress={Actions.contactUs}
@@ -200,8 +195,6 @@ class Menu extends React.Component {
                     }
                     style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}
                 </Text>
-
-
                 {this.renderShareSheet()}
             </ScrollView>
         )
@@ -212,94 +205,96 @@ class Menu extends React.Component {
             message: "App Description",
             url: "https://www.google.com",
             subject: "Share Link" //  for email
-          };
+        };
         return(
             <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-          <Button iconSrc={{ uri: TWITTER_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "twitter"
-                }));
-              },300);
-            }}>Twitter</Button>
-          <Button iconSrc={{ uri: FACEBOOK_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "facebook"
-                }));
-              },300);
-            }}>Facebook</Button>
-          <Button iconSrc={{ uri: WHATSAPP_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "whatsapp"
-                }));
-              },300);
-            }}>Whatsapp</Button>
-          <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "googleplus"
-                }));
-              },300);
-            }}>Google +</Button>
-          <Button iconSrc={{ uri: EMAIL_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "email"
-                }));
-              },300);
-            }}>Email</Button>
-          <Button
-            iconSrc={{ uri: CLIPBOARD_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                if(typeof shareOptions["url"] !== undefined) {
-                  Clipboard.setString(shareOptions["url"]);
-                  if (Platform.OS === "android") {
-                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
-                  } else if (Platform.OS === "ios") {
-                    AlertIOS.alert('Link Copied to Clipboard');
-                  }
-                }
-              },300);
-            }}>Copy Link</Button>
-          <Button iconSrc={{ uri: MORE_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.open(shareOptions)
-              },300);
-            }}>More</Button>
-            {/* <View style={{paddingBottom:40}}/> */}
-        </ShareSheet>
+                <Button iconSrc={{ uri: TWITTER_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "twitter"
+                            }
+                        ));
+                    },300);}}>Twitter
+                </Button>
+                <Button iconSrc={{ uri: FACEBOOK_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "facebook"
+                            }
+                        ));
+                    },300);}}>Facebook
+                </Button>
+                <Button iconSrc={{ uri: WHATSAPP_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "whatsapp"
+                            }
+                        ));
+                    },300);}}>Whatsapp
+                </Button>
+                <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "googleplus"
+                            }
+                        ));
+                    },300);}}>Google +
+                </Button>
+                <Button iconSrc={{ uri: EMAIL_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "email"
+                            }
+                        ));
+                    },300);}}>Email
+                </Button>
+                <Button iconSrc={{ uri: CLIPBOARD_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            if(typeof shareOptions["url"] !== undefined) {
+                                Clipboard.setString(shareOptions["url"]);
+                                if (Platform.OS === "android") {
+                                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
+                                } else if (Platform.OS === "ios") {
+                                    AlertIOS.alert('Link Copied to Clipboard');
+                                }
+                            }
+                        },300);
+                    }}>Copy Link
+                </Button>
+                <Button iconSrc={{ uri: MORE_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.open(shareOptions)
+                        },300);
+                    }}>More
+                </Button>
+                {/* <View style={{paddingBottom:40}}/> */}
+            </ShareSheet>
         );
     }
-
     onOpen() {
-        console.log("OPEN")
         this.setState({
             visible:true,
         });
     }
-
     onCancel() {
         console.log("CANCEL")
         this.setState({visible:false});
     }
 }
-
 const TWITTER_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg==";
 
 //  facebook icon

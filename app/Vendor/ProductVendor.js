@@ -95,7 +95,7 @@ class ProductVendor extends Component {
             quantity:'',
             service_provider_id : '',
             address_id : '',
-            selectedAddress : "Select Address",
+            selectedAddress : I18n.t('productdetail.selectaddress', { locale: this.props.lang }),
             ScheduleDate : {},
             BookingTime : ["5.30 AM",],
             calanderShow : false
@@ -117,10 +117,9 @@ class ProductVendor extends Component {
         });
     }
     onOpen() {
-        if(this.validate()) {
-            console.log("OPEN")
+        // if(this.validate()) {
             this.setState({visible:true});
-        }
+        // }
     }
     componentDidMount(){
         var Items = this.props.productImages,
@@ -243,7 +242,8 @@ class ProductVendor extends Component {
     }
     validate(){
         const { date_in } = this.state;
-        const { lang } = this.props;
+        const { lang } = this.props,
+        align = lang == 'ar'? 'right': 'left';
         if (!date_in.length){
             MessageBarManager.showAlert({
                 message: I18n.t('productdetail.selectaddress', { locale: lang }),
@@ -399,77 +399,28 @@ class ProductVendor extends Component {
                             </View>
                             { this.props.is_user ?
                                 <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingTop : 10}}>
-                                    <Button
-                                        onPress= {()=>this.order()}
-                                        // onPress={this.onOpen.bind(this)}
-                                        title= "Book Now"
-                                        color="#fbcdc5"
-                                        />
-                                    { Platform.OS === 'ios' ?
-                                        <TouchableOpacity onPress={this.onOpen.bind(this)}>
-                                            <View style= {{ flexDirection :direction, justifyContent: "space-between", padding : 5}}>
-                                                <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
-                                                {/* <TextInput
-                                                    style ={{
-                                                    height:40,
-                                                    width : width-50,
-                                                    borderWidth : StyleSheet.hairlineWidth,
-                                                    borderColor: "#ccc",
-                                                    paddingLeft: 5,
-                                                    color: '#ccc',
-                                                    }}
-                                                    value={this.state.selectedAddress}
-                                                    editable={false}
-                                                    underlineColorAndroid={'transparent'}
-                                                    /> */
-                                                }
-                                                <View style ={{
-                                                        height:40,
-                                                        width : width-50,
-                                                        borderWidth : StyleSheet.hairlineWidth,
-                                                        borderColor: "#ccc",
-                                                        paddingLeft: 5,
-                                                        // color: '#ccc',
-                                                        // textAlign:'center',
-                                                        justifyContent:'center',
-                                                        // backgroundColor:'red',
-                                                    }}>
-                                                    <Text style ={{color: '#ccc',}}>{this.state.selectedAddress}</Text>
-                                                </View>
-                                                {/* <Text style ={{
-                                                    height:40,
-                                                    width : width-50,
-                                                    borderWidth : StyleSheet.hairlineWidth,
-                                                    borderColor: "#ccc",
-                                                    paddingLeft: 5,
-                                                    color: '#ccc',
-                                                    // textAlign:'center',
-                                                    // justifyContent:'center'
-                                                    backgroundColor:'red',
-                                                    }}>{this.state.selectedAddress}</Text> */
-                                                }
-                                            </View>
-                                        </TouchableOpacity>
-                                        :
-                                        <TouchableNativeFeedback onPress={this.onOpen.bind(this)} background={TouchableNativeFeedback.SelectableBackground()}>
-                                            <View style= {{ flexDirection :"row", justifyContent: "space-between", padding : 5}}>
-                                                <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
-                                                <TextInput style ={{
-                                                        height:40,
-                                                        width : width-50,
-                                                        borderWidth : StyleSheet.hairlineWidth,
-                                                        borderColor: "#ccc"
-                                                    }}
-                                                    value={this.state.selectedAddress}
-                                                    editable={false}
-                                                    underlineColorAndroid={'transparent'}
-                                                    />
-                                            </View>
-                                        </TouchableNativeFeedback>
-                                    }
-                                    <Text onPress={()=>this.setState({
+                                    <TouchableOpacity onPress={()=>this.setState({
                                             calanderShow: true
-                                        })}>hi</Text>
+                                        })} style={{backgroundColor: "#a9d5d1", justifyContent: 'center',alignItems: 'center', height: 40, marginTop: 10}}>
+                                        <Text style={{ fontSize: 15, color: "#fff", fontWeight: 'bold'}}>{I18n.t('servicedetail.schedule', { locale: lang })}</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={this.onOpen.bind(this)} >
+                                        <View style= {{ flexDirection :direction, justifyContent: "space-between", padding : 5}}>
+                                            <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
+                                            <TextInput style ={{
+                                                    height:40,
+                                                    width : width-50,
+                                                    borderWidth : StyleSheet.hairlineWidth,
+                                                    borderColor: "#ccc",
+                                                    textAlign: (lang === 'ar') ? 'right': 'left'
+                                                }}
+                                                value={this.state.selectedAddress}
+                                                editable={false}
+                                                underlineColorAndroid={'transparent'}
+                                                />
+                                        </View>
+                                    </TouchableOpacity>
+
                                 </View>
                                 : undefined
                             }
@@ -484,9 +435,9 @@ class ProductVendor extends Component {
                     </View>
                 </ScrollView>
                 <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-                    <View style={{flexDirection:'row', justifyContent:'center', width:'100%', marginBottom: -30}}>
-                        <View style={{flexDirection:'row', justifyContent:'center', width:'50%', alignItems:'center'}}>
-                            <Text>{I18n.t('productdetail.selectaddress', { locale: lang })}</Text>
+                    <View style={{flexDirection:direction, justifyContent:'center', width:'100%', marginBottom: -30}}>
+                        <View style={{flexDirection:direction, justifyContent:'center', width:'50%', alignItems:'center'}}>
+                            <Text style={{ color:'#696969', marginTop:5,textAlign: (lang === 'ar') ? 'right': 'left'}}> {I18n.t('productdetail.selectaddress', { locale: lang })}</Text>
                         </View>
                         <View style={{flexDirection:'row', justifyContent:'center', width:'50%'}}>
                             <TouchableOpacity style={{padding:10, backgroundColor:'#a9d5d1', alignItems:'center', width:'80%'}} onPress={()=> routes.newaddress({isFromEdit:false})}>
@@ -499,54 +450,62 @@ class ProductVendor extends Component {
                     </View>
                 </ShareSheet>
                 <ShareSheet visible={this.state.calanderShow} onCancel={this.onCancel.bind(this)}>
-                <View style= {{ flexDirection :direction, justifyContent: 'center', height: height/5}}>
-                    <Agenda
-                        markedDates={ScheduleDate}
-                        // markedDates={{
-                        //     '2018-03-16': {selected: true, marked: true, selectedColor: 'blue'},
-                        //     '2018-03-17': {marked: true},
-                        //     '2018-03-18': {marked: true, dotColor: 'red', activeOpacity: 0},
-                        //     '2018-03-19': {disabled: true, disableTouchEvent: true}
-                        // }}
-                        current={[this.state.currDate]}
-                        onDayPress={this.onDayPress}
-                        monthFormat={'MMMM yyyy'}
-                        firstDay={1}
-                        hideDayNames={true}
-                        // ----------------
-                        pastScrollRange={50}
-                        futureScrollRange={50}
-                        loadItemsForMonth={(month) => {console.log('trigger items loading')}}
-                        onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
-                        onDayPress={(day)=>{
-                            // console.warn('day pressed :', day)
-                        }}
-                        // ------
-                        theme={{
-                            agendaDayTextColor: 'yellow',
-                            agendaDayNumColor: 'blue',
-                            calendarBackground: '#f9f9f9',
-                            textSectionTitleColor: '#a9d5d1',
-                            todayTextColor: '#a9d5d1',
-                            selectedDayTextColor: 'white',
-                            monthTextColor: 'white',
-                            selectedDayBackgroundColor: '#a9d5d1',
-                            arrowColor: 'white',
-                            monthTextColor: 'green',
-                            textDisabledColor: 'red',
-                            height : 100
-                        }}
-                        />
-                </View>
-                <ScrollView contentContainerStyle={styles.contentContainer}   horizontal={true}>
-                    {renderedButtons}
-                </ScrollView>
-                </ShareSheet>
-                <Modal isVisible={this.state.visibleModal}>
-                    <View style={{alignItems : 'center', padding:10}}>
-                        <CirclesLoader />
+                    <View style={{backgroundColor: "#a9d5d1", justifyContent: 'center', height: 30}}>
+                        <Icon onPress= {this.onCancel.bind(this)} name="close" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
                     </View>
-                </Modal>
+                    <Text style={{color:'#000', textAlign: (lang === 'ar') ? 'right': 'left'}}>{I18n.t('servicedetail.selectDate', { locale: lang })}</Text>
+                    <View style= {{ flexDirection :direction, justifyContent: 'center', height: height/4}}>
+                        <Agenda
+                            markedDates={ScheduleDate}
+                            // markedDates={{
+                                //     '2018-03-16': {selected: true, marked: true, selectedColor: 'blue'},
+                                //     '2018-03-17': {marked: true},
+                                //     '2018-03-18': {marked: true, dotColor: 'red', activeOpacity: 0},
+                                //     '2018-03-19': {disabled: true, disableTouchEvent: true}
+                                // }}
+                                current={[this.state.currDate]}
+                                onDayPress={this.onDayPress}
+                                monthFormat={'MMMM yyyy'}
+                                firstDay={1}
+                                hideDayNames={true}
+                                // ----------------
+                                pastScrollRange={50}
+                                futureScrollRange={50}
+                                loadItemsForMonth={(month) => {console.log('trigger items loading')}}
+                                onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
+                                onDayPress={(day)=>{
+                                    // console.warn('day pressed :', day)
+                                }}
+                                // ------
+                                theme={{
+                                    agendaDayTextColor: 'yellow',
+                                    agendaDayNumColor: 'blue',
+                                    calendarBackground: '#f9f9f9',
+                                    textSectionTitleColor: '#a9d5d1',
+                                    todayTextColor: '#a9d5d1',
+                                    selectedDayTextColor: 'white',
+                                    monthTextColor: 'white',
+                                    selectedDayBackgroundColor: '#a9d5d1',
+                                    arrowColor: 'white',
+                                    monthTextColor: 'green',
+                                    textDisabledColor: 'red',
+                                    height : 100
+                                }}
+                                />
+                        </View>
+                        <Text style={{color:'#000', textAlign: (lang === 'ar') ? 'right': 'left'}}>{I18n.t('servicedetail.selectTime', { locale: lang })}</Text>
+                        <ScrollView contentContainerStyle={styles.contentContainer}   horizontal={true}>
+                            {renderedButtons}
+                        </ScrollView>
+                        <TouchableOpacity onPress= {()=>this.order()} style={{backgroundColor: "#fbcdc5", justifyContent: 'center',alignItems: 'center', height: 40, marginTop: 10}}>
+                            <Text style={{ fontSize: 15, color: "#fff", fontWeight: 'bold'}}>{I18n.t('servicedetail.booknow', { locale: lang })}</Text>
+                        </TouchableOpacity>
+                    </ShareSheet>
+                    <Modal isVisible={this.state.visibleModal}>
+                        <View style={{alignItems : 'center', padding:10}}>
+                            <CirclesLoader />
+                        </View>
+                    </Modal>
             </View>
         )
     }

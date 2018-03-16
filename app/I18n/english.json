@@ -136,10 +136,14 @@
     },
     "servicedetail":{
         "booknow":"Book Now",
+        "schedule":"Schedule",
+        "selectaddress":"Select Address",
         "noaddress":"No address Found",
         "productinfo":"Product Information",
         "paymentsuccess":"Payment Success",
-        "paymentfailure":"Payment Not Success"
+        "paymentfailure":"Payment Not Success",
+        "selectDate":"Plese Select Date",
+        "selectTime":"Plese Select Time Slot"
     },
     "bottomTabs":{
         "home":"Home",
@@ -480,6 +484,11 @@
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
-
+    },
+    "notification":{
+        "orderId":"Order Id",
+        "orderType":"Order Type",
+        "deliveryStatus": "Delivery Status",
     }
+
 }

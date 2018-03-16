@@ -11,8 +11,10 @@ import {
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n'
 
-export default class GetMarketing extends Component {
+class GetMarketing extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -23,11 +25,9 @@ export default class GetMarketing extends Component {
         }
     }
     componentDidMount(){
-        // this.getKey()
-        // .then( ()=>
         this.fetchData()
-    // )
-        // .done()
+        .then(()=>console.log("load success"))
+        .done();
     }
     // async getKey() {
     //     try {
@@ -41,43 +41,50 @@ export default class GetMarketing extends Component {
     //         console.log("Error retrieving data" + error);
     //     }
     // }
-    fetchData(){
-        const { u_id,  country } = this.props;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        fetch(Utils.gurl('getMarketingAd'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            if(responseData.status){
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    refreshing : false,
-                    status : responseData.status
-                });
-            }else {
-                this.setState({
-                    status : responseData.status
-                });
+    async fetchData(){
+        try {
+            const { u_id,  country } = this.props;
+            let formData = new FormData();
+            formData.append('u_id', String(u_id));
+            formData.append('country', String(country));
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
             }
-        })
-        .catch((error) => {
-            this.setState({
-                status : responseData.status
-            });
-        })
-        .done();
+            fetch(Utils.gurl('getMarketingAd'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+                if(responseData.status){
+                    this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                        refreshing : false,
+                        status : responseData.status
+                    });
+                }else {
+                    this.setState({
+                        status : responseData.status
+                    });
+                }
+            })
+            .catch((error) => {
+                this.setState({
+                    status : responseData.status
+                });
+            })
+            .done();
+
+        } catch (error) {
+            console.log(error);
+        }
     }
     render() {
-        let {country, u_id, deviceId, lang} = this.props;
+        let {country, u_id, deviceId, lang} = this.props,
+        align = (lang === 'ar') ?  'flex-end': 'flex-start',
+        direction = (lang === 'ar') ?  'row-reverse': 'row';
         let listView = (<View></View>);
         listView = (
             <ListView
@@ -96,7 +103,7 @@ export default class GetMarketing extends Component {
         );
         if ( this.state.dataSource.getRowCount() < 1 ) {
             return (
-                <View style={{ height:59, justifyContent: 'center', backgroundColor: '#fff', borderTopWidth: StyleSheet.hairlineWidth, borderColor: '#ccc', borderBottomWidth: StyleSheet.hairlineWidth}}>
+                <View style={{alignItems: align, height:59, justifyContent: 'center', backgroundColor: '#fff', borderTopWidth: StyleSheet.hairlineWidth, borderColor: '#ccc', borderBottomWidth: StyleSheet.hairlineWidth}}>
                     <Image style={styles.thumb}
                         source={require('../images/logo.png')} />
                 </View>
@@ -108,7 +115,7 @@ export default class GetMarketing extends Component {
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         return (
-            <TouchableOpacity style={styles.row} onPress={()=> Actions.timeLine({ ad_type:data.ad_type, uri : data.path })}>
+            <TouchableOpacity style={[styles.row, { flexDirection: direction}]} onPress={()=> Actions.timeLine({ ad_type:data.ad_type, uri : data.path })}>
                 <Image style={styles.thumb} source={{ uri : data.thumbnail_image}}/>
                 <View style={styles.OvalShapeView} />
             </TouchableOpacity>
@@ -120,7 +127,7 @@ var styles =StyleSheet.create({
     list: {
         flex: 1,
         justifyContent: 'flex-start',
-        flexDirection: 'row',
+        flexDirection: 'row-reverse',
         alignItems: 'center',
     },
     row: {
@@ -171,3 +178,12 @@ var styles =StyleSheet.create({
        marginBottom: 60
    },
 });
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
+    }
+}
+export default connect(mapStateToProps)(GetMarketing);
