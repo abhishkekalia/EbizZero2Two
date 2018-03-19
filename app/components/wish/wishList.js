@@ -228,14 +228,22 @@ class WishList extends Component {
             Quentity: !this.state.Quentity
         });
     }
-    noItemFound(){
-        const { lang } = this.props;
+    noItemFound() {
+        const {lang} = this.props;
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
-                <Text> {I18n.t('wishlist.noitem', { locale: lang })} </Text>
-                {/* <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load wishlist</Text></TouchableOpacity> */}
-               </View> );
+            <View style={{flex: 1}}>
+                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    {this._renderLeftButton()}
+                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                    {this._renderRightButton()}
+                </View>
+                <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
+                    <Text> {I18n.t('wishlist.noitem', { locale: lang })} </Text>
+                </View>
+            </View>
+        );
     }
+
     getSize(size){
         this.setState({size});
     }
@@ -285,6 +293,12 @@ class WishList extends Component {
             );
         return (
         <View style={{flex :1}}>
+            <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                {this._renderLeftButton()}
+                <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                {this._renderRightButton()}
+            </View>
+
         <ScrollView>
         {listView}
         </ScrollView>

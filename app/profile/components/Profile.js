@@ -46,13 +46,11 @@ class Profile extends Component {
 			 <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
 		 );
 	 };
-
    _renderRightButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
         );
     };
-
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');
@@ -143,6 +141,12 @@ class Profile extends Component {
 		mobile = lang == 'ar'? dataSource.mobile: dataSource.mobile;
 		return (
 			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
+				<View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+					{this._renderLeftButton()}
+					<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
+					{this._renderRightButton()}
+				</View>
+
 				<View style={[styles.content, {flexDirection :direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
 					<View style={{ flexDirection : direction }}>
 						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'rgba(240,241,243,1)'}}>
@@ -197,7 +201,7 @@ class Profile extends Component {
 				</View>
 				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
 
-			
+
 				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 

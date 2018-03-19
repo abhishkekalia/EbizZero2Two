@@ -171,6 +171,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     title={"wishlist.wishlistTitle"}
                                     icon={TabIcon}
                                     iconName="heart"
+                                    hideNavBar={true}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                                         <Scene
                                         key="wish"
@@ -186,6 +187,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     title={"cart.carttitle"}
                                     icon={TabIcon}
                                     is_vector={true}
+                                    hideNavBar={true}
                                     iconName= {require('./images/cart_icon.png')}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                                         <Scene
@@ -202,6 +204,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     title={"profile.profiletitle"}
                                     icon={TabIcon}
                                     iconName="users"
+                                    hideNavBar={true}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                                         <Scene
                                         titleStyle={{color : "#FFF", alignSelf: 'center'}}
@@ -323,7 +326,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                         <Scene
                     key="register"
                     component={Register}
-                    title="Create an Acount"
+                    title={I18n.t("login.createaccountbtn", { locale: lang })}
                     navBar={CustomGenNavBar}
                     />
                 </Stack>
@@ -331,7 +334,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="vendorRegister"
                     component={Vendorreg}
-                    title="Create an Acount"
+                    title={I18n.t("login.createaccountbtn", { locale: lang })}
                     navBar={CustomGenNavBar}
                     />
                 </Stack>
@@ -339,21 +342,21 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="editproduct"
                     component={EditProduct}
-                    title="EditProduct"
+                    title={I18n.t("vendorproducts.producteditTitle", { locale: lang })}
                     />
                 </Stack>
                 <Stack key="editservice" navBar={CustomGenNavBar} >
                     <Scene
                     key="editservice"
                     component={EditService}
-                    title="EditService"
+                    title={I18n.t("vendorservice.serviceeditTitle", { locale: lang })}
                     />
                 </Stack>
                 <Stack key="AddressLists" navBar={CustomGenNavBar} hideNavBar={true} >
                     <Scene
                     key="address"
                     component={AddressBook}
-                    title="Select Address"
+                    title={I18n.t("productdetail.selectaddress", { locale: lang })}
                     hideNavBar={false}
                     renderRightButton={() => <Ionicons name="plus" size={25} onPress={()=> Actions.newaddress({isFromEdit:false})} color="#fff" style={Platform.OS === 'ios' ?
                         {
@@ -376,7 +379,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="contact"
                     component={Contact}
-                    title="Contact Us"
+                    title={I18n.t("sidemenu.contact", { locale: lang })}
                     navBar={CustomGenNavBar}
                     />
                 </Stack>
@@ -392,14 +395,14 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="profile"
                     component={ProfilePage}
-                    title="Profile"
+                    title={I18n.t("profile.profiletitle", { locale: lang })}
                     />
                 </Stack>
                 <Stack key="newaddress">
                     <Scene
                     key="newaddress"
                     component={Newaddress}
-                    title="Newaddress"
+                    title={I18n.t("newAddress.newaddrtitle", { locale: lang })}
                     hideNavBar={true}/>
                 </Stack>
                 <Stack key="terms" renderTitle>
@@ -413,14 +416,14 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="settings"
                     component={Settings}
-                    title="Settings"
+                    title={I18n.t("profile.settings", { locale: lang })}
                     navBar={CustomGenNavBar} />
                 </Stack>
                 <Stack key="postad">
                     <Scene
                     key="adpost"
                     component={Marketingadd}
-                    title="Advertisement"
+                    title={I18n.t("marketing.advertisement", { locale: lang })}
                     navBar={CustomGenNavBar} />
                 </Stack>
                 <Stack
@@ -496,7 +499,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                 titleStyle={{alignSelf: 'center'}}>
                     <Scene
                     key="filter"
-                    title="filter"
+                    title={I18n.t("filter.fitlertitle", { locale: lang })}
                     navBar={CustomNavBar}
                     component={Filter}
                     back/>
@@ -520,7 +523,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                 >
                     <Scene
                     key="getmyaddress"
-                    title="My Address"
+                    title={I18n.t("profile.addressbook", { locale: lang })}
                     navBar={CustomGenNavBar}
                     component={GetMyaddress}
                     back/>
@@ -564,7 +567,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                 key="myorder">
                     <Scene
                     key="orderList"
-                    title="Order History"
+                    title={I18n.t("userorderhistory.orderhistorytitle", { locale: lang })}
                     titleStyle={{alignSelf: 'center'}}
                     component={OrderList}
                     navBar={CustomGenNavBar}/>
@@ -573,7 +576,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="compaign"
                     component={MarketingCompaign}
-                    title="Marketing"
+                    title={I18n.t("venderprofile.marketing", { locale: lang })}
                     navBar={CustomGenNavBar}
                     type={ActionConst.ANDROID_BACK}
                     />

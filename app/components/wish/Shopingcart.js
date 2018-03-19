@@ -252,9 +252,17 @@ class Shopingcart extends Component {
     noItemFound(){
         const {lang} = this.props;
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', alignContent:'center',flex:1}}>
-                <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
-            </View> );
+            <View style={{flex: 1}}>
+                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    {this._renderLeftButton()}
+                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                    {this._renderRightButton()}
+                </View>
+                <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
+                    <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
+                </View>
+            </View>
+        );
         }
     render() {
         const { itemcount, totalamount, subtotalamount } = this.state;
@@ -276,6 +284,12 @@ class Shopingcart extends Component {
         }
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
+                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    {this._renderLeftButton()}
+                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                    {this._renderRightButton()}
+                </View>
+
                 {listView}
                 {this.renderFooter(itemcount, totalamount, subtotalamount)}
                 <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>

@@ -50,6 +50,10 @@
         "selectcountry":"اختر الدولة",
         "address":"العنوان",
         "createbtn":"انشاء حساب",
+        "otplabel" : "OTP",
+        "otpplchldr" : "Enter 6 Digit Otp",
+        "resendOtp": "Want to Resend Otp",
+        "submitbtn":"موافق",
         "venderregister":"اذا كنت بائع، سجل هنا",
         "privacypolicy1":"By Signing in you are agreeing to our",
         "privacypolicy2":"Terms and Conditions",
@@ -58,6 +62,7 @@
         "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
         "pleaseenterfullname":"الرجاء تعبئة الأسم الكامل",
         "pleaseentervalidmail":"الرجاء تعبئة البريد الألكتروني",
+        "maildomain":"mail domain name must be .com",
         "pleaseenterpwd":"الرجاء ادخال كلمة السر",
         "pleaseselectgender":"الرجاء أختيار الجنس",
         "pleaseentercontact":"الرجاء ادخال رقم الهاتف",
@@ -88,6 +93,7 @@
         "pleaseenterrepresentative":"الرجاء ادخال أسم ممثل الشركة",
         "pleaseentercontact":"الرجاء ادخال رقم الهاتف",
         "pleaseenteremail":"الرجاء تعبئة البريد الألكتروني",
+        "maildomain":"mail domain name must be .com",
         "pleaseenteraddr":"الرجاء تعبئة العنوان",
         "pleaseenterpwd":"الرجاء ادخال كلمة السر",
         "pleaseselectgender":"الرجاء أختيار الجنس",
@@ -327,6 +333,7 @@
     },
     "vendorproducts":{
         "productTitle":"المنتج",
+        "producteditTitle":"Edit Product",
         "myproduct":"منتجاتي",
         "categories":"الأقسام",
         "quantity":"الكمية متاحة",
@@ -374,10 +381,10 @@
         "quantityerr":"الرجاء تحديد الكمية",
         "sizeerr":"الرجاء تحديد المقاس",
         "productadded":"تم اضافة المنتج"
-
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",
+        "serviceeditTitle":"Edit service",
         "myservice":"خدماتي",
         "categories":"الأقسام",
         "price":"القيمة",
