@@ -433,9 +433,9 @@ const styles = StyleSheet.create({
         height: 0,
         backgroundColor: 'transparent',
         borderStyle: 'solid',
-        borderLeftWidth: 15,
-        borderRightWidth: 15,
-        borderBottomWidth: 25,
+        borderLeftWidth: 10,
+        borderRightWidth: 10,
+        borderBottomWidth: 20,
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
         borderBottomColor: '#a9d5d1'

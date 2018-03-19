@@ -45,7 +45,7 @@
         "showpassword":"عرض كلمة السر",
         "male":"ذكر",
         "female":"انتثى",
-        "other":"Other","_comment":"remove others and make gender optional",
+        "other":"Other",
         "mobilenumber":"رقم الهاتف (لتحديث الطلب)",
         "selectcountry":"اختر الدولة",
         "address":"العنوان",
@@ -55,10 +55,6 @@
         "resendOtp": "Want to Resend Otp",
         "submitbtn":"موافق",
         "venderregister":"اذا كنت بائع، سجل هنا",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":" of use and ",
-        "privacypolicy4":"Privacy Policy",
         "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
         "pleaseenterfullname":"الرجاء تعبئة الأسم الكامل",
         "pleaseentervalidmail":"الرجاء تعبئة البريد الألكتروني",
@@ -293,9 +289,18 @@
     },
     "marketing":{
         "advertisement":"دعاية",
+        "videopicker":"Video Picker",
+        "imagepicker":"Image Picker",
+        "takeVideo":"Take Video...",
+        "choose_video":"Choose From Library",
+        "SelectThumbline_lbl": "Select Thumbline Image",
+        "SelectThumbline": "Please Select Thumbline Image",
         "uploadfiles":"اختر ملفات للتحميل",
         "costperad":"التكلفة لكل إعلان",
         "aduploaderr":"حصل خطأ ما أثناء التحميل",
+        "textstring":"Upload your image into the External Circle \n" +
+                            "Upload your 10 sec video into the External Circle \n" +
+                            "Price: 1 KD per picture  / 1.5 KD per video",
         "myAdFaturah":{
             "paymentsuccess":"تم الدفع بنجاح",
             "paymenterr":"حصل خطأ أثناء الدفع"
@@ -493,5 +498,4 @@
         "orderType":"Order Type",
         "deliveryStatus": "Delivery Status",
     }
-
 }

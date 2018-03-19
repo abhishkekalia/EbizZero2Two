@@ -362,6 +362,7 @@ class AddProduct extends Component {
                     console.log('uploaded', Math.floor(written/total*100) + '%')
                 })
                 .then((res)=>{
+                    console.log(res)
                     MessageBarManager.showAlert({
                         message: I18n.t('vendoraddproduct.productadded', { locale: lang }),
                         alertType: 'extra',
@@ -641,7 +642,7 @@ class AddProduct extends Component {
                                 </View>
                                 <TextInput
                                     style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                                    value={this.state.detaildescription}
+                                    value={this.state.detail_description_in_arabic}
                                     numberOfLines={3}
                                     multiline
                                     underlineColorAndroid = 'transparent'
@@ -658,7 +659,7 @@ class AddProduct extends Component {
                                     onContentSizeChange={(event) => {
                                         this.setState({height: event.nativeEvent.contentSize.height});
                                     }}
-                                    onChangeText={(detaildescription) => this.setState({detaildescription})}
+                                    onChangeText={(detail_description_in_arabic) => this.setState({detail_description_in_arabic})}
                                     />
                             </View>
                             :

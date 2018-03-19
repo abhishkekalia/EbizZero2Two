@@ -520,11 +520,9 @@ class MainView extends Component {
                     contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 100}}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="always">
-
                     { this.renderListData()}
                     {this.renderAllShopViews()}
                     {this.renderAllServiceViews()}
-
                 </ScrollView>
                 {this.renderShareSheet()}
             </View>
@@ -539,75 +537,82 @@ class MainView extends Component {
         };
         return(
             <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-          <Button iconSrc={{ uri: TWITTER_ICON }}
-                  onPress={()=>{
-                    this.onCancel();
-                    setTimeout(() => {
-                      Share.shareSingle(Object.assign(shareOptions, {
-                        "social": "twitter"
-                      }));
-                    },300);
-            }}>Twitter</Button>
-          <Button iconSrc={{ uri: FACEBOOK_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "facebook"
-                }));
-              },300);
-            }}>Facebook</Button>
-          <Button iconSrc={{ uri: WHATSAPP_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "whatsapp"
-                }));
-              },300);
-            }}>Whatsapp</Button>
-          <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "googleplus"
-                }));
-              },300);
-            }}>Google +</Button>
-          <Button iconSrc={{ uri: EMAIL_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "email"
-                }));
-              },300);
-            }}>Email</Button>
-          <Button
-            iconSrc={{ uri: CLIPBOARD_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                if(typeof shareOptions["url"] !== undefined) {
-                  Clipboard.setString(shareOptions["url"]);
-                  if (Platform.OS === "android") {
-                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
-                  } else if (Platform.OS === "ios") {
-                    AlertIOS.alert('Link Copied to Clipboard');
-                  }
-                }
-              },300);
-            }}>Copy Link</Button>
-          <Button iconSrc={{ uri: MORE_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.open(shareOptions)
-              },300);
-            }}>More</Button>
-            <View style={{paddingBottom:40}}/>
-        </ShareSheet>
+                <Button iconSrc={{ uri: TWITTER_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "twitter"
+                            }));
+                        },300);
+                    }}>Twitter
+                </Button>
+                <Button iconSrc={{ uri: FACEBOOK_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "facebook"
+                            }));
+                        },300);
+                    }}>Facebook
+                </Button>
+                <Button iconSrc={{ uri: WHATSAPP_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "whatsapp"
+                            }));
+                        },300);
+                    }}>Whatsapp
+                </Button>
+                <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "googleplus"
+                            }));
+                        },300);
+                    }}>Google +
+                </Button>
+                <Button iconSrc={{ uri: EMAIL_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "email"
+                            }));
+                        },300);
+                    }}>Email
+                </Button>
+                <Button
+                    iconSrc={{ uri: CLIPBOARD_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            if(typeof shareOptions["url"] !== undefined) {
+                                Clipboard.setString(shareOptions["url"]);
+                                if (Platform.OS === "android") {
+                                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
+                                } else if (Platform.OS === "ios") {
+                                    AlertIOS.alert('Link Copied to Clipboard');
+                                }
+                            }
+                        },300);
+                    }}>Copy Link
+                </Button>
+                <Button iconSrc={{ uri: MORE_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.open(shareOptions)
+                        },300);
+                    }}>More
+                </Button>
+                <View style={{paddingBottom:40}}/>
+            </ShareSheet>
         );
     }
     renderListData(){
@@ -817,23 +822,20 @@ class MainView extends Component {
                     <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyShop()} >
                         <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10, textAlign: align} : {color:'#fff',marginLeft:10}}>{I18n.t('home.done', { locale: lang })}</Text>
                     </TouchableOpacity>
-
-                    </View>
-                    <ScrollView contentContainerStyle={styles.contentContainer}
+                </View>
+                <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}>
                     <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}>
-                    <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text>
-                    {this.state.rows.length == 0 ?
-                        <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
-                    :
-                        undefined
-                    }
-
+                        <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text>
+                        {this.state.rows.length == 0 ?
+                            <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
+                            :
+                            undefined
+                        }
                     </TouchableOpacity>
-                        {this.renderView()}
-                    </ScrollView>
-
-                </ModalWrapper>
+                    {this.renderView()}
+                </ScrollView>
+            </ModalWrapper>
         );
     }
 
