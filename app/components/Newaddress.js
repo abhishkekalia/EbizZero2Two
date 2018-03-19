@@ -23,8 +23,9 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import EventEmitter from "react-native-eventemitter";
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
+
 import Geocoder from 'react-native-geocoding';
-Geocoder.setApiKey('AIzaSyDrEoh2rWIuEuorBrsENJA88z1TAA17tYU');
+Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
 
 // import Geocoder from 'react-native-geocoder';
 // // simply add your google key
@@ -73,37 +74,28 @@ class Newaddress extends Component{
         this.inputs = {};
     }
     componentDidMount (){
-        // this.getKey()
-        // .then(()=>this.fetchData())
-        // .done();
-        this.fetchData()
-
-        console.log("componentDidMount");
-        try{
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    this.setState({
-                        coordinate: {
-                            latitude: 23.0225,
-                            longitude:  72.5714,
-                        },
-                        region: {
-                            latitude: 23.0225,
-                            longitude:  72.5714,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                        },
-                    });
-                },
-                (error) => {
-                    console.log(error)
-                },
-                { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000 },);
-            }catch (error) {
-                console.log("Crash" + error);
-            }
-
-    }
+     // this.getKey()
+     // .then(()=>this.fetchData())
+     // .done();
+     this.fetchData()
+     navigator.geolocation.getCurrentPosition(
+         (position) => {
+             this.setState({
+                 coordinate: {
+                     latitude: position.coords.latitude,
+                     longitude: position.coords.longitude,
+                 },
+                 region: {
+                     latitude: position.coords.latitude,
+                     longitude: position.coords.longitude,
+                     latitudeDelta: 0.0922,
+                     longitudeDelta: 0.0421,
+                 },
+             });
+         },
+         (error) => console.log(error.error),
+         { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },);
+ }
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');

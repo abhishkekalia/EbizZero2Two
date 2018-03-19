@@ -65,8 +65,8 @@ class WishList extends Component {
     }
     componentWillMount() {
         Actions.refresh({ left: this._renderLeftButton, right: this._renderRightButton,});
-        console.log("componentWillMount")
     }
+
     _renderLeftButton = () => {
          return(
              <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
@@ -558,14 +558,14 @@ class SelectItem extends Component{
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => {
                 this.setState({
-                selectSize : true
-            })}
-         },{
-             text: I18n.t('wishlist.delete', { locale: lang }),
-             backgroundColor: '#f53d3d',
-             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-             onPress: () => {this.removeWishlist()}
-         }];
+                    selectSize : true
+                })
+            }},{
+                text: I18n.t('wishlist.delete', { locale: lang }),
+                backgroundColor: '#f53d3d',
+                underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+                onPress: () => {this.removeWishlist()}
+            }];
         return(
             <Swipeout
                 right={swipeBtns}
@@ -573,15 +573,15 @@ class SelectItem extends Component{
                 backgroundColor= 'transparent'>
                 {this.props.children}
                 <SinglePickerMaterialDialog
-                  title={I18n.t('wishlist.selectsize', { locale: lang })}
-                  items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
-                  visible={this.state.selectSize}
-                  selectedItem={this.state.singlePickerSelectedItem}
-                  onCancel={() => this.setState({ selectSize: false })}
-                  onOk={result => this.changeSize(result)}
-                  cancelLabel={I18n.t('wishlist.cancel', { locale: lang })}
-                  okLabel={I18n.t('wishlist.ok', { locale: lang })}
-                />
+                    title={I18n.t('wishlist.selectsize', { locale: lang })}
+                    items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
+                    visible={this.state.selectSize}
+                    selectedItem={this.state.singlePickerSelectedItem}
+                    onCancel={() => this.setState({ selectSize: false })}
+                    onOk={result => this.changeSize(result)}
+                    cancelLabel={I18n.t('wishlist.cancel', { locale: lang })}
+                    okLabel={I18n.t('wishlist.ok', { locale: lang })}
+                    />
             </Swipeout>
         )
     }
@@ -592,7 +592,6 @@ const styles = StyleSheet.create ({
         flexDirection: 'column',
         padding : 10
     },
-
     row: {
         flexDirection: 'row',
         marginTop : 1

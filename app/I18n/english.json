@@ -136,9 +136,14 @@
     },
     "servicedetail":{
         "booknow":"Book Now",
+        "schedule":"Schedule",
+        "selectaddress":"Select Address",
+        "noaddress":"No address Found",
         "productinfo":"Product Information",
         "paymentsuccess":"Payment Success",
-        "paymentfailure":"Payment Not Success"
+        "paymentfailure":"Payment Not Success",
+        "selectDate":"Please Select Date",
+        "selectTime":"Please Select Time Slot"
     },
     "bottomTabs":{
         "home":"Home",
@@ -153,7 +158,10 @@
         "type":"Type"
     },
     "sidemenu":{
+        "signup": "Signup",
+        "login": "Log in",
         "notification":"Notification",
+        "deals":"Deals and Offers",
         "home":"Home",
         "contact":"Contact Us",
         "order":"My Order",
@@ -331,6 +339,7 @@
         "deactivate":"Deactivate",
         "aproved":"Apendingproved",
         "pending":"Pending",
+        "deliverd":"Deliverd",
         "searchHere" : "Search Here"
     },
     "vendoraddproduct":{
@@ -475,6 +484,12 @@
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
-
+        "addressvalidation":"Please Select Address First"
+    },
+    "notification":{
+        "orderId":"Order Id",
+        "orderType":"Order Type",
+        "deliveryStatus": "Delivery Status",
     }
+
 }

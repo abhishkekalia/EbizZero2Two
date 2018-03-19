@@ -3,6 +3,8 @@ import { Dimensions, StyleSheet,View } from 'react-native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {connect} from "react-redux";
+import I18n from 'react-native-i18n'
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -13,12 +15,10 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyD4T7njRubC7I7zYNwE5wnuTw0X5E_1Cc4';
 
-export default class TrackOrder extends Component<Props> {
+class TrackOrder extends Component<Props> {
 
       constructor(props) {
         super(props);
-
-        // AirBnB's Office, and Apple Park
         this.state = {
           coordinates: [
             {
@@ -94,3 +94,14 @@ export default class TrackOrder extends Component<Props> {
         );
       }
     }
+    function mapStateToProps(state) {
+        return {
+            identity: state.identity,
+    		lang: state.auth.lang,
+            country: state.auth.country,
+            u_id: state.identity.u_id,
+            deviceId: state.auth.deviceId,
+        };
+    }
+
+    export default connect(mapStateToProps)(TrackOrder);

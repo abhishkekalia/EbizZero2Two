@@ -136,9 +136,14 @@
     },
     "servicedetail":{
         "booknow":"احجز الان",
+        "schedule":"Schedule",
+        "selectaddress":"اختر العنوان",
+        "noaddress":"No address Found",
         "productinfo":"تفاصيل الخدمة",
         "paymentsuccess":"تم قبول عملية الدفع بنجاح",
-        "paymentfailure":"تم رفض عملية الدفع"
+        "paymentfailure":"تم رفض عملية الدفع",
+        "selectDate":"Plese Select Date",
+        "selectTime":"Plese Select Time Slot"
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -153,7 +158,10 @@
         "type":"النوع"
     },
     "sidemenu":{
+        "signup": "Signup",
+        "login": "Log in",
         "notification":"تنبيهات",
+        "deals":"Deals and Offers",
         "home":"الرئيسية",
         "contact":"اتصل بنا",
         "order":"طلباتي",
@@ -330,6 +338,7 @@
         "deactivate":"اخفاء",
         "aproved":"تم التأكيد",
         "pending":"بانتظار التأكيد",
+        "deliverd":"Deliverd",
         "searchHere" : "Search Here"
     },
     "vendoraddproduct":{
@@ -471,5 +480,12 @@
     },
     "scheduleService":{
         "serviceTitle":"جدول",
+        "addressvalidation":"Please Select Address First"
+    },
+    "notification":{
+        "orderId":"Order Id",
+        "orderType":"Order Type",
+        "deliveryStatus": "Delivery Status",
     }
+
 }
