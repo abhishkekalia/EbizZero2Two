@@ -47,6 +47,7 @@ export default function auth(state = INITIAL_STATE, action) {
 		case types.SET_COUNTRY:
 				return {
 					country: action.payload,
+					lang: "en"
 				};
 		default:
 			return state;

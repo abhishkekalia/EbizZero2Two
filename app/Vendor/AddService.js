@@ -16,7 +16,6 @@ import {
     Switch
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
-
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-picker'
@@ -668,7 +667,6 @@ class AddService extends Component {
                     </View>
                     <Icon name={is_weekend_work} size={20}/>
                 </TouchableOpacity>
-
                 {Platform.OS === 'ios'? <KeyboardSpacer/> : undefined}
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>

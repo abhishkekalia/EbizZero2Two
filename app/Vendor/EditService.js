@@ -16,7 +16,6 @@ import {
     Switch
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
-
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import ImagePicker from 'react-native-image-picker'
@@ -31,6 +30,7 @@ import Editimage from './Editimage';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -47,9 +47,9 @@ class EditService extends Component {
             height : '',
             service_type: this.props.service_type,
             service_name : this.props.service_name,
-            service_name : this.props.service_name,
-            service_name : this.props.service_name,
-            service_name : this.props.service_name,
+            service_name_in_arabic : this.props.service_name_in_arabic,
+            short_description_in_arabic : this.props.short_description_in_arabic,
+            detail_description_in_arabic : this.props.detail_description_in_arabic,
             detail_description : this.props.detail_description,
             short_description : this.props.short_description,
             price : this.props.price,
@@ -58,7 +58,8 @@ class EditService extends Component {
             Imagepath : [],
             removed_images : [],
             languageChoose: '',
-            is_feature:0
+            is_feature:0,
+            is_weekend_work : 0
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
@@ -102,7 +103,7 @@ class EditService extends Component {
         );
     };
     validate(){
-        const { service_type , service_name,
+        const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic,
             short_description, detail_description, price,
             special_price,Imagepaths, Imagepath
         } = this.state;
@@ -192,18 +193,52 @@ class EditService extends Component {
             })
             return false
         }
+        if (!service_name_in_arabic.length){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddservice.servicename_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!short_description_in_arabic.length){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddservice.shortdesc_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!detail_description_in_arabic.length){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddservice.detaildesc_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
         return true;
     }
     uploadTocloud(){
-        const { service_type , service_name,
+        const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic,
             short_description, detail_description, price,
-            special_price, Imagepath, removed_images
+            special_price, Imagepath, removed_images,is_feature, is_weekend_work
         } = this.state;
-        const { u_id, country, lang } = this.props;
+        const { u_id, country, lang } = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
+
+
         if(this.validate()) {
             this.setState({
                 visibleModal : true
             });
+            console.log(Imagepath);
             RNFetchBlob.fetch('POST', Utils.gurl('editService'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
@@ -214,12 +249,19 @@ class EditService extends Component {
                 { name : 'country', data: String(country)},
                 { name : 'service_type', data: String(service_type)},
                 { name : 'service_name', data: String(service_name)},
+                { name : 'service_name_in_arabic', data: String(service_name_in_arabic)},
                 { name : 'short_description', data: String(short_description)},
+                { name : 'short_description_in_arabic', data: String(short_description_in_arabic)},
                 { name : 'detail_description', data: String(detail_description)},
+                { name : 'detail_description_in_arabic', data: String(detail_description_in_arabic)},
                 { name : 'price', data: String(price)},
+                { name : 'price_in_arabic', data: String(price)},
+                { name : 'special_price_in_arabic', data: String(special_price)},
                 { name : 'special_price', data: String(special_price)},
                 { name : 'service_id', data: String(this.props.service_id)},
                 { name : 'removed_images', data: removed_images.toString()},
+                { name : 'is_feature', data: String(is_feature)},
+                { name : 'is_weekend', data: String(is_weekend_work)},
             ])
             .uploadProgress((written, total) => {
                 console.log('uploaded', Math.floor(written/total*100) + '%')
@@ -252,14 +294,18 @@ class EditService extends Component {
                 }
             })
             .catch((errorMessage, statusCode) => {
+                console.warn(errorMessage);
                 // routes.service();
-                // message: "Failed Due to Some communication Error",
-                // MessageBarManager.showAlert({
-                // alertType: 'warning',
-                // })
-                // this.setState({
-                //     visibleModal : false
-                // })
+                MessageBarManager.showAlert({
+                    message: I18n.t('vendoraddservice.updatefail', { locale: lang }),
+                    alertType: 'extra',
+                    title:'',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+                this.setState({
+                    visibleModal : false
+                })
                 console.log(errorMessage);
             })
             .done();
@@ -333,10 +379,18 @@ class EditService extends Component {
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
-
         let is_feature;
         if(this.state.is_feature === '0' ){
-            is_feature = false} else { is_feature = true}
+            is_feature = false
+        } else {
+            is_feature = true
+        }
+        let is_weekend_work;
+        if(this.state.is_weekend === true){
+            is_weekend_work = "checkbox-marked";
+        } else {
+            is_weekend_work = "checkbox-blank-outline";
+        }
 
         return (
             <ScrollView
@@ -568,31 +622,7 @@ class EditService extends Component {
                         </View>
                     }
                     {/* --------------------------service price start-----------*/}
-                    {(languageChoose === 'ar') ?
-                        <View style={commonStyles.textField}>
-                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.pricelbl', { locale: languageChoose })}</Text>
-                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
-                            </View>
-                            <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.price_in_arabic}
-                            keyboardType={'numeric'}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            placeholder={I18n.t('vendoraddservice.price', { locale: languageChoose })}
-                            maxLength={7}
-                            onSubmitEditing={() => {
-                                this.focusNextField('six');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['five'] = input;
-                            }}
-                            onChangeText={(price_in_arabic) => this.setState({price_in_arabic})}
-                            />
-                        </View>
-                        :
+
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.pricelbl', { locale: languageChoose })}</Text>
@@ -616,31 +646,8 @@ class EditService extends Component {
                             onChangeText={(price) => this.setState({price})}
                             />
                         </View>
-                    }
                     {/* --------------------------service price end-----------*/}
                     {/* --------------------------service special start-----------*/}
-                    {(languageChoose === 'ar') ?
-                        <View style={commonStyles.textField}>
-                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: languageChoose })}</Text>
-                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
-                            </View>
-                            <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.special_price_in_arabic}
-                            underlineColorAndroid = 'transparent'
-                            keyboardType={'numeric'}
-                            autoCorrect={false}
-                            placeholder={I18n.t('vendoraddservice.spprice', { locale: languageChoose })}
-                            maxLength={7}
-                            returnKeyType={"done" }
-                            ref={ input => {
-                                this.inputs['six'] = input;
-                            }}
-                            onChangeText={(special_price_in_arabic) => this.setState({special_price_in_arabic})}
-                            />
-                        </View>
-                        :
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: languageChoose })}</Text>
@@ -661,7 +668,6 @@ class EditService extends Component {
                             onChangeText={(special_price) => this.setState({special_price})}
                             />
                         </View>
-                    }
                     {/* --------------------------service special price end-----------*/}
                     <View style={[commonStyles.feature, { flexDirection: direction}]}>
                         <View style={{ width: '80%', flexDirection: direction}}>
@@ -681,6 +687,16 @@ class EditService extends Component {
                             circleActiveColor={'#30a566'}
                             circleInActiveColor={'#000000'}/>
                     </View>
+                    <TouchableOpacity style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]} onPress={()=> this.setState({
+                            is_weekend : !this.state.is_weekend,
+                            is_weekend_work : 1
+                        })}>
+                        <View style={{ flexDirection: direction}}>
+                            <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
+                        </View>
+                        <Icon name={is_weekend_work} size={20}/>
+                    </TouchableOpacity>
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
                         {
