@@ -63,10 +63,10 @@ class EditProduct extends Component {
             Imagepath : [],
             is_feature : this.props.is_feature ,
             removed_images : [],
+            quasize : [],
             selSize:"",
             selQuantity:'',
             languageChoose: ''
-
         }
         this.inputs = {};
         this.handlePress = this.handlePress.bind(this)
@@ -90,6 +90,9 @@ class EditProduct extends Component {
             gender: option,
         });
     }
+    getSizeandQuan(sizeRows){
+        this.setState({sizeRows});
+    }
     componentDidMount(){
         var Items = this.props.productImages,
         length = Items.length,
@@ -105,28 +108,12 @@ class EditProduct extends Component {
             rows : Select
         })
     }
-    componentWillMount() {
-        // routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
-    }
-    _renderLeftButton = () => {
-        return(
-            <Text style={{color : '#fff'}}></Text>
-        );
-    };
-    _renderRightButton = () => {
-        return(
-            <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-                <Text style={{color : '#fff'}}>Upload</Text>
-            </TouchableOpacity>
-        );
-    };
     validate(){
         const { productname, shortdescription, detaildescription, price, discount,final_price, quantityRows,
             Size, quantity, is_feature, Imagepath , special, rows ,sizeRows
         } = this.state;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
-
         let path = rows.length
         if(path < 1){
             MessageBarManager.showAlert({
@@ -185,9 +172,8 @@ class EditProduct extends Component {
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
                 messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-                })
-                return false
-
+            })
+            return false
         }
         if ( special > price){
             MessageBarManager.showAlert({
@@ -199,112 +185,110 @@ class EditProduct extends Component {
             })
             return false
         }
-}
-        uploadTocloud(){
-            const {
-                product_category , productname,
-                shortdescription, detaildescription, price,
-                discount,final_price, quantityRows,
-                Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images} = this.state;
-
-                const { u_id, country } = this.props;
-                if(this.validate()) {
+    }
+    uploadTocloud(){
+        const {
+            product_category , productname,
+            shortdescription, detaildescription, price,
+            discount,final_price, quantityRows,
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images
+        } = this.state;
+        const { u_id, country } = this.props;
+        if(this.validate()) {
+            this.setState({
+                visibleModal : true
+            });
+            RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{
+                Authorization : "Bearer access-token",
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            [...Imagepath,
+                { name : 'u_id', data: String(u_id)},
+                { name : 'country', data: String(country)},
+                { name : 'product_category', data: String(product_category)},
+                { name : 'product_name', data: String(productname)},
+                { name : 'short_description', data: String(shortdescription)},
+                { name : 'detail_description', data: String(detaildescription)},
+                { name : 'price', data: String(price)},
+                { name : 'special_price', data: String(special)},
+                { name : 'discount', data: String(10)},
+                { name : 'final_price', data: String(special)},
+                { name : 'product_id', data: String(this.props.product_id)},
+                { name : 'removed_images', data: removed_images.toString()},
+                { name : 'quantity', data: quantityRows.toString()},
+                { name : 'size_id', data: sizeRows.toString()},
+                { name : 'size', data: sizeRows.toString()},
+                { name : 'quantity', data: sizeRows.toString()},
+                { name : 'is_feature', data: String(is_feature)},
+                { name : 'gender', data: String(1)},
+            ])
+            .uploadProgress((written, total) => {
+                console.log('uploaded', Math.floor(written/total*100) + '%')
+            })
+            .then((res)=>{
+                var getdata = JSON.parse(res.data);
+                if(getdata.status){
+                    MessageBarManager.showAlert({
+                        message: "Product Update Successfully",
+                        alertType: 'warning',
+                        title:''
+                    })
                     this.setState({
-                        visibleModal : true
-                    });
-
-                    RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{
-                        Authorization : "Bearer access-token",
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data;',
-                    },
-                    [...Imagepath,
-                        { name : 'u_id', data: String(u_id)},
-                        { name : 'country', data: String(country)},
-                        { name : 'product_category', data: String(product_category)},
-                        { name : 'product_name', data: String(productname)},
-                        { name : 'short_description', data: String(shortdescription)},
-                        { name : 'detail_description', data: String(detaildescription)},
-                        { name : 'price', data: String(price)},
-                        { name : 'special_price', data: String(special)},
-                        { name : 'discount', data: String(10)},
-                        { name : 'final_price', data: String(special)},
-                        { name : 'product_id', data: String(this.props.product_id)},
-                        { name : 'removed_images', data: removed_images.toString()},
-                        { name : 'quantity', data: quantityRows.toString()},
-                        { name : 'size_id', data: sizeRows.toString()},
-                        { name : 'size', data: sizeRows.toString()},
-                        { name : 'quantity', data: sizeRows.toString()},
-                        { name : 'is_feature', data: String(is_feature)},
-                        { name : 'gender', data: String(1)},
-                    ])
-                    .uploadProgress((written, total) => {
-                        console.log('uploaded', Math.floor(written/total*100) + '%')
+                        visibleModal : false
                     })
-                    .then((res)=>{
-                        var getdata = JSON.parse(res.data);
-                        if(getdata.status){
-                            MessageBarManager.showAlert({
-                                message: "Product Update Successfully",
-                                alertType: 'warning',
-                                title:''
-                            })
-                            this.setState({
-                                visibleModal : false
-                            })
-                        }else{
-                            MessageBarManager.showAlert({
-                                message: "Product Upload Failed",
-                                alertType: 'warning',
-                                title:''
-                            })
-                            this.setState({
-                                visibleModal : false
-                            })
-                        }
+                }else{
+                    MessageBarManager.showAlert({
+                        message: "Product Upload Failed",
+                        alertType: 'warning',
+                        title:''
                     })
-                    .then(()=>routes.product())
-                    .catch((errorMessage, statusCode) => {
-                        this.setState({
-                            visibleModal : false
-                        })
+                    this.setState({
+                        visibleModal : false
                     })
-                    .done();
                 }
-            }
+            })
+            .then(()=>routes.product())
+            .catch((errorMessage, statusCode) => {
+                this.setState({
+                    visibleModal : false
+                })
+            })
+            .done();
+        }
+    }
     selectPhotoTapped() {
         const options = {
             quality: 1.0,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-            skipBackup: true
+                skipBackup: true
             }
         };
-
         ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
             if (response.didCancel) {
-            console.log('User cancelled photo picker');
+                console.log('User cancelled photo picker');
             }
             else if (response.error) {
-              console.log('ImagePicker Error: ', response.error);
+                console.log('ImagePicker Error: ', response.error);
             }
             else if (response.customButton) {
-              console.log('User tapped custom button: ', response.customButton);
+                console.log('User tapped custom button: ', response.customButton);
             }
             else {
-              let url = response.uri
-              let path =
+                let url = response.uri
+                let path =
                 (Platform.OS === 'ios')?
-                    url.replace(/^file:\/\//, '') : response.uri
-
-       let source = {
-        name : 'product_images[]',
-        filename : response.fileName,
-        data: RNFetchBlob.wrap(path),
-        uri: response.uri ,
-        type: 'image/jpg'};
+                url.replace(/^file:\/\//, '') : response.uri
+                let source = {
+                    name : 'product_images[]',
+                    filename : response.fileName,
+                    data: RNFetchBlob.wrap(path),
+                    uri: response.uri ,
+                    type: 'image/jpg'
+                };
                 let uri = response.uri;
                 this.setState({
                     avatarSource: source,
@@ -316,10 +300,10 @@ class EditProduct extends Component {
                 var newPathArray = this.state.Imagepath.slice();
                 newStateArray.push(source);
                 newPathArray.push(source);
-                    this.setState({
-                        rows: newStateArray,
-                        Imagepath: newPathArray
-                    });
+                this.setState({
+                    rows: newStateArray,
+                    Imagepath: newPathArray
+                });
             }
         });
     }
@@ -344,18 +328,9 @@ class EditProduct extends Component {
         arrayvar.push(result)
         this.setState({ removed_images: arrayvar })
     }
-    // renderSizeTable(){
-    //   render() {
-    //     // const {Size} = this.state;
-    //     return (
-    //       <Text style={[commonStyles.label,{ textAlign: textline}]}> this.state.Size </Text>
-    //     )
-    //   }
-    //
-    // }
-
     render() {
         const { imageSelect, quantityRows, sizeRows, languageChoose} = this.state;
+        console.warn(sizeRows);
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
@@ -365,62 +340,61 @@ class EditProduct extends Component {
             { label:I18n.t('userregister.female', { locale: lang }), value: I18n.t('userregister.female', { locale: lang })},
             // { label:I18n.t('userregister.other', { locale: lang }), value: I18n.t('userregister.other', { locale: lang })},
         ];
-
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
         let is_feature;
         if(this.state.is_feature === '0' ){
-            is_feature = false} else { is_feature = true}
-
+            is_feature = false
+        } else {
+            is_feature = true
+        }
         let sizeArr = [];
-        // const size = this.state.sizeRows;
-        // var selSize= this.state.selSize;
         return (
             <ScrollView
-            contentContainerStyle={commonStyles.container}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'handled'}>
-            <RadioGroup
-                size={15}
-                thickness={1}
-                color='#a9d5d1'
-                highlightColor='transparent'
-                // selectedIndex={langIndex}
-                onSelect = {(index, value) => this.onSelect(index, value)}
-                style={{flexDirection: 'row', justifyContent: 'space-around'}}
-                >
-
-                <RadioButton value='en' >
-                    <Text>English</Text>
-                </RadioButton>
-                <RadioButton value='ar'>
-                    <Text>Arabic</Text>
-                </RadioButton>
-            </RadioGroup>
+                contentContainerStyle={commonStyles.container}
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps={'handled'}>
+                <RadioGroup
+                    size={15}
+                    thickness={1}
+                    color='#a9d5d1'
+                    highlightColor='transparent'
+                    // selectedIndex={langIndex}
+                    onSelect = {(index, value) => this.onSelect(index, value)}
+                    style={{flexDirection: 'row', justifyContent: 'space-around'}}
+                    >
+                    <RadioButton value='en' >
+                        <Text>English</Text>
+                    </RadioButton>
+                    <RadioButton value='ar'>
+                        <Text>Arabic</Text>
+                    </RadioButton>
+                </RadioGroup>
                 <View style={commonStyles.formItems}>
                     {/* --------------------------Product name start-----------*/}
-                    {(languageChoose === 'ar') ?
+                    {
+                        (languageChoose === 'ar') ?
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: languageChoose })}</Text>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.product_name_in_arabic}
-                            // onFocus={()=>this.hidetab()}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            placeholder={I18n.t('vendoraddproduct.productname', { locale: languageChoose })}
-                            maxLength={140}
-                            onSubmitEditing={() => {
-                                this.focusNextField('two');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['one'] = input;
-                            }}
-                            onChangeText={(product_name_in_arabic) => this.setState({product_name_in_arabic})}
-                            />
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.product_name_in_arabic}
+                                // onFocus={()=>this.hidetab()}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddproduct.productname', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('two');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['one'] = input;
+                                }}
+                                onChangeText={(product_name_in_arabic) => this.setState({product_name_in_arabic})}
+                                />
                         </View>
                         :
                         <View style={commonStyles.textField}>
@@ -429,48 +403,49 @@ class EditProduct extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.productname}
-                            // onFocus={()=>this.hidetab()}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            placeholder={I18n.t('vendoraddproduct.productname', { locale: languageChoose })}
-                            maxLength={140}
-                            onSubmitEditing={() => {
-                                this.focusNextField('two');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['one'] = input;
-                            }}
-                            onChangeText={(productname) => this.setState({productname})}
-                            />
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.productname}
+                                // onFocus={()=>this.hidetab()}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddproduct.productname', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('two');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['one'] = input;
+                                }}
+                                onChangeText={(productname) => this.setState({productname})}
+                                />
                         </View>
                     }
                     {/* --------------------------Product name end-----------*/}
                     {/* --------------------------shortdescription start-----------*/}
-                    {(languageChoose === 'ar') ?
+                    {
+                        (languageChoose === 'ar') ?
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.shortdesclbl', { locale: languageChoose })}</Text>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.short_description_in_arabic}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            placeholder={I18n.t('vendoraddproduct.shortdesc', { locale: languageChoose })}
-                            maxLength={140}
-                            onSubmitEditing={() => {
-                                this.focusNextField('three');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['two'] = input;
-                            }}
-                            onChangeText={(short_description_in_arabic) => this.setState({short_description_in_arabic})}
-                            />
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.short_description_in_arabic}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddproduct.shortdesc', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('three');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['two'] = input;
+                                }}
+                                onChangeText={(short_description_in_arabic) => this.setState({short_description_in_arabic})}
+                                />
                         </View>
                         :
                         <View style={commonStyles.textField}>
@@ -479,26 +454,27 @@ class EditProduct extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.shortdescription}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            placeholder={I18n.t('vendoraddproduct.shortdesc', { locale: languageChoose })}
-                            maxLength={140}
-                            onSubmitEditing={() => {
-                                this.focusNextField('three');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['two'] = input;
-                            }}
-                            onChangeText={(shortdescription) => this.setState({shortdescription})}
-                            />
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                value={this.state.shortdescription}
+                                underlineColorAndroid = 'transparent'
+                                autoCorrect={false}
+                                placeholder={I18n.t('vendoraddproduct.shortdesc', { locale: languageChoose })}
+                                maxLength={140}
+                                onSubmitEditing={() => {
+                                    this.focusNextField('three');
+                                }}
+                                returnKeyType={ "next" }
+                                ref={ input => {
+                                    this.inputs['two'] = input;
+                                }}
+                                onChangeText={(shortdescription) => this.setState({shortdescription})}
+                                />
                         </View>
                     }
                     {/* --------------------------shortdescription ends-----------*/}
                     {/* --------------------------detaildescription start-----------*/}
-                    {(languageChoose === 'ar') ?
+                    {
+                        (languageChoose === 'ar') ?
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.detaildesclbl', { locale: languageChoose })}</Text>
@@ -556,12 +532,12 @@ class EditProduct extends Component {
                     </View>
                 }
                 {/* --------------------------detaildescription ends-----------*/}
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: languageChoose })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
-                        </View>
-                        <TextInput
+                <View style={commonStyles.textField}>
+                    <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                        <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: languageChoose })}</Text>
+                        <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                    </View>
+                    <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
@@ -578,13 +554,13 @@ class EditProduct extends Component {
                         }}
                         onChangeText={(price) => this.setState({price})}
                         />
+                </View>
+                <View style={commonStyles.textField}>
+                    <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                        <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: languageChoose })}</Text>
+                        <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                     </View>
-                    <View style={commonStyles.textField}>
-                        <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: languageChoose })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
-                        </View>
-                        <TextInput
+                    <TextInput
                         style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
                         value={this.state.special}
                         underlineColorAndroid = 'transparent'
@@ -598,44 +574,42 @@ class EditProduct extends Component {
                         }}
                         onChangeText={(special) => this.setState({special})}
                         />
-                    </View>
-                    <View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
-                                        <Text/>
-
-                        <SegmentedControls
-                            tint= {'#a9d5d1'}
-                            selectedTint= {'white'}
-                            backTint= {'#fff'}
-                            optionStyle= {{
+                </View>
+                <View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
+                    <Text/>
+                    <SegmentedControls
+                        tint= {'#a9d5d1'}
+                        selectedTint= {'white'}
+                        backTint= {'#fff'}
+                        optionStyle= {{
                             fontSize: 15,
                             fontWeight: 'bold',
                             // fontFamily: 'Snell Roundhand'
-                             alignItems: align
-                          }}
-                          containerStyle= {{
+                            alignItems: align
+                        }}
+                        containerStyle= {{
                             marginLeft: 10,
                             marginRight: 10,
-                          }}
-                          options={ options }
-                          onSelection={ this.setSelectedOption.bind(this) }
-                          selectedOption={ this.state.gender }
-                          extractText={ (option) => option.label }
-                          testOptionEqual={ (a, b) => {
+                        }}
+                        options={ options }
+                        onSelection={ this.setSelectedOption.bind(this) }
+                        selectedOption={ this.state.gender }
+                        extractText={ (option) => option.label }
+                        testOptionEqual={ (a, b) => {
                             if (!a || !b) {
-                              return false;
+                                return false;
                             }
                             return a.label === b.label
-                          }}
+                        }}
                         />
-                        <Text/>
+                    <Text/>
+                </View>
+                <View style={[commonStyles.feature, { flexDirection: direction}]}>
+                    <View style={{ width: '80%', flexDirection: direction}}>
+                        <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.isfeature', { locale: lang })}</Text>
+                        <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
                     </View>
-
-                    <View style={[commonStyles.feature, { flexDirection: direction}]}>
-                        <View style={{ width: '80%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddproduct.isfeature', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
-                        </View>
-                        <Switch
+                    <Switch
                         value={is_feature}
                         onValueChange={(val) =>
                             this.setState({ is_feature : val ? "2" : "0"})
@@ -647,58 +621,56 @@ class EditProduct extends Component {
                         backgroundInactive={'gray'}
                         circleActiveColor={'#30a566'}
                         circleInActiveColor={'#000000'}/>
-                    </View>
-                    <UpdateQuan
-                        lang={lang}
-                        sizeRows={sizeRows}
-                        />
-
-                    <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
-                    {Platform.OS === 'ios' ?
-                        <TouchableOpacity
-                        onPress={this.selectPhotoTapped.bind(this)}>
-
-                        <View style={{ }}>
-                        <Feather
-                            name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                            <Text>{I18n.t('vendoraddproduct.click', { locale: lang })}</Text>
-                    </View>
-                    </TouchableOpacity>
-                    :
-                    <TouchableNativeFeedback
-                    onPress={this.selectPhotoTapped.bind(this)}
-                    background={TouchableNativeFeedback.SelectableBackground()}>
-
-                    <View style={{ justifyContent: 'center'}}>
-                    <Feather
-                            name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                            <Text>{I18n.t('vendoraddproduct.click', { locale: lang })}</Text>
-                    </View>
-                    </TouchableNativeFeedback>
-
-                    }
-                        <Editimage
-                            productImages={this.state.rows}
-                            callback={this.getResponse.bind(this)}
-                            getremovedata= {this.getRemoveresponse.bind(this)}
-                            />
-                    </View>
                 </View>
+                <UpdateQuan
+                    lang={lang}
+                    sizeRows={sizeRows}
+                    callback={this.getSizeandQuan.bind(this)}
+                    />
+                <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
+                    {
+                        Platform.OS === 'ios' ?
+                        <TouchableOpacity
+                            onPress={this.selectPhotoTapped.bind(this)}>
+                            <View style={{ }}>
+                                <Feather
+                                    name="upload-cloud" size= {30} style={{ padding:20 }}/>
+                                <Text>{I18n.t('vendoraddproduct.click', { locale: lang })}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        :
+                        <TouchableNativeFeedback
+                            onPress={this.selectPhotoTapped.bind(this)}
+                            background={TouchableNativeFeedback.SelectableBackground()}>
+                            <View style={{ justifyContent: 'center'}}>
+                                <Feather
+                                    name="upload-cloud" size= {30} style={{ padding:20 }}/>
+                                <Text>{I18n.t('vendoraddproduct.click', { locale: lang })}</Text>
+                            </View>
+                        </TouchableNativeFeedback>
+                    }
+                    <Editimage
+                        productImages={this.state.rows}
+                        callback={this.getResponse.bind(this)}
+                        getremovedata= {this.getRemoveresponse.bind(this)}
+                        />
+                </View>
+            </View>
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={{
-                height:54,
-                marginTop : 20,
-                justifyContent :'center',
-                alignItems :'center',
-                backgroundColor:'#a9d5d1'
-            }} >
-            <Text style={{color : '#fff', fontWeight:'bold'}}>Edit Product</Text>
+                    height:54,
+                    marginTop : 20,
+                    justifyContent :'center',
+                    alignItems :'center',
+                    backgroundColor:'#a9d5d1'
+                }} >
+                <Text style={{color : '#fff', fontWeight:'bold'}}>Edit Product</Text>
             </TouchableOpacity>
-                <Modal isVisible={this.state.visibleModal}>
-                    <View style={{alignItems : 'center', padding:10}}>
+            <Modal isVisible={this.state.visibleModal}>
+                <View style={{alignItems : 'center', padding:10}}>
                     <CirclesLoader />
                 </View>
             </Modal>
-            </ScrollView>
+        </ScrollView>
         )
     }
 }
@@ -716,6 +688,7 @@ class UpdateQuan extends Component {
     focusNextField(id) {
         this.inputs[id].focus();
     }
+    concatAndDeDuplicateObjectsDeep = (p, ...arrs) => [ ...new Set( [].concat(...arrs).map(a => JSON.stringify(a)) ) ].map(a => JSON.parse(a))
     editSize(size_id, size, quantity){
       this.setState({
           size_id:size_id,
@@ -724,16 +697,22 @@ class UpdateQuan extends Component {
           editSizeModal:true
       });
     }
-updateQuantity(){
-    var test = [];
-    test.push({
-        size_id: this.state.size_id,
-        size: this.state.size,
-        quantity: this.state.quantity
-    });
-    console.warn(test);
-    this.setState({ editSizeModal : false })
-}
+    updateQuantity(){
+        let arr2 = [];
+        arr2.push({
+            size_id: this.state.size_id,
+            size: this.state.size,
+            quantity: this.state.quantity
+        });
+        let arr1 = this.state.sizeRows;
+        let newOne = this.concatAndDeDuplicateObjectsDeep('size_id', arr2, arr1 );
+        let newsome = newOne.reduce((x, y) => x.findIndex(e => e.size_id==y.size_id) < 0 ? [...x, y]: x, [])
+        this.setState({
+            editSizeModal : false,
+            sizeRows: newsome
+        })
+        this.props.callback(newsome);
+    }
     render(){
         const { lang} = this.props,
         direction = lang === 'ar' ? "row-reverse" : "row",
