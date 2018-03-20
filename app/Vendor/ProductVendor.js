@@ -32,6 +32,9 @@ import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 
+import * as authActions from "app/auth/auth.actions";
+import {bindActionCreators} from 'redux';
+
 const {width,height} = Dimensions.get('window');
 var bookingSlot = [
     "5:30 AM",
@@ -262,11 +265,17 @@ class ProductVendor extends Component {
     validateSlot(time){
 
         const {dateSelected,ScheduleDate} = this.state;
-
         let timeString = this.state.BookingTime;
-
-        if(ScheduleDate.length ==  0)
+        
+        if(ScheduleDate !== {})
         {
+            let dt = new Date();
+
+            let currentdate= dt.getFullYear() +'-'+ ((dt.getMonth() + 1) < 10 ? ('0' + parseInt(dt.getMonth()+1)) : parseInt(dt.getMonth()+1))  + '-'+ dt.getDate();
+                console.log(currentdate);
+            ScheduleDate.forEach(function (item) {
+                console.log(item);
+            });
             for (i=0;i< this.state.BookingTime.length;i++) {
                 var obj = { selected: true, selectedColor: '#a9d5d1'};
                 let strTime = timeString[i]
@@ -281,11 +290,8 @@ class ProductVendor extends Component {
                     return false;
                 }
             }
-            return true
-        }else {
-            return  true;
         }
-
+        return true;
     }
     buyNow(){
         routes.AddressLists();
@@ -349,15 +355,21 @@ class ProductVendor extends Component {
         );
     }
     noItemFound(){
-        const { lang} = this.props;
+        const { lang,logout,u_id} = this.props;
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text style={{fontSize: 12, fontWeight: 'bold'}}>{I18n.t('servicedetail.noaddress', { locale: lang })}</Text>
+
+            {    u_id === undefined ? <Text onPress={
+                        ()=>{ Utils.logout()
+                            .then(logout)
+                            .done()
+                        } } style={{fontSize: 12, fontWeight: 'bold'}}> Please login / register to add address </Text> : <Text> </Text>
+}
             </View>
         );
     }
     validateService(){
-
 
         if(this.state.selectedAddress == "Select Address"){
             MessageBarManager.showAlert({
@@ -379,7 +391,7 @@ class ProductVendor extends Component {
 
         var availabletime =  this.validateSlot(b);
         if(availabletime){
-                console.log("Success schedule :", b);
+
         }
     }
 
@@ -683,4 +695,9 @@ function mapStateToProps(state) {
         deviceId: state.auth.deviceId,
     }
 }
-export default connect(mapStateToProps)(ProductVendor);
+function dispatchToProps(dispatch) {
+    return bindActionCreators({
+        logout: authActions.logout,
+    }, dispatch);
+}
+export default connect(mapStateToProps,dispatchToProps)(ProductVendor);
