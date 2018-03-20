@@ -499,6 +499,7 @@
     },
     "scheduleService":{
         "serviceTitle":"جدول",
+        "addressvalidation":"Please Select Address First"
     },
     "notification":{
         "orderId":"Order Id",

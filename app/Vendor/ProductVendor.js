@@ -32,6 +32,9 @@ import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 
+import * as authActions from "app/auth/auth.actions";
+import {bindActionCreators} from 'redux';
+
 const {width,height} = Dimensions.get('window');
 var bookingSlot = [
     "5:30 AM",
@@ -97,6 +100,8 @@ class ProductVendor extends Component {
             address_id : '',
             selectedAddress : I18n.t('productdetail.selectaddress', { locale: this.props.lang }),
             ScheduleDate : {},
+            dateSelected: "",
+            service_date: "",
             BookingTime : ["5.30 AM",],
             calanderShow : false
         }
@@ -201,6 +206,7 @@ class ProductVendor extends Component {
                     ScheduleDate : arrNew,
                     BookingTime :  timeArray
                 });
+                console.log(this.state.ScheduleDate);
             }
         })
         .catch((error) => {
@@ -257,23 +263,35 @@ class ProductVendor extends Component {
         return true
     }
     validateSlot(time){
-        let timeString = this.state.BookingTime
-        for (i=0;i< this.state.BookingTime.length;i++) {
-            var obj = { selected: true, selectedColor: '#a9d5d1'};
-            let strTime = timeString[i]
-            if(timeString[i] === time){
-                MessageBarManager.showAlert({
-                    message: " Please Select another time Slot",
-                    alertType: 'extra',
-                    title:'',
-                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                    messageStyle: { color: 'white', fontSize: 16 , textAlign:"left"},
-                })
-                return false;
+
+        const {dateSelected,ScheduleDate} = this.state;
+        let timeString = this.state.BookingTime;
+        
+        if(ScheduleDate !== {})
+        {
+            let dt = new Date();
+
+            let currentdate= dt.getFullYear() +'-'+ ((dt.getMonth() + 1) < 10 ? ('0' + parseInt(dt.getMonth()+1)) : parseInt(dt.getMonth()+1))  + '-'+ dt.getDate();
+                console.log(currentdate);
+            ScheduleDate.forEach(function (item) {
+                console.log(item);
+            });
+            for (i=0;i< this.state.BookingTime.length;i++) {
+                var obj = { selected: true, selectedColor: '#a9d5d1'};
+                let strTime = timeString[i]
+                if(timeString[i] === time){
+                    MessageBarManager.showAlert({
+                        message: " Please Select another time Slot",
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:"left"},
+                    })
+                    return false;
+                }
             }
         }
-        return true
-
+        return true;
     }
     buyNow(){
         routes.AddressLists();
@@ -337,13 +355,46 @@ class ProductVendor extends Component {
         );
     }
     noItemFound(){
-        const { lang} = this.props;
+        const { lang,logout,u_id} = this.props;
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text style={{fontSize: 12, fontWeight: 'bold'}}>{I18n.t('servicedetail.noaddress', { locale: lang })}</Text>
+
+            {    u_id === undefined ? <Text onPress={
+                        ()=>{ Utils.logout()
+                            .then(logout)
+                            .done()
+                        } } style={{fontSize: 12, fontWeight: 'bold'}}> Please login / register to add address </Text> : <Text> </Text>
+}
             </View>
         );
     }
+    validateService(){
+
+        if(this.state.selectedAddress == "Select Address"){
+            MessageBarManager.showAlert({
+                message: "Please Select Address First",
+                alertType: 'alert',
+                stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                title:''
+            });
+            this.setState({
+                calanderShow: false
+            });
+        }else{
+            this.setState({
+                calanderShow: true
+            });
+        }
+    }
+    validateScheduleTimings(b){
+
+        var availabletime =  this.validateSlot(b);
+        if(availabletime){
+
+        }
+    }
+
 
     render () {
         const { date_in, count, ScheduleDate, BookingTime } = this.state;
@@ -354,7 +405,7 @@ class ProductVendor extends Component {
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
         const renderedButtons =  bookingSlot.map((b, i) => {
-            return <TouchableOpacity onPress ={()=>this.validateSlot(b)}
+            return <TouchableOpacity onPress ={()=>this.validateScheduleTimings(b)}
                 style={{ marginLeft: 10,width:50, height: 50, backgroundColor: "#a9d5d1", borderRadius:30, overflow:'hidden', flexDirection: 'row'}}>
                 <Text  style={{backgroundColor:"transparent" , color : '#fff', alignSelf: 'center',textAlign:'center' }}
                     key={i}
@@ -399,9 +450,7 @@ class ProductVendor extends Component {
                             </View>
                             { this.props.is_user ?
                                 <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingTop : 10}}>
-                                    <TouchableOpacity onPress={()=>this.setState({
-                                            calanderShow: true
-                                        })} style={{backgroundColor: "#a9d5d1", justifyContent: 'center',alignItems: 'center', height: 40, marginTop: 10}}>
+                                    <TouchableOpacity onPress={this.validateService.bind(this)}  style={{backgroundColor: "#a9d5d1", justifyContent: 'center',alignItems: 'center', height: 40, marginTop: 10}}>
                                         <Text style={{ fontSize: 15, color: "#fff", fontWeight: 'bold'}}>{I18n.t('servicedetail.schedule', { locale: lang })}</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={this.onOpen.bind(this)} >
@@ -467,13 +516,18 @@ class ProductVendor extends Component {
                                 monthFormat={'MMMM yyyy'}
                                 firstDay={1}
                                 hideDayNames={true}
+                                minDate={[this.state.currDate]}
                                 // ----------------
                                 pastScrollRange={50}
                                 futureScrollRange={50}
                                 loadItemsForMonth={(month) => {console.log('trigger items loading')}}
                                 onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
                                 onDayPress={(day)=>{
-                                    // console.warn('day pressed :', day)
+                                    console.log("selected date :",day);
+                                    this.setState({
+                                        dateSelected : day.dateString,
+                                        service_date: day.dateString
+                                    })
                                 }}
                                 // ------
                                 theme={{
@@ -641,4 +695,9 @@ function mapStateToProps(state) {
         deviceId: state.auth.deviceId,
     }
 }
-export default connect(mapStateToProps)(ProductVendor);
+function dispatchToProps(dispatch) {
+    return bindActionCreators({
+        logout: authActions.logout,
+    }, dispatch);
+}
+export default connect(mapStateToProps,dispatchToProps)(ProductVendor);

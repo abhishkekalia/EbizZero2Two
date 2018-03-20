@@ -16,6 +16,7 @@ import {
     TouchableHighlight
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
+
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modal';
@@ -727,4 +728,5 @@ function mapStateToProps(state) {
         deviceId: state.auth.deviceId,
     }
 }
+
 export default connect(mapStateToProps)(ProductDescription);

@@ -72,9 +72,10 @@ class MarketingCompaign extends Component {
     }
     validate(){
         const { Source, ad_category} = this.state;
+        const {lang} = this.props;
         if (!Source.length){
             MessageBarManager.showAlert({
-                message: "Plese Select Image Or Video To Upload Advertisement",
+                message: I18n.t('venderprofile.imagevideoselection', { locale: lang }),
                 alertType: 'warning',
                 title:''
                 })
@@ -82,7 +83,7 @@ class MarketingCompaign extends Component {
         }
         if (!ad_category.length){
             MessageBarManager.showAlert({
-                message: "Plese Select Advertisement Category",
+                message: I18n.t('venderprofile.categoryerr', { locale: lang }),
                 alertType: 'warning',
                 title:''
                 })
@@ -150,7 +151,7 @@ class MarketingCompaign extends Component {
             })
             .catch((errorMessage, statusCode) => {
                 MessageBarManager.showAlert({
-                message: "error while opload add",
+                message: I18n.t('marketing.aduploaderr', { locale: this.props.lang }),
                 alertType: 'warning',
                 title:''
                 })

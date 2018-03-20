@@ -140,8 +140,8 @@
         "productinfo":"Product Information",
         "paymentsuccess":"Payment Success",
         "paymentfailure":"Payment Not Success",
-        "selectDate":"Plese Select Date",
-        "selectTime":"Plese Select Time Slot"
+        "selectDate":"Please Select Date",
+        "selectTime":"Please Select Time Slot"
     },
     "bottomTabs":{
         "home":"Home",
@@ -294,7 +294,7 @@
         "choose_video":"Choose From Library",
         "uploadfiles":"Select files To upload",
         "costperad":"Cost Per Advertisement",
-        "aduploaderr":"error while opload add",
+        "aduploaderr":"error while upload add",
         "textstring":"Upload your image into the External Circle \n" +
                             "Upload your 10 sec video into the External Circle \n" +
                             "Price: 1 KD per picture  / 1.5 KD per video",
@@ -345,7 +345,7 @@
         "preview":"Preview",
         "activate":"Activate",
         "deactivate":"Deactivate",
-        "aproved":"Apendingproved",
+        "aproved":"Approved",
         "pending":"Pending",
         "deliverd":"Deliverd",
         "searchHere" : "Search Here"
@@ -496,6 +496,7 @@
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
+        "addressvalidation":"Please Select Address First"
     },
     "notification":{
         "orderId":"Order Id",

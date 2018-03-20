@@ -445,15 +445,21 @@ class AddProduct extends Component {
     productCont(){
         Keyboard.dismiss();
         const { quantity, Size} = this.state;
-        var newStateArray = this.state.quantityRows.slice();
-        var newsizeArray = this.state.sizeRows.slice();
-        newStateArray.push(quantity);
-        newsizeArray.push(Size);
-        this.setState({...INITIAL_STATE,
-            quantityRows: newStateArray,
-            sizeRows: newsizeArray,
-            additional : false
-        });
+
+        if(quantity !== "" && Size != "")
+        {
+            var newStateArray = this.state.quantityRows.slice();
+            var newsizeArray = this.state.sizeRows.slice();
+            newStateArray.push(quantity);
+            newsizeArray.push(Size);
+            this.setState({...INITIAL_STATE,
+                quantityRows: newStateArray,
+                sizeRows: newsizeArray,
+                additional : false
+            });
+        }else{
+            
+        }
     }
     textInputFocused(){
         console.log("focused");
