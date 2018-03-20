@@ -3808,9 +3808,9 @@ react-native-datepicker@1.6.0:
   dependencies:
     moment "2.x.x"
 
-react-native-device-info@^0.17.4:
-  version "0.17.4"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.17.4.tgz#c135d4719f0512729de1c72e058a137e29ea1e3e"
+react-native-device-info@^0.21.2:
+  version "0.21.2"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.21.2.tgz#82209bf529f5cae7eab1d6512b1cfb03e29ced30"
 
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"

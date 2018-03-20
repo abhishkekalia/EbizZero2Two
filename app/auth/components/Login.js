@@ -16,7 +16,7 @@ import {
 import {Actions as routes} from "react-native-router-flux";
 import SettingsActions from 'app/Redux/SettingsRedux'
 import I18n from 'react-native-i18n'
-// import DeviceInfo from 'react-native-device-info';
+import DeviceInfo from 'react-native-device-info';
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -27,7 +27,7 @@ import Utils from 'app/common/Utils';
 const { width, height } = Dimensions.get('window')
 
 const INITIAL_STATE = {email: '', password: ''};
-const deviceId = "abhishek123";
+const deviceId = DeviceInfo.getUniqueID();
 class Login extends Component {
 	constructor() {
 		super();
@@ -162,6 +162,7 @@ class Login extends Component {
 	render() {
 		const {errorStatus, loading, language, changeLanguage} = this.props;
 		const {setParams} = this.props.navigation
+		console.warn(deviceId);
 		return (
 			<View style={{flex:1}}>
 				<View style= {{height:64,backgroundColor: '#a9d5d1', zIndex: 0}}>

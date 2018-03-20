@@ -642,7 +642,7 @@ class AddService extends Component {
                 </View>
                 <View style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]}>
                     <View style={{ flexDirection: direction}}>
-                        <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddproduct.isfeature', { locale: lang })}</Text>
+                        <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.isfeature', { locale: lang })}</Text>
                         <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
                     </View>
                     <Switch
@@ -667,7 +667,7 @@ class AddService extends Component {
                         <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
                     </View>
                     <Icon name={is_weekend_work} size={20}/>
-                </TouchableOpacity> 
+                </TouchableOpacity>
 
                 {Platform.OS === 'ios'? <KeyboardSpacer/> : undefined}
                 <Modal isVisible={this.state.visibleModal}>

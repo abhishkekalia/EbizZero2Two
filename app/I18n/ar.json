@@ -385,7 +385,13 @@
         "sppriceerr":"سعر الخصم يجب أن يكون أقل من السعر الأساسي",
         "quantityerr":"الرجاء تحديد الكمية",
         "sizeerr":"الرجاء تحديد المقاس",
-        "productadded":"تم اضافة المنتج"
+        "productadded":"تم اضافة المنتج",
+        "productupdadded":"Product Update Successfully",
+        "updatefail":"Product Upload Failed",
+        "productname_ar_err":"Plese Insert Product Name in arabic",
+        "shortdesc_ar_err":"Plese Insert arabic Short description",
+        "detaildesc_ar_err":"Plese Insert arabic Detail description",
+        "errorwhileUpload":"error While Upload",
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",
@@ -412,6 +418,7 @@
         "detaildesc":"وصف كامل",
         "pricelbl":"القيمة",
         "price":"القيمة",
+        "isfeature":"Service Is Feature",
         "sppricelbl":"القيمة بعد الخصم",
         "spprice":"القيمة بعد الخصم",
         "imageuploaderr":"الرجاء أختيار صورة على الأقل",

@@ -137,8 +137,8 @@ class Profile extends Component {
 		textline = lang == 'ar'? 'right': 'left';
 		fullname = lang == 'ar'? dataSource.fullname: dataSource.fullname;
 		acount_name = dataSource.fullname ? fullname : I18n.t('profile.guest', { locale: lang })
-		email = lang == 'ar'? dataSource.email_arabic: dataSource.email;
-		mobile = lang == 'ar'? dataSource.mobile: dataSource.mobile;
+		email = dataSource.email;
+		mobile = dataSource.mobile;
 		return (
 			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
 				<View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>

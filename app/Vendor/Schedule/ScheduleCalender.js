@@ -63,32 +63,15 @@ class ScheduleCalender extends Component {
 			.then((responseData) => {
 				if(responseData.status){
 					let	data = responseData.data;
-					// var data = ['date1','date2','date3']
 					var arrNew = {};
-
-				   for (i=0;i<data.length;i++) {
-					   var obj = { selected: true, selectedColor: '#a9d5d1'};
-					   let strDate = data[i]
-					   var objFinal = {
-						   strDate : obj,
-					   };
-					   arrNew[strDate] = obj
-				   }
-				   // console.log("arrNew:=",arrNew);
-					// let datesArray = {
-					// 	data : {selected: true,  marked: true},
-			 		// 	// '2018-03-22': {selected: true,},
-					// 	// '2017-12-28': {selected: true,},
-					// }
-					// const selectedDate = new Date().toISOString().substring(0, 10)
-					// Object.keys(datesArray).map((d, i) => {
-					// 	if (datesArray[d].disabled === false) {
-					// 		delete datesArray[d]
-					// 	} else if (selectedDate !== new Date(datesArray[i])) {
-					// 		datesArray[selectedDate] = {selected: true, marked: true, selectedColor: 'green'}
-					// 	}
-					// })
-					// console.log('dates array: ', datesArray)
+					for (i=0;i<data.length;i++) {
+						var obj = { selected: true, selectedColor: '#a9d5d1'};
+						let strDate = data[i]
+						var objFinal = {
+							strDate : obj,
+						};
+						arrNew[strDate] = obj
+					}
 					this.setState ({
 						ScheduleDate: arrNew,
 						status: responseData.status
@@ -139,7 +122,6 @@ class ScheduleCalender extends Component {
 				console.log(errorMessage);
 			})
 			.done();
-
 		}
 		catch (error) {
 			console.log("Error retrieving data" + error);
@@ -166,7 +148,6 @@ class ScheduleCalender extends Component {
 				showsVerticalScrollIndicator={false}
 				/>
 			);
-
 		return (
 			<View style={styles.container}>
 				<Calendar
@@ -187,19 +168,6 @@ class ScheduleCalender extends Component {
 						monthTextColor: 'green',
 						textDisabledColor: 'red',
 					}}
-					// markedDates={{
-					// 	[ScheduleDate]: {selected: true, marked: true, selectedColor: 'green'},
-					// 	'2018-03-26':  {selected: true, marked: true, selectedColor: 'green'},
-					// 	'2018-03-29': {selected: true, marked: true, selectedColor: 'green'},
-					// 	'2018-03-13':  {selected: true, marked: true, selectedColor: 'green'}
-					// }}
-					// markedDates={{[this.state.markedDates]: {selected:true,marked: true, dotColor: 'red', selectedColor: 'green'}}}
-					// Initially visible month. Default = Date()
-					// onDayPress={this.onDayPress}
-					// style={styles.calendar}
-					// hideExtraDays
-					// showWeekNumbers
-					// markedDates={ScheduleDate}
 					/>
 				<View style={{flex: 1}}>
 					{listView}
@@ -306,5 +274,4 @@ function mapStateToProps(state) {
 		lang : state.auth.lang
 	}
 }
-
 export default connect(mapStateToProps)(ScheduleCalender);
