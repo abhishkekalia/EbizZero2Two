@@ -47,6 +47,9 @@ class EditService extends Component {
             height : '',
             service_type: this.props.service_type,
             service_name : this.props.service_name,
+            service_name : this.props.service_name,
+            service_name : this.props.service_name,
+            service_name : this.props.service_name,
             detail_description : this.props.detail_description,
             short_description : this.props.short_description,
             price : this.props.price,
@@ -54,7 +57,8 @@ class EditService extends Component {
             rows : [] ,
             Imagepath : [],
             removed_images : [],
-            languageChoose: ''
+            languageChoose: '',
+            is_feature:0
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
@@ -322,7 +326,6 @@ class EditService extends Component {
         arrayvar.push(result)
         this.setState({ removed_images: arrayvar })
     }
-
     render() {
         const { lang } =this.props,
         { imageSelect, quantityRows, sizeRows, languageChoose} = this.state,
@@ -660,9 +663,26 @@ class EditService extends Component {
                         </View>
                     }
                     {/* --------------------------service special price end-----------*/}
+                    <View style={[commonStyles.feature, { flexDirection: direction}]}>
+                        <View style={{ width: '80%', flexDirection: direction}}>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.isfeature', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
+                        </View>
+                        <Switch
+                            value={is_feature}
+                            onValueChange={(val) =>
+                                this.setState({ is_feature : val ? "2" : "0"})
+                            }
+                            disabled={false}
+                            activeText={'On'}
+                            inActiveText={'Off'}
+                            backgroundActive={'green'}
+                            backgroundInactive={'gray'}
+                            circleActiveColor={'#30a566'}
+                            circleInActiveColor={'#000000'}/>
+                    </View>
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
-
                         {
                             Platform.OS === 'ios' ?
                             <TouchableOpacity

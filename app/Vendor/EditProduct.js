@@ -109,8 +109,8 @@ class EditProduct extends Component {
         })
     }
     validate(){
-        const { productname, shortdescription, detaildescription, price, discount,final_price, quantityRows,
-            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows
+        const { productname, shortdescription, detaildescription, price, discount,final_price, quantityRows, product_name_in_arabic,
+            short_description_in_arabic, detail_description_in_arabic, Size, quantity, is_feature, Imagepath , special, rows ,sizeRows
         } = this.state;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
@@ -185,19 +185,66 @@ class EditProduct extends Component {
             })
             return false
         }
+        if (!product_name_in_arabic){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddproduct.productname_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!short_description_in_arabic){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddproduct.shortdesc_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!detail_description_in_arabic){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddproduct.detaildesc_ar_err', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        return true
     }
     uploadTocloud(){
         const {
-            product_category , productname,
+            product_category , productname, product_name_in_arabic,
+                short_description_in_arabic, detail_description_in_arabic,
             shortdescription, detaildescription, price,
             discount,final_price, quantityRows,
             Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images
         } = this.state;
-        const { u_id, country } = this.props;
+        const { u_id, country,lang, product_id} = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
+
         if(this.validate()) {
             this.setState({
                 visibleModal : true
             });
+            // console.warn("u_id",u_id);
+            // console.warn("country",country);
+            // console.warn("product_category",product_category);
+            // console.warn("shortdescription",shortdescription);
+            // console.warn("detaildescription",detaildescription);
+            // console.warn("price",price);
+            // console.warn("special",special);
+            // console.warn("product_id",product_id);
+            // console.warn("removed_images",removed_images);
+            // console.warn("quantityRows",quantityRows);
+            // console.warn("sizeRows",sizeRows);
+            // console.warn("is_feature",is_feature);
+
             RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
@@ -208,15 +255,20 @@ class EditProduct extends Component {
                 { name : 'country', data: String(country)},
                 { name : 'product_category', data: String(product_category)},
                 { name : 'product_name', data: String(productname)},
+                { name : 'product_name_in_arabic', data: String(product_name_in_arabic)},
                 { name : 'short_description', data: String(shortdescription)},
+                { name : 'short_description_in_arabic', data: String(short_description_in_arabic)},
                 { name : 'detail_description', data: String(detaildescription)},
+                { name : 'detail_description_in_arabic', data: String(detail_description_in_arabic)},
                 { name : 'price', data: String(price)},
+                { name : 'price_in_arabic', data: String(price)},
                 { name : 'special_price', data: String(special)},
+                { name : 'special_price_in_arabic', data: String(special)},
                 { name : 'discount', data: String(10)},
                 { name : 'final_price', data: String(special)},
                 { name : 'product_id', data: String(this.props.product_id)},
                 { name : 'removed_images', data: removed_images.toString()},
-                { name : 'quantity', data: quantityRows.toString()},
+                { name : 'quantity_for_product_size', data: quantityRows.toString()},
                 { name : 'size_id', data: sizeRows.toString()},
                 { name : 'size', data: sizeRows.toString()},
                 { name : 'quantity', data: sizeRows.toString()},
@@ -228,28 +280,41 @@ class EditProduct extends Component {
             })
             .then((res)=>{
                 var getdata = JSON.parse(res.data);
+                console.warn(getdata);
                 if(getdata.status){
                     MessageBarManager.showAlert({
-                        message: "Product Update Successfully",
-                        alertType: 'warning',
-                        title:''
+                        message: I18n.t('vendoraddproduct.productupdadded', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                     })
                     this.setState({
                         visibleModal : false
                     })
+                    routes.product()
                 }else{
                     MessageBarManager.showAlert({
-                        message: "Product Upload Failed",
-                        alertType: 'warning',
-                        title:''
+                        message: I18n.t('vendoraddproduct.updatefail', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                     })
                     this.setState({
                         visibleModal : false
                     })
                 }
             })
-            .then(()=>routes.product())
-            .catch((errorMessage, statusCode) => {
+            // .then(()=>routes.product())
+            .catch((error, statusCode) => {
+                MessageBarManager.showAlert({
+                    message: I18n.t('vendoraddproduct.errorwhileUpload', { locale: lang }),
+                    alertType: 'extra',
+                    title:'',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
                 this.setState({
                     visibleModal : false
                 })
@@ -330,7 +395,6 @@ class EditProduct extends Component {
     }
     render() {
         const { imageSelect, quantityRows, sizeRows, languageChoose} = this.state;
-        console.warn(sizeRows);
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
@@ -803,6 +867,8 @@ class UpdateQuan extends Component {
 function mapStateToProps(state) {
     return {
         lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
     }
 }
 export default connect(mapStateToProps)(EditProduct);

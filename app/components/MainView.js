@@ -1047,13 +1047,21 @@ class MainView extends Component {
     noItemFound(){
         const { lang , deviceId, country, u_id} = this.props,
         align = (lang === 'ar') ?  'right': 'left';
-
         return (
+            <View style={{flex: 1}}>
+            <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                {this._renderLeftButton()}
+                <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                    resizeMode = 'contain'
+                    resizeMethod = 'resize'/>
+                {this._renderRightButton()}
+            </View>
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 {this.renderFilterOptions()}
                 {this.renderAllShopViews()}
                 {this.renderAllServiceViews()}
                 <Text style={{marginTop:10, textAlign: align}}>{I18n.t('home.noitem', { locale: lang })}</Text>
+            </View>
             </View>
         );
     }
