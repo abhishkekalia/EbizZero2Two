@@ -36,7 +36,10 @@ import {
 import { material } from 'react-native-typography';
 import EventEmitter from "react-native-eventemitter";
 import {connect} from 'react-redux';
-import I18n from 'react-native-i18n'
+import I18n from 'react-native-i18n';
+
+import * as authActions from "app/auth/auth.actions";
+import {bindActionCreators} from 'redux';
 
 const {width,height} = Dimensions.get('window');
 const buttons = [
@@ -362,12 +365,20 @@ class ProductDescription extends Component {
         );
     }
     noItemFound(){
+        const { lang,logout,u_id} = this.props;
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text style={{fontSize: 12, fontWeight: 'bold'}}>No Address Found </Text>
-            </View>
-        );
-    }
+                {/* <Text style={{fontSize: 12, fontWeight: 'bold'}}>No Address Found </Text> */}
+                <Text style={{fontSize: 12, fontWeight: 'bold'}}>{I18n.t('servicedetail.noaddress', { locale: lang })}</Text>
+                {    u_id === undefined ? <Text onPress={
+                            ()=>{ Utils.logout()
+                                .then(logout)
+                                .done()
+                            } } style={{fontSize: 12, fontWeight: 'bold'}}> Please login / register to add address </Text> : <Text> </Text>
+                        }
+                        </View>
+                    );
+                }
     render () {
         const { date_in, count } = this.state;
         const { lang, country, u_id, deviceId } = this.props;
@@ -728,5 +739,9 @@ function mapStateToProps(state) {
         deviceId: state.auth.deviceId,
     }
 }
-
-export default connect(mapStateToProps)(ProductDescription);
+function dispatchToProps(dispatch) {
+    return bindActionCreators({
+        logout: authActions.logout,
+    }, dispatch);
+}
+export default connect(mapStateToProps,dispatchToProps)(ProductDescription);

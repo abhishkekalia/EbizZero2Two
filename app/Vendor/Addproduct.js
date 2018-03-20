@@ -188,6 +188,9 @@ class AddProduct extends Component {
             product_name_in_arabic, short_description_in_arabic,
             detail_description_in_arabic,price_in_arabic, special_price_in_arabic
         } = this.state;
+
+        console.warn(product_name_in_arabic,short_description_in_arabic);
+
         const { lang} = this.props,
         align = (lang === 'ar') ?  'right': 'left';
         let path = Imagepath.length
@@ -458,7 +461,7 @@ class AddProduct extends Component {
                 additional : false
             });
         }else{
-            
+
         }
     }
     textInputFocused(){
