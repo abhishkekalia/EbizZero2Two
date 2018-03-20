@@ -30,9 +30,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ActionSheet from 'react-native-actionsheet';
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
-
 const countryTitle = 'Select Country'
-
 const { width, height } = Dimensions.get('window')
 
 const INITIAL_STATE = {
@@ -602,7 +600,7 @@ class Vendorreg extends Component {
 			fetch(Utils.gurl('register'), config)
 			.then((response) => response.json())
 			.then((responseData) => {
-				console.warn(JSON.stringify(responseData));
+				// console.warn(JSON.stringify(responseData));
 				routes.loginPage()
 				MessageBarManager.showAlert({
 					message: "Congratulations You Are Successfully Registered ",

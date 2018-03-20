@@ -162,7 +162,6 @@ class Login extends Component {
 	render() {
 		const {errorStatus, loading, language, changeLanguage} = this.props;
 		const {setParams} = this.props.navigation
-		console.warn(deviceId);
 		return (
 			<View style={{flex:1}}>
 				<View style= {{height:64,backgroundColor: '#a9d5d1', zIndex: 0}}>
