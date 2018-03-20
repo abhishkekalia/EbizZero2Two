@@ -56,14 +56,15 @@ class EditProduct extends Component {
             Size : this.props.size,
             quantityRows : this.props.quantity,
             sizeRows : this.props.size,
-            product_name_in_arabic: '',
-            short_description_in_arabic: '',
-            detail_description_in_arabic: '',
+            product_name_in_arabic: this.props.product_name_in_arabic,
+            short_description_in_arabic: this.props.short_description_in_arabic,
+            detail_description_in_arabic: this.props.detail_description_in_arabic,
             rows : [] ,
             Imagepath : [],
             is_feature : this.props.is_feature ,
             removed_images : [],
-            selSize:[],
+            selSize:"",
+            selQuantity:'',
             languageChoose: ''
 
         }
@@ -241,7 +242,6 @@ class EditProduct extends Component {
                         console.log('uploaded', Math.floor(written/total*100) + '%')
                     })
                     .then((res)=>{
-
                         var getdata = JSON.parse(res.data);
                         if(getdata.status){
                             MessageBarManager.showAlert({
@@ -325,12 +325,9 @@ class EditProduct extends Component {
     }
     productCont(){
         Keyboard.dismiss();
-
         const { quantity, Size} = this.state;
-
         var newStateArray = this.state.quantityRows.slice();
         var newsizeArray = this.state.sizeRows.slice();
-
         newStateArray.push(quantity);
         newsizeArray.push(Size);
         this.setState({...INITIAL_STATE,
@@ -356,12 +353,6 @@ class EditProduct extends Component {
     //   }
     //
     // }
-    editSize(selSizeData){
-      this.setState({
-        selSize:selSizeData,
-        editSizeModal:true
-      });
-    }
 
     render() {
         const { imageSelect, quantityRows, sizeRows, languageChoose} = this.state;
@@ -381,11 +372,8 @@ class EditProduct extends Component {
             is_feature = false} else { is_feature = true}
 
         let sizeArr = [];
-        const size = this.state.sizeRows;
-        var selSize= this.state.selSize;
-
-
-
+        // const size = this.state.sizeRows;
+        // var selSize= this.state.selSize;
         return (
             <ScrollView
             contentContainerStyle={commonStyles.container}
@@ -413,12 +401,12 @@ class EditProduct extends Component {
                     {(languageChoose === 'ar') ?
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: lang })}</Text>
+                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.productnamelbl', { locale: languageChoose })}</Text>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
                             style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.productname}
+                            value={this.state.product_name_in_arabic}
                             // onFocus={()=>this.hidetab()}
                             underlineColorAndroid = 'transparent'
                             autoCorrect={false}
@@ -431,7 +419,7 @@ class EditProduct extends Component {
                             ref={ input => {
                                 this.inputs['one'] = input;
                             }}
-                            onChangeText={(productname) => this.setState({productname})}
+                            onChangeText={(product_name_in_arabic) => this.setState({product_name_in_arabic})}
                             />
                         </View>
                         :
@@ -469,7 +457,7 @@ class EditProduct extends Component {
                             </View>
                             <TextInput
                             style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                            value={this.state.shortdescription}
+                            value={this.state.short_description_in_arabic}
                             underlineColorAndroid = 'transparent'
                             autoCorrect={false}
                             placeholder={I18n.t('vendoraddproduct.shortdesc', { locale: languageChoose })}
@@ -481,7 +469,7 @@ class EditProduct extends Component {
                             ref={ input => {
                                 this.inputs['two'] = input;
                             }}
-                            onChangeText={(shortdescription) => this.setState({shortdescription})}
+                            onChangeText={(short_description_in_arabic) => this.setState({short_description_in_arabic})}
                             />
                         </View>
                         :
@@ -518,7 +506,7 @@ class EditProduct extends Component {
                             </View>
                             <TextInput
                                 style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                                value={this.state.detaildescription}
+                                value={this.state.detail_description_in_arabic}
                                 numberOfLines={3}
                                 multiline
                                 underlineColorAndroid = 'transparent'
@@ -535,7 +523,7 @@ class EditProduct extends Component {
                                 onContentSizeChange={(event) => {
                                     this.setState({height: event.nativeEvent.contentSize.height});
                                 }}
-                                onChangeText={(detaildescription) => this.setState({detaildescription})}
+                                onChangeText={(detail_description_in_arabic) => this.setState({detail_description_in_arabic})}
                                 />
                         </View>
                     :
@@ -570,7 +558,7 @@ class EditProduct extends Component {
                 {/* --------------------------detaildescription ends-----------*/}
                     <View style={commonStyles.textField}>
                         <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.pricelbl', { locale: languageChoose })}</Text>
                             <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                         </View>
                         <TextInput
@@ -593,7 +581,7 @@ class EditProduct extends Component {
                     </View>
                     <View style={commonStyles.textField}>
                         <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: lang })}</Text>
+                            <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: languageChoose })}</Text>
                             <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                         </View>
                         <TextInput
@@ -660,42 +648,10 @@ class EditProduct extends Component {
                         circleActiveColor={'#30a566'}
                         circleInActiveColor={'#000000'}/>
                     </View>
-                    <View>
-                        <View style={{flex:1,flexDirection:'row'}}>
-                            <View style={{padding:5}}>
-                                <Text> #Id</Text>
-                            </View>
-                            <View style={{padding:5}}>
-                                <Text> Size </Text>
-                            </View>
-                            <View style={{padding:5}}>
-                                <Text> Quantity </Text>
-                            </View>
-
-                        </View>
-                      {size.map((prop, key) => {
-                        return (
-
-                          <View style={{flex:1,flexDirection:'row'}}>
-                                  <View style={{padding:5}}>
-                                      <Text> {prop.size_id} </Text>
-                                  </View>
-                                  <View style={{padding:5}}>
-                                      <Text> {prop.size} </Text>
-                                  </View>
-                                  <View style={{padding:5}}>
-                                      <Text> {prop.quantity} </Text>
-                                  </View>
-                                  <View>
-                                    <TouchableOpacity
-                                    onPress={() => this.editSize(prop)}>
-                                        <Icon style={{padding:5}} name='create' size={25}  />
-                                    </TouchableOpacity>
-                                  </View>
-                              </View>
-                        );
-                     })}
-                    </View>
+                    <UpdateQuan
+                        lang={lang}
+                        sizeRows={sizeRows}
+                        />
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
                     {Platform.OS === 'ios' ?
@@ -742,8 +698,74 @@ class EditProduct extends Component {
                     <CirclesLoader />
                 </View>
             </Modal>
+            </ScrollView>
+        )
+    }
+}
+class UpdateQuan extends Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            size : "",
+            quantity:"",
+            editSizeModal: this.props.editSizeModal,
+            sizeRows : this.props.sizeRows
+        }
+        this.inputs = {};
+    }
+    focusNextField(id) {
+        this.inputs[id].focus();
+    }
+    editSize(size_id, size, quantity){
+      this.setState({
+          size_id:size_id,
+          size:size,
+          quantity:quantity,
+          editSizeModal:true
+      });
+    }
+updateQuantity(){
+    var test = [];
+    test.push({
+        size_id: this.state.size_id,
+        size: this.state.size,
+        quantity: this.state.quantity
+    });
+    console.warn(test);
+    this.setState({ editSizeModal : false })
+}
+    render(){
+        const { lang} = this.props,
+        direction = lang === 'ar' ? "row-reverse" : "row",
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
+        let { sizeRows} = this.state;
+        return(
             <View>
-              <Modal isVisible={this.state.editSizeModal}>
+                <View>
+                    <View style={{ flexDirection:'row', justifyContent: 'space-around', alignItems: 'center'}}>
+                            <Text style={{ alignSelf: 'center'}}> #Id</Text>
+                            <Text style={{ alignSelf: 'center'}}>Size </Text>
+                            <Text style={{ alignSelf: 'center'}}> Quantity </Text>
+                            <Text style={{ alignSelf: 'center'}}> Action </Text>
+                    </View>
+                    {
+                        sizeRows.map((prop, key) => { return (
+                            <View style={{flex:1,flexDirection:'row', justifyContent: 'space-around'}}>
+                                  <Text style={{ alignSelf: 'center'}}>{prop.size_id} </Text>
+                                  <Text style={{ alignSelf: 'center'}}> {prop.size} </Text>
+                                  <Text style={{ alignSelf: 'center'}}> {prop.quantity} </Text>
+                              <View>
+                                <TouchableOpacity
+                                onPress={() => this.editSize(prop.size_id, prop.size, prop.quantity)}>
+                                    <Icon style={{padding:5}} name='create' size={25} color="#a9d5d1" />
+                                </TouchableOpacity>
+                              </View>
+                          </View>
+                    );
+                 })}
+                </View>
+                <Modal isVisible={this.state.editSizeModal}>
                   <View style={{ padding:10, backgroundColor : '#fff'}}>
                       <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center'}}>Edit Quantity & Size</Text>
                       <View style={{flexDirection: direction, width: '90%'}}>
@@ -752,64 +774,50 @@ class EditProduct extends Component {
                       </View>
                         <TextInput
                           style={[commonStyles.inputs, { bottom : 20,  textAlign: textline, width: '90%'}]}
-                          value={this.state.selSize.quantity}
+                          value={this.state.quantity}
                           underlineColorAndroid = 'transparent'
                           autoCorrect={false}
                           keyboardType={'numeric'}
                           placeholder="Quantity"
                           maxLength={3}
-                          onChangeText={(quantity) => this.setState({
-                            selSize:{
-                                    size:this.state.selSize.size,
-                                    quantity:quantity
-                            }
-                          })}
+                          onChangeText={(quantity) => this.setState({quantity})}
                           onSubmitEditing={() => {
                               this.focusNextField('two');
                             }}
                             returnKeyType={ "next" }
                             ref={ input => {
                               this.inputs['one'] = input;
-                            }}
-
-                              />
+                            }}/>
                   <View style={{flexDirection: direction, width: '90%'}}>
                           <Text style={{color :"#a9d5d1" ,bottom : 10}}>Size</Text>
                           <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
                       </View>
                       <TextInput
                           style={[commonStyles.inputs, {bottom : 20,  textAlign: textline, width: '90%'}]}
-                          value={this.state.selSize.size}
+                          value={this.state.size}
                           underlineColorAndroid = 'transparent'
                           autoCorrect={false}
                           keyboardType={'default'}
                           placeholder="Size"
                           maxLength={15}
-
                           returnKeyType={ "done" }
                           ref={ input => {
                               this.inputs['two'] = input;
                           }}
-                          onChangeText={(Size) => this.setState({
-                            selSize:{
-                                    size:Size,
-                                    quantity:this.state.selSize.quantity
-
-                            }
-                          })}
+                          onChangeText={(size) => this.setState({size})}
                       />
                   <View style={{flexDirection: direction, justifyContent: 'space-around'}}>
-                      <Button title="Cancel" onPress={()=>this.setState({
+                      <Button title={I18n.t('vendoraddproduct.cancel', { locale: lang })} onPress={()=>this.setState({
                                   editSizeModal : false
                               })} color="#a9d5d1"/>
-                      <Button title={I18n.t('vendoraddproduct.submit', { locale: lang })}   color="#a9d5d1"  onPress={()=>this.setState({ editSizeModal : false })}
+                      <Button title={I18n.t('vendoraddproduct.submit', { locale: lang })}   color="#a9d5d1"
+                          onPress={()=>this.updateQuantity()}
+                          // onPress={()=>this.setState({ editSizeModal : false })}
                               />
                   </View>
               </View>
               </Modal>
             </View>
-
-            </ScrollView>
         )
     }
 }

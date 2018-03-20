@@ -8,7 +8,8 @@ import {
 	TextInput ,
 	ActivityIndicator,
 	ListView,
-	Dimensions
+	Dimensions,
+	Modal
 } from "react-native";
 import I18n from 'react-native-i18n'
 import {connect} from "react-redux";
@@ -25,7 +26,8 @@ class ScheduleCalender extends Component {
 			status : false,
 			dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
 			ScheduleDate: ['2018-03-23','2018-03-26'],
-			selected : []
+			selected : [],
+		    addressVisible: false,
     	};
 		this.onDayPress = this.onDayPress.bind(this);
 	}
@@ -117,7 +119,6 @@ class ScheduleCalender extends Component {
 			let formData = new FormData();
 			formData.append('vendor_id', String(u_id));
 			formData.append('selected_date', String(date));
-			// console.warn(formData);
 			const config = {
 				method: 'POST',
 				headers: {
@@ -129,9 +130,9 @@ class ScheduleCalender extends Component {
 			fetch(Utils.gurl('getSchedulelist'), config)
 			.then((response) => response.json())
 			.then((responseData) => {
-				console.log(responseData.data.vendorBookedSlot);
+				console.log(responseData.data.anUserBookedSlot);
 				this.setState({
-					dataSource: this.state.dataSource.cloneWithRows(responseData.data.vendorBookedSlot),
+					dataSource: this.state.dataSource.cloneWithRows(responseData.data.anUserBookedSlot),
 				})
 			})
 			.catch((errorMessage, statusCode) => {
@@ -207,23 +208,23 @@ class ScheduleCalender extends Component {
 		)
 	}
 	renderData( data, rowData: string, sectionID: number, rowID: number, index) {
+		const { lang} = this.props;
+		let direction = (lang === 'ar') ? 'row-reverse' :'row',
+		align = (lang === 'ar') ?  'right': 'left';
 		return (
-			<TouchableOpacity key={rowID} data={rowData} onPress={() => console.log(data.schedule_id)}>
-            <View style={styles.row}>
-				<Text style={styles.textQue}>{data.schedule_id}</Text>
-				<Text style={styles.textQue}>{data.name}</Text>
-				<Text style={styles.textQue}>{data.boking_time}</Text>
-				<Text style={styles.textQue}>{data.duration}</Text>
-				<Text style={styles.textQue}>{data.date}</Text>
-				<Text style={styles.textQue}>{data.create_time}</Text>
-				<Text style={styles.textQue}>{data.vendor_id}</Text>
-				<Text style={styles.textQue}>{data.is_user}</Text>
-            </View>
-		</TouchableOpacity>
-
+			<View>
+				<TouchableOpacity style={{ flexDirection: direction, marginTop : 1, borderColor: "#a9d5d1", borderWidth: StyleSheet.hairlineWidth}} key={rowID} data={rowData} onPress={() => console.log(data.schedule_id)}>
+					<View style={{ width: "70%", height: 40, justifyContent: 'center', alignItems: 'center'}}>
+						<Text style={[styles.textQue, { textAlign: align}]}>{data.addressArray[0].full_name}</Text>
+					</View>
+					<View style={{ flexDirection: 'column', width: "30%", height: 40, borderLeftWidth: StyleSheet.hairlineWidth, borderColor: "#a9d5d1" , justifyContent: 'center', alignItems: 'center'}}>
+						<Text style={[styles.textQue, { textAlign: align}]}>{data.service_name}</Text>
+						<Text style={[styles.textQue, { textAlign: align}]}>{data.service_datetime}</Text>
+					</View>
+				</TouchableOpacity>
+			</View>
 		)
 	}
-
 }
 const styles = StyleSheet.create({
 	container: {
@@ -269,10 +270,8 @@ const styles = StyleSheet.create({
 		marginLeft : 10
 	},
 	textQue :{
-		flex: 1,
-		fontSize: 18,
+		fontSize: 10,
 		fontWeight: '400',
-		left : 5
 	},
 	centering: {
 		flex:1,

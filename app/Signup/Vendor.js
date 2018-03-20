@@ -302,152 +302,126 @@ class Vendorreg extends Component {
 						<Icon name= {icon} size={25} color="#FFCC7D" style={ lang == 'ar' ? { right : 10} :{ right : 10}  }/>
 						<Text style={{textAlign: textline}}>{I18n.t('userregister.showpassword', { locale: lang })}</Text>
 					</TouchableOpacity>
-					<View style={{borderBottomWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5'}}>
-						<Text/>
-						<SegmentedControls
-							tint= {'#a9d5d1'}
-							selectedTint= {'white'}
-							backTint= {'#fff'}
-							optionStyle= {{
-								fontSize: 12,
-								fontWeight: 'bold',
-								fontFamily: 'Snell Roundhand'
-							}}
-							containerStyle= {{
-								marginLeft: 10,
-								marginRight: 10,
-							}}
-							options={ options }
-							onSelection={ this.setSelectedOption.bind(this) }
-							selectedOption={ this.state.gender }
-							extractText={ (option) => option.label }
-							testOptionEqual={ (a, b) => {
-								if (!a || !b) {
-									return false;
-								}
-								return a.label === b.label
-							}}/>
-							<Text/>
-						</View>
-						<TouchableOpacity onPress={this.showCountrysheet} style={[commonStyles.iconusername, {
-								flexDirection: direction,
-								justifyContent: 'space-between',
-								alignItems: 'center' ,
-								marginBottom : 5,
-								paddingLeft:5,
-								height:40,
-								overflow:'hidden',
-								borderBottomWidth:0
-							}]}>
-							{!this.state.selectCountry? undefined:
-								<Image style={{height:40, width:40}}
-									resizeMode = 'center'
-									resizeMethod = 'resize'
-									source={{uri : selCountryObj ? selCountryObj.flag : "" }}
-									onLoadEnd={() => {  }}
-									/>
-							}
-							<Text style={{ }} >{this.state.selectCountry? selCountryObj.country_name  : this.state.selectCountry }</Text>
-							<FontAwesome name="chevron-down" size={20} color="#000" style={{padding:5, marginRight:5}}/>
-							{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>Select Country</Text>: undefined}
-						</TouchableOpacity>
-						<ActionSheet
-							ref={o => this.countrySheet = o}
-							// title={!this.state.selectCountry? this.state.selectCountry : selCountryObj.country_name  }
-							options={this.state.countries}
-							cancelButtonIndex={CANCEL_INDEX}
-							// destructiveButtonIndex={DESTRUCTIVE_INDEX}
-							onPress={this.handlePress}/>
-					</View>
-					<Text style={{ paddingTop:5,paddingBottom:5, textAlign: textline}}>{I18n.t('venderregister.addsocialmedia', { locale: lang })}</Text>
-					<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
-						<View style ={[commonStyles.iconusername, { alignItems : 'center', flexDirection:direction,}]}>
-							<Ionicons name="sc-facebook" size={25} color="#3b5998"  style={commonStyles.social}/>
-							<TextInput
-								style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
-								value={this.state.facebook_id}
-								underlineColorAndroid = 'transparent'
-								autoCorrect={false}
-								placeholder={I18n.t('venderregister.fb_page', { locale: lang })}
-								maxLength={140}
-								keyboardType={'default'}
-								onSubmitEditing={() => {
-									this.focusNextField('eight');
-								}}
-								returnKeyType={ "next" }
-								ref={ input => {
-									this.inputs['seven'] = input;
-								}}
-								onChangeText={(facebook_id) => this.setState({facebook_id})}
+					<TouchableOpacity onPress={this.showCountrysheet} style={[commonStyles.iconusername, {
+							flexDirection: direction,
+							justifyContent: 'space-between',
+							alignItems: 'center' ,
+							marginBottom : 5,
+							paddingLeft:5,
+							height:40,
+							overflow:'hidden',
+							borderBottomWidth:0
+						}]}>
+						{!this.state.selectCountry? undefined:
+							<Image style={{height:40, width:40}}
+								resizeMode = 'center'
+								resizeMethod = 'resize'
+								source={{uri : selCountryObj ? selCountryObj.flag : "" }}
+								onLoadEnd={() => {  }}
 								/>
-						</View>
-						<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
-							<Icon name="twitter" size={25} color="#0084b4"  style={commonStyles.social}/>
-							<TextInput
-								style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
-								value={this.state.twitter_id}
-								underlineColorAndroid = 'transparent'
-								autoCorrect={false}
-								placeholder={I18n.t('venderregister.twitter_page', { locale: lang })}
-								maxLength={140}
-								keyboardType={'default'}
-								onSubmitEditing={() => {
-									this.focusNextField('nine');
-								}}
-								returnKeyType={ "next" }
-								ref={ input => {
-									this.inputs['eight'] = input;
-								}}
-								onChangeText={(twitter_id) => this.setState({twitter_id})}/>
-						</View>
-						<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
-							<Icon name="instagram" size={25} color="#a9d5d1"  style={commonStyles.social}/>
-							<TextInput
-								style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
-								value={this.state.instagram_id}
-								underlineColorAndroid = 'transparent'
-								autoCorrect={false}
-								placeholder={I18n.t('venderregister.insta_page', { locale: lang })}
-								maxLength={140}
-								keyboardType={'default'}
-								onSubmitEditing={() => {
-									this.focusNextField('ten');
-								}}
-								returnKeyType={ "next" }
-								ref={ input => {
-									this.inputs['nine'] = input;
-								}}
-								onChangeText={(instagram_id) => this.setState({instagram_id})}/>
-						</View>
-						<View style ={{ flexDirection:direction,
-								backgroundColor : 'transparent',
-								alignItems : 'center'}}>
-								<Icon name="snapchat" size={25} color="#FFCC7D"  style={commonStyles.social}/>
-								<TextInput
-									style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
-									value={this.state.snapchat_id }
-									underlineColorAndroid = 'transparent'
-									autoCorrect={false}
-									placeholder={I18n.t('venderregister.snap_page', { locale: lang })}
-									maxLength={140}
-									keyboardType={'default'}
-									onSubmitEditing={() => {
-										this.onSubmit()
-									}}
-									returnKeyType={ "done" }
-									ref={ input => {
-										this.inputs['ten'] = input;
-								}}
-								onChangeText={(snapchat_id) => this.setState({snapchat_id})}/>
-						</View>
+						}
+						<Text style={{ }} >{this.state.selectCountry? selCountryObj.country_name  : this.state.selectCountry }</Text>
+						<FontAwesome name="chevron-down" size={20} color="#000" style={{padding:5, marginRight:5}}/>
+						{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>{I18n.t('userregister.selectcountry', { locale: lang })}</Text>: undefined}
+					</TouchableOpacity>
+					<ActionSheet
+						ref={o => this.countrySheet = o}
+						// title={!this.state.selectCountry? this.state.selectCountry : selCountryObj.country_name  }
+						options={this.state.countries}
+						cancelButtonIndex={CANCEL_INDEX}
+						// destructiveButtonIndex={DESTRUCTIVE_INDEX}
+						onPress={this.handlePress}/>
+				</View>
+				<Text style={{ paddingTop:5,paddingBottom:5, textAlign: textline}}>{I18n.t('venderregister.addsocialmedia', { locale: lang })}</Text>
+				<View style ={[commonStyles.registerContent, {marginBottom : 10}]}>
+					<View style ={[commonStyles.iconusername, { alignItems : 'center', flexDirection:direction,}]}>
+						<Ionicons name="sc-facebook" size={25} color="#3b5998"  style={commonStyles.social}/>
+						<TextInput
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
+							value={this.state.facebook_id}
+							underlineColorAndroid = 'transparent'
+							autoCorrect={false}
+							placeholder={I18n.t('venderregister.fb_page', { locale: lang })}
+							maxLength={140}
+							keyboardType={'default'}
+							onSubmitEditing={() => {
+								this.focusNextField('eight');
+							}}
+							returnKeyType={ "next" }
+							ref={ input => {
+								this.inputs['seven'] = input;
+							}}
+							onChangeText={(facebook_id) => this.setState({facebook_id})}
+							/>
+					</View>
+					<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
+						<Icon name="twitter" size={25} color="#0084b4"  style={commonStyles.social}/>
+						<TextInput
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
+							value={this.state.twitter_id}
+							underlineColorAndroid = 'transparent'
+							autoCorrect={false}
+							placeholder={I18n.t('venderregister.twitter_page', { locale: lang })}
+							maxLength={140}
+							keyboardType={'default'}
+							onSubmitEditing={() => {
+								this.focusNextField('nine');
+							}}
+							returnKeyType={ "next" }
+							ref={ input => {
+								this.inputs['eight'] = input;
+							}}
+							onChangeText={(twitter_id) => this.setState({twitter_id})}/>
+					</View>
+					<View style ={[commonStyles.iconusername, {flexDirection:direction, alignItems : 'center'}]}>
+						<Icon name="instagram" size={25} color="#a9d5d1"  style={commonStyles.social}/>
+						<TextInput
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
+							value={this.state.instagram_id}
+							underlineColorAndroid = 'transparent'
+							autoCorrect={false}
+							placeholder={I18n.t('venderregister.insta_page', { locale: lang })}
+							maxLength={140}
+							keyboardType={'default'}
+							onSubmitEditing={() => {
+								this.focusNextField('ten');
+							}}
+							returnKeyType={ "next" }
+							ref={ input => {
+								this.inputs['nine'] = input;
+							}}
+							onChangeText={(instagram_id) => this.setState({instagram_id})}/>
+					</View>
+					<View style ={{ flexDirection:direction,
+							backgroundColor : 'transparent',
+							alignItems : 'center'
+						}}>
+						<Icon name="snapchat" size={25} color="#FFCC7D"  style={commonStyles.social}/>
+						<TextInput
+							style={[commonStyles.socialInput,{height:40, textAlign: textline, }]}
+							value={this.state.snapchat_id }
+							underlineColorAndroid = 'transparent'
+							autoCorrect={false}
+							placeholder={I18n.t('venderregister.snap_page', { locale: lang })}
+							maxLength={140}
+							keyboardType={'default'}
+							onSubmitEditing={() => {
+								this.onSubmit()
+							}}
+							returnKeyType={ "done" }
+							ref={ input => {
+								this.inputs['ten'] = input;
+							}}
+							onChangeText={(snapchat_id) => this.setState({snapchat_id})}/>
 					</View>
 				</View>
-				<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#fbcdc5', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
-					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
-						<Text style = {{color:"#FFFFFF"}}>{I18n.t('venderregister.createbtn', { locale: lang })}</Text>
-					</View>
-				</TouchableOpacity>
-			</ScrollView>
+			</View>
+			<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#fbcdc5', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
+				<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+					<Text style = {{color:"#FFFFFF"}}>{I18n.t('venderregister.createbtn', { locale: lang })}</Text>
+				</View>
+			</TouchableOpacity>
+		</ScrollView>
 		);
 	}
 	validate(){

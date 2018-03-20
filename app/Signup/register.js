@@ -199,9 +199,10 @@ class Register extends Component {
 							autoCorrect={false}
 							placeholder={I18n.t('userregister.fullname', { locale: lang })}
 							maxLength={140}
-          					onSubmitEditing={() => {
+          					onSubmitEditing={(event) => {
           						this.focusNextField('two');
           					}}
+						  	autoFocus = {true}
           					returnKeyType={ "next" }
  					        ref={ input => {
  					        	this.inputs['one'] = input;
@@ -216,10 +217,11 @@ class Register extends Component {
 							autoCorrect={false}
 							placeholder={I18n.t('userregister.emailaddress', { locale: lang })}
 							maxLength={140}
-          					onSubmitEditing={() => {
+          					onSubmitEditing={(event) => {
           						this.focusNextField('three');
           					}}
           					returnKeyType={ "next" }
+							// autoFocus = {true}
  					        ref={ input => {
  					        	this.inputs['two'] = input;
 							 }}
@@ -236,7 +238,7 @@ class Register extends Component {
 							autoCorrect={false}
 							placeholder={I18n.t('userregister.password', { locale: lang })}
 							maxLength={140}
-          					onSubmitEditing={() => {
+          					onSubmitEditing={(event) => {
           						this.focusNextField('four');
           					}}
           					returnKeyType={ "next" }
@@ -294,7 +296,7 @@ class Register extends Component {
 							placeholder={I18n.t('userregister.mobilenumber', { locale: lang })}
 							maxLength={140}
 							keyboardType={'numeric'}
-          					onSubmitEditing={() => {
+          					onSubmitEditing={(event) => {
           						this.focusNextField('five');
           					}}
           					returnKeyType={ "next" }
@@ -384,42 +386,41 @@ class Register extends Component {
 					</View>
 				</View>
 				<Modal
-				  animationType="slide"
-				  transparent={false}
-				  isVisible={this.state.otpVarification}
-				  onRequestClose={() => this.setState({ otpVarification :false})}>
-				  <View style={{ flex: 0.4, backgroundColor: "#fff", justifyContent: 'center', alignItems: 'center', borderRadius: 10}}>
-					  <View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center'}}>
-						  <Text style={{ fontSize: 15, color: "#6969"}}>{I18n.t('userregister.otplabel', { locale: lang })}</Text>
-						  <TextInput
-							  style={[commonStyles.inputpassword,{
-								  borderBottomWidth: 1,
-								  textAlign: 'center',
-								  height: 30,
-								   width: width/3, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
-							  secureTextEntry={this.state.hidden}
-							  value={this.state.otp}
-							  underlineColorAndroid = 'transparent'
-							  autoCorrect={false}
-							  placeholder={I18n.t('userregister.otpplchldr', { locale: lang })}
-							  maxLength={140}
-							  onSubmitEditing={() => {
-								  // this.focusNextField('four');
-							  }}
-							  returnKeyType={ "done" }
-							  onChangeText={ (otp) => this.setState({ otp }) }/>
-					  </View>
-					  <View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center', justifyContent: 'space-between'}}>
-						  <Icon name="refresh" size={25} color="#a9d5d1"/>
-						  <Text style={{ fontSize: 10, color: "#6969"}}>{I18n.t('userregister.resendOtp', { locale: lang })}</Text>
-					  </View>
-					  <TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: "#a9d5d1", width: width/2, borderRadius: 10, marginTop: 10}}
-						  onPress={()=>this.varifyOtp()}>
-						  <Text style={{ fontSize: 15, fontWeight: 'bold', color: "#fff"}}>{I18n.t('userregister.submitbtn', { locale: lang })}</Text>
-					  </TouchableOpacity>
-				  </View>
-			  </Modal>
-
+					animationType="slide"
+					transparent={false}
+					isVisible={this.state.otpVarification}
+					onRequestClose={() => this.setState({ otpVarification :false})}>
+					<View style={{ flex: 0.4, backgroundColor: "#fff", justifyContent: 'center', alignItems: 'center', borderRadius: 10}}>
+						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center'}}>
+							<Text style={{ fontSize: 15, color: "#6969"}}>{I18n.t('userregister.otplabel', { locale: lang })}</Text>
+							<TextInput
+								style={[commonStyles.inputpassword,{
+									borderBottomWidth: 1,
+									textAlign: 'center',
+									height: 30,
+									width: width/3, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]
+								}
+								// secureTextEntry={this.state.hidden}
+								value={this.state.otp}
+								underlineColorAndroid = 'transparent'
+								autoCorrect={false}
+								placeholder={I18n.t('userregister.otpplchldr', { locale: lang })}
+								maxLength={140}
+								onSubmitEditing={(event) => {
+									// this.focusNextField('four');
+								}}
+								returnKeyType={ "done" }
+								onChangeText={ (otp) => this.setState({ otp }) }/>
+						</View>
+						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center', justifyContent: 'space-between'}}>
+							<Icon name="refresh" size={25} color="#a9d5d1"/>
+							<Text style={{ fontSize: 10, color: "#6969"}}>{I18n.t('userregister.resendOtp', { locale: lang })}</Text>
+						</View>
+						<TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: "#a9d5d1", width: width/2, borderRadius: 10, marginTop: 10}} onPress={()=>this.varifyOtp()}>
+							<Text style={{ fontSize: 15, fontWeight: 'bold', color: "#fff"}}>{I18n.t('userregister.submitbtn', { locale: lang })}</Text>
+						</TouchableOpacity>
+					</View>
+				</Modal>
 			</ScrollView>
 		);
 	}

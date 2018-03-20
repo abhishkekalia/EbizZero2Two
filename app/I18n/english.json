@@ -18,11 +18,7 @@
         "forgotpassword":"Forgot your password?",
         "newcustomer":"New Customer?",
         "createaccountbtn":"Create An Acount",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":"of use and",
-        "privacypolicy4":"Privacy Policy",
-        "privacypolicy":"By  clicking on the registration \n"+"button the user agrees to the terms and conditions",
+        "privacypolicy":"By clicking on the registration \n"+"button the user agrees to the terms and conditions",
         "cancel":"Cancel",
         "submit":"Submit",
         "internetconnection":"Internet connection not available",
@@ -55,10 +51,6 @@
         "otpplchldr" : "Enter 6 Digit Otp",
         "resendOtp": "Want to Resend Otp",
         "venderregister":"If you are vendor ? Register Here",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":" of use and ",
-        "privacypolicy4":"Privacy Policy",
         "pleaseenterfullname":"Plese Enter Your Fullname",
         "pleaseentervalidmail":"Plese Enter Valid Email",
         "maildomain":"mail domain name must be .com",
@@ -294,9 +286,18 @@
     },
     "marketing":{
         "advertisement":"Advertisement",
+        "videopicker":"Video Picker",
+        "imagepicker":"Image Picker",
+        "takeVideo":"Take Video..",
+        "SelectThumbline_lbl": "Select Thumbline Image",
+        "SelectThumbline": "Please Select Thumbline Image",
+        "choose_video":"Choose From Library",
         "uploadfiles":"Select files To upload",
         "costperad":"Cost Per Advertisement",
         "aduploaderr":"error while opload add",
+        "textstring":"Upload your image into the External Circle \n" +
+                            "Upload your 10 sec video into the External Circle \n" +
+                            "Price: 1 KD per picture  / 1.5 KD per video",
         "myAdFaturah":{
             "paymentsuccess":"Payment Success",
             "paymenterr":"Error Ocurd while Payment"
@@ -498,5 +499,4 @@
         "orderType":"Order Type",
         "deliveryStatus": "Delivery Status",
     }
-
 }
