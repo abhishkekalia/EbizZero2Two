@@ -14,18 +14,15 @@ import {bindActionCreators} from "redux";
 import {Actions} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/Feather';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import ActionSheet from 'react-native-actionsheet';
 import {connect} from "react-redux";
 import * as ebiztrait from "../auth/auth.actions";
-
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
-
 const countryTitle = 'Select Country'
 const deliveryTitle = 'Select Deliveryarea'
-
 const { width, height } = Dimensions.get('window')
 
 class WelcomeScreen extends Component {
@@ -42,10 +39,10 @@ class WelcomeScreen extends Component {
             loaded: false,
             deliveryarea : '',
         }
-        this.handlePress = this.handlePress.bind(this)
-        this.handleDeliveryPress = this.handleDeliveryPress.bind(this)
-        this.showCountrysheet = this.showCountrysheet.bind(this)
-        this.showDelivery = this.showDelivery.bind(this)
+        this.handlePress = this.handlePress.bind(this);
+        this.handleDeliveryPress = this.handleDeliveryPress.bind(this);
+        this.showCountrysheet = this.showCountrysheet.bind(this);
+        this.showDelivery = this.showDelivery.bind(this);
     }
     showCountrysheet() {
         this.countrySheet.show()
@@ -83,7 +80,6 @@ class WelcomeScreen extends Component {
                 deliveryareas: city_list
             })
             this.props.SetCountry(countryId)
-
         }
     }
     showDelivery() {

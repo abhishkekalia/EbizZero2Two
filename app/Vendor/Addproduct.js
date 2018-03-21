@@ -124,9 +124,10 @@ class AddProduct extends Component {
         );
     };
    _renderRightButton = () => {
+       const { lang} = this.props;
         return(
-            <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-            <Text style={{color : '#fff'}}>UPLOAD</Text>
+            <TouchableOpacity onPress={() => this.uploadTocloud() } style={[commonStyles.submit, { margin: 5}]} >
+            <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
             </TouchableOpacity>
         );
     };
@@ -188,9 +189,6 @@ class AddProduct extends Component {
             product_name_in_arabic, short_description_in_arabic,
             detail_description_in_arabic,price_in_arabic, special_price_in_arabic
         } = this.state;
-
-        console.warn(product_name_in_arabic,short_description_in_arabic);
-
         const { lang} = this.props,
         align = (lang === 'ar') ?  'right': 'left';
         let path = Imagepath.length
@@ -326,9 +324,9 @@ class AddProduct extends Component {
             product_name_in_arabic, short_description_in_arabic,
             detail_description_in_arabic,price_in_arabic, special_price_in_arabic
         } = this.state;
+        let genderty= gender.label == "Male" ? 1 : 0
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
-
             if(this.validate()) {
                 var productcategory = product_category ? this.state.optionsAvailable.find(x => x.category_name === this.state.options[this.state.product_category]).category_id : null;
                 this.setState({
@@ -356,10 +354,10 @@ class AddProduct extends Component {
                     { name : 'special_price_in_arabic', data: String(special)},
                     { name : 'discount', data: String(10)},
                     { name : 'final_price', data: String(special)},
-                    { name : 'quantity', data: quantityRows.toString()},
+                    { name : 'quantity_for_product_size', data: quantityRows.toString()},
                     { name : 'size', data: sizeRows.toString()},
                     { name : 'is_feature', data: String(is_feature)},
-                    { name : 'gender', data: String(1)},
+                    { name : 'gender', data: String(genderty)},
                 ])
                 .uploadProgress((written, total) => {
                     console.log('uploaded', Math.floor(written/total*100) + '%')

@@ -64,6 +64,9 @@ class EditProduct extends Component {
             is_feature : this.props.is_feature ,
             removed_images : [],
             quasize : [],
+            size_id :[],
+            Quantity:[],
+            Size_ar :[],
             selSize:"",
             selQuantity:'',
             languageChoose: ''
@@ -91,7 +94,8 @@ class EditProduct extends Component {
         });
     }
     getSizeandQuan(sizeRows){
-        this.setState({sizeRows});
+        this.setState({sizeRows}, ()=> this.productCont());
+
     }
     componentDidMount(){
         var Items = this.props.productImages,
@@ -107,10 +111,12 @@ class EditProduct extends Component {
         this.setState({
             rows : Select
         })
+        this.productCont();
     }
     validate(){
-        const { productname, shortdescription, detaildescription, price, discount,final_price, quantityRows, product_name_in_arabic,
-            short_description_in_arabic, detail_description_in_arabic, Size, quantity, is_feature, Imagepath , special, rows ,sizeRows
+        const {
+            productname, shortdescription, detaildescription, price, discount,final_price, quantityRows, product_name_in_arabic,
+            short_description_in_arabic, detail_description_in_arabic, Size, quantity, is_feature, Imagepath , special, rows ,sizeRows,gender
         } = this.state;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
@@ -185,6 +191,16 @@ class EditProduct extends Component {
             })
             return false
         }
+        if ( gender === undefined ){
+            MessageBarManager.showAlert({
+                message: I18n.t('userregister.pleaseselectgender', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
         if (!product_name_in_arabic){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.productname_ar_err', { locale: lang }),
@@ -220,15 +236,16 @@ class EditProduct extends Component {
     uploadTocloud(){
         const {
             product_category , productname, product_name_in_arabic,
-                short_description_in_arabic, detail_description_in_arabic,
+            short_description_in_arabic, detail_description_in_arabic,
             shortdescription, detaildescription, price,
             discount,final_price, quantityRows,
-            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images
+            Size, quantity, is_feature, Imagepath , special, rows ,sizeRows, removed_images,
+            size_id, Quantity, Size_ar, gender
         } = this.state;
         const { u_id, country,lang, product_id} = this.props,
         align = (lang === 'ar') ?  'right': 'left';
-
         if(this.validate()) {
+            let genderty= gender.label == "Male" ? 1 : 0;
             this.setState({
                 visibleModal : true
             });
@@ -252,7 +269,6 @@ class EditProduct extends Component {
             },
             [...Imagepath,
                 { name : 'u_id', data: String(u_id)},
-                { name : 'country', data: String(country)},
                 { name : 'product_category', data: String(product_category)},
                 { name : 'product_name', data: String(productname)},
                 { name : 'product_name_in_arabic', data: String(product_name_in_arabic)},
@@ -266,14 +282,15 @@ class EditProduct extends Component {
                 { name : 'special_price_in_arabic', data: String(special)},
                 { name : 'discount', data: String(10)},
                 { name : 'final_price', data: String(special)},
+                { name : 'country', data: String(country)},
                 { name : 'product_id', data: String(this.props.product_id)},
                 { name : 'removed_images', data: removed_images.toString()},
                 { name : 'quantity_for_product_size', data: quantityRows.toString()},
-                { name : 'size_id', data: sizeRows.toString()},
-                { name : 'size', data: sizeRows.toString()},
-                { name : 'quantity', data: sizeRows.toString()},
+                { name : 'size_id', data: size_id.toString()},
+                { name : 'size', data: Size_ar.toString()},
+                { name : 'quantity', data: Quantity.toString()},
                 { name : 'is_feature', data: String(is_feature)},
-                { name : 'gender', data: String(1)},
+                { name : 'gender', data: String(genderty)},
             ])
             .uploadProgress((written, total) => {
                 console.log('uploaded', Math.floor(written/total*100) + '%')
@@ -373,17 +390,24 @@ class EditProduct extends Component {
         });
     }
     productCont(){
-        Keyboard.dismiss();
-        const { quantity, Size} = this.state;
-        var newStateArray = this.state.quantityRows.slice();
-        var newsizeArray = this.state.sizeRows.slice();
-        newStateArray.push(quantity);
-        newsizeArray.push(Size);
-        this.setState({...INITIAL_STATE,
-            quantityRows: newStateArray,
-            sizeRows: newsizeArray,
-            additional : false
-        });
+        const { quantity, sizeRows} = this.state;
+        let sizelength = sizeRows.length;
+        let Size_ID =[];
+        let Quantity =[];
+        let Size_ar =[];
+        for (var i = 0; i < sizelength; i++) {
+            Size_ID.push( sizeRows[i].size_id );
+            Quantity.push( sizeRows[i].quantity );
+            Size_ar.push( sizeRows[i].size );
+        }
+        this.setState({
+            size_id : Size_ID,
+            Quantity : Quantity,
+            Size_ar : Size_ar
+        })
+        // console.warn(Size_ID);
+        // console.warn(Quantity);
+        // console.warn(Size_ar);
     }
     getResponse(rows){
         this.setState({rows});

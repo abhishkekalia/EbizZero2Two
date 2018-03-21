@@ -35,10 +35,17 @@ class MyService extends Component {
         .then( ()=>this.fetchData())
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left: this._renderRightButton });
+        routes.refresh({ right: this._renderRightButton, left: this._renderLeftButton });
     }
+    _renderLeftButton = () => {
+         return(
+             <Text style={{color : '#fff'}}></Text>
+         );
+     };
     _renderRightButton = () => {
-        return null
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
     };
     async getKey() {
         try {

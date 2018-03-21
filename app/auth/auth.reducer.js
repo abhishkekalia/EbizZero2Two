@@ -15,7 +15,8 @@ export default function auth(state = INITIAL_STATE, action) {
 				loading: false,
 				token: action.payload.token,
 				user_type: action.payload.user_type,
-				u_id: action.payload.u_id
+				u_id: action.payload.u_id,
+				deviceId: action.payload.deviceId,
 			};
 		case types.AUTH_LOGIN_FAIL:
 			return {

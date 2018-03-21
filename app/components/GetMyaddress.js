@@ -199,6 +199,8 @@ class AddressBook extends Component {
         fetch(Utils.gurl('addressList'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log(responseData);
+
             if(responseData.status){
                 this.setState({
                 status : responseData.status,
