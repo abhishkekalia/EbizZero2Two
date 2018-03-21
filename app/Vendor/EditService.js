@@ -292,7 +292,7 @@ class EditService extends Component {
                 }
             })
             .catch((errorMessage, statusCode) => {
-                console.warn(errorMessage);
+                // console.warn(errorMessage);
                 // routes.service();
                 MessageBarManager.showAlert({
                     message: I18n.t('vendoraddservice.updatefail', { locale: lang }),
