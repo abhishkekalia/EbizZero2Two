@@ -15,6 +15,7 @@ import {
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
 import I18n from 'react-native-i18n';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const { width, height } = Dimensions.get('window')
 
 export default class FeaturedProduct extends Component {
@@ -39,10 +40,10 @@ export default class FeaturedProduct extends Component {
     })
   }
 
-    // componentDidMount(){
-    //     this.getKey()
-    //     .then( ()=>this.fetchData())
-    // }
+    componentDidMount(){
+        this.getKey()
+        .then( ()=>render())
+    }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton });
     }
@@ -53,8 +54,9 @@ export default class FeaturedProduct extends Component {
         try {
             const value = await AsyncStorage.getItem('data');
             var response = JSON.parse(value);
+
             this.setState({
-                u_id: response.userdetail.u_id ,
+                u_id: response.userdetail.u_id,
                 country: response.userdetail.country
             });
         } catch (error) {
@@ -120,6 +122,7 @@ export default class FeaturedProduct extends Component {
 
 
     render() {
+
         const { lang} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
@@ -153,6 +156,7 @@ export default class FeaturedProduct extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
+        const {u_id,country} = this.state;
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         const { lang} = this.props,
@@ -164,6 +168,7 @@ export default class FeaturedProduct extends Component {
         detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
         price = (lang == 'ar')? data.price_in_arabic : data.price,
         special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
+
 
         return (
             <View style={{
@@ -226,7 +231,7 @@ export default class FeaturedProduct extends Component {
                     </View>
                 </TouchableOpacity>
                 <Footer
-                    inserted_date = {data.inserted_date} lang={lang}/>
+                    inserted_date = {data.inserted_date} product_id = {data.product_id} u_id={u_id} country={country} lang={lang} is_feature = {data.is_feature}/>
             </View>
         );
     }
@@ -255,11 +260,77 @@ class Footer extends Component{
             toggled : false
         }
     }
+    manageFeature(){
+        const {u_id,country,is_feature} = this.props;
+        const {product_id} = this.props;
+        // this.state.toggled = is_feature == "2" ? ;
+
+        if(is_feature == "2"){
+            let form = new FormData();
+        	form.append('u_id', String(u_id));
+        	form.append('country', String(country));
+            form.append('product_id',String(product_id));
+            form.append('amount',"10");
+        		const config = {
+                   	method: 'POST',
+                   	headers: {
+                   		'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data;'
+                    },
+                	body: form,
+                }
+            fetch(Utils.gurl('addToFeature'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+            	if(responseData.status){
+                    let feature_id = responseData.data.feature_id;
+                    let url = responseData.data.url;
+                    routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id,amout:10})
+            	}else{
+
+            	}
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .done();
+        }else if(is_feature == "1"){
+            let form = new FormData();
+        	form.append('u_id', String(u_id));
+        	form.append('country', String(country));
+            form.append('product_id',String(product_id));
+        		const config = {
+                   	method: 'POST',
+                   	headers: {
+                   		'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data;'
+                    },
+                	body: form,
+                }
+            fetch(Utils.gurl('removeFromFeature'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+        	       if(responseData.status){
+                       MessageBarManager.showAlert({
+                           message: `Product removed from featured list`,
+                           alertType: 'alert',
+                           title:''
+                       })
+        	          }else{
+
+                      }
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .done();
+        }
+    }
   // componentWillReceiveProps(nextProps){
   //   // this.setState({user: nextProps.user})
   // }
     render(){
-        const { lang} = this.props,
+        const { lang,is_feature} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
 
@@ -269,8 +340,9 @@ class Footer extends Component{
                       // onTintColor="#00ff00"
                       thumbTintColor="#fff"
                       tintColor="#000"
-                    onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
-                    value={ this.state.toggled} />
+                      onValueChange={ ()=> this.manageFeature()}
+                    // onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
+                    value={is_feature == "2" ? false : true } />
                     <View style={{flexDirection: direction}}>
                         <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
                             <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>:</Text>

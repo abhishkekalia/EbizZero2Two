@@ -54,15 +54,23 @@ class Profile extends Component {
     }
 
     handleConnectionChange = (isConnected) => {
+		const {lang} = this.props;
+		align = lang == 'ar'? 'flex-end': 'flex-start';
+
+
         this.setState({ netStatus: isConnected });
-        {this.state.netStatus ?  MessageBarManager.showAlert({
-                message: `Internet connection is available`,
+
+        {this.state.netStatus ?
+			  MessageBarManager.showAlert({
+                message: I18n.t('venderprofile.online', { locale: language }),
                 alertType: 'alert',
-                title:''
+                title:'',
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             }) : MessageBarManager.showAlert({
-                message: `Internet connection not available`,
-                alertType: 'error',
-                title:''
+				message: I18n.t('venderprofile.offline', { locale: language }),
+                alertType: 'alert',
+                title:'',
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
         }
     }
