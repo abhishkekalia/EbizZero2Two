@@ -120,7 +120,7 @@ class MarketingCompaign extends Component {
             this.setState({
                 visibleModal : true
             })
-// console.warn(Source);
+            console.log(thumbnail_image);
             RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
@@ -156,8 +156,9 @@ class MarketingCompaign extends Component {
                 title:''
                 })
                 this.setState({
-                        visibleModal : false,
-                    })
+                    visibleModal : false,
+                })
+                console.log(errorMessage);
             })
             .done();
         // let formData = new FormData();

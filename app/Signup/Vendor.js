@@ -238,14 +238,6 @@ class Vendorreg extends Component {
 								maxLength={140}
 								keyboardType={'email-address'}
 								onSubmitEditing={() => {
-									let emailarr = this.state.email.split('.');
-									if(emailarr[emailarr.length- 1] !== "com"){
-										MessageBarManager.showAlert({
-											message: "mail domain name must be .com",
-											alertType: 'alert',
-											title:''
-										});
-									}
 									this.focusNextField('five');
 								}
 							}
@@ -430,6 +422,8 @@ class Vendorreg extends Component {
 			align = lang === 'ar' ? "right" : "left";
 
 			const emailArr = email.split('.');
+			
+
 			if (!company.length){
 				MessageBarManager.showAlert({
 					message: I18n.t('venderregister.pleaseentercompany', { locale: lang }),
@@ -471,7 +465,7 @@ class Vendorreg extends Component {
 				})
 				return false;
 			}
-			if(emailarr[emailarr.length- 1] !== "com"){
+			if(emailArr[emailArr.length- 1] !== "com"){
 				MessageBarManager.showAlert({
 					message: I18n.t('venderregister.maildomain', { locale: lang }),
 					title:'',
@@ -499,16 +493,6 @@ class Vendorreg extends Component {
 					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
         	})
 			return false
-		}
-		if( gender.value === undefined){
-			MessageBarManager.showAlert({
-				message: I18n.t('venderregister.pleaseselectgender', { locale: lang }),
-				title:'',
-				alertType: 'extra',
-				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-			})
-			return false;
 		}
 		if (!selectCountry.length){
 			MessageBarManager.showAlert({
