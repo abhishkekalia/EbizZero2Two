@@ -237,6 +237,7 @@ class EditService extends Component {
             this.setState({
                 visibleModal : true
             });
+            console.log(Imagepath);
             RNFetchBlob.fetch('POST', Utils.gurl('editService'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
@@ -265,7 +266,7 @@ class EditService extends Component {
                 console.log('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((res)=>{
-                var getdata = JSON.parse(responseData.data);
+                var getdata = JSON.parse(res.data);
                 if(getdata.status){
                     MessageBarManager.showAlert({
                         message: I18n.t('vendoraddservice.updateSuccess', { locale: lang }),
