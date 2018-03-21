@@ -266,7 +266,7 @@ class ProductVendor extends Component {
 
         const {dateSelected,ScheduleDate} = this.state;
         let timeString = this.state.BookingTime;
-        
+
         if(ScheduleDate !== {})
         {
             let dt = new Date();
@@ -360,15 +360,15 @@ class ProductVendor extends Component {
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text style={{fontSize: 12, fontWeight: 'bold'}}>{I18n.t('servicedetail.noaddress', { locale: lang })}</Text>
 
-            {    u_id === undefined ? <Text onPress={
+                 {    u_id === undefined ? <Text onPress={
                         ()=>{ Utils.logout()
                             .then(logout)
                             .done()
                         } } style={{fontSize: 12, fontWeight: 'bold'}}> Please login / register to add address </Text> : <Text> </Text>
-}
-            </View>
-        );
-    }
+                    }
+                    </View>
+                );
+            }
     validateService(){
 
         if(this.state.selectedAddress == "Select Address"){

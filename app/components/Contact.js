@@ -129,14 +129,26 @@ class Contact extends Component<{}> {
             body: formData,
         }
         if (this.validate()) {
+            const { lang } =this.props,
+            align = lang == 'ar'? 'right': 'left';
+
+
             fetch(Utils.gurl('contactUs'), config)
             .then((response) => response.json())
             .then((responseData) => {
-                MessageBarManager.showAlert({
-                    message: responseData.data.message,
-                    alertType: 'alert',
-                    title:''
-                })
+
+                let msg = responseData.data.message;
+                if(msg == "Thank you for contact us. We will contact you soon")
+                {
+                    MessageBarManager.showAlert({
+                        message: I18n.t('contact.apiresponse', { locale: lang }),
+                        alertType: 'extra',
+                        title:'',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                    })
+                }
+
                 this.setState({message : '', issue : ''})
             })
             .catch((error) => {
