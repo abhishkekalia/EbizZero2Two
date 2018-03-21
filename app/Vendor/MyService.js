@@ -171,7 +171,6 @@ class MyService extends Component {
                 underlineColorAndroid='transparent'
                 placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
                 />
-
             {listView}
         </View>
         );
@@ -210,11 +209,11 @@ class MyService extends Component {
                         country : this.state.country,
                         service_id: data.service_id,
                         service_type:data.service_type,
-                        service_name: service_name,
+                        service_name: data.service_name,
                         service_name_in_arabic: data.service_name_in_arabic,
-                        detail_description: detail_description,
+                        detail_description: data.detail_description,
                         short_description_in_arabic: data.short_description_in_arabic,
-                        short_description: short_description,
+                        short_description: data.short_description,
                         detail_description_in_arabic: data.detail_description_in_arabic,
                         price: price,
                         special_price: special_price,

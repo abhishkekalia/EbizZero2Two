@@ -67,8 +67,6 @@ class EditProduct extends Component {
             size_id :[],
             Quantity:[],
             Size_ar :[],
-            selSize:"",
-            selQuantity:'',
             languageChoose: ''
         }
         this.inputs = {};
@@ -95,7 +93,6 @@ class EditProduct extends Component {
     }
     getSizeandQuan(sizeRows){
         this.setState({sizeRows}, ()=> this.productCont());
-
     }
     componentDidMount(){
         var Items = this.props.productImages,
@@ -249,19 +246,6 @@ class EditProduct extends Component {
             this.setState({
                 visibleModal : true
             });
-            // console.warn("u_id",u_id);
-            // console.warn("country",country);
-            // console.warn("product_category",product_category);
-            // console.warn("shortdescription",shortdescription);
-            // console.warn("detaildescription",detaildescription);
-            // console.warn("price",price);
-            // console.warn("special",special);
-            // console.warn("product_id",product_id);
-            // console.warn("removed_images",removed_images);
-            // console.warn("quantityRows",quantityRows);
-            // console.warn("sizeRows",sizeRows);
-            // console.warn("is_feature",is_feature);
-
             RNFetchBlob.fetch('POST', Utils.gurl('editProduct'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
@@ -297,7 +281,7 @@ class EditProduct extends Component {
             })
             .then((res)=>{
                 var getdata = JSON.parse(res.data);
-                console.warn(getdata);
+                console.log(getdata);
                 if(getdata.status){
                     MessageBarManager.showAlert({
                         message: I18n.t('vendoraddproduct.productupdadded', { locale: lang }),
@@ -815,6 +799,11 @@ class UpdateQuan extends Component {
                             <Text style={{ alignSelf: 'center'}}>Size </Text>
                             <Text style={{ alignSelf: 'center'}}> Quantity </Text>
                             <Text style={{ alignSelf: 'center'}}> Action </Text>
+                                <TouchableOpacity
+                                onPress={() => this.editSize(1, "", "")}>
+                                    <Icon style={{padding:5}} name='add' size={25} color="#a9d5d1" />
+                                </TouchableOpacity>
+
                     </View>
                     {
                         sizeRows.map((prop, key) => { return (

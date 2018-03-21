@@ -87,25 +87,10 @@ class EditService extends Component {
             rows : Select
         })
     }
-    componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
-    }
-    _renderLeftButton = () => {
-        return(
-            <Text style={{color : '#fff'}}></Text>
-        );
-    };
-    _renderRightButton = () => {
-        return(
-            <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-                <Text style={{color : '#fff'}}>Upload</Text>
-            </TouchableOpacity>
-        );
-    };
     validate(){
-        const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic,
-            short_description, detail_description, price,
-            special_price,Imagepaths, Imagepath
+        const {
+            service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic,
+            short_description, detail_description, price, special_price,Imagepaths, Imagepath
         } = this.state;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
