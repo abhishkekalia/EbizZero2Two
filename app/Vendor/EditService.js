@@ -215,15 +215,28 @@ class EditService extends Component {
             short_description, detail_description, price,
             special_price, Imagepath, removed_images,is_feature, is_weekend_work
         } = this.state;
-        const { u_id, country, lang } = this.props,
+        const { u_id, country, lang, service_id } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
 
-
+        // console.warn("u_id", u_id);
+        // console.warn("country", country);
+        // console.warn("service_type", service_type);
+        // console.warn("service_name", service_name);
+        // console.warn("service_name_in_arabic", service_name_in_arabic);
+        // console.warn("short_description", short_description);
+        // console.warn("short_description_in_arabic", short_description_in_arabic);
+        // console.warn("detail_description", detail_description);
+        // console.warn("detail_description_in_arabic", detail_description_in_arabic);
+        // console.warn("price", price);
+        // console.warn("special_price", special_price);
+        // console.warn("service_id", service_id);
+        // console.warn("removed_images", removed_images);
+        // console.warn("is_feature", is_feature);
+        // console.warn("is_weekend_work", is_weekend_work);
         if(this.validate()) {
             this.setState({
                 visibleModal : true
             });
-            console.log(Imagepath);
             RNFetchBlob.fetch('POST', Utils.gurl('editService'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
@@ -243,7 +256,7 @@ class EditService extends Component {
                 { name : 'price_in_arabic', data: String(price)},
                 { name : 'special_price_in_arabic', data: String(special_price)},
                 { name : 'special_price', data: String(special_price)},
-                { name : 'service_id', data: String(this.props.service_id)},
+                { name : 'service_id', data: String(service_id)},
                 { name : 'removed_images', data: removed_images.toString()},
                 { name : 'is_feature', data: String(is_feature)},
                 { name : 'is_weekend', data: String(is_weekend_work)},
@@ -305,7 +318,6 @@ class EditService extends Component {
             skipBackup: true
             }
         };
-
         ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
             if (response.didCancel) {
