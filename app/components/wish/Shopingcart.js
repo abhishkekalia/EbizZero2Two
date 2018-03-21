@@ -48,7 +48,8 @@ class Shopingcart extends Component {
             user_type : null,
             selectSize : false,
             // country : null,
-            status : false
+            status : false,
+            cartIdList:[]
         };
     }
     componentDidMount(){
@@ -61,7 +62,7 @@ class Shopingcart extends Component {
         EventEmitter.removeAllListeners("redirectToFaturah");
         EventEmitter.on("redirectToFaturah", (value)=>{
             console.log("redirectToFaturah", value);
-            routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura})
+            routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
         });
     }
     callBackFitura() {
@@ -178,6 +179,16 @@ class Shopingcart extends Component {
                     refreshing : false,
                     status : responseData.status
                 });
+                let res = responseData.data;
+                let cartIdList = [];
+                for (var i = 0; i < res.length; i++) {
+                    cartIdList.push(res[i].cart_id);
+                }
+
+                this.setState({
+                    cartIdList:cartIdList
+                });
+                console.warn(this.state.cartIdList);
             }else {
                 this.setState({
                     status : responseData.status
@@ -218,7 +229,8 @@ class Shopingcart extends Component {
             routes.AddressLists({
                 order_detail : this.state.ShopingItems,
                 SetToList :this.state.SetToList,
-                totalAmount : this.state.subtotalamount
+                totalAmount : this.state.subtotalamount,
+                cartIdList:this.state.cartIdList
             })
         }
     }
@@ -380,6 +392,7 @@ class Shopingcart extends Component {
                     callback={this.fetchData.bind(this)}
                     size_arr={data.size_arr}
                     lang={lang}
+                    cartIdList = {this.state.cartIdList}
                     deviceId={deviceId}/>
             </View>
         )

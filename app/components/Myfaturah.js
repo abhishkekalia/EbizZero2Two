@@ -81,6 +81,7 @@ export default class Myfaturah extends Component {
         formData.append('payment_id', String(id));
         formData.append('payment_status', String(status));
         formData.append('amount', String(5));
+        formData.append('cart_id',this.props.cartIdList.toString());
 
         const config = {
             method: 'POST',
