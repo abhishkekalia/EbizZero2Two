@@ -61,6 +61,23 @@ class ScheduleCalender extends Component {
 			.then((responseData) => {
 				if(responseData.status){
 					let	data = responseData.data;
+
+					var arrNew = [];
+
+					for (i=0;i<data.length;i++) {
+						var obj = {
+							selected: true, 
+							marked: true, 
+							selectedColor: 'green'
+						};
+						let strDate = data[i]
+
+						var objFinal = {
+							strDate : obj
+						};
+						arrNew.push(objFinal)
+					}
+					
 					let datesArray = {
 						data : {selected: true,  marked: true},
 			 			// '2018-03-22': {selected: true,},
