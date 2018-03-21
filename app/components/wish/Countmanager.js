@@ -154,7 +154,7 @@ const styles = StyleSheet.create ({
         marginTop : 1
     },
     qtybutton: {
-        padding: 10,
+        padding: 5,
         // paddingRight: 10,
 
         alignItems: 'center',

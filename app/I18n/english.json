@@ -18,11 +18,7 @@
         "forgotpassword":"Forgot your password?",
         "newcustomer":"New Customer?",
         "createaccountbtn":"Create An Acount",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":"of use and",
-        "privacypolicy4":"Privacy Policy",
-        "privacypolicy":"By  clicking on the registration \n"+"button the user agrees to the terms and conditions",
+        "privacypolicy":"By clicking on the registration \n"+"button the user agrees to the terms and conditions",
         "cancel":"Cancel",
         "submit":"Submit",
         "internetconnection":"Internet connection not available",
@@ -50,13 +46,14 @@
         "selectcountry":"Select Country",
         "address":"Address",
         "createbtn":"Create An Acount",
+        "otplabel" : "OTP",
+        "submitbtn":"Submit",
+        "otpplchldr" : "Enter 6 Digit Otp",
+        "resendOtp": "Want to Resend Otp",
         "venderregister":"If you are vendor ? Register Here",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":" of use and ",
-        "privacypolicy4":"Privacy Policy",
         "pleaseenterfullname":"Plese Enter Your Fullname",
         "pleaseentervalidmail":"Plese Enter Valid Email",
+        "maildomain":"mail domain name must be .com",
         "pleaseenterpwd":"Plese Enter Your Password",
         "pleaseselectgender":"Plese Select Gender",
         "pleaseentercontact":"Plese Enter Your Contact Number",
@@ -87,6 +84,7 @@
         "pleaseenterrepresentative":"Plese Enter Representative Name",
         "pleaseentercontact":"Plese Enter Your Contact Number",
         "pleaseenteremail":"Plese Enter Valid Email",
+        "maildomain":"mail domain name must be .com",
         "pleaseenteraddr":"Plese Enter Address",
         "pleaseenterpwd":"Plese Enter Your Password",
         "pleaseselectgender":"Plese Select Gender",
@@ -136,9 +134,14 @@
     },
     "servicedetail":{
         "booknow":"Book Now",
+        "schedule":"Schedule",
+        "selectaddress":"Select Address",
+        "noaddress":"No address Found",
         "productinfo":"Product Information",
         "paymentsuccess":"Payment Success",
-        "paymentfailure":"Payment Not Success"
+        "paymentfailure":"Payment Not Success",
+        "selectDate":"Please Select Date",
+        "selectTime":"Please Select Time Slot"
     },
     "bottomTabs":{
         "home":"Home",
@@ -153,7 +156,10 @@
         "type":"Type"
     },
     "sidemenu":{
+        "signup": "Signup",
+        "login": "Log in",
         "notification":"Notification",
+        "deals":"Deals and Offers",
         "home":"Home",
         "contact":"Contact Us",
         "order":"My Order",
@@ -163,7 +169,7 @@
         "logout":"Logout"
     },
     "wishlist":{
-        "wishlistTitle":"wishlist",
+        "wishlistTitle":"Wishlist",
         "noitem":"No Item added to your wishlist",
         "sizelbl":"Size",
         "shareerr":"No apps can perform this action.",
@@ -280,9 +286,18 @@
     },
     "marketing":{
         "advertisement":"Advertisement",
+        "videopicker":"Video Picker",
+        "imagepicker":"Image Picker",
+        "takeVideo":"Take Video..",
+        "SelectThumbline_lbl": "Select Thumbline Image",
+        "SelectThumbline": "Please Select Thumbline Image",
+        "choose_video":"Choose From Library",
         "uploadfiles":"Select files To upload",
         "costperad":"Cost Per Advertisement",
-        "aduploaderr":"error while opload add",
+        "aduploaderr":"error while upload add",
+        "textstring":"Upload your image into the External Circle \n" +
+                            "Upload your 10 sec video into the External Circle \n" +
+                            "Price: 1 KD per picture  / 1.5 KD per video",
         "myAdFaturah":{
             "paymentsuccess":"Payment Success",
             "paymenterr":"Error Ocurd while Payment"
@@ -320,6 +335,7 @@
     },
     "vendorproducts":{
         "productTitle":"Product",
+        "producteditTitle":"Edit Product",
         "myproduct":"My Product",
         "categories":"Categories",
         "quantity":"Quantity Available",
@@ -329,8 +345,9 @@
         "preview":"Preview",
         "activate":"Activate",
         "deactivate":"Deactivate",
-        "aproved":"Apendingproved",
+        "aproved":"Approved",
         "pending":"Pending",
+        "deliverd":"Deliverd",
         "searchHere" : "Search Here"
     },
     "vendoraddproduct":{
@@ -366,13 +383,16 @@
         "quantityerr":"Plese Enter Quantity of Items",
         "sizeerr":"Plese Enter Size of Items",
         "productadded":"Product Addedd",
-        "productname_ar_err":"Plese Insert Service Name in arabic",
+        "productupdadded":"Product Update Successfully",
+        "updatefail":"Product Upload Failed",
+        "productname_ar_err":"Plese Insert Product Name in arabic",
         "shortdesc_ar_err":"Plese Insert arabic Short description",
         "detaildesc_ar_err":"Plese Insert arabic Detail description",
-
+        "errorwhileUpload":"error While Upload",
     },
     "vendorservice":{
         "serviceTitle":"Service",
+        "serviceeditTitle":"Edit service",
         "myservice":"My Service",
         "categories":"Categories",
         "price":"Price",
@@ -397,6 +417,7 @@
         "price":"Price ",
         "sppricelbl":"Special Price",
         "spprice":"Special Price",
+        "isfeature":"Service Is Feature",
         "imageuploaderr":"Plese Select At Lest Single Image",
         "servicetypeerr":"Plese Insert Service Type",
         "servicenameerr":"Plese Insert Service Name",
@@ -475,6 +496,11 @@
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
-
+        "addressvalidation":"Please Select Address First"
+    },
+    "notification":{
+        "orderId":"Order Id",
+        "orderType":"Order Type",
+        "deliveryStatus": "Delivery Status",
     }
 }

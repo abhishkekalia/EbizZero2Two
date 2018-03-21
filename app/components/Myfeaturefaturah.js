@@ -13,7 +13,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
 
-export default class Myfaturah extends Component {
+export default class Myfeaturefaturah extends Component {
     constructor(props) {
         super(props);
         this.getKey= this.getKey.bind(this);
@@ -25,7 +25,6 @@ export default class Myfaturah extends Component {
     }
     componentDidMount(){
         this.getKey()
-        .then(()=>this.props.callback())
         .done()
      }
 
@@ -77,11 +76,10 @@ export default class Myfaturah extends Component {
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
-        formData.append('order_id', String(this.props.order_id));
+        formData.append('feature_id', String(this.props.feature_id));
         formData.append('payment_id', String(id));
         formData.append('payment_status', String(status));
-        formData.append('amount', String(5));
-        formData.append('cart_id',this.props.cartIdList.toString());
+        formData.append('amount', "10");
 
         const config = {
             method: 'POST',
@@ -91,16 +89,16 @@ export default class Myfaturah extends Component {
             },
             body: formData,
         }
-        fetch(Utils.gurl('orderPayment'), config)
+        fetch(Utils.gurl('featurePayment'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
                 MessageBarManager.showAlert({
-                    message: "Payment Success",
+                    message: "Product added to feature list",
                     alertType: 'alert',
                     title:''
                 })
-                routes.pop();
+
             }
         })
         .catch((error) => {

@@ -45,19 +45,20 @@
         "showpassword":"عرض كلمة السر",
         "male":"ذكر",
         "female":"انتثى",
-        "other":"Other","_comment":"remove others and make gender optional",
+        "other":"Other",
         "mobilenumber":"رقم الهاتف (لتحديث الطلب)",
         "selectcountry":"اختر الدولة",
         "address":"العنوان",
         "createbtn":"انشاء حساب",
+        "otplabel" : "OTP",
+        "otpplchldr" : "Enter 6 Digit Otp",
+        "resendOtp": "Want to Resend Otp",
+        "submitbtn":"موافق",
         "venderregister":"اذا كنت بائع، سجل هنا",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":" of use and ",
-        "privacypolicy4":"Privacy Policy",
         "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
         "pleaseenterfullname":"الرجاء تعبئة الأسم الكامل",
         "pleaseentervalidmail":"الرجاء تعبئة البريد الألكتروني",
+        "maildomain":"mail domain name must be .com",
         "pleaseenterpwd":"الرجاء ادخال كلمة السر",
         "pleaseselectgender":"الرجاء أختيار الجنس",
         "pleaseentercontact":"الرجاء ادخال رقم الهاتف",
@@ -88,6 +89,7 @@
         "pleaseenterrepresentative":"الرجاء ادخال أسم ممثل الشركة",
         "pleaseentercontact":"الرجاء ادخال رقم الهاتف",
         "pleaseenteremail":"الرجاء تعبئة البريد الألكتروني",
+        "maildomain":"mail domain name must be .com",
         "pleaseenteraddr":"الرجاء تعبئة العنوان",
         "pleaseenterpwd":"الرجاء ادخال كلمة السر",
         "pleaseselectgender":"الرجاء أختيار الجنس",
@@ -136,9 +138,14 @@
     },
     "servicedetail":{
         "booknow":"احجز الان",
+        "schedule":"Schedule",
+        "selectaddress":"اختر العنوان",
+        "noaddress":"No address Found",
         "productinfo":"تفاصيل الخدمة",
         "paymentsuccess":"تم قبول عملية الدفع بنجاح",
-        "paymentfailure":"تم رفض عملية الدفع"
+        "paymentfailure":"تم رفض عملية الدفع",
+        "selectDate":"Plese Select Date",
+        "selectTime":"Plese Select Time Slot"
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -153,7 +160,10 @@
         "type":"النوع"
     },
     "sidemenu":{
+        "signup": "Signup",
+        "login": "Log in",
         "notification":"تنبيهات",
+        "deals":"Deals and Offers",
         "home":"الرئيسية",
         "contact":"اتصل بنا",
         "order":"طلباتي",
@@ -279,9 +289,18 @@
     },
     "marketing":{
         "advertisement":"دعاية",
+        "videopicker":"Video Picker",
+        "imagepicker":"Image Picker",
+        "takeVideo":"Take Video...",
+        "choose_video":"Choose From Library",
+        "SelectThumbline_lbl": "Select Thumbline Image",
+        "SelectThumbline": "Please Select Thumbline Image",
         "uploadfiles":"اختر ملفات للتحميل",
         "costperad":"التكلفة لكل إعلان",
         "aduploaderr":"حصل خطأ ما أثناء التحميل",
+        "textstring":"Upload your image into the External Circle \n" +
+                            "Upload your 10 sec video into the External Circle \n" +
+                            "Price: 1 KD per picture  / 1.5 KD per video",
         "myAdFaturah":{
             "paymentsuccess":"تم الدفع بنجاح",
             "paymenterr":"حصل خطأ أثناء الدفع"
@@ -319,6 +338,7 @@
     },
     "vendorproducts":{
         "productTitle":"المنتج",
+        "producteditTitle":"Edit Product",
         "myproduct":"منتجاتي",
         "categories":"الأقسام",
         "quantity":"الكمية متاحة",
@@ -330,6 +350,7 @@
         "deactivate":"اخفاء",
         "aproved":"تم التأكيد",
         "pending":"بانتظار التأكيد",
+        "deliverd":"Deliverd",
         "searchHere" : "Search Here"
     },
     "vendoraddproduct":{
@@ -364,11 +385,17 @@
         "sppriceerr":"سعر الخصم يجب أن يكون أقل من السعر الأساسي",
         "quantityerr":"الرجاء تحديد الكمية",
         "sizeerr":"الرجاء تحديد المقاس",
-        "productadded":"تم اضافة المنتج"
-
+        "productadded":"تم اضافة المنتج",
+        "productupdadded":"Product Update Successfully",
+        "updatefail":"Product Upload Failed",
+        "productname_ar_err":"Plese Insert Product Name in arabic",
+        "shortdesc_ar_err":"Plese Insert arabic Short description",
+        "detaildesc_ar_err":"Plese Insert arabic Detail description",
+        "errorwhileUpload":"error While Upload",
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",
+        "serviceeditTitle":"Edit service",
         "myservice":"خدماتي",
         "categories":"الأقسام",
         "price":"القيمة",
@@ -391,6 +418,7 @@
         "detaildesc":"وصف كامل",
         "pricelbl":"القيمة",
         "price":"القيمة",
+        "isfeature":"Service Is Feature",
         "sppricelbl":"القيمة بعد الخصم",
         "spprice":"القيمة بعد الخصم",
         "imageuploaderr":"الرجاء أختيار صورة على الأقل",
@@ -471,5 +499,11 @@
     },
     "scheduleService":{
         "serviceTitle":"جدول",
+        "addressvalidation":"Please Select Address First"
+    },
+    "notification":{
+        "orderId":"Order Id",
+        "orderType":"Order Type",
+        "deliveryStatus": "Delivery Status",
     }
 }

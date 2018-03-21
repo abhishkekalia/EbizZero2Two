@@ -74,6 +74,7 @@ export default class Editwish extends Component {
                         title:'',
                         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
                         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                        // stylesheetWarning : {{ backgroundColor : '#FFC0CB'}}
                     })
                 }
             })
@@ -108,7 +109,7 @@ export default class Editwish extends Component {
                 alertType: 'extra',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'red', fontSize: 16 , textAlign:align},
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
         })
         .then(()=>this.props.fetchData())

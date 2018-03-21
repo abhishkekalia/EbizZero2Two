@@ -13,6 +13,7 @@ import Utils from 'app/common/Utils';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import I18n from 'react-native-i18n';
+import {connect} from "react-redux";
 
 class ProductOrder extends Component{
      constructor(props) {
@@ -103,7 +104,7 @@ class ProductOrder extends Component{
         .done();
     }
     fetchData () {
-        const { u_id,country, } = this.state;
+        const { u_id,country, } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
@@ -414,4 +415,13 @@ var styles = StyleSheet.create({
         fontWeight : 'bold'
 }
 });
-export default ProductOrder
+
+function mapStateToProps(state) {
+	return {
+        lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
+	};
+}
+export default connect(mapStateToProps)(ProductOrder);

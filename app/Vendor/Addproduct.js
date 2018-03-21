@@ -124,9 +124,10 @@ class AddProduct extends Component {
         );
     };
    _renderRightButton = () => {
+       const { lang} = this.props;
         return(
-            <TouchableOpacity onPress={() => this.uploadTocloud() } style={commonStyles.submit} >
-            <Text style={{color : '#fff'}}>UPLOAD</Text>
+            <TouchableOpacity onPress={() => this.uploadTocloud() } style={[commonStyles.submit, { margin: 5}]} >
+            <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
             </TouchableOpacity>
         );
     };
@@ -323,9 +324,9 @@ class AddProduct extends Component {
             product_name_in_arabic, short_description_in_arabic,
             detail_description_in_arabic,price_in_arabic, special_price_in_arabic
         } = this.state;
+        let genderty= gender.label == "Male" ? 1 : 0
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
-
             if(this.validate()) {
                 var productcategory = product_category ? this.state.optionsAvailable.find(x => x.category_name === this.state.options[this.state.product_category]).category_id : null;
                 this.setState({
@@ -353,15 +354,16 @@ class AddProduct extends Component {
                     { name : 'special_price_in_arabic', data: String(special)},
                     { name : 'discount', data: String(10)},
                     { name : 'final_price', data: String(special)},
-                    { name : 'quantity', data: quantityRows.toString()},
+                    { name : 'quantity_for_product_size', data: quantityRows.toString()},
                     { name : 'size', data: sizeRows.toString()},
                     { name : 'is_feature', data: String(is_feature)},
-                    { name : 'gender', data: String(1)},
+                    { name : 'gender', data: String(genderty)},
                 ])
                 .uploadProgress((written, total) => {
                     console.log('uploaded', Math.floor(written/total*100) + '%')
                 })
                 .then((res)=>{
+                    console.log(res)
                     MessageBarManager.showAlert({
                         message: I18n.t('vendoraddproduct.productadded', { locale: lang }),
                         alertType: 'extra',
@@ -444,15 +446,21 @@ class AddProduct extends Component {
     productCont(){
         Keyboard.dismiss();
         const { quantity, Size} = this.state;
-        var newStateArray = this.state.quantityRows.slice();
-        var newsizeArray = this.state.sizeRows.slice();
-        newStateArray.push(quantity);
-        newsizeArray.push(Size);
-        this.setState({...INITIAL_STATE,
-            quantityRows: newStateArray,
-            sizeRows: newsizeArray,
-            additional : false
-        });
+
+        if(quantity !== "" && Size != "")
+        {
+            var newStateArray = this.state.quantityRows.slice();
+            var newsizeArray = this.state.sizeRows.slice();
+            newStateArray.push(quantity);
+            newsizeArray.push(Size);
+            this.setState({...INITIAL_STATE,
+                quantityRows: newStateArray,
+                sizeRows: newsizeArray,
+                additional : false
+            });
+        }else{
+
+        }
     }
     textInputFocused(){
         console.log("focused");
@@ -641,7 +649,7 @@ class AddProduct extends Component {
                                 </View>
                                 <TextInput
                                     style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
-                                    value={this.state.detaildescription}
+                                    value={this.state.detail_description_in_arabic}
                                     numberOfLines={3}
                                     multiline
                                     underlineColorAndroid = 'transparent'
@@ -658,7 +666,7 @@ class AddProduct extends Component {
                                     onContentSizeChange={(event) => {
                                         this.setState({height: event.nativeEvent.contentSize.height});
                                     }}
-                                    onChangeText={(detaildescription) => this.setState({detaildescription})}
+                                    onChangeText={(detail_description_in_arabic) => this.setState({detail_description_in_arabic})}
                                     />
                             </View>
                             :

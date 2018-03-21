@@ -8,7 +8,8 @@ import {
 	TextInput ,
 	ActivityIndicator,
 	ListView,
-	Dimensions
+	Dimensions,
+	Modal
 } from "react-native";
 import I18n from 'react-native-i18n'
 import {connect} from "react-redux";
@@ -25,7 +26,8 @@ class ScheduleCalender extends Component {
 			status : false,
 			dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
 			ScheduleDate: ['2018-03-23','2018-03-26'],
-			selected : []
+			selected : [],
+		    addressVisible: false,
     	};
 		this.onDayPress = this.onDayPress.bind(this);
 	}
@@ -61,39 +63,17 @@ class ScheduleCalender extends Component {
 			.then((responseData) => {
 				if(responseData.status){
 					let	data = responseData.data;
-
-					var arrNew = [];
-
+					var arrNew = {};
 					for (i=0;i<data.length;i++) {
-						var obj = {
-							selected: true, 
-							marked: true, 
-							selectedColor: 'green'
-						};
+						var obj = { selected: true, selectedColor: '#a9d5d1'};
 						let strDate = data[i]
-
 						var objFinal = {
-							strDate : obj
+							strDate : obj,
 						};
-						arrNew.push(objFinal)
+						arrNew[strDate] = obj
 					}
-					
-					let datesArray = {
-						data : {selected: true,  marked: true},
-			 			// '2018-03-22': {selected: true,},
-						// '2017-12-28': {selected: true,},
-					}
-					const selectedDate = new Date().toISOString().substring(0, 10)
-					Object.keys(datesArray).map((d, i) => {
-						if (datesArray[d].disabled === false) {
-							delete datesArray[d]
-						} else if (selectedDate !== new Date(datesArray[i])) {
-							datesArray[selectedDate] = {selected: true, marked: true, selectedColor: 'green'}
-						}
-					})
-					console.log('dates array: ', datesArray)
 					this.setState ({
-						ScheduleDate: datesArray,
+						ScheduleDate: arrNew,
 						status: responseData.status
 					})
 				}
@@ -120,9 +100,8 @@ class ScheduleCalender extends Component {
 		const {u_id} = this.props;
 		try {
 			let formData = new FormData();
-			formData.append('vendor_id', String(7));
-			formData.append('selected_date', String("2017-11-13"));
-			// console.warn(formData);
+			formData.append('vendor_id', String(u_id));
+			formData.append('selected_date', String(date));
 			const config = {
 				method: 'POST',
 				headers: {
@@ -134,16 +113,15 @@ class ScheduleCalender extends Component {
 			fetch(Utils.gurl('getSchedulelist'), config)
 			.then((response) => response.json())
 			.then((responseData) => {
-				console.log(responseData.data.vendorBookedSlot);
+				console.log(responseData.data.anUserBookedSlot);
 				this.setState({
-					dataSource: this.state.dataSource.cloneWithRows(responseData.data.vendorBookedSlot),
+					dataSource: this.state.dataSource.cloneWithRows(responseData.data.anUserBookedSlot),
 				})
 			})
 			.catch((errorMessage, statusCode) => {
 				console.log(errorMessage);
 			})
 			.done();
-
 		}
 		catch (error) {
 			console.log("Error retrieving data" + error);
@@ -170,7 +148,6 @@ class ScheduleCalender extends Component {
 				showsVerticalScrollIndicator={false}
 				/>
 			);
-
 		return (
 			<View style={styles.container}>
 				<Calendar
@@ -191,19 +168,6 @@ class ScheduleCalender extends Component {
 						monthTextColor: 'green',
 						textDisabledColor: 'red',
 					}}
-					// markedDates={{
-					// 	[ScheduleDate]: {selected: true, marked: true, selectedColor: 'green'},
-					// 	'2018-03-26':  {selected: true, marked: true, selectedColor: 'green'},
-					// 	'2018-03-29': {selected: true, marked: true, selectedColor: 'green'},
-					// 	'2018-03-13':  {selected: true, marked: true, selectedColor: 'green'}
-					// }}
-					// markedDates={{[this.state.markedDates]: {selected:true,marked: true, dotColor: 'red', selectedColor: 'green'}}}
-					// Initially visible month. Default = Date()
-					// onDayPress={this.onDayPress}
-					// style={styles.calendar}
-					// hideExtraDays
-					// showWeekNumbers
-					// markedDates={ScheduleDate}
 					/>
 				<View style={{flex: 1}}>
 					{listView}
@@ -212,23 +176,23 @@ class ScheduleCalender extends Component {
 		)
 	}
 	renderData( data, rowData: string, sectionID: number, rowID: number, index) {
+		const { lang} = this.props;
+		let direction = (lang === 'ar') ? 'row-reverse' :'row',
+		align = (lang === 'ar') ?  'right': 'left';
 		return (
-			<TouchableOpacity key={rowID} data={rowData} onPress={() => navigate('Detail', { feed: que_ans.feed, detail : que_ans.detail , source : que_ans.source, time : que_ans.time  })}>
-            <View style={styles.row}>
-				<Text style={styles.textQue}>{data.schedule_id}</Text>
-				<Text style={styles.textQue}>{data.name}</Text>
-				<Text style={styles.textQue}>{data.boking_time}</Text>
-				<Text style={styles.textQue}>{data.duration}</Text>
-				<Text style={styles.textQue}>{data.date}</Text>
-				<Text style={styles.textQue}>{data.create_time}</Text>
-				<Text style={styles.textQue}>{data.vendor_id}</Text>
-				<Text style={styles.textQue}>{data.is_user}</Text>
-            </View>
-		</TouchableOpacity>
-
+			<View>
+				<TouchableOpacity style={{ flexDirection: direction, marginTop : 1, borderColor: "#a9d5d1", borderWidth: StyleSheet.hairlineWidth}} key={rowID} data={rowData} onPress={() => console.log(data.schedule_id)}>
+					<View style={{ width: "70%", height: 40, justifyContent: 'center', alignItems: 'center'}}>
+						<Text style={[styles.textQue, { textAlign: align}]}>{data.addressArray[0].full_name}</Text>
+					</View>
+					<View style={{ flexDirection: 'column', width: "30%", height: 40, borderLeftWidth: StyleSheet.hairlineWidth, borderColor: "#a9d5d1" , justifyContent: 'center', alignItems: 'center'}}>
+						<Text style={[styles.textQue, { textAlign: align}]}>{data.service_name}</Text>
+						<Text style={[styles.textQue, { textAlign: align}]}>{data.service_datetime}</Text>
+					</View>
+				</TouchableOpacity>
+			</View>
 		)
 	}
-
 }
 const styles = StyleSheet.create({
 	container: {
@@ -274,10 +238,8 @@ const styles = StyleSheet.create({
 		marginLeft : 10
 	},
 	textQue :{
-		flex: 1,
-		fontSize: 18,
+		fontSize: 10,
 		fontWeight: '400',
-		left : 5
 	},
 	centering: {
 		flex:1,
@@ -312,5 +274,4 @@ function mapStateToProps(state) {
 		lang : state.auth.lang
 	}
 }
-
 export default connect(mapStateToProps)(ScheduleCalender);

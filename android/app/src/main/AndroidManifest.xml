@@ -25,7 +25,8 @@
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
         android:screenOrientation="portrait"
-        android:windowSoftInputMode="adjustResize"
+        android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+        android:fitsSystemWindows="true"
         android:supportsRtl="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -35,7 +36,7 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
       <meta-data
       android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyDqd0y_5PDthinBVBXhmZE8sXxsy17FFpM"/>
+      android:value="AIzaSyD4T7njRubC7I7zYNwE5wnuTw0X5E_1Cc4"/>
     </application>
 
 </manifest>

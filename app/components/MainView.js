@@ -193,19 +193,21 @@ class MainView extends Component {
        .done();
    }
    renderLoadingView() {
+       const {lang} = this.props;
        return (
-           <ActivityIndicator
-               style={[styles.centering]}
-               color="#a9d5d1"
-               size="large"/>
-       );
-   }
-   renderLoadingView() {
-       return (
-           <ActivityIndicator
-               style={[styles.centering]}
-               color="#a9d5d1"
-               size="large"/>
+           <View style={{flex: 1}}>
+               <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                   {this._renderLeftButton()}
+                   <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                       resizeMode = 'contain'
+                       resizeMethod = 'resize'/>
+                   {this._renderRightButton()}
+               </View>
+               <ActivityIndicator
+                   style={[styles.centering]}
+                   color="#a9d5d1"
+                   size="large"/>
+           </View>
        );
    }
    blur() {
@@ -488,14 +490,6 @@ class MainView extends Component {
             special_price : special_price,
         })
     }
-    renderLoadingView() {
-        return (
-            <ActivityIndicator
-            style={[styles.centering]}
-            color="#a9d5d1"
-            size="large"/>
-            );
-    }
     render() {
         const {u_id, country, deviceId ,lang} = this.props;
         // console.warn(this.props.deviceId);
@@ -517,20 +511,18 @@ class MainView extends Component {
                     {this._renderRightButton()}
                 </View>
                 {this.renderFilterOptions()}
+                <StatusBar
+                    hidden={false}
+                    backgroundColor="#a9d5d1"
+                    barStyle="light-content"/>
+                <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
                 <ScrollView
                     contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 100}}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="always">
-                    <StatusBar
-                        hidden={false}
-                        backgroundColor="#a9d5d1"
-                        barStyle="light-content"/>
-                    <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
-
-                    {this.renderListData()}
+                    { this.renderListData()}
                     {this.renderAllShopViews()}
                     {this.renderAllServiceViews()}
-
                 </ScrollView>
                 {this.renderShareSheet()}
             </View>
@@ -545,75 +537,82 @@ class MainView extends Component {
         };
         return(
             <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-          <Button iconSrc={{ uri: TWITTER_ICON }}
-                  onPress={()=>{
-                    this.onCancel();
-                    setTimeout(() => {
-                      Share.shareSingle(Object.assign(shareOptions, {
-                        "social": "twitter"
-                      }));
-                    },300);
-            }}>Twitter</Button>
-          <Button iconSrc={{ uri: FACEBOOK_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "facebook"
-                }));
-              },300);
-            }}>Facebook</Button>
-          <Button iconSrc={{ uri: WHATSAPP_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "whatsapp"
-                }));
-              },300);
-            }}>Whatsapp</Button>
-          <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "googleplus"
-                }));
-              },300);
-            }}>Google +</Button>
-          <Button iconSrc={{ uri: EMAIL_ICON }}
-                  onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.shareSingle(Object.assign(shareOptions, {
-                  "social": "email"
-                }));
-              },300);
-            }}>Email</Button>
-          <Button
-            iconSrc={{ uri: CLIPBOARD_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                if(typeof shareOptions["url"] !== undefined) {
-                  Clipboard.setString(shareOptions["url"]);
-                  if (Platform.OS === "android") {
-                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
-                  } else if (Platform.OS === "ios") {
-                    AlertIOS.alert('Link Copied to Clipboard');
-                  }
-                }
-              },300);
-            }}>Copy Link</Button>
-          <Button iconSrc={{ uri: MORE_ICON }}
-            onPress={()=>{
-              this.onCancel();
-              setTimeout(() => {
-                Share.open(shareOptions)
-              },300);
-            }}>More</Button>
-            <View style={{paddingBottom:40}}/>
-        </ShareSheet>
+                <Button iconSrc={{ uri: TWITTER_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "twitter"
+                            }));
+                        },300);
+                    }}>Twitter
+                </Button>
+                <Button iconSrc={{ uri: FACEBOOK_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "facebook"
+                            }));
+                        },300);
+                    }}>Facebook
+                </Button>
+                <Button iconSrc={{ uri: WHATSAPP_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "whatsapp"
+                            }));
+                        },300);
+                    }}>Whatsapp
+                </Button>
+                <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "googleplus"
+                            }));
+                        },300);
+                    }}>Google +
+                </Button>
+                <Button iconSrc={{ uri: EMAIL_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.shareSingle(Object.assign(shareOptions, {
+                                "social": "email"
+                            }));
+                        },300);
+                    }}>Email
+                </Button>
+                <Button
+                    iconSrc={{ uri: CLIPBOARD_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            if(typeof shareOptions["url"] !== undefined) {
+                                Clipboard.setString(shareOptions["url"]);
+                                if (Platform.OS === "android") {
+                                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
+                                } else if (Platform.OS === "ios") {
+                                    AlertIOS.alert('Link Copied to Clipboard');
+                                }
+                            }
+                        },300);
+                    }}>Copy Link
+                </Button>
+                <Button iconSrc={{ uri: MORE_ICON }}
+                    onPress={()=>{
+                        this.onCancel();
+                        setTimeout(() => {
+                            Share.open(shareOptions)
+                        },300);
+                    }}>More
+                </Button>
+                <View style={{paddingBottom:40}}/>
+            </ShareSheet>
         );
     }
     renderListData(){
@@ -823,23 +822,20 @@ class MainView extends Component {
                     <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyShop()} >
                         <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10, textAlign: align} : {color:'#fff',marginLeft:10}}>{I18n.t('home.done', { locale: lang })}</Text>
                     </TouchableOpacity>
-
-                    </View>
-                    <ScrollView contentContainerStyle={styles.contentContainer}
+                </View>
+                <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}>
                     <TouchableOpacity style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}>
-                    <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text>
-                    {this.state.rows.length == 0 ?
-                        <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
-                    :
-                        undefined
-                    }
-
+                        <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text>
+                        {this.state.rows.length == 0 ?
+                            <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
+                            :
+                            undefined
+                        }
                     </TouchableOpacity>
-                        {this.renderView()}
-                    </ScrollView>
-
-                </ModalWrapper>
+                    {this.renderView()}
+                </ScrollView>
+            </ModalWrapper>
         );
     }
 
@@ -1051,13 +1047,21 @@ class MainView extends Component {
     noItemFound(){
         const { lang , deviceId, country, u_id} = this.props,
         align = (lang === 'ar') ?  'right': 'left';
-
         return (
+            <View style={{flex: 1}}>
+            <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                {this._renderLeftButton()}
+                <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                    resizeMode = 'contain'
+                    resizeMethod = 'resize'/>
+                {this._renderRightButton()}
+            </View>
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 {this.renderFilterOptions()}
                 {this.renderAllShopViews()}
                 {this.renderAllServiceViews()}
                 <Text style={{marginTop:10, textAlign: align}}>{I18n.t('home.noitem', { locale: lang })}</Text>
+            </View>
             </View>
         );
     }
@@ -1318,7 +1322,7 @@ class LoadImage extends Component {
                         />
                 }
                 BadgeElement={
-                    <Text style={{color:'#FFFFFF'}}>{"125"}</Text>
+                    <Text style={{color:'#FFFFFF'}}>{this.props.special_price} KWD</Text>
                 }
                 IconBadgeStyle={
                     {

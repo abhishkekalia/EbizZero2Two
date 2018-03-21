@@ -48,7 +48,8 @@ class Shopingcart extends Component {
             user_type : null,
             selectSize : false,
             // country : null,
-            status : false
+            status : false,
+            cartIdList:[]
         };
     }
     componentDidMount(){
@@ -61,7 +62,7 @@ class Shopingcart extends Component {
         EventEmitter.removeAllListeners("redirectToFaturah");
         EventEmitter.on("redirectToFaturah", (value)=>{
             console.log("redirectToFaturah", value);
-            routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura})
+            routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
         });
     }
     callBackFitura() {
@@ -126,6 +127,9 @@ class Shopingcart extends Component {
     // }
     fetchData(){
         const {u_id, country, lang ,deviceId } = this.props;
+        // deviceId = "fc898d3fb74399eb";
+        // console.warn("deviceId", deviceId);
+        // console.warn("country", country);
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
@@ -141,6 +145,7 @@ class Shopingcart extends Component {
         fetch(Utils.gurl('cartList'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            // console.warn(responseData);
             var Items = responseData.data,
                 length = Items.length,
                 organization,
@@ -174,6 +179,16 @@ class Shopingcart extends Component {
                     refreshing : false,
                     status : responseData.status
                 });
+                let res = responseData.data;
+                let cartIdList = [];
+                for (var i = 0; i < res.length; i++) {
+                    cartIdList.push(res[i].cart_id);
+                }
+
+                this.setState({
+                    cartIdList:cartIdList
+                });
+                console.warn(this.state.cartIdList);
             }else {
                 this.setState({
                     status : responseData.status
@@ -214,7 +229,8 @@ class Shopingcart extends Component {
             routes.AddressLists({
                 order_detail : this.state.ShopingItems,
                 SetToList :this.state.SetToList,
-                totalAmount : this.state.subtotalamount
+                totalAmount : this.state.subtotalamount,
+                cartIdList:this.state.cartIdList
             })
         }
     }
@@ -233,7 +249,7 @@ class Shopingcart extends Component {
                         flex : 0}
                     }>
                     <Text style={{ textAlign: align}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
-                    <Text style={{textAlign: align}}> KWD {totalamount}</Text>
+                    {/*<Text style={{textAlign: align}}> KWD {totalamount}</Text>*/}
                 </View>
                 <View style={{
                         flexDirection : direction,
@@ -251,9 +267,17 @@ class Shopingcart extends Component {
     noItemFound(){
         const {lang} = this.props;
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', alignContent:'center',flex:1}}>
-                <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
-            </View> );
+            <View style={{flex: 1}}>
+                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    {this._renderLeftButton()}
+                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                    {this._renderRightButton()}
+                </View>
+                <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
+                    <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
+                </View>
+            </View>
+        );
         }
     render() {
         const { itemcount, totalamount, subtotalamount } = this.state;
@@ -275,6 +299,12 @@ class Shopingcart extends Component {
         }
         return (
             <View style={{flex: 1, flexDirection: 'column'}}>
+                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    {this._renderLeftButton()}
+                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                    {this._renderRightButton()}
+                </View>
+
                 {listView}
                 {this.renderFooter(itemcount, totalamount, subtotalamount)}
                 <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
@@ -362,6 +392,7 @@ class Shopingcart extends Component {
                     callback={this.fetchData.bind(this)}
                     size_arr={data.size_arr}
                     lang={lang}
+                    cartIdList = {this.state.cartIdList}
                     deviceId={deviceId}/>
             </View>
         )

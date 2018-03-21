@@ -4,18 +4,60 @@ import {
     Text,
     View,
     ListView,
+    Dimensions,
     TouchableOpacity,
     ActivityIndicator,
     AsyncStorage,
     Alert,
+    Modal
 } from 'react-native';
+import MapView from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Actions } from 'react-native-router-flux';
+import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
+import {connect} from "react-redux";
+import I18n from 'react-native-i18n';
+// import Modal from 'react-native-modal';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default class ProductOrder extends Component<{}> {
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE = 22.966425;
+const LONGITUDE = 72.615933;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
+class ProductOrder extends Component{
      constructor(props) {
         super(props);
-        this.state = this.getInitialState();
+        this.state = {
+            ...this.getInitialState(),
+            visibleMap: false,
+            coordinates: [
+              {
+                latitude: 22.966425,
+                longitude: 72.615933,
+              },
+              {
+                latitude: 22.996170,
+                longitude: 72.599584,
+              },
+            ],
+
+        },
         this.bindMethods();
+        this.mapView = null;
+
+    }
+    onMapPress = (e) => {
+      this.setState({
+        coordinates: [
+          ...this.state.coordinates,
+          e.nativeEvent.coordinate,
+        ],
+      });
     }
 
     bindMethods() {
@@ -146,15 +188,90 @@ export default class ProductOrder extends Component<{}> {
     }
 
     render() {
+        const {lang} =this.props;
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
         if (!this.state.status) {
             return this.noItemFound();
         }
-        return this.renderListView();
-    }
+        let listView = (<View></View>);
 
+        listView = (
+            <ListView
+                dataSource = {this.state.dataSource}
+                style      = {styles.listview}
+                renderRow  = {this.renderRow.bind(this)}
+                renderSectionHeader = {this.renderSectionHeader}
+                enableEmptySections = {true}
+                automaticallyAdjustContentInsets={false}
+                showsVerticalScrollIndicator={false}
+            />
+        );
+
+        return (
+            <View style={[styles.container, {padding : 5}]}>
+                {listView}
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.visibleMap}
+                    onRequestClose={() => this.setState({ visibleMap :false})}>
+                <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: 10}}>
+                    <Icon onPress ={()=>this.setState({ visibleMap :false})} name="close-circle" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
+                </View>
+                <View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
+                    <MapView
+                  initialRegion={{
+                    latitude: LATITUDE,
+                    longitude: LONGITUDE,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                  }}
+                  style={StyleSheet.absoluteFill}
+                  ref={c => this.mapView = c}
+                  onPress={this.onMapPress}
+                >
+                  {this.state.coordinates.map((coordinate, index) =>
+                    <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} >
+                        <FontAwesome name="car" size={15} color="#FFCC7D"/>
+                        </MapView.Marker>
+                  )}
+                  {(this.state.coordinates.length >= 2) && (
+                    <MapViewDirections
+                      origin={this.state.coordinates[0]}
+                      waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
+                      destination={this.state.coordinates[this.state.coordinates.length-1]}
+                      apikey={GOOGLE_MAPS_APIKEY}
+                      strokeWidth={5}
+                      strokeColor="#a9d5d1"
+                      onStart={(params) => {
+                        console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
+                      }}
+                      // onReady={(result) => {
+                      //   this.mapView.fitToCoordinates(result.coordinates, {
+                      //     edgePadding: {
+                      //       right: (width / 20),
+                      //       bottom: (height / 20),
+                      //       left: (width / 20),
+                      //       top: (height / 20),
+                      //     }
+                      //   });
+                      // }}
+                      onError={(errorMessage) => {
+                        // console.log('GOT AN ERROR');
+                      }}
+                    />
+                  )}
+                </MapView>
+              </View>
+
+
+            </Modal>
+
+        </View>
+        );
+    }
     renderLoadingView() {
         return (
                 <View style={styles.container}>
@@ -167,23 +284,6 @@ export default class ProductOrder extends Component<{}> {
         );
     }
 
-    renderListView() {
-        return (
-            <View style={[styles.container, {padding : 5}]}>
-
-                <ListView
-                    dataSource = {this.state.dataSource}
-                    style      = {styles.listview}
-                    renderRow  = {this.renderRow}
-                    renderSectionHeader = {this.renderSectionHeader}
-                    enableEmptySections = {true}
-                    automaticallyAdjustContentInsets={false}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
-        );
-    }
-
     renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.section}>
@@ -192,24 +292,22 @@ export default class ProductOrder extends Component<{}> {
             </View>
         );
     }
-};
-
-Object.assign(ProductOrder.prototype, {
-    bindableMethods : {
-        renderRow : function (rowData, sectionID, rowID) {
-            return (
-                <TouchableOpacity
+    renderRow(rowData, sectionID, rowID) {
+        return (
+            <TouchableOpacity
                 style={{ padding : 10}}
-                // onPress={() => this.onPressRow(rowData, sectionID)}
+                onPress ={()=>this.setState({
+                    visibleMap :true
+                })}
                 >
-                    <View style={styles.rowStyle}>
-                        <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
-                            <Text style={styles.label}>Product ID </Text>
-                            <Text style={styles.rowText}>#{rowID.product_id} </Text>
-                        </View>
-                        <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
-                            <Text style={styles.label}>Product Name </Text>
-                            <Text style={styles.rowText}>{rowID.product_name} </Text>
+                <View style={styles.rowStyle}>
+                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                        <Text style={styles.label}>Product ID </Text>
+                        <Text style={styles.rowText}>#{rowID.product_id} </Text>
+                    </View>
+                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                        <Text style={styles.label}>Product Name </Text>
+                        <Text style={styles.rowText}>{rowID.product_name} </Text>
                     </View>
                     <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
                         <Text style={styles.label}>Quantity</Text>
@@ -223,25 +321,11 @@ Object.assign(ProductOrder.prototype, {
                         <Text style={styles.label}>price</Text>
                         <Text style={styles.rowText}>{rowID.price} </Text>
                     </View>
-                     </View>
-                </TouchableOpacity>
-            );
-        },
-        onPressRow : function (rowData, sectionID) {
-            var buttons = [
-                {
-                    text : 'Cancel'
-                },
-                {
-                    text    : 'OK',
-                    onPress : () => this.createCalendarEvent(rowData, sectionID)
-                }
-            ]
-            Alert.alert('User\'s Email is ' + rowData.email, null, null);
-        }
-
+                </View>
+            </TouchableOpacity>
+        );
     }
-});
+};
 
 var styles = StyleSheet.create({
     container: {
@@ -302,3 +386,13 @@ var styles = StyleSheet.create({
         borderColor: '#fbcdc5'
     }
 });
+function mapStateToProps(state) {
+    return {
+        identity: state.identity,
+		lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
+    };
+}
+export default connect(mapStateToProps)(ProductOrder);

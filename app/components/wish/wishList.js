@@ -41,6 +41,7 @@ const { width, height } = Dimensions.get('window');
 class WishList extends Component {
     constructor(props) {
         super(props);
+
         this.fetchData = this.fetchData.bind(this);
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
@@ -64,8 +65,8 @@ class WishList extends Component {
     }
     componentWillMount() {
         Actions.refresh({ left: this._renderLeftButton, right: this._renderRightButton,});
-        console.log("componentWillMount")
     }
+
     _renderLeftButton = () => {
          return(
              <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
@@ -227,14 +228,22 @@ class WishList extends Component {
             Quentity: !this.state.Quentity
         });
     }
-    noItemFound(){
-        const { lang } = this.props;
+    noItemFound() {
+        const {lang} = this.props;
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
-                <Text> {I18n.t('wishlist.noitem', { locale: lang })} </Text>
-                {/* <TouchableOpacity onPress={()=>this.fetchData()}><Text>Tap Here To Load wishlist</Text></TouchableOpacity> */}
-               </View> );
+            <View style={{flex: 1}}>
+                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    {this._renderLeftButton()}
+                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                    {this._renderRightButton()}
+                </View>
+                <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
+                    <Text> {I18n.t('wishlist.noitem', { locale: lang })} </Text>
+                </View>
+            </View>
+        );
     }
+
     getSize(size){
         this.setState({size});
     }
@@ -284,11 +293,17 @@ class WishList extends Component {
             );
         return (
         <View style={{flex :1}}>
-        <ScrollView>
-            {listView}
-                    </ScrollView>
+            <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                {this._renderLeftButton()}
+                <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                {this._renderRightButton()}
+            </View>
 
-            <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
+        <ScrollView>
+        {listView}
+        </ScrollView>
+
+        <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
           <Button iconSrc={{ uri: TWITTER_ICON }}
                   onPress={()=>{
               this.onCancel();
@@ -557,14 +572,14 @@ class SelectItem extends Component{
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => {
                 this.setState({
-                selectSize : true
-            })}
-         },{
-             text: I18n.t('wishlist.delete', { locale: lang }),
-             backgroundColor: '#f53d3d',
-             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-             onPress: () => {this.removeWishlist()}
-         }];
+                    selectSize : true
+                })
+            }},{
+                text: I18n.t('wishlist.delete', { locale: lang }),
+                backgroundColor: '#f53d3d',
+                underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+                onPress: () => {this.removeWishlist()}
+            }];
         return(
             <Swipeout
                 right={swipeBtns}
@@ -572,15 +587,15 @@ class SelectItem extends Component{
                 backgroundColor= 'transparent'>
                 {this.props.children}
                 <SinglePickerMaterialDialog
-                  title={I18n.t('wishlist.selectsize', { locale: lang })}
-                  items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
-                  visible={this.state.selectSize}
-                  selectedItem={this.state.singlePickerSelectedItem}
-                  onCancel={() => this.setState({ selectSize: false })}
-                  onOk={result => this.changeSize(result)}
-                  cancelLabel={I18n.t('wishlist.cancel', { locale: lang })}
-                  okLabel={I18n.t('wishlist.ok', { locale: lang })}
-                />
+                    title={I18n.t('wishlist.selectsize', { locale: lang })}
+                    items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
+                    visible={this.state.selectSize}
+                    selectedItem={this.state.singlePickerSelectedItem}
+                    onCancel={() => this.setState({ selectSize: false })}
+                    onOk={result => this.changeSize(result)}
+                    cancelLabel={I18n.t('wishlist.cancel', { locale: lang })}
+                    okLabel={I18n.t('wishlist.ok', { locale: lang })}
+                    />
             </Swipeout>
         )
     }
@@ -591,7 +606,6 @@ const styles = StyleSheet.create ({
         flexDirection: 'column',
         padding : 10
     },
-
     row: {
         flexDirection: 'row',
         marginTop : 1

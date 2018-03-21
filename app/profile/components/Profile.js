@@ -46,13 +46,11 @@ class Profile extends Component {
 			 <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10}}/>
 		 );
 	 };
-
    _renderRightButton = () => {
         return(
             <Text style={{color : '#fff'}}></Text>
         );
     };
-
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');
@@ -139,10 +137,16 @@ class Profile extends Component {
 		textline = lang == 'ar'? 'right': 'left';
 		fullname = lang == 'ar'? dataSource.fullname: dataSource.fullname;
 		acount_name = dataSource.fullname ? fullname : I18n.t('profile.guest', { locale: lang })
-		email = lang == 'ar'? dataSource.email_arabic: dataSource.email;
-		mobile = lang == 'ar'? dataSource.mobile: dataSource.mobile;
+		email = dataSource.email;
+		mobile = dataSource.mobile;
 		return (
 			<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
+				<View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+					{this._renderLeftButton()}
+					<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
+					{this._renderRightButton()}
+				</View>
+
 				<View style={[styles.content, {flexDirection :direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>
 					<View style={{ flexDirection : direction }}>
 						<View style={{margin:10, width :40, height:40, justifyContent: 'center', alignItems : 'center', borderRadius:25, overflow:'hidden', backgroundColor:'rgba(240,241,243,1)'}}>
@@ -196,13 +200,9 @@ class Profile extends Component {
 
 				</View>
 				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
-					<TouchableOpacity style={{ justifyContent: 'center', alignItems : 'flex-end'}}
-					onPress={()=> this.setState({
-						visibleModal:true
-					})} >
-					<Text style={{padding: 5,borderWidth: StyleSheet.hairlineWidth, borderColor: "#fbcdc5"}}>{I18n.t('profile.resetPass', { locale: lang })}</Text>
-					</TouchableOpacity >
-					<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
+
+
+				<View style={{width:'100%', backgroundColor:'transparent', height:5}}></View>
 				<View style={[styles.content, {flexDirection : 'row', justifyContent: 'space-between' ,padding : 0}]}>
 
 					<View style={{ padding : 0, backgroundColor : '#fff', flex : 1, justifyContent : 'center'}}>
@@ -232,14 +232,10 @@ class Profile extends Component {
 
 				<Modal isVisible={this.state.visibleModal}>
 					<View style={{alignItems : 'center', padding:10, backgroundColor: '#fff'}}>
-					<View style ={[{borderColor:'#fbcdc5'}]}>
-						<Ionicons name="ios-mail-outline"
-						size={30}
-						color="#fbcdc5"
-						style= {{ padding: 10}}
-						/>
+					<View style ={[{borderColor:'#fbcdc5',width:250}]}>
+
 						<TextInput
-							style={{left:6.5}}
+							// style={{left:6.5}}
 							// onBlur={ () => this.onBlurUser() }
 							value={this.state.forgotPassword}
 							underlineColorAndroid = 'transparent'
@@ -258,18 +254,18 @@ class Profile extends Component {
 						/>
 					</View>
 					<View style={{flexDirection: direction, height: 40}}>
-					<TouchableOpacity
-					onPress={()=> this.setState({ visibleModal:  false})}>
-					<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
-					 Cancel
-					</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-					onPress={()=> this.Forgotpassword()}>
-					<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
-					 Submit
-					</Text>
-					</TouchableOpacity>
+						<TouchableOpacity
+						onPress={()=> this.setState({ visibleModal:  false})}>
+							<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+						 		Cancel
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+						onPress={()=> this.Forgotpassword()}>
+							<Text style={{color :'#fbcdc5', fontSize : 15, textAlign:'center', height: 25, margin: 10, width: '80%'}}>
+							 	Submit
+							</Text>
+						</TouchableOpacity>
 					</View>
 					</View>
 			</Modal>

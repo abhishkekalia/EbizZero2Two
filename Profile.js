@@ -23,14 +23,16 @@ class Profile extends Component {
             phone_no : null,
             data : [],
             marketing_campaign : [],
-			chart : []
+						chart : []
         };
     }
     componentwillMount(){
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+
         NetInfo.isConnected.fetch().done(
             (isConnected) => { this.setState({ netStatus: isConnected }); }
             );
+
         NetInfo.isConnected.fetch().done((isConnected) => {
             if (isConnected)
             {
@@ -54,23 +56,15 @@ class Profile extends Component {
     }
 
     handleConnectionChange = (isConnected) => {
-		const {lang} = this.props;
-		align = lang == 'ar'? 'flex-end': 'flex-start';
-
-
         this.setState({ netStatus: isConnected });
-
-        {this.state.netStatus ?
-			  MessageBarManager.showAlert({
-                message: I18n.t('venderprofile.online', { locale: language }),
+        {this.state.netStatus ?  MessageBarManager.showAlert({
+                message: `Internet connection is available`,
                 alertType: 'alert',
-                title:'',
-				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                title:''
             }) : MessageBarManager.showAlert({
-				message: I18n.t('venderprofile.offline', { locale: language }),
-                alertType: 'alert',
-                title:'',
-				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                message: `Internet connection not available`,
+                alertType: 'error',
+                title:''
             })
         }
     }
@@ -185,10 +179,7 @@ class Profile extends Component {
 				<Text style={{textAlign: textline, alignSelf: 'center'}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
 				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}/>
 				<TouchableOpacity
-                onPress={()=>{ Utils.logout()
-					.then(logout)
-					.done()
-				}}
+                onPress={()=>( Utils.logout()),logout}
                 style={styles.logout}>
 					<Text style={{ color: "#fbcdc5"}}>{I18n.t('venderprofile.logout', { locale: lang })}</Text>
 				</TouchableOpacity>

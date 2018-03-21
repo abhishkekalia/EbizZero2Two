@@ -40,7 +40,7 @@ class MyProduct extends Component {
         this.fetchData()
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton });
+        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton});
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
     }
@@ -54,8 +54,15 @@ class MyProduct extends Component {
     _keyboardDidHide () {
         routes.refresh ({hideTabBar: false})
     }
+    _renderLeftButton = () => {
+         return(
+             <Text style={{color : '#fff'}}></Text>
+         );
+     };
     _renderRightButton = () => {
-        return  null;
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
     };
     // async getKey() {
     //     try {
@@ -208,9 +215,12 @@ class MyProduct extends Component {
                             country : this.state.country,
                             product_id: data.product_id,
                             product_category:data.product_category,
-                            product_name: product_name,
-                            detail_description: detail_description,
-                            short_description: short_description,
+                            product_name: data.product_name,
+                            detail_description: data.detail_description,
+                            short_description: data.short_description,
+                            product_name_in_arabic: data.product_name_in_arabic,
+                            short_description_in_arabic: data.short_description_in_arabic,
+                            detail_description_in_arabic: data.detail_description_in_arabic,
                             price: price,
                             special_price: special_price,
                             quantity: data.quantity,
