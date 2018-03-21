@@ -6,7 +6,6 @@ import {
     View,
     Image,
     Text,
-    ViewPropTypes,
     // Button,
     AsyncStorage,
     TouchableHighlight,
@@ -68,8 +67,8 @@ class Menu extends React.Component {
                 <View style={[styles.avatarContainer,{ alignSelf: 'center', justifyContent: 'space-around'}]}>
                     {
                         u_id == undefined ?
-                        <View style={{ height: 120, width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
-                            <TouchableOpacity onPress={Actions.register} style={{alignSelf: 'center'}} >
+                        <View style={{ height: "85%", width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
+                            <TouchableOpacity onPress={Actions.registerPage} style={{alignSelf: 'center'}} >
                                 <Text style={styles.signinbtn}>{I18n.t('sidemenu.signup', { locale: lang })}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={Actions.profile} style={styles.username}>
@@ -82,7 +81,7 @@ class Menu extends React.Component {
                             </TouchableOpacity>
                         </View>
                         :
-                        <View style={{ height: 120, width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
+                        <View style={{ height:  "90%", width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
                             <TouchableOpacity
             						onPress={Actions.profile} style={styles.username}>
                                 <View style= {styles.guest}>
@@ -91,7 +90,7 @@ class Menu extends React.Component {
                             </TouchableOpacity>
                         </View>
                     }
-                    <View style={{ width: width, height: 120, justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 1, position: 'absolute'}}>
+                    <View style={{ width: width, height:  "20%", justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 0, position: 'relative'}}>
                         {
                             Object.keys(I18n.translations).map((item, key)=>(
                                 <Text
@@ -105,7 +104,8 @@ class Menu extends React.Component {
                         }
                     </View>
                     <Text style={{
-                            // position: 'absolute' ,
+                            zIndex: 1,
+                            position: 'relative' ,
                             marginBottom: 10,
                             paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:0}}>{identity.username}</Text>
                 </View>

@@ -13,7 +13,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
 var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
 
-export default class Myfaturah extends Component { 
+export default class Myfaturah extends Component {
     constructor(props) {
         super(props);
         this.getKey= this.getKey.bind(this);
@@ -21,35 +21,35 @@ export default class Myfaturah extends Component {
             loading: false,
             u_id: '',
             country : '',
-        }; 
-    } 
+        };
+    }
     componentDidMount(){
         this.getKey()
         .then(()=>this.props.callback())
         .done()
      }
-    
+
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country 
-            }); 
+                country: response.userdetail.country
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
-    } 
+    }
 
-    _renderLoadingIndicator = () => { 
-        if (this.state.loading) { 
-            return ( 
-                <View style={styles.loadingOverlay}> 
+    _renderLoadingIndicator = () => {
+        if (this.state.loading) {
+            return (
+                <View style={styles.loadingOverlay}>
                     <Text> LOADING...</Text>
                 </View>
-            ); 
-        } else { 
+            );
+        } else {
             return null;
         }
     }
@@ -57,16 +57,16 @@ export default class Myfaturah extends Component {
     _onNavigationStateChange = (navState) => {
             let extraOptions = {};
 
-            if (!navState.loading) { 
-                extraOptions.url = navState.url; 
+            if (!navState.loading) {
+                extraOptions.url = navState.url;
             }
-        this.setState({ 
+        this.setState({
             loading: navState.loading,
-       }); 
+       });
 
         if (navState.url.indexOf(BASEURL) != -1) {
             let status = navState.url.split("?")[1];
-            let statusId = navState.url.split("?")[2]; 
+            let statusId = navState.url.split("?")[2];
             let id = statusId.split("=")[1];
             this.orderPayment(status, id)
         }
@@ -76,36 +76,36 @@ export default class Myfaturah extends Component {
         const {u_id, country} = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
-        formData.append('country', String(country));  
-        formData.append('order_id', String(this.props.order_id));  
-        formData.append('payment_id', String(id));  
-        formData.append('payment_status', String(status));  
-        formData.append('amount', String(5));  
+        formData.append('country', String(country));
+        formData.append('order_id', String(this.props.order_id));
+        formData.append('payment_id', String(id));
+        formData.append('payment_status', String(status));
+        formData.append('amount', String(5));
 
-        const config = { 
-            method: 'POST', 
-            headers: { 
-                'Accept': 'application/json', 
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data;',
             },
             body: formData,
-        } 
-        fetch(Utils.gurl('orderPayment'), config) 
+        }
+        fetch(Utils.gurl('orderPayment'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                MessageBarManager.showAlert({ 
-                    message: "Payment Success", 
-                    alertType: 'alert', 
+                MessageBarManager.showAlert({
+                    message: "Payment Success",
+                    alertType: 'alert',
                     title:''
                 })
                 routes.pop();
             }
         })
         .catch((error) => {
-                MessageBarManager.showAlert({ 
-                    message: "Payment Not Success", 
-                    alertType: 'alert', 
+                MessageBarManager.showAlert({
+                    message: "Payment Not Success",
+                    alertType: 'alert',
                     title:''
                 })
         })

@@ -2,7 +2,8 @@ import {Actions as routes} from "react-native-router-flux";
 import { MessageBarManager } from 'react-native-message-bar';
 import Utils from 'app/common/Utils'
 import { AsyncStorage } from 'react-native';
-
+import DeviceInfo from 'react-native-device-info';
+const deviceId = DeviceInfo.getUniqueID();
 export const AUTH_LOGIN_START = 'AUTH_LOGIN_START';
 export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS';
 export const AUTH_LOGIN_FAIL = 'AUTH_LOGIN_FAIL';
@@ -82,6 +83,7 @@ const successHome = (username, password ,usr_type, u_id) => {
 			token: Math.random().toString(),
 			user_type : usr_type,
 			u_id : u_id,
+			deviceId:deviceId,
 			username,
 			password
 		}

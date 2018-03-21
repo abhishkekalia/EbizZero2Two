@@ -127,6 +127,8 @@ class Shopingcart extends Component {
     fetchData(){
         const {u_id, country, lang ,deviceId } = this.props;
         // deviceId = "fc898d3fb74399eb";
+        // console.warn("deviceId", deviceId);
+        // console.warn("country", country);
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
@@ -142,6 +144,7 @@ class Shopingcart extends Component {
         fetch(Utils.gurl('cartList'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            // console.warn(responseData);
             var Items = responseData.data,
                 length = Items.length,
                 organization,

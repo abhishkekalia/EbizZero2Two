@@ -35,10 +35,17 @@ class MyService extends Component {
         .then( ()=>this.fetchData())
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left: this._renderRightButton });
+        routes.refresh({ right: this._renderRightButton, left: this._renderLeftButton });
     }
+    _renderLeftButton = () => {
+         return(
+             <Text style={{color : '#fff'}}></Text>
+         );
+     };
     _renderRightButton = () => {
-        return null
+        return(
+            <Text style={{color : '#fff'}}></Text>
+        );
     };
     async getKey() {
         try {
@@ -204,8 +211,11 @@ class MyService extends Component {
                         service_id: data.service_id,
                         service_type:data.service_type,
                         service_name: service_name,
+                        service_name_in_arabic: data.service_name_in_arabic,
                         detail_description: detail_description,
+                        short_description_in_arabic: data.short_description_in_arabic,
                         short_description: short_description,
+                        detail_description_in_arabic: data.detail_description_in_arabic,
                         price: price,
                         special_price: special_price,
                         is_active: data.is_active,

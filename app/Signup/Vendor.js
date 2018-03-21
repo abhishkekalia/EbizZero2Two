@@ -26,7 +26,7 @@ import { Picker } from 'react-native-picker-dropdown';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actionsheet';
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
@@ -311,7 +311,7 @@ class Vendorreg extends Component {
 								/>
 						}
 						<Text style={{ }} >{this.state.selectCountry? selCountryObj.country_name  : this.state.selectCountry }</Text>
-						<FontAwesome name="chevron-down" size={20} color="#000" style={{padding:5, marginRight:5}}/>
+						<FontAwesome name="chevron-down" size={20} color="#FFCC7D" style={{padding:5, marginRight:5}}/>
 						{!this.state.selectCountry? <Text style={{position:'absolute', marginLeft:5, fontSize:12}} onPress={()=>console.log("echo")}>{I18n.t('userregister.selectcountry', { locale: lang })}</Text>: undefined}
 					</TouchableOpacity>
 					<ActionSheet
@@ -422,7 +422,7 @@ class Vendorreg extends Component {
 			align = lang === 'ar' ? "right" : "left";
 
 			const emailArr = email.split('.');
-			
+
 
 			if (!company.length){
 				MessageBarManager.showAlert({
@@ -473,6 +473,7 @@ class Vendorreg extends Component {
 					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
 					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
 				});
+				return false;
 			}
 			if (!address.length){
 				MessageBarManager.showAlert({

@@ -24,7 +24,7 @@ import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actionsheet';
 import Modal from 'react-native-modal';
 
@@ -330,8 +330,8 @@ class Register extends Component {
 						<Text style={{ }} >{this.state.selectCountry? selCountryObj.country_name  : I18n.t('userregister.selectcountry', { locale: lang }) }</Text>
 						<FontAwesome
 							name="chevron-down"
-							size={15}
-							color="#000"
+							size={20}
+							color="#FFCC7D"
 							style={{padding:5, marginRight:5}}/>
 					</TouchableOpacity>
 					<ActionSheet

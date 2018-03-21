@@ -15,6 +15,7 @@ import {
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
 import I18n from 'react-native-i18n';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 const { width, height } = Dimensions.get('window')
 
 export default class FeaturedProduct extends Component {
@@ -230,7 +231,7 @@ export default class FeaturedProduct extends Component {
                     </View>
                 </TouchableOpacity>
                 <Footer
-                    inserted_date = {data.inserted_date} product_id = {data.product_id} u_id={u_id} country={country} lang={lang}/>
+                    inserted_date = {data.inserted_date} product_id = {data.product_id} u_id={u_id} country={country} lang={lang} is_feature = {data.is_feature}/>
             </View>
         );
     }
@@ -260,11 +261,11 @@ class Footer extends Component{
         }
     }
     manageFeature(){
-        const {u_id,country} = this.props;
+        const {u_id,country,is_feature} = this.props;
         const {product_id} = this.props;
-        this.state.toggled = !this.state.toggled;
+        // this.state.toggled = is_feature == "2" ? ;
 
-        if(this.state.toggled == true){
+        if(is_feature == "2"){
             let form = new FormData();
         	form.append('u_id', String(u_id));
         	form.append('country', String(country));
@@ -293,7 +294,7 @@ class Footer extends Component{
               console.log(error);
             })
             .done();
-        }else{
+        }else if(is_feature == "1"){
             let form = new FormData();
         	form.append('u_id', String(u_id));
         	form.append('country', String(country));
@@ -329,7 +330,7 @@ class Footer extends Component{
   //   // this.setState({user: nextProps.user})
   // }
     render(){
-        const { lang} = this.props,
+        const { lang,is_feature} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
 
@@ -341,7 +342,7 @@ class Footer extends Component{
                       tintColor="#000"
                       onValueChange={ ()=> this.manageFeature()}
                     // onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
-                    value={ this.state.toggled} />
+                    value={is_feature == "2" ? false : true } />
                     <View style={{flexDirection: direction}}>
                         <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
                             <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>:</Text>

@@ -23,16 +23,14 @@ class Profile extends Component {
             phone_no : null,
             data : [],
             marketing_campaign : [],
-						chart : []
+			chart : []
         };
     }
     componentwillMount(){
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
-
         NetInfo.isConnected.fetch().done(
             (isConnected) => { this.setState({ netStatus: isConnected }); }
             );
-
         NetInfo.isConnected.fetch().done((isConnected) => {
             if (isConnected)
             {
@@ -187,7 +185,10 @@ class Profile extends Component {
 				<Text style={{textAlign: textline, alignSelf: 'center'}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
 				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}/>
 				<TouchableOpacity
-                onPress={()=>( Utils.logout()),logout}
+                onPress={()=>{ Utils.logout()
+					.then(logout)
+					.done()
+				}}
                 style={styles.logout}>
 					<Text style={{ color: "#fbcdc5"}}>{I18n.t('venderprofile.logout', { locale: lang })}</Text>
 				</TouchableOpacity>
