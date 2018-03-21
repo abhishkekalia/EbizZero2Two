@@ -46,6 +46,7 @@ import GetMyaddress from "./components/GetMyaddress";
 import Marketingadd from "./components/Marketingadd";
 import Editmyprofile from "./components/Editmyprofile";
 import Myfaturah from './components/Myfaturah';
+import Myfeaturefaturah from './components/Myfeaturefaturah'
 import BookMyService from './components/BookMyService';
 import MyAdfaturah from './components/MyAdfaturah';
 import Myuserfaturah from './components/Myuserfaturah';
@@ -456,6 +457,18 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="faturah"
                     component={Myfaturah} />
+                </Stack>
+                <Stack
+                back
+                backTitle="Back"
+                hideNavBar={true}
+                duration={0}
+                key="myfeaturefaturah"
+                titleStyle={{ color: 'black', alignSelf: 'center' }}
+                navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                    <Scene
+                    key="featurefaturah"
+                    component={Myfeaturefaturah} />
                 </Stack>
                 <Stack
                 back
