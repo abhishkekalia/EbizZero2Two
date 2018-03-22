@@ -53,6 +53,7 @@ import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
 import ServiceUser from './components/Order/ServiceUser'
 import TrackOrder from './components/Order/TrackOrder'
+import DealsandOffers from './components/DealsandOffers'
 import Filter from './components/Filter';
 import MenuIcon from './images/imgpsh.png';
 
@@ -323,13 +324,22 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                         </Scene>
                     </Stack>
                 </Lightbox>
-                    <Stack key="registerPage" navBar={CustomGenNavBar} >
-                        <Scene
-                    key="register"
-                    component={Register}
-                    title={I18n.t("login.createaccountbtn", { locale: lang })}
-                    navBar={CustomGenNavBar}
-                    />
+                <Stack key="deals" >
+                    <Scene
+                        hideNavBar={true}
+                        key="register"
+                        component={DealsandOffers}
+                        title={I18n.t("login.createaccountbtn", { locale: lang })}
+                        navBar={CustomGenNavBar}
+                        />
+                </Stack>
+                <Stack key="registerPage" navBar={CustomGenNavBar} >
+                    <Scene
+                        key="register"
+                        component={Register}
+                        title={I18n.t("login.createaccountbtn", { locale: lang })}
+                        navBar={CustomGenNavBar}
+                        />
                 </Stack>
                 <Stack key="registerVendor" navBar={CustomGenNavBar} >
                     <Scene

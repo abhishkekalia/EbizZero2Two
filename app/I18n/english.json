@@ -502,5 +502,9 @@
         "orderId":"Order Id",
         "orderType":"Order Type",
         "deliveryStatus": "Delivery Status",
+    },
+    "deals":{
+        "dealTitle":"Deals & Offres",
+        "buyitnowbtn":"Buy It Now",
     }
 }
