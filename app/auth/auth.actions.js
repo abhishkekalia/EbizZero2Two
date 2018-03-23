@@ -52,8 +52,9 @@ export const login = (username, password, os) => {
             	}
         	}));
 					let usr_type = responseData.response.data.user_type,
+					country = responseData.response.data.country,
 					 u_id = responseData.response.data.u_id;
-    	 	dispatch(successHome(responseData.response.data.fullname, password, usr_type, u_id));
+    	 	dispatch(successHome(responseData.response.data.fullname, password, usr_type, u_id, country));
 
          } else {
             MessageBarManager.showAlert({
@@ -71,7 +72,7 @@ export const login = (username, password, os) => {
 };
 };
 
-const successHome = (username, password ,usr_type, u_id) => {
+const successHome = (username, password ,usr_type, u_id, country) => {
  	if(usr_type === "3"){
 		routes.vendortab()
 	}else{
@@ -84,6 +85,7 @@ const successHome = (username, password ,usr_type, u_id) => {
 			user_type : usr_type,
 			u_id : u_id,
 			deviceId:deviceId,
+			country:country,
 			username,
 			password
 		}

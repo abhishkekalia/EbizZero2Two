@@ -111,26 +111,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                         type={ActionConst.REPLACE}
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                         titleStyle={{color : "#FFF", alignSelf: 'center'}}/>
-                        <Drawer
-                        key="drawer"
-                        drawer ={true}
-                        type="overlay"
-                        drawerImage={MenuIcon}
-                        contentComponent={Menu}
-                        styles={drawerStyles.drawer}
-                        drawerPosition={I18n.t('home.sidemenu', { locale: lang })}
-                        onOpen={()=>Actions.refresh({key:state.key, open: true})}
-                        onClose={()=>Actions.refresh({key:state.key, open: false})}
-                        tapToClose={true}
-                        // initial={true}
-                        // initial={true}
-                        hideNavBar={true}
-                        initial={user}
-                        panOpenMask={0.80}
-                        easingFunc={Easing.ease}
-                        // captureGestures="open"
-                        >
-                            <Scene key="tab" hideNavBar>
+                            <Scene key="tab" hideNavBar initial={user}>
                                 <Tabs
                                 tabs
                                 key="tabbar"
@@ -217,7 +198,6 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     </Stack>
                                 </Tabs>
                             </Scene>
-                        </Drawer>
                         <Scene
                         key="vendortab"
                         hideNavBar

@@ -51,7 +51,7 @@ const Slide = props => {
                 name="share-google"
                 size={30}
                 color="#a9d5d1"
-                onPress={()=>props.share()} />
+                onPress={props.share} />
             {
               !props.loaded && <View style={styles.loadingView}>
               <BubblesLoader

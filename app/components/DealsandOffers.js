@@ -27,21 +27,9 @@ import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
 import I18n from 'react-native-i18n'
 import Share, {ShareSheet, Button} from 'react-native-share';
+import Drawer from 'react-native-drawer';
+import Menu from './menu/MenuContainer';
 const { width, height } = Dimensions.get('window')
-
-class MyToolbar extends Component {
-    render() {
-        var navigator = this.props.navigator;
-        return (
-            <ToolbarAndroid
-                title={this.props.title}
-                navIcon={require('./images/icon-checkbox-checked.png')}
-                style = {styles.toolbar}
-                titleColor={'white'}
-                onIconClicked={this.props.sidebarRef}/>
-        );
-    }
-}
 class DealsandOffers extends Component {
     constructor(props) {
         super(props);
@@ -49,7 +37,9 @@ class DealsandOffers extends Component {
             visible: false,
             notificationCount : 0,
             refreshing: false,
-            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
+            dataSource2: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
+            visibleaddress: false,
         }
     }
     _onRefresh() {
@@ -61,6 +51,7 @@ class DealsandOffers extends Component {
     }
     componentDidMount(){
         this.fetchData();
+        this.fetchAddress();
     }
     fetchData(){
         api.dealsAndOffer()
@@ -77,146 +68,77 @@ class DealsandOffers extends Component {
         })
         .done();
     }
+    fetchAddress(){
+        const { u_id, country } = this.props;
+        api.addressList(u_id, country)
+        .then((responseData) => {
+            if(responseData.status){
+                this.setState({
+                    addressStatus : responseData.status,
+                    dataSource2: this.state.dataSource.cloneWithRows(responseData.data),
+                });
+            }else{
+                this.setState({
+                    addressStatus : responseData.status,
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+    }
+    order (delivery_address_id){
+        const{ data } = this.state;
+        var Select =[];
+        var today = new Date();
+        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
+        Select.push ({
+                "product_id": data.product_id,
+                "size": "not defined",
+                "quantity": "1",
+                "delivery_address_id": delivery_address_id,
+                "vendor_id":"1",
+                "price":(data.Price),
+                "delivery_datetime": currentdate,
+                "order_date": nextdate
+            }
+        )
+        this.addToOrder(Select)
+        .then(()=>this.setState({
+            visible:false,
+            visibleModal: true,
+        }))
+        .done()
+    }
+    async addToOrder(value){
+        try {
+            const { data ,count} = this.state;
+            const { u_id, country} = this.props;
+            api.addToOrder(u_id, country, value, data, 1)
+            .then((responseData) => {
+                if(responseData.status){
+                    routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+                }else{
+                    // this.removeLoader
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
     SampleFunction=(newLang)=>{
         this.props.languageChange(newLang)
     }
     render() {
         const {identity, logout, lang,u_id} = this.props;
-
-        var navigationView = (
-            <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
-                <View style={[styles.avatarContainer,{ alignSelf: 'center', justifyContent: 'space-around'}]}>
-                    {
-                        u_id == undefined ?
-                        <View style={{ height: "85%", width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
-                            <TouchableOpacity onPress={Actions.registerPage} style={{alignSelf: 'center'}} >
-                                <Text style={styles.signinbtn}>{I18n.t('sidemenu.signup', { locale: lang })}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={Actions.profile} style={styles.username}>
-                                <View style= {styles.guest}>
-                                    <Zocial name='guest' color="#000" size={15} />
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity  onPress={Actions.loginPage} style={{alignSelf: 'center'}}>
-                                <Text style={styles.signinbtn}>{I18n.t('sidemenu.login', { locale: lang })}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        :
-                        <View style={{ height:  "90%", width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
-                            <TouchableOpacity
-                                    onPress={Actions.profile} style={styles.username}>
-                                <View style= {styles.guest}>
-                                    <Zocial name='guest' color="#000" size={15} />
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    }
-                    <View style={{ width: width, height:  "20%", justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 0, position: 'relative'}}>
-                        {
-                            Object.keys(I18n.translations).map((item, key)=>(
-                                <Text
-                                    style={{ fontSize: 15, color: '#fff', alignSelf: 'flex-end'}}
-                                    key={key}
-                                    // {I18n.translations[item].id }
-                                    onPress={ this.SampleFunction.bind(this, item) }>
-                                    {I18n.translations[item].id }
-                                </Text>
-                            ))
-                        }
-                    </View>
-                    <Text style={{
-                            zIndex: 1,
-                            position: 'relative' ,
-                            marginBottom: 10,
-                            paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:0}}>{identity.username}</Text>
-                </View>
-                <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
-                    {
-                        this.state.notificationCount > 0 ?
-                        <IconBadge
-                            MainElement={
-                                <Ionicons
-                                    name="ios-notifications"
-                                    color="#a9d5d1" size={30}
-                                    style={{ left : 5}}
-                                    />
-                            }
-                            BadgeElement={
-                                <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
-                            }
-                            IconBadgeStyle={{
-                                width:16,
-                                height:18,
-                                // left : 10,
-                                backgroundColor: 'orange'
-                            }}
-                            />
-                        :
-                        <Ionicons
-                            name="ios-notifications"
-                            color="#a9d5d1" size={30}
-                            style={{ left : 5}}
-                            />
-                    }
-                    <Text onPress={Actions.notificationShow}
-                        style={{
-                            fontSize: 12,
-                            padding: 10,
-                            marginTop : 1,
-                            left :5,
-                        }}>	{I18n.t('sidemenu.notification', { locale: lang })}
-                    </Text>
-                </View>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                    onPress={Actions.deals}
-                    style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.deals', { locale: lang })}</Text>
-                    <View style={styles.starsix}>
-                    <TriangleUp style={styles.starSixUp} />
-                    <Text style={{position: 'absolute',textAlign: 'center',zIndex: 2, color: "#fff", fontSize: 8, alignSelf: 'center'}}>OFF</Text>
-                    <TriangleDown style={styles.starSixDown} />
-                    </View>
-                </View>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
-                    onPress={Actions.homePage}
-                    style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.home', { locale: lang })}</Text>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
-                    onPress={Actions.contactUs}
-                    style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.contact', { locale: lang })}</Text>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
-                    onPress={Actions.myorder}
-                    style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.order', { locale: lang })}</Text>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
-                    onPress={()=>this.onOpen()}
-                    style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.share', { locale: lang })}</Text>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                {/* in feedback it says to remove rate us
-                    <Text
-                    onPress={Actions.sync}
-                    style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.rateus', { locale: lang })}</Text>
-                    */
-                }
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text
-                    onPress={Actions.postad}
-                    style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                <Text onPress={
-                        ()=>{ Utils.logout()
-                            .then(logout)
-                            .done()
-                        }
-                    }
-                    style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}
-                </Text>
-                {this.renderShareSheet()}
-            </ScrollView>
-        );
+        let side = lang === "ar" ? "right" : "left";
         let listView = (<View></View>);
         listView = (
             <ListView
@@ -234,14 +156,23 @@ class DealsandOffers extends Component {
                 />
         );
         return (
-            <DrawerLayoutAndroid
-                drawerWidth={300}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => navigationView}
-                ref={'DRAWER'}>
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side= {side}
+                >
                     <View style={{flex: 1}}>
                         <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                            <TouchableOpacity onPress={()=>this._setDrawer()}>
+                            <TouchableOpacity onPress={()=>this.openControlPanel()}>
                                 <Feather name="menu" size={20} color="#fff" style={{ padding : 10}}/>
                             </TouchableOpacity>
                             <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
@@ -249,7 +180,8 @@ class DealsandOffers extends Component {
                         </View>
                         {listView}
                 </View>
-            </DrawerLayoutAndroid>
+                {this.renderAddressSheet()}
+            </Drawer>
         );
     }
     renderData(data, rowData, sectionID, rowID, index) {
@@ -279,135 +211,122 @@ class DealsandOffers extends Component {
                         <Text style={{color: "#fff"}}/>
                     </View>
                 </View>
-                <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', flexDirection: direction}}>
+                <TouchableOpacity onPress={()=> this.setState({
+                        data: data,
+                        visibleaddress: true
+                    })}
+                    style={{justifyContent: 'center', alignItems: 'center', flexDirection: direction}}>
                     <Icon name="handbag" size={25} color="#000"/>
                     <Text style={{ margin: 10}}>{I18n.t('deals.buyitnowbtn', { locale: lang })}</Text>
                 </TouchableOpacity>
             </View>
        );
    }
-   renderShareSheet() {
-       let shareOptions = {
-           title: "ZeroToTwo",
-           message: "App Description",
-           url: "https://www.google.com",
-           subject: "Share Link" //  for email
-       };
-        return(
-            <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-                <Button iconSrc={{ uri: TWITTER_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.shareSingle(Object.assign(shareOptions, {
-                                "social": "twitter"
-                            }
-                        ));
-                    },300);}}>Twitter
-                </Button>
-                <Button iconSrc={{ uri: FACEBOOK_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.shareSingle(Object.assign(shareOptions, {
-                                "social": "facebook"
-                            }
-                        ));
-                    },300);}}>Facebook
-                </Button>
-                <Button iconSrc={{ uri: WHATSAPP_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.shareSingle(Object.assign(shareOptions, {
-                                "social": "whatsapp"
-                            }
-                        ));
-                    },300);}}>Whatsapp
-                </Button>
-                <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.shareSingle(Object.assign(shareOptions, {
-                                "social": "googleplus"
-                            }
-                        ));
-                    },300);}}>Google +
-                </Button>
-                <Button iconSrc={{ uri: EMAIL_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.shareSingle(Object.assign(shareOptions, {
-                                "social": "email"
-                            }
-                        ));
-                    },300);}}>Email
-                </Button>
-                <Button iconSrc={{ uri: CLIPBOARD_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            if(typeof shareOptions["url"] !== undefined) {
-                                Clipboard.setString(shareOptions["url"]);
-                                if (Platform.OS === "android") {
-                                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
-                                } else if (Platform.OS === "ios") {
-                                    AlertIOS.alert('Link Copied to Clipboard');
-                                }
-                            }
-                        },300);
-                    }}>Copy Link
-                </Button>
-                <Button iconSrc={{ uri: MORE_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.open(shareOptions)
-                        },300);
-                    }}>More
-                </Button>
-                {/* <View style={{paddingBottom:40}}/> */}
-            </ShareSheet>
-        );
-    }
+   addrssData(data, rowData, sectionID, rowID, index) {
+       const { navigate } = this.props.navigation,
+       {lang}= this.props,
+       direction = (lang === 'ar') ? 'row-reverse' :'row',
+       align = (lang === 'ar') ?  'right': 'left';
+       return (
+           <TouchableOpacity style={{ flexDirection: direction ,paddingBottom:  10}} onPress= {()=>this.order(data.address_id)}>
+               <View style={{ flexDirection: 'column' }}>
+                   <View style={{ width: width-125, flexDirection: direction , justifyContent: 'space-between'}}>
+                       <Text style={{ fontSize: 15,  textAlign: align}}>{data.full_name}</Text>
+                   </View>
+                   <Text style={{ fontSize : 10,  textAlign: align}}>{data.mobile_number}</Text>
+                   <Text style={{fontSize:12, textAlign: align}}>
+                       {[
+                           data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
+                           data.jadda,"\n",data.city," ",data.direction
+                       ]}
+                   </Text>
+               </View>
+           </TouchableOpacity>
+       );
+   }
+   noItemFound(){
+       const { lang,logout,u_id} = this.props;
+       return (
+           <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+               <Text style={{fontSize: 12, fontWeight: 'bold'}}>{I18n.t('servicedetail.noaddress', { locale: lang })}</Text>
+               {
+                   u_id === undefined ?
+                   <Text onPress={()=>{
+                           Utils.logout()
+                           .then(logout)
+                           .done()
+                       }} style={{fontSize: 12, fontWeight: 'bold'}}> Please login / register to add address
+                   </Text>
+                   :
+                   <Text/>
+               }
+           </View>
+       );
+   }
+   renderAddressSheet(){
+       let {lang}= this.props,
+       direction = (lang === 'ar') ? 'row-reverse' :'row',
+       align = (lang === 'ar') ?  'right': 'left';
+
+       let listView = (<View></View>);
+       listView = (
+           <ListView
+               refreshControl={
+                   <RefreshControl
+                       refreshing={false}
+                       onRefresh={()=>this._onRefresh()} />
+               }
+               contentContainerStyle={styles.list}
+               dataSource={this.state.dataSource2}
+               renderRow={ this.addrssData.bind(this)}
+               enableEmptySections={true}
+               automaticallyAdjustContentInsets={false}
+               showsVerticalScrollIndicator={false}
+               />
+       );
+       return (
+           <ShareSheet visible={this.state.visibleaddress} onCancel={this.onCancel.bind(this)}>
+               <View style={{flexDirection:direction, justifyContent:'center', width:'100%', marginBottom: -30}}>
+                   <View style={{flexDirection:direction, justifyContent:'center', width:'50%', alignItems:'center'}}>
+                       <Text>{I18n.t('productdetail.selectaddress', { locale: lang })}</Text>
+                   </View>
+                   <View style={{flexDirection: direction, justifyContent:'center', width:'50%'}}>
+                       <TouchableOpacity style={{padding:10, backgroundColor:'#a9d5d1', alignItems:'center', width:'80%'}} onPress={()=> Actions.newaddress({isFromEdit:false})}>
+                           <Text style={{color:'#fff'}}>{I18n.t('productdetail.addaddresslbl', { locale: lang })}</Text>
+                       </TouchableOpacity>
+                   </View>
+               </View>
+               <View style={{margin: 35}}>
+                   {(this.state.dataSource.getRowCount() < 1) ? this.noItemFound() : listView}
+               </View>
+           </ShareSheet>
+       )
+   }
     onOpen() {
         this.setState({
             visible:true,
         });
     }
     onCancel() {
-        console.log("CANCEL")
-        this.setState({visible:false});
+        this.setState({
+            visible:false,
+            visibleaddress: false
+        });
     }
-    _setDrawer() {
-        this.refs['DRAWER'].openDrawer();
-    }
-}
-class TriangleUp extends Component{
-    render() {
-        return (
-            <View style={[styles.triangle, this.props.style]} />
-        )
-    }
-}
-class TriangleDown extends Component{
-    render() {
-        return (
-            <TriangleUp style={styles.triangleDown}/>
-        )
-    }
+    closeControlPanel = () => {
+        this._drawer.close()
+    };
+    openControlPanel = () => {
+        this._drawer.open()
+    };
 }
 const styles = StyleSheet.create({
     row:{
         flexDirection: 'column',
         justifyContent: 'space-between',
-        // width : width/2 -6,
         margin: 3,
         borderWidth: 1,
         borderColor: '#CCC',
-        // borderRadius : 5,
     },
     linearGradient: {
         paddingLeft: 15,
@@ -416,13 +335,8 @@ const styles = StyleSheet.create({
         width:'80%'
       },
       contentContainer: {
-        // flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-    },
-    seprator : {
-        // borderBottomColor : "grey",
-        // borderBottomWidth : 0.5
     },
     badge : {
         alignItems: 'center',
@@ -434,7 +348,6 @@ const styles = StyleSheet.create({
         width:'100%',
         borderBottomColor:'rgba(241,241,241,1)'
     },
-
     menu: {
         flex: 1,
         width: width - 30,
@@ -442,7 +355,6 @@ const styles = StyleSheet.create({
         backgroundColor: "grey",
         position : 'absolute'
     },
-
     avatarContainer: {
         width: width,
         height : 120,
@@ -452,7 +364,6 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     signinbtn:{
-
         padding:5,
         marginLeft: 10,
         marginRight: 10,
@@ -503,40 +414,12 @@ const styles = StyleSheet.create({
         // borderBottomColor:'linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(223,223,223,1) 50%, rgba(255,255,255,1) 100%)',
         // borderBottomColor:'red',
         // borderBottomWidth:5
-    },
-    triangle: {
-        width: 0,
-        height: 0,
-        backgroundColor: 'transparent',
-        borderStyle: 'solid',
-        borderLeftWidth: 10,
-        borderRightWidth: 10,
-        borderBottomWidth: 20,
-        borderLeftColor: 'transparent',
-        borderRightColor: 'transparent',
-        borderBottomColor: '#a9d5d1'
-    },
-    triangleDown: {
-        transform: [{
-            rotate: '180deg'
-        }]
-    },
-    starsix: {
-    // width: 100,
-    // height: 100
-  },
-  starSixUp: {
-    position: 'absolute',
-    // zIndex: 1
-    top: -7,
-    // left: 0
-  },
-  starSixDown: {
-    position: 'absolute',
-    top: 25,
-    left: 0
-  }
+    }
 });
+const drawerStyles = {
+  drawer: { backgroundColor:'#fff', shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
+  main: {paddingLeft: 3, backgroundColor:'#fff'},
+}
 const TWITTER_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg==";
 
 //  facebook icon
@@ -564,7 +447,9 @@ function mapStateToProps(state) {
     return {
         identity: state.identity,
         lang: state.auth.lang,
+        country: state.auth.country,
         u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
     }
 }
 

@@ -1,93 +1,60 @@
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet,View } from 'react-native';
-import MapView from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
+import {
+  StyleSheet,
+  Text,
+  View,
+  DrawerLayoutAndroid,
+  TouchableHighlight,
+  ToolbarAndroid,
+  ScrollView
+} from 'react-native';
 
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE = 37.771707;
-const LONGITUDE = -122.4053769;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+import Drawer from 'react-native-drawer';
+class ControlPanel extends Component {
+    render() {
+      return (
+          <ScrollView>
+              <View style = {{height:100, backgroundColor:'blue', justifyContent:'center'}}>
+                  <Text  onPress={() => {this.props.closeDrawer()}}
+                      style = {{height:25, color:'white', fontSize:25, marginLeft:20}}>Welcome To ReactNative</Text>
+              </View>
+          </ScrollView>
 
-const GOOGLE_MAPS_APIKEY = 'AIzaSyD4T7njRubC7I7zYNwE5wnuTw0X5E_1Cc4';
-
-export default class App extends Component<Props> {
-
-      constructor(props) {
-        super(props);
-
-        // AirBnB's Office, and Apple Park
-        this.state = {
-          coordinates: [
-            {
-              latitude: 37.3317876,
-              longitude: -122.0054812,
-            },
-            {
-              latitude: 37.771707,
-              longitude: -122.4053769,
-            },
-          ],
-        };
-
-        this.mapView = null;
-      }
-
-      onMapPress = (e) => {
-        this.setState({
-          coordinates: [
-            ...this.state.coordinates,
-            e.nativeEvent.coordinate,
-          ],
-        });
-      }
-
-      render() {
-        return (
-            <View style={{ flex : 1, justifyContent: 'center',}}>
-                <MapView
-              initialRegion={{
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              }}
-              style={StyleSheet.absoluteFill}
-              ref={c => this.mapView = c}
-              onPress={this.onMapPress}
-            >
-              {this.state.coordinates.map((coordinate, index) =>
-                <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} />
-              )}
-              {(this.state.coordinates.length >= 2) && (
-                <MapViewDirections
-                  origin={this.state.coordinates[0]}
-                  waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
-                  destination={this.state.coordinates[this.state.coordinates.length-1]}
-                  apikey={GOOGLE_MAPS_APIKEY}
-                  strokeWidth={3}
-                  strokeColor="hotpink"
-                  onStart={(params) => {
-                    console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-                  }}
-                  // onReady={(result) => {
-                  //   this.mapView.fitToCoordinates(result.coordinates, {
-                  //     edgePadding: {
-                  //       right: (width / 20),
-                  //       bottom: (height / 20),
-                  //       left: (width / 20),
-                  //       top: (height / 20),
-                  //     }
-                  //   });
-                  // }}
-                  onError={(errorMessage) => {
-                    // console.log('GOT AN ERROR');
-                  }}
-                />
-              )}
-            </MapView>
-          </View>
-        );
-      }
+      );
     }
+}
+export default class App extends Component {
+    render() {
+        return (
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<ControlPanel closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2} // 20% gap on the right side of drawer
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                >
+                <View style={{flex: 1, alignItems: 'center'}}>
+                    <TouchableHighlight onPress={()=>this.openControlPanel()}>
+                        <Text style={{margin: 10, fontSize: 15, textAlign: 'right'}}>Hello</Text>
+                    </TouchableHighlight>
+                </View>
+            </Drawer>
+        );
+    }
+    closeControlPanel = () => {
+      this._drawer.close()
+    };
+    openControlPanel = () => {
+      this._drawer.open()
+    };
+}
+const drawerStyles = {
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
+  main: {paddingLeft: 3},
+}
