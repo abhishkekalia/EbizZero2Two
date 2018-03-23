@@ -363,7 +363,7 @@ class AddProduct extends Component {
                     console.log('uploaded', Math.floor(written/total*100) + '%')
                 })
                 .then((res)=>{
-                    console.log(res)
+                    console.log(res);
                     MessageBarManager.showAlert({
                         message: I18n.t('vendoraddproduct.productadded', { locale: lang }),
                         alertType: 'extra',
