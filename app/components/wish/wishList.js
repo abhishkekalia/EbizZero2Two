@@ -451,6 +451,7 @@ class WishList extends Component {
                                 product_id={data.product_id}
                                 updatetype={"0"}
                                 country={this.state.country}
+                                deviceId={deviceId}
                                 callback={this.refreshfromCount.bind(this)}
                                 />
                             </View>

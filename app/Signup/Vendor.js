@@ -454,6 +454,17 @@ class Vendorreg extends Component {
 				})
 				return false
 			}
+			if(contact.length !== 12){
+				MessageBarManager.showAlert({
+					message: "Please enter valid Mobile number ",
+					title:'',
+					alertType: 'extra',
+					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+				})
+				return false
+			}
+
 			let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
 			if(reg.test(email) === false){
 				MessageBarManager.showAlert({
@@ -493,6 +504,16 @@ class Vendorreg extends Component {
 					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
 					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
         	})
+			return false
+		}
+		if(password.length < 6){
+			MessageBarManager.showAlert({
+				message: "Please enter atleast 6 character password ",
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
 			return false
 		}
 		if (!selectCountry.length){

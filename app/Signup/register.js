@@ -506,6 +506,16 @@ class Register extends Component {
 			})
 			return false
 		}
+		if(password.length < 6){
+			MessageBarManager.showAlert({
+				message: "Please enter atleast 6 character password ",
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
+			return false
+		}
 		if( gender.value === undefined){
 			MessageBarManager.showAlert({
 				message: I18n.t('userregister.pleaseselectgender', { locale: lang }),
@@ -515,6 +525,16 @@ class Register extends Component {
 				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
 			})
 			return false;
+		}
+		if(contact.length !== 12 ){
+			MessageBarManager.showAlert({
+				message: "Please enter 12 digit Mobile number ",
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
+			return false
 		}
 		if (!contact.length){
 			MessageBarManager.showAlert({
