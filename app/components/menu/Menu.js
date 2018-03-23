@@ -18,9 +18,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
 import I18n from 'react-native-i18n'
-
 import Share, {ShareSheet, Button} from 'react-native-share';
-
 const { width, height } = Dimensions.get('window')
 
 class Menu extends React.Component {
@@ -61,7 +59,7 @@ class Menu extends React.Component {
         this.props.languageChange(newLang)
     }
     render() {
-        const {identity, logout, lang,u_id} = this.props;
+        const {identity, logout, lang,u_id, closeDrawer} = this.props;
         return (
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
                 <View style={[styles.avatarContainer,{ alignSelf: 'center', justifyContent: 'space-around'}]}>
