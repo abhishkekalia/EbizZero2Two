@@ -45,11 +45,9 @@ class ProductOrder extends Component{
                 longitude: 72.599584,
               },
             ],
-
         },
         this.bindMethods();
         this.mapView = null;
-
     }
     onMapPress = (e) => {
       this.setState({
@@ -59,12 +57,10 @@ class ProductOrder extends Component{
         ],
       });
     }
-
     bindMethods() {
         if (! this.bindableMethods) {
             return;
         }
-
         for (var methodName in this.bindableMethods) {
             this[methodName] = this.bindableMethods[methodName].bind(this);
         }
@@ -74,7 +70,6 @@ class ProductOrder extends Component{
         var getSectionData = (dataBlob, sectionID) => {
             return dataBlob[sectionID];
         }
-
         var getRowData = (dataBlob, sectionID, rowID) => {
             return dataBlob[sectionID + ':' + rowID];
         }
@@ -110,36 +105,31 @@ class ProductOrder extends Component{
             console.log("Error retrieving data" + error);
         }
     }
-
-
     fetchData () {
-                const { u_id,country, } = this.state;
-
+        const { u_id,country, } = this.state;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
-
         const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
         fetch(Utils.gurl('userOrderList'), config)
-
-            .then((response) => response.json())
-            .then((responseData) => {
+        .then((response) => response.json())
+        .then((responseData) => {
             var orders = responseData.data,
-                length = orders.length,
-                dataBlob = {},
-                sectionIDs = [],
-                rowIDs = [],
-                order,
-                orderLength,
-                i,
-                j;
+            length = orders.length,
+            dataBlob = {},
+            sectionIDs = [],
+            rowIDs = [],
+            order,
+            orderLength,
+            i,
+            j;
 
             for (i = 0; i < length; i++) {
                 order = orders[i];
@@ -158,7 +148,6 @@ class ProductOrder extends Component{
                     dataBlob[orderDetail] = orderDetail;
                 }
             }
-
             if (responseData.status) {
                 this.setState({
                     dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
@@ -171,24 +160,22 @@ class ProductOrder extends Component{
                     status     : responseData.status
                 });
             }
-
         })
         .catch((error) => {
-          console.log(error);
+            console.log(error);
         })
         .done();
-
     }
     noItemFound(){
+        const { lang} = this.props;
         return (
-            <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
-                <Text>You have no items in product</Text>
+            <View style={{ flex:1, justifyContent:'center', alignItems:'center'}}>
+                <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );
     }
-
     render() {
-        const {lang} =this.props;
+        const { lang } =this.props;
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
@@ -196,19 +183,17 @@ class ProductOrder extends Component{
             return this.noItemFound();
         }
         let listView = (<View></View>);
-
         listView = (
             <ListView
                 dataSource = {this.state.dataSource}
                 style      = {styles.listview}
                 renderRow  = {this.renderRow.bind(this)}
-                renderSectionHeader = {this.renderSectionHeader}
+                renderSectionHeader = {this.renderSectionHeader.bind(this)}
                 enableEmptySections = {true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
             />
         );
-
         return (
             <View style={[styles.container, {padding : 5}]}>
                 {listView}
@@ -217,59 +202,55 @@ class ProductOrder extends Component{
                     transparent={false}
                     visible={this.state.visibleMap}
                     onRequestClose={() => this.setState({ visibleMap :false})}>
-                <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: 10}}>
-                    <Icon onPress ={()=>this.setState({ visibleMap :false})} name="close-circle" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
-                </View>
-                <View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
+                    <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: 10}}>
+                        <Icon onPress ={()=>this.setState({ visibleMap :false})} name="close-circle" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
+                    </View>
+                    <View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
                     <MapView
-                  initialRegion={{
-                    latitude: LATITUDE,
-                    longitude: LONGITUDE,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA,
-                  }}
-                  style={StyleSheet.absoluteFill}
-                  ref={c => this.mapView = c}
-                  onPress={this.onMapPress}
-                >
-                  {this.state.coordinates.map((coordinate, index) =>
-                    <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} >
-                        <FontAwesome name="car" size={15} color="#FFCC7D"/>
-                        </MapView.Marker>
-                  )}
-                  {(this.state.coordinates.length >= 2) && (
-                    <MapViewDirections
-                      origin={this.state.coordinates[0]}
-                      waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
-                      destination={this.state.coordinates[this.state.coordinates.length-1]}
-                      apikey={GOOGLE_MAPS_APIKEY}
-                      strokeWidth={5}
-                      strokeColor="#a9d5d1"
-                      onStart={(params) => {
-                        console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-                      }}
-                      // onReady={(result) => {
-                      //   this.mapView.fitToCoordinates(result.coordinates, {
-                      //     edgePadding: {
-                      //       right: (width / 20),
-                      //       bottom: (height / 20),
-                      //       left: (width / 20),
-                      //       top: (height / 20),
-                      //     }
-                      //   });
-                      // }}
-                      onError={(errorMessage) => {
-                        // console.log('GOT AN ERROR');
-                      }}
-                    />
-                  )}
-                </MapView>
-              </View>
-
-
-            </Modal>
-
-        </View>
+                        initialRegion={{
+                            latitude: LATITUDE,
+                            longitude: LONGITUDE,
+                            latitudeDelta: LATITUDE_DELTA,
+                            longitudeDelta: LONGITUDE_DELTA
+                        }}
+                        style={StyleSheet.absoluteFill}
+                        ref={c => this.mapView = c}
+                        onPress={this.onMapPress}>
+                        {this.state.coordinates.map((coordinate, index) =>
+                            <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} >
+                                <FontAwesome name="car" size={15} color="#FFCC7D"/>
+                            </MapView.Marker>
+                        )}
+                        {(this.state.coordinates.length >= 2) && (
+                            <MapViewDirections
+                                origin={this.state.coordinates[0]}
+                                waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
+                                destination={this.state.coordinates[this.state.coordinates.length-1]}
+                                apikey={GOOGLE_MAPS_APIKEY}
+                                strokeWidth={5}
+                                strokeColor="#a9d5d1"
+                                onStart={(params) => {
+                                    console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
+                                }}
+                                // onReady={(result) => {
+                                    //   this.mapView.fitToCoordinates(result.coordinates, {
+                                    //     edgePadding: {
+                                    //       right: (width / 20),
+                                    //       bottom: (height / 20),
+                                    //       left: (width / 20),
+                                    //       top: (height / 20),
+                                    //     }
+                                    //   });
+                                    // }}
+                                    onError={(errorMessage) => {
+                                        // console.log('GOT AN ERROR');
+                                    }}
+                                    />
+                            )}
+                        </MapView>
+                    </View>
+                </Modal>
+            </View>
         );
     }
     renderLoadingView() {
@@ -283,16 +264,27 @@ class ProductOrder extends Component{
             </View>
         );
     }
-
     renderSectionHeader(sectionData, sectionID) {
+        let { lang } = this.props;
+        let direction = lang == 'ar'? 'row-reverse': 'row';
         return (
-            <View style={styles.section}>
-                <Text style={[styles.text,{ color: '#fbcdc5'}]}>OrderDate:  {sectionData}</Text>
-                <Text style={[styles.text,{ color: '#a9d5d1'}]}>Order Id : {sectionID}</Text>
+            <View style={[styles.section, { flexDirection: direction}]}>
+                <View style={{flexDirection: direction}}>
+                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>{I18n.t('userorderhistory.productid', { locale: lang })}</Text>
+                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>:</Text>
+                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>{sectionData}</Text>
+                </View>
+                <View style={{flexDirection: direction}}>
+                    <Text style={[styles.text,{ color: '#a9d5d1'}]}>{I18n.t('userorderhistory.orderid', { locale: lang })}</Text>
+                    <Text style={[styles.text,{ color: '#a9d5d1'}]}>:</Text>
+                    <Text style={[styles.text,{ color: '#a9d5d1'}]}>{sectionID}</Text>
+                </View>
             </View>
         );
     }
     renderRow(rowData, sectionID, rowID) {
+        let { lang } = this.props;
+        let direction = lang == 'ar'? 'row-reverse': 'row';
         return (
             <TouchableOpacity
                 style={{ padding : 10}}
@@ -300,25 +292,25 @@ class ProductOrder extends Component{
                     visibleMap :true
                 })}
                 >
-                <View style={styles.rowStyle}>
+                <View style={[styles.rowStyle, { flexDirection: direction}]}>
                     <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
-                        <Text style={styles.label}>Product ID </Text>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.productid', { locale: lang })}</Text>
                         <Text style={styles.rowText}>#{rowID.product_id} </Text>
                     </View>
                     <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
-                        <Text style={styles.label}>Product Name </Text>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.productnm', { locale: lang })}</Text>
                         <Text style={styles.rowText}>{rowID.product_name} </Text>
                     </View>
                     <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
-                        <Text style={styles.label}>Quantity</Text>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.quantity', { locale: lang })}</Text>
                         <Text style={styles.rowText}>{rowID.quantity} </Text>
                     </View>
                     <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
-                        <Text style={styles.label}>Order Status</Text>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.orderstatus', { locale: lang })}</Text>
                         <Text style={styles.rowText}>{ rowID.order_status ? 'pending' : 'paid'} </Text>
                     </View>
                     <View style={{ flexDirection : 'column', alignItems: 'center'}}>
-                        <Text style={styles.label}>price</Text>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
                         <Text style={styles.rowText}>{rowID.price} </Text>
                     </View>
                 </View>
@@ -349,20 +341,16 @@ var styles = StyleSheet.create({
         color: 'white'
     },
     text: {
-        // paddingHorizontal: 8,
         fontSize: 14
     },
     rowStyle: {
         paddingVertical: 5,
-        // paddingLeft: 16,
         borderTopColor: 'white',
         borderLeftColor: 'white',
         borderRightColor: 'white',
         borderBottomColor: '#E0E0E0',
         borderWidth: StyleSheet.hairlineWidth,
-        flexDirection: 'row',
         justifyContent: 'space-between',
-
     },
     rowText: {
         fontSize: 12,
@@ -377,7 +365,6 @@ var styles = StyleSheet.create({
       fontSize : 12
     },
     section: {
-        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         padding: 5,

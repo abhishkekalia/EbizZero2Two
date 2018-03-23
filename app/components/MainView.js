@@ -451,7 +451,6 @@ class MainView extends Component {
             },
             body: formData,
         }
-
         fetch(Utils.gurl('filterProducts'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -475,7 +474,6 @@ class MainView extends Component {
             console.log(error);
         })
         .done();
-
     }
     Description( service_id, product_name, productImages , short_description, detail_description, price ,special_price){
         Actions.vendordesc({

@@ -114,6 +114,8 @@ class GetMarketing extends Component {
         );
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+        let {lang} = this.props,
+        direction = (lang === 'ar') ?  'row-reverse': 'row';
         return (
             <TouchableOpacity style={[styles.row, { flexDirection: direction}]} onPress={()=> Actions.timeLine({ ad_type:data.ad_type, uri : data.path })}>
                 <Image style={styles.thumb} source={{ uri : data.thumbnail_image}}/>

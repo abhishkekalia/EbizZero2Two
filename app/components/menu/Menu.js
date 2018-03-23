@@ -151,7 +151,7 @@ class Menu extends React.Component {
                 <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                 <Text
-                    onPress={Actions.homePage}
+                    onPress={Actions.deals}
                     style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.deals', { locale: lang })}</Text>
                     <View style={styles.starsix}>
                     <TriangleUp style={styles.starSixUp} />
