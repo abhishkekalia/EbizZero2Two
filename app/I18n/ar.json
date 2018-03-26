@@ -31,6 +31,10 @@
         "passwordvalidation":"كلمة السر يجب أن تتكون من 6 أحرف أو أرقام",
         "cancel":"الغاء",
         "submit":"موافق",
+        "close" : "Close",
+        "invaliduser": "invalid username and password",
+        "passsnotmatch" : "Username and Password Does not matched",
+
     },
     "forgotpassword":{
         "emailaddress":"البريد الالكتروني",

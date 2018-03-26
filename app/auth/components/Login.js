@@ -4,6 +4,7 @@ import {
 	Text,
 	ScrollView,
 	TextInput,
+	StyleSheet,
 	TouchableOpacity,
 	Button,
 	Platform,
@@ -433,8 +434,8 @@ class Login extends Component {
 					</TouchableOpacity>
 					<Modal isVisible={this.state.visibleModal}>
 						<View style={{alignItems : 'center', padding:10}}>
-							{errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
-							{errorStatus ? <Text onPress = {()=> this.setState({ visibleModal : false})} style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
+							{errorStatus ?  <View style={{ backgroundColor: 'transparent', padding : 10, borderRadius :10}}><Text  style={{ color : '#fff', backgroundColor : 'transparent' }}>{I18n.t('login.passsnotmatch', { locale: language })}</Text></View> : undefined }
+							{errorStatus ? <Text onPress = {()=> this.setState({ visibleModal : false})} style={{ color : '#fff', backgroundColor : '#a9d5d1' ,padding : 10, borderRadius: 10 , borderWidth: StyleSheet.hairlineWidth, borderColor: "#fff"}}>{I18n.t('login.close', { locale: language })}</Text> : <CirclesLoader />}
 						</View>
 					</Modal>
 				</View>

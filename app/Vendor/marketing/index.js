@@ -25,14 +25,12 @@ class Marketing extends Component {
             customStyleIndex: 0,
         }
     }
-
     handleSingleIndexSelect = (index) => {
         this.setState({
             ...this.state,
             selectedIndex: index,
         });
     }
-
     handleMultipleIndexSelect = (index) => {
         if (this.state.selectedIndices.includes(index)) {
             this.setState({
@@ -50,17 +48,15 @@ class Marketing extends Component {
             });
         }
     }
-
     handleCustomIndexSelect = (index) => {
         this.setState({
             ...this.state,
             customStyleIndex: index,
         });
     }
-
     render() {
         const {lang} = this.props;
-        
+
         return (
             <View style={styles.container}>
                 <SegmentedControlTab

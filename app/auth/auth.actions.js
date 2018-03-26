@@ -19,66 +19,63 @@ const loginStart = () => {
 };
 
 export const login = (username, password, os) => {
-		return dispatch => {
+	return dispatch => {
 		dispatch(loginStart());
-	let formData = new FormData();
-	formData.append('email', String(username));
-	formData.append('password', String(password));
-	formData.append('device_type', String(os));
-	formData.append('device_token', Math.random().toString());
-
-	const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-    fetch(Utils.gurl('login'), config)
-    .then((response) => response.json())
-    .then((responseData) => {
-    	 if (responseData.response.status) {
-    	 	AsyncStorage.setItem('data', JSON.stringify({
-    	   		"userdetail" : {
-	           		"u_id" : responseData.response.data.u_id ,
-	           		"fullname" : responseData.response.data.fullname ,
-	           		"email" : responseData.response.data.email ,
-	           		"phone_no" : responseData.response.data.phone_no ,
-	           		"country" : responseData.response.data.country ,
-	           		"address" : responseData.response.data.address ,
-	           		"u_name" : responseData.response.data.is_active ,
-	           		"user_type" : responseData.response.data.user_type
-            	}
-        	}));
-					let usr_type = responseData.response.data.user_type,
-					country = responseData.response.data.country,
-					 u_id = responseData.response.data.u_id;
-    	 	dispatch(successHome(responseData.response.data.fullname, password, usr_type, u_id, country));
-
-         } else {
-            MessageBarManager.showAlert({
-            message: "invalid username and password",
-						alertType: 'error',
-						title:''
-            })
-            dispatch(loginFail(new Error('Username and Password Does not matched')));
-    	}
-    })
-    .catch(err => {
-    	console.log(err);
-    })
-    .done();
+		let formData = new FormData();
+		formData.append('email', String(username));
+		formData.append('password', String(password));
+		formData.append('device_type', String(os));
+		formData.append('device_token', Math.random().toString());
+		const config = {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'multipart/form-data;',
+			},
+			body: formData,
+		}
+		fetch(Utils.gurl('login'), config)
+		.then((response) => response.json())
+		.then((responseData) => {
+			if (responseData.response.status) {
+				AsyncStorage.setItem('data', JSON.stringify({
+					"userdetail" : {
+						"u_id" : responseData.response.data.u_id ,
+						"fullname" : responseData.response.data.fullname ,
+						"email" : responseData.response.data.email ,
+						"phone_no" : responseData.response.data.phone_no ,
+						"country" : responseData.response.data.country ,
+						"address" : responseData.response.data.address ,
+						"u_name" : responseData.response.data.is_active ,
+						"user_type" : responseData.response.data.user_type
+					}
+				}));
+				let usr_type = responseData.response.data.user_type,
+				country = responseData.response.data.country,
+				u_id = responseData.response.data.u_id;
+				dispatch(successHome(responseData.response.data.fullname, password, usr_type, u_id, country));
+			} else {
+				MessageBarManager.showAlert({
+					message: "invalid username and password",
+					alertType: 'error',
+					title:''
+				})
+				dispatch(loginFail(new Error('passsnotmatch')));
+			}
+		})
+		.catch(err => {
+			console.log(err);
+		})
+		.done();
+	};
 };
-};
-
 const successHome = (username, password ,usr_type, u_id, country) => {
- 	if(usr_type === "3"){
+	if(usr_type === "3"){
 		routes.vendortab()
 	}else{
- 	 	routes.homePage();
- 	 }
-	 return {
+		routes.homePage();
+	}
+	return {
 		type: AUTH_LOGIN_SUCCESS,
 		payload: {
 			token: Math.random().toString(),
@@ -109,20 +106,20 @@ export const logout = () => {
 };
 export const languageChange = (newLang) => {
 	return dispatch => {
-	dispatch(changeTo(newLang));
+		dispatch(changeTo(newLang));
 	};
 };
 
 const changeTo = (newLang) => {
 	return {
 		type: CHANGE_LANGUAGE,
-			payload: newLang,
+		payload: newLang,
 	}
 };
 
 export const skipSignIN = (deviceId) => {
 	return dispatch => {
-	dispatch(skip(deviceId));
+		dispatch(skip(deviceId));
 	};
 };
 
@@ -136,13 +133,13 @@ const skip = (deviceId) => {
 
 export const SetCountry = (country) => {
 	return dispatch => {
-	dispatch(countryId(country));
+		dispatch(countryId(country));
 	};
 };
 
 const countryId = (country) => {
 	return {
 		type: SET_COUNTRY,
-			payload: country,
+		payload: country,
 	}
 };
