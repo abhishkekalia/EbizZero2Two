@@ -1,13 +1,13 @@
 import React, { Component ,PropTypes } from 'react';
 import {
     ListView,
-    TouchableOpacity, 
+    TouchableOpacity,
     StyleSheet,
     Dimensions,
-    AsyncStorage, 
-    Text, 
+    AsyncStorage,
+    Text,
     View,
-    Image 
+    Image
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -20,8 +20,8 @@ const { width, height } = Dimensions.get('window')
 export default class Searchproduct extends Component {
     constructor(props) {
         super(props);
-        this.getKey = this.getKey.bind(this);             
-        this.state = { 
+        this.getKey = this.getKey.bind(this);
+        this.state = {
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             status : false,
             u_id: null,
@@ -46,14 +46,14 @@ export default class Searchproduct extends Component {
     }
 
     async getKey() {
-        try { 
-            const value = await AsyncStorage.getItem('data'); 
-            var response = JSON.parse(value);  
-            this.setState({ 
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
                 u_id: response.userdetail.u_id ,
                 country: response.userdetail.country ,
-                user_type: response.userdetail.user_type 
-            }); 
+                user_type: response.userdetail.user_type
+            });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
@@ -61,25 +61,25 @@ export default class Searchproduct extends Component {
 
 
 
-    fetchData(){ 
+    fetchData(){
         const { filterdBy, vendor } = this.props;
         const {u_id, country, user_type } = this.state;
 
         let formData = new FormData();
         formData.append('u_id', String(user_type));
-        formData.append('country', String(country)); 
-        formData.append('category_id', String([2,3])); 
-        formData.append('vendor_id', String  (vendor)); 
+        formData.append('country', String(country));
+        formData.append('category_id', String([2,3]));
+        formData.append('vendor_id', String  (vendor));
 
-    const config = { 
-                method: 'POST', 
-                headers: { 
-                    'Accept': 'application/json', 
+    const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data;',
                 },
                 body: formData,
             }
-    fetch(Utils.gurl('filterProducts'), config) 
+    fetch(Utils.gurl('filterProducts'), config)
         .then((response) => response.json())
         .then((responseData) => {
         // console.warn(JSON.stringify(responseData))
@@ -91,12 +91,12 @@ export default class Searchproduct extends Component {
                 refreshing : false
             });
         } else {
-            console.warn(responseData.data.message)
+            
         }
         })
         .catch((error) => {
           console.log(error);
-        })       
+        })
         .done();
     }
 
@@ -124,11 +124,11 @@ export default class Searchproduct extends Component {
             let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         let url = data.productImages ? data.productImages[0].image : null;
-        
+
         let heartType
 
         if (data.is_feature == 0) {
-            heartType = 'ios-heart-outline'; 
+            heartType = 'ios-heart-outline';
         } else {
             heartType = 'ios-heart' ;
         }
@@ -136,15 +136,15 @@ export default class Searchproduct extends Component {
             return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text> No Item Found In Your Service</Text>
-            </View> 
-            );        
+            </View>
+            );
         }
         return (
-            <View style={styles.row} > 
+            <View style={styles.row} >
                 <View style={{flexDirection: 'row', justifyContent: "center"}}>
                     <IconBadge
-                        MainElement={ 
-                            <Image style={styles.thumb} 
+                        MainElement={
+                            <Image style={styles.thumb}
                                 source={{ uri : url }}/>                        }
                         BadgeElement={
                             <Text style={{color:'#FFFFFF', fontSize: 10, position: 'absolute'}}>{data.discount} %off</Text>
@@ -157,29 +157,29 @@ export default class Searchproduct extends Component {
                             position : 'absolute',
                             backgroundColor: '#87cefa'}}
                     />
-                    <EvilIcons style={{ position : 'absolute', left : 0}} 
-                        name="share-google" 
-                        size={20} 
-                        color="#ccc" 
+                    <EvilIcons style={{ position : 'absolute', left : 0}}
+                        name="share-google"
+                        size={20}
+                        color="#ccc"
                         onPress={()=> this.sharing(data.product_id)}/>
 
-                    <TouchableOpacity 
+                    <TouchableOpacity
                     onPress={()=> this.addtoWishlist(data.product_id)}
-                    style={{ 
-                        left : width/3-35, 
+                    style={{
+                        left : width/3-35,
                         position : 'absolute',
                         width : 50,
                         height :50
                     }}
                     >
-                        <Ionicons  
-                        name={heartType} 
-                        size={20} 
-                        color="#87cefa" 
+                        <Ionicons
+                        name={heartType}
+                        size={20}
+                        color="#87cefa"
                         />
                     </TouchableOpacity>
                 </View>
-                
+
                 <View style={{ padding :5}}>
                 <TouchableOpacity  style={styles.name} onPress={()=>Actions.deascriptionPage({product_id : data.product_id})}>
 
@@ -187,11 +187,11 @@ export default class Searchproduct extends Component {
                 </TouchableOpacity>
                 <Text style={styles.description}>{data.short_description}</Text>
                 <View style={{
-                    flex: 0, 
-                    flexDirection: 'row', 
+                    flex: 0,
+                    flexDirection: 'row',
                     justifyContent: 'space-between',
                     top : 5
-                }}> 
+                }}>
                     <Text style={styles.special_price}>{data.special_price} Aed</Text>
                     <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine}}>{data.price} Aed</Text>
                 </View>
@@ -209,7 +209,7 @@ container: {
         backgroundColor: '#F5FCFF'
     },
     list: {
-        // borderWidth: 1, 
+        // borderWidth: 1,
         // borderColor: '#CCC',
         flexDirection: 'row',
         flexWrap: 'wrap'
@@ -230,12 +230,12 @@ container: {
         alignItems : 'center',
         padding : 10
     },
-    allshop :{ 
-        flex:1, 
-        justifyContent : "space-around", 
-        flexDirection: 'row', 
-        borderWidth : 0.5, 
-        borderColor: "#ccc", 
+    allshop :{
+        flex:1,
+        justifyContent : "space-around",
+        flexDirection: 'row',
+        borderWidth : 0.5,
+        borderColor: "#ccc",
         alignItems: 'center'
     },
 

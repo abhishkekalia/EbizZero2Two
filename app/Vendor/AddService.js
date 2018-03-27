@@ -189,7 +189,7 @@ class AddService extends Component {
             })
             return false
         }
-        if ( special_price > price){
+        if ( parseInt(special_price) > parseInt(price)){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.specialpriceerr1', { locale: lang }),
                 alertType: 'extra',

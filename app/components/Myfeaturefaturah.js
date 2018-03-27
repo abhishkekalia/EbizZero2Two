@@ -10,6 +10,8 @@ import {
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import I18n from 'react-native-i18n';
+
 
 var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
 

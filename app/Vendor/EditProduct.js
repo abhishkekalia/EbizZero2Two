@@ -244,8 +244,8 @@ class EditProduct extends Component {
 
         if(this.validate()) {
             let genderty;
-            console.log("gender",gender);
-            if (gender === '') {
+
+            if (gender == undefined) {
                 genderty = "";
             } else {
                 genderty= gender.label == "Male" ? 1 : 0

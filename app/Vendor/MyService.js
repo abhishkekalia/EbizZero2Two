@@ -213,6 +213,7 @@ class MyService extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
+
         const { lang} = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left',

@@ -324,10 +324,12 @@ class AddProduct extends Component {
             product_name_in_arabic, short_description_in_arabic,
             detail_description_in_arabic,price_in_arabic, special_price_in_arabic
         } = this.state;
-        if (gender === '') {
-            let genderty = "";
+        let genderty;
+        console.log("gender",gender);
+        if (gender == "") {
+            genderty = "";
         } else {
-            let genderty= gender.label == "Male" ? 1 : 0
+            genderty= gender.label == "Male" ? 1 : 0
         }
 
         const { lang } = this.props,
