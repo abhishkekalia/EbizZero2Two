@@ -90,7 +90,7 @@ class GetMarketing extends Component {
             <ListView
                 dataSource={this.state.dataSource}
                 renderRow={this.renderData.bind(this)}
-                contentContainerStyle={styles.list}
+                contentContainerStyle={[styles.list, { flexDirection: direction}]}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 automaticallyAdjustContentInsets={true}
@@ -110,7 +110,7 @@ class GetMarketing extends Component {
             );
         }
         return (
-            <View style={{ borderBottomWidth: 0.5, borderColor: '#CCC'}}>{listView}</View>
+            <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: '#CCC'}}>{listView}</View>
         );
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
@@ -119,7 +119,6 @@ class GetMarketing extends Component {
         return (
             <TouchableOpacity style={[styles.row, { flexDirection: direction}]} onPress={()=> Actions.timeLine({ ad_type:data.ad_type, uri : data.path })}>
                 <Image style={styles.thumb} source={{ uri : data.thumbnail_image}}/>
-                <View style={styles.OvalShapeView} />
             </TouchableOpacity>
         );
     }
@@ -129,7 +128,6 @@ var styles =StyleSheet.create({
     list: {
         flex: 1,
         justifyContent: 'flex-start',
-        flexDirection: 'row-reverse',
         alignItems: 'center',
     },
     row: {

@@ -69,7 +69,8 @@
         "pleaseenteraddr":"Plese Enter Address",
         "pleaseenterusertype":"Plese Select User Type",
         "greetings":"Congratulations You Are Successfully Registered",
-        "passwordvalidation":"Please enter atleast 6 character password"
+        "passwordvalidation":"Please enter atleast 6 character password",
+        "pickfromMap": "Pick Address From Map"
     },
     "venderregister":{
         "company":"Company",

@@ -228,7 +228,7 @@ class MyProduct extends Component {
             return (
                 <View style={{ flex: 1}}>
                     <View style={{
-                            flexDirection: 'row',
+                            flexDirection: direction,
                             justifyContent: 'space-between',
                             marginTop: 5,
                             borderWidth: 1,
@@ -237,7 +237,7 @@ class MyProduct extends Component {
                         }}>
                         <Icon size={20} color="#ccc" name="md-search" style={{ alignSelf: 'center', margin: 5}} onPress={()=>this.removeFilterFunction()}/>
                         <TextInput
-                            style={[styles.TextInputStyleClass, {width: "75%",alignSelf: 'center'}]}
+                            style={[styles.TextInputStyleClass, {width: "75%", alignSelf: 'center', textAlign: textline}]}
                             onChangeText={(text) => this.SearchFilterFunction(text)}
                             value={this.state.text}
                             controlled={true}
@@ -248,14 +248,13 @@ class MyProduct extends Component {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 width: 35,
-                                borderTopRightRadius: 7,
-                                borderBottomRightRadius: 7,
-                                backgroundColor: "#a9d5d1"
+                                borderRadius:  7,
+                                backgroundColor: "transparent"
                             }} >
-                        <Icon size={25} color="#fff" name="ios-backspace-outline" style={{}} onPress={()=>this.removeFilterFunction()}/>
+                        <Icon size={25} color="#a9d5d1" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
                         </TouchableOpacity>
                         </View>
-                        <View style={{ flexDirection: 'row'}}>
+                        <View style={{ flexDirection: direction}}>
                             {data}
                             <ScrollView style={{marginBottom: 50}}>
                                 { (this.state.dataSource.getRowCount() > 0 ) ? this.state.productnames.map((data, index) => this._renderRightLetters(data, index)) : undefined}

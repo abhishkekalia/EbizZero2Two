@@ -66,8 +66,9 @@
         "pleaseselectcountry":"الرجاء أختيار دولة",
         "pleaseenteraddr":"الرجاء تعبئة العنوان",
         "pleaseenterusertype":"الرجاء أختيار نوع المستخدم",
-        "greetings":"شكرا لأنضمامكم الى قائمة مستخدميناwishlistTitle",
-        "passwordvalidation":"يرجى إدخال كلمة مرور مؤلفة من 6 أحرف او ارقام على الأقل "
+        "greetings":"شكرا لأنضمامكم الى قائمة",
+        "passwordvalidation":"يرجى إدخال كلمة مرور مؤلفة من 6 أحرف او ارقام على الأقل",
+        "pickfromMap": "Pick Address From Map"
     },
     "venderregister":{
         "company":"اسم الشركة",
