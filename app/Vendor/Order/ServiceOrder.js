@@ -28,13 +28,11 @@ export default class ServiceOrder extends Component {
             status : false
         };
     }
-
     componentDidMount() {
         this.getKey()
         .then(()=>this.fetchData())
         .done();
     }
-
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');
@@ -95,9 +93,10 @@ export default class ServiceOrder extends Component {
 
     }
     noItemFound(){
+        const { lang} = this.props;
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
-                <Text>You Have No Itmes In Service</Text>
+                <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );
     }
@@ -106,11 +105,9 @@ export default class ServiceOrder extends Component {
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
-
         if (!this.state.status) {
             return this.noItemFound();
         }
-
         let listView = (<View></View>);
             listView = (
                <ListView
@@ -146,11 +143,9 @@ export default class ServiceOrder extends Component {
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left',
         service_name = lang == 'ar'? data.serviceDetail.service_name_in_arabic: data.serviceDetail.service_name;
-
-
         return (
             <TouchableOpacity
-            style={{ flexDirection : 'column'}}
+            style={{ flexDirection : 'column', backgroundColor: "#fff"}}
             key={rowID}
             data={rowData}
             onPress={()=>Actions.servicecustomer({
@@ -158,43 +153,42 @@ export default class ServiceOrder extends Component {
                 addressDetail : data.addressDetail,
             })}>
                 <View style={[styles.header, { flexDirection: direction}]}>
-                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.bookingdt', { locale: lang })}</Text>
                             <Text style={styles.label}>:</Text>
                         <Text style={styles.bodyText}>{data.service_datetime}</Text>
                     </View>
-                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.amount', { locale: lang })}</Text>
                         <Text style={styles.label}>:</Text>
                         <Text style={styles.bodyText}>{data.amount}</Text>
                     </View>
                 </View>
                 <View style={lang == 'ar'? { right : 10}: { left : 10}} >
-                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.servicenm', { locale: lang })}</Text>
                             <Text style={styles.label}>:</Text>
                         <Text style={styles.bodyText}>{service_name}</Text>
                     </View>
-                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.customername', { locale: lang })}</Text>
                         <Text style={styles.label}>:</Text>
                         <Text style={styles.bodyText}>{data.userDetail.fullname}</Text>
                     </View>
-                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.customeremail', { locale: lang })}</Text>
                         <Text style={styles.label}>:</Text>
                         <Text style={styles.bodyText}>{data.userDetail.email}</Text>
                     </View>
-                    <View style={{flexDirection: direction, backgroundColor: '#F6F6F6'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.price', { locale: lang })}</Text>
                         <Text style={styles.label}>:</Text>
                         <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
                         <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
                     </View>
                 </View>
-
             </TouchableOpacity>
-            );
+        );
     }
 
     _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {

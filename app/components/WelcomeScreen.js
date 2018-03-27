@@ -150,11 +150,13 @@ class WelcomeScreen extends Component {
                 country_name = order.country_name;
                 optionsList.push(country_name);
             }
-            this.setState({
-                countries: optionsList,
-                dataSource : responseData.response.data,
-                loaded: true
-            })
+            setTimeout( () => {
+                this.setState({
+                    countries: optionsList,
+                    dataSource : responseData.response.data,
+                    loaded: true
+                })
+            }, 2000);
         })
         .catch((error) => {
             console.log(error);
@@ -187,7 +189,7 @@ class WelcomeScreen extends Component {
                 </View>
                 <ActivityIndicator
                     style={[styles.centering]}
-                    color="#1e90ff"
+                    color="#a9d5d1"
                     size="large"/>
             </View>
         );

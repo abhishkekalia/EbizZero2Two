@@ -40,29 +40,29 @@ export default class FeaturedProduct extends Component {
     })
   }
 
-    componentDidMount(){
-        this.getKey()
-        .then( ()=>render())
-    }
+    // componentDidMount(){
+    //     this.getKey()
+    //     .then( ()=>render())
+    // }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton });
     }
     _renderRightButton = () => {
         return null
     };
-    async getKey() {
-        try {
-            const value = await AsyncStorage.getItem('data');
-            var response = JSON.parse(value);
-
-            this.setState({
-                u_id: response.userdetail.u_id,
-                country: response.userdetail.country
-            });
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-    }
+    // async getKey() {
+    //     try {
+    //         const value = await AsyncStorage.getItem('data');
+    //         var response = JSON.parse(value);
+    //
+    //         this.setState({
+    //             u_id: response.userdetail.u_id,
+    //             country: response.userdetail.country
+    //         });
+    //     } catch (error) {
+    //         console.log("Error retrieving data" + error);
+    //     }
+    // }
 
     // fetchData(){
     //     const {u_id, country } = this.state;
@@ -119,15 +119,11 @@ export default class FeaturedProduct extends Component {
             </View>
         );
     }
-
-
     render() {
-
         const { lang} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
-
         if (this.state.isLoading) {
             return (
                 <View style={{flex: 1, paddingTop: 20}}>
@@ -138,7 +134,6 @@ export default class FeaturedProduct extends Component {
         if (this.state.dataSource.getRowCount() === 0 ) {
             return this.noItemFound();
         }
-
         let listView = (<View></View>);
             listView = (
                <ListView
@@ -150,9 +145,9 @@ export default class FeaturedProduct extends Component {
                 renderRow={this.renderData.bind(this)}/>
             );
         return (
-        <View style={{paddingBottom : 53}}>
-            {listView}
-        </View>
+            <View style={{paddingBottom : 53}}>
+                {listView}
+            </View>
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
@@ -168,64 +163,62 @@ export default class FeaturedProduct extends Component {
         detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
         price = (lang == 'ar')? data.price_in_arabic : data.price,
         special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
-
-
         return (
             <View style={{
-            width : width-30,
-            flexDirection: 'column' ,
-            marginTop : 2,
-            borderWidth : 1,
-            borderColor : "#ccc",
-            borderRadius : 2
-            }}>
+                    width : width-30,
+                    flexDirection: 'column' ,
+                    marginTop : 2,
+                    borderWidth : 1,
+                    borderColor : "#ccc",
+                    borderRadius : 2
+                }}>
                 <Header product_id= {data.product_id} lang={lang}/>
                 <TouchableOpacity style={{
-                flexDirection: direction,
-                backgroundColor : "#fff",
-                borderBottomWidth : 1,
-                borderColor : "#ccc",
-                }}
-                onPress={()=>routes.editproduct({
-                    u_id : this.state.u_id,
-                    country : this.state.country,
-                    product_id: data.product_id,
-                    product_category:data.product_category,
-                    product_name: data.product_name,
-                    detail_description: data.detail_description,
-                    short_description: data.short_description,
-                    product_name_in_arabic: data.product_name_in_arabic,
-                    short_description_in_arabic: data.short_description_in_arabic,
-                    detail_description_in_arabic: data.detail_description_in_arabic,
-                    price: data.price,
-                    special_price: data.special_price,
-                    quantity: data.quantity,
-                    size: data.size,
-                    discount: data.discount,
-                    final_price: data.final_price,
-                    is_feature: data.is_feature,
-                    productImages: data.productImages
-                })}>
+                        flexDirection: direction,
+                        backgroundColor : "#fff",
+                        borderBottomWidth : 1,
+                        borderColor : "#ccc",
+                    }}
+                    onPress={()=>routes.editproduct({
+                        u_id : this.state.u_id,
+                        country : this.state.country,
+                        product_id: data.product_id,
+                        product_category:data.product_category,
+                        product_name: data.product_name,
+                        detail_description: data.detail_description,
+                        short_description: data.short_description,
+                        product_name_in_arabic: data.product_name_in_arabic,
+                        short_description_in_arabic: data.short_description_in_arabic,
+                        detail_description_in_arabic: data.detail_description_in_arabic,
+                        price: data.price,
+                        special_price: data.special_price,
+                        quantity: data.quantity,
+                        size: data.size,
+                        discount: data.discount,
+                        final_price: data.final_price,
+                        is_feature: data.is_feature,
+                        productImages: data.productImages
+                    })}>
                     <Image style={[styles.thumb, {margin: 10}]}
-                    resizeMode={"stretch"}
-                    source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
-                    />
+                        resizeMode={"stretch"}
+                        source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
+                        />
                     <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
                         <Text style={[styles.row, { color:'#000',fontWeight :'bold', textAlign: textline}]} > {product_name} </Text>
                         <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline}} > {short_description} </Text>
                         <View style={{ flexDirection:direction}}>
                             <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >{I18n.t('venderprofile.quantity', { locale: lang })}</Text>
-                                <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >: </Text>
-                        <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} > {data.quantity} </Text>
+                            <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >: </Text>
+                            <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} > {data.quantity} </Text>
                         </View>
                         <View style={{ flexDirection : direction, justifyContent : 'space-between'}}>
                             <View style={{ flexDirection : direction}}>
                                 <Text style={{color : '#fbcdc5', textAlign: textline}} >{I18n.t('venderprofile.price', { locale: lang })}</Text>
                                 <Text style={{color : '#fbcdc5',textAlign: textline}} >:</Text>
-                            <Text> {data.special_price} </Text>
-                            <Text style={{ color: color, textDecorationLine: textDecorationLine, textAlign: textline}}> {data.price} </Text>
+                                <Text> {data.special_price} </Text>
+                                <Text style={{ color: color, textDecorationLine: textDecorationLine, textAlign: textline}}> {data.price} </Text>
                             </View>
-                                <Text style={{color : '#ccc'}} >KWD</Text>
+                            <Text style={{color : '#ccc'}} >KWD</Text>
 
                         </View>
                     </View>
@@ -263,35 +256,32 @@ class Footer extends Component{
     manageFeature(){
         const {u_id,country,is_feature} = this.props;
         const {product_id} = this.props;
-        // this.state.toggled = is_feature == "2" ? ;
-
         if(is_feature == "2"){
             let form = new FormData();
         	form.append('u_id', String(u_id));
         	form.append('country', String(country));
             form.append('product_id',String(product_id));
             form.append('amount',"10");
-        		const config = {
-                   	method: 'POST',
-                   	headers: {
-                   		'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data;'
-                    },
-                	body: form,
-                }
+            const config = {
+           	    method: 'POST',
+           	    headers: {
+           	        'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;'
+                },
+                body: form,
+            }
             fetch(Utils.gurl('addToFeature'), config)
             .then((response) => response.json())
             .then((responseData) => {
-            	if(responseData.status){
+                if(responseData.status){
                     let feature_id = responseData.data.feature_id;
                     let url = responseData.data.url;
                     routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id,amout:10})
-            	}else{
-
-            	}
+                }else{
+                }
             })
             .catch((error) => {
-              console.log(error);
+                console.log(error);
             })
             .done();
         }else if(is_feature == "1"){
@@ -299,56 +289,51 @@ class Footer extends Component{
         	form.append('u_id', String(u_id));
         	form.append('country', String(country));
             form.append('product_id',String(product_id));
-        		const config = {
-                   	method: 'POST',
-                   	headers: {
-                   		'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data;'
-                    },
-                	body: form,
-                }
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;'
+                },
+                body: form,
+            }
             fetch(Utils.gurl('removeFromFeature'), config)
             .then((response) => response.json())
             .then((responseData) => {
-        	       if(responseData.status){
-                       MessageBarManager.showAlert({
-                           message: `Product removed from featured list`,
-                           alertType: 'alert',
-                           title:''
-                       })
-        	          }else{
-
-                      }
+                if(responseData.status){
+                    MessageBarManager.showAlert({
+                        message: `Product removed from featured list`,
+                        alertType: 'alert',
+                        title:''
+                    })
+                }else{
+                }
             })
             .catch((error) => {
-              console.log(error);
+                console.log(error);
             })
             .done();
         }
     }
-  // componentWillReceiveProps(nextProps){
-  //   // this.setState({user: nextProps.user})
-  // }
     render(){
         const { lang,is_feature} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
-
         return(
-        <View style={[styles.bottom, {flexDirection: direction}]}>
-                    <Switch
-                      // onTintColor="#00ff00"
-                      thumbTintColor="#fff"
-                      tintColor="#000"
-                      onValueChange={ ()=> this.manageFeature()}
+            <View style={[styles.bottom, {flexDirection: direction}]}>
+                <Switch
+                    // onTintColor="#00ff00"
+                    thumbTintColor="#fff"
+                    tintColor="#000"
+                    onValueChange={ ()=> this.manageFeature()}
                     // onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
                     value={is_feature == "2" ? false : true } />
-                    <View style={{flexDirection: direction}}>
-                        <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
-                            <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>:</Text>
-                                <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{this.props.inserted_date}</Text>
-                    </View>
+                <View style={{flexDirection: direction}}>
+                    <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
+                    <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>:</Text>
+                    <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{this.props.inserted_date}</Text>
                 </View>
+            </View>
         )
     }
 }
@@ -357,27 +342,23 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         padding : 10
     },
-
     row: {
         marginTop : 1
     },
     qtybutton: {
         paddingLeft: 10,
         paddingRight: 10,
-
         alignItems: 'center',
         borderWidth : 0.5,
         borderColor : "#ccc",
         shadowOpacity: 0.2,
         shadowRadius: 2,
     },
-        countryIcon: {
+    countryIcon: {
         width : 40,
         height:40,
         padding :10
     },
-
-
     lowerButton :{
         // alignItems : 'center',
         borderWidth : 0.5,
@@ -385,19 +366,16 @@ const styles = StyleSheet.create({
         padding : 5,
         borderRadius : 5
     },
-
     thumb: {
         width   : "20%",
         height  :width/5 ,
     },
-
     textQue :{
         flex: 1,
         fontSize: 18,
         fontWeight: '400',
         left : 5
     },
-
     centering: {
         flex:1,
         alignItems: 'center',
@@ -410,7 +388,6 @@ const styles = StyleSheet.create({
         backgroundColor : "#fff",
         padding : 5
     },
-
     headline: {
         paddingTop : 10,
         paddingBottom : 10,

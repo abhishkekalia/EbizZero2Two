@@ -10,7 +10,8 @@ import {
     Dimensions,
     TouchableOpacity,
     TextInput,
-    Keyboard
+    Keyboard,
+    ScrollView
     // AsyncStorage,
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
@@ -19,6 +20,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window')
 
@@ -31,6 +33,7 @@ class MyProduct extends Component {
             u_id : null,
             country : null,
             text: '',
+            productnames: []
         }
         this.arrayholder = [] ;
     }
@@ -92,10 +95,22 @@ class MyProduct extends Component {
         fetch(Utils.gurl('productList'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            let data = responseData.data,
+            length = data.length,
+            productname = [],
+            name,
+            shortname
+
+            for (let i = 0; i < length; i++) {
+                name = data[i].product_name
+                shortname = name.charAt(0).toUpperCase();
+                productname.push(shortname);
+            }
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    isLoading : false
+                    isLoading : false,
+                    productnames: productname
                 },()=>{
                     this.arrayholder = responseData.data ;
                 });
@@ -113,7 +128,6 @@ class MyProduct extends Component {
     }
     SearchFilterFunction(text){
         const { lang } =this.props
-
         const newData = this.arrayholder.filter(function(item){
             const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
             const textData = text.toUpperCase()
@@ -124,9 +138,23 @@ class MyProduct extends Component {
             text: text
         })
     }
+    removeFilterFunction(){
+        const { lang } =this.props
+        let text = ""
+        const newData = this.arrayholder.filter(function(item){
+            const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
+            const textData = text.toUpperCase()
+            return itemData.indexOf(textData) > -1
+        })
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(newData),
+            text: text
+        })
+    }
+
     ListViewItemSeparator = () => {
         return (
-            <View style={{ height: .5, width: "100%"}}/>
+            <View style={{ height: StyleSheet.hairlineWidth, width: "100%"}}/>
         );
     }
     Description (product_name, productImages ,short_description, detail_description, price ,special_price){
@@ -142,10 +170,43 @@ class MyProduct extends Component {
             }
         )
     }
+    // renderProductnames(){
+    //                 {this.state.letters.map((letter, index) => this._renderRightLetters(letter, index))}
+    //     return this.state.productnames.map((data, index) => this._renderRightLetters(letter, index)))
+    // }
+    _scrollTo(index, letter) {
+        // this.refs.toast.close();
+        let position = 0;
+        for (let i = 0; i < index; i++) {
+            // position += totalheight[i]
+        }
+        // this._listView.scrollTo({y: 250});
+        // this.refs.toast.show(letter, DURATION.LENGTH_SHORT);
+    }
+
+    _renderRightLetters(letter, index) {
+      return (
+        <TouchableOpacity key={'letter_idx_' + index} activeOpacity={0.6} onPress={() => {
+          this._scrollTo(index, letter)
+      }} style={{ width: 20, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: 12, color: "#a9d5d1"}}>{letter}</Text>
+        </TouchableOpacity>
+      );
+    }
+    noItemFound(){
+        const { lang} = this.props;
+        return (
+            <View style={{ justifyContent:'center', alignItems:'center'}}>
+                <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
+            </View>
+        );
+    }
+
     render() {
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
+        let asce = this.state.productnames.sort((a, b)=>{return a});
         if (this.state.isLoading) {
             return (
                 <View style={{flex: 1, paddingTop: 20, justifyContent: 'center'}}>
@@ -163,16 +224,43 @@ class MyProduct extends Component {
                     renderSeparator= {this.ListViewItemSeparator}
                     renderRow={this.renderData.bind(this)}/>
             );
+            let data = (this.state.dataSource.getRowCount() < 1) ? this.noItemFound() :listView
             return (
                 <View style={{ flex: 1}}>
-                    <TextInput
-                        style={[styles.TextInputStyleClass, {width: width-30,alignSelf: 'center',marginTop: 5}]}
-                        onChangeText={(text) => this.SearchFilterFunction(text)}
-                        value={this.state.text}
-                        underlineColorAndroid='transparent'
-                        placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
-                        />
-                    {listView}
+                    <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginTop: 5,
+                            borderWidth: 1,
+                            borderColor: '#ccc',
+                            borderRadius: 7
+                        }}>
+                        <Icon size={20} color="#ccc" name="md-search" style={{ alignSelf: 'center', margin: 5}} onPress={()=>this.removeFilterFunction()}/>
+                        <TextInput
+                            style={[styles.TextInputStyleClass, {width: "75%",alignSelf: 'center'}]}
+                            onChangeText={(text) => this.SearchFilterFunction(text)}
+                            value={this.state.text}
+                            controlled={true}
+                            underlineColorAndroid='transparent'
+                            placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
+                            />
+                        <TouchableOpacity style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: 35,
+                                borderTopRightRadius: 7,
+                                borderBottomRightRadius: 7,
+                                backgroundColor: "#a9d5d1"
+                            }} >
+                        <Icon size={25} color="#fff" name="ios-backspace-outline" style={{}} onPress={()=>this.removeFilterFunction()}/>
+                        </TouchableOpacity>
+                        </View>
+                        <View style={{ flexDirection: 'row'}}>
+                            {data}
+                            <ScrollView style={{marginBottom: 50}}>
+                                { (this.state.dataSource.getRowCount() > 0 ) ? this.state.productnames.map((data, index) => this._renderRightLetters(data, index)) : undefined}
+                            </ScrollView>
+                        </View>
                 </View>
             );
         }
@@ -474,12 +562,11 @@ const styles = StyleSheet.create({
         fontWeight : 'bold'
     },
     TextInputStyleClass:{
-        textAlign: 'center',
         height: 40,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 7 ,
-        backgroundColor : "#FFFFFF"
+        // borderWidth: 1,
+        // borderColor: '#ccc',
+        // borderRadius: 7 ,
+        backgroundColor : "transparent"
     }
 });
 

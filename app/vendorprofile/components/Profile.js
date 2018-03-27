@@ -34,7 +34,6 @@ class Profile extends Component {
         NetInfo.isConnected.fetch().done((isConnected) => {
             if (isConnected)
             {
-            	console.warn('hello')
             }else{
                 console.log(`is connected: ${this.state.netStatus}`);
             }
@@ -52,14 +51,10 @@ class Profile extends Component {
             });
         });
     }
-
     handleConnectionChange = (isConnected) => {
 		const {lang} = this.props;
 		align = lang == 'ar'? 'flex-end': 'flex-start';
-
-
         this.setState({ netStatus: isConnected });
-
         {this.state.netStatus ?
 			  MessageBarManager.showAlert({
                 message: I18n.t('venderprofile.online', { locale: language }),
@@ -78,7 +73,6 @@ class Profile extends Component {
         try {
             const value = await AsyncStorage.getItem('data');
             var response = JSON.parse(value);
-
             this.setState({
                 u_id: response.userdetail.u_id ,
                 email: response.userdetail.email,
@@ -113,7 +107,7 @@ class Profile extends Component {
         	       	address : responseData.response.address,
                     data : responseData.response.feature_product,
                     marketing_campaign : responseData.response.marketing_campaign,
-										chart : responseData.response.chart
+					chart : responseData.response.chart
         	        });
         	}else{
         	    this.setState({
@@ -126,14 +120,12 @@ class Profile extends Component {
         })
         .done();
     }
-
 	render() {
 		const {identity, logout, lang} = this.props,
 		{data, u_id, address, dataSource, chart} = this.state,
 		direction = lang == 'ar'? 'row-reverse': 'row',
 		align = lang == 'ar'? 'flex-end': 'flex-start',
 		textline = lang == 'ar'? 'right': 'left';
-
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
 				<View style={{flexDirection: direction, justifyContent: 'space-around', marginTop: 5,marginBottom: 5}}>
@@ -165,7 +157,6 @@ class Profile extends Component {
 								borderRadius : 17 ,
 							}}/>
 						</View>
-
 						<View style={{flexDirection : 'column'}}>
                             <Text style={[styles.label, { color : '#696969', textAlign: textline}]}>{dataSource.fullname}</Text>
                             <Text style={[styles.label, { color : '#a9d5d1', textAlign: textline}]}>Product Manager</Text>
@@ -192,12 +183,10 @@ class Profile extends Component {
                 style={styles.logout}>
 					<Text style={{ color: "#fbcdc5"}}>{I18n.t('venderprofile.logout', { locale: lang })}</Text>
 				</TouchableOpacity>
-
 			</View>
 		)
 	}
 }
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,

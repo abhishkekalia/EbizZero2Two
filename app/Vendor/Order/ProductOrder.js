@@ -75,6 +75,17 @@ class ProductOrder extends Component{
         }
     }
     changeorderstatus(order_id, status){
+        this.setState({
+            loaded: false,
+            dataSource : new ListView.DataSource({
+                u_id                    : null,
+                country                 : null,
+                getSectionData          : null,
+                getRowData              : null,
+                rowHasChanged           : (row1, row2) => row1 !== row2,
+                sectionHeaderHasChanged : (s1, s2) => s1 !== s2
+            })
+        })
         let formData = new FormData();
         formData.append('order_id', String(order_id));
         formData.append('status', String(status));
@@ -86,7 +97,6 @@ class ProductOrder extends Component{
                 },
                 body: formData,
             }
-
         fetch(Utils.gurl('changeorderstatus'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -128,7 +138,6 @@ class ProductOrder extends Component{
                 orderLength,
                 i,
                 j;
-// console.warn('hello');
             for (i = 0; i < length; i++) {
                 order = orders[i];
                 sectionIDs.push(order.order_id);
@@ -168,30 +177,47 @@ class ProductOrder extends Component{
         const { lang} = this.props;
         return (
             <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
-                <Text>You Have No Itmes In Ordered</Text>
+                <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );
     }
 
     render() {
+        let listView = (<View></View>);
+            listView = (
+                <ListView
+                dataSource = {this.state.dataSource}
+                style      = {styles.listview}
+                renderRow  = {this.renderRow.bind(this)}
+                renderSectionHeader = {this.renderSectionHeader.bind(this)}
+                enableEmptySections = {true}
+                automaticallyAdjustContentInsets={false}
+                renderSeparator={this._renderSeparator}
+                showsVerticalScrollIndicator={false}
+            />
+    );
+
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
         if (!this.state.status) {
             return this.noItemFound();
         }
-
-        return this.renderListView();
+        return (
+            <View style={[styles.container, {padding : 5}]}>
+                {listView}
+            </View>
+        );
     }
 
     renderLoadingView() {
         return (
-                <View style={styles.container}>
-                    <ActivityIndicator
-                        animating={!this.state.loaded}
-                        style={[styles.activityIndicator, {height: 80}]}
-                        size="large"
-                    />
+            <View style={styles.container}>
+                <ActivityIndicator
+                    animating={!this.state.loaded}
+                    style={[styles.centering]}
+                    color="#a9d5d1"
+                    size="large"/>
             </View>
         );
     }
@@ -203,23 +229,6 @@ class ProductOrder extends Component{
           height: adjacentRowHighlighted ? 4 : StyleSheet.hairlineWidth,
           backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
         }}/>
-        );
-    }
-
-    renderListView() {
-        return (
-            <View style={[styles.container, {padding : 5}]}>
-                <ListView
-                    dataSource = {this.state.dataSource}
-                    style      = {styles.listview}
-                    renderRow  = {this.renderRow.bind(this)}
-                    renderSectionHeader = {this.renderSectionHeader.bind(this)}
-                    enableEmptySections = {true}
-                    automaticallyAdjustContentInsets={false}
-                    renderSeparator={this._renderSeparator}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
         );
     }
 
@@ -252,13 +261,13 @@ class ProductOrder extends Component{
         let label,
         ord_status;
         if(rowID.order_status === '1'){
-            label = 'Pending';
+            label = I18n.t('vendorproducts.pending', { locale: lang });
             ord_status = 0;
         }
         else if(rowID.order_status === '0'){
-        label = 'Complete';
-        ord_status = 1;
-    }
+            label = I18n.t('vendorproducts.deliverd', { locale: lang });
+            ord_status = 1;
+        }
         return (
             <View style={styles.row}>
                 <View style={{ flexDirection : direction, backgroundColor:'#fff'}}>
@@ -287,12 +296,14 @@ class ProductOrder extends Component{
                 <View style={[styles.footer, { flexDirection: direction}]}>
                     <View style={{ flexDirection : direction}}>
                         <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'} ]}>{I18n.t('productorder.orderstatus', { locale: lang })} </Text>
+                            <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'} ]}>:</Text>
                         <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status)}>
                         <Text style={[styles.rowText, { color : '#a9d5d1', textAlign: textline, alignSelf: 'center'}]}>{label} </Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{ flexDirection : direction}}>
-                        <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>{I18n.t('productorder.orderstatus', { locale: lang })}</Text>
+                        <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>{I18n.t('productorder.orderdate', { locale: lang })}</Text>
+                            <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>:</Text>
                         <Text style={styles.rowText}>{ rowID.order_date} </Text>
                     </View>
                 </View>
@@ -371,7 +382,7 @@ var styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         padding: 5,
-        backgroundColor: '#F6F6F6'
+        backgroundColor: '#fff'
     },
 
     thumb: {
@@ -385,14 +396,11 @@ var styles = StyleSheet.create({
         fontWeight: '400',
         left : 5
     },
-
-    centering: {
-        flex:1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20
+    centering : {
+        flex : 1,
+        justifyContent  :'center',
+        alignItems : 'center'
     },
-
     heading: {
         paddingTop : 5,
         paddingBottom : 5,
