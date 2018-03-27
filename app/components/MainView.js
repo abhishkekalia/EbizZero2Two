@@ -1311,10 +1311,10 @@ var styles = StyleSheet.create({
     thumb: {
         width: width/2-10,
         height: height/3,
-        borderTopLeftRadius: 2,
-        borderTopRightRadius: 2
+        borderTopLeftRadius: 4,
+        borderTopRightRadius: 4,
         // resizeMode : 'center',
-        // top : 20
+        top : StyleSheet.hairlineWidth
     },
 
     text: {
@@ -1373,7 +1373,7 @@ class LoadImage extends Component {
             <IconBadge
                 MainElement={
                     <Image style={[styles.thumb, { alignSelf: 'center',}]}
-                        resizeMode = {"contain"}
+                        resizeMode = "center"
                         resizeMethod = 'resize'
                         source={require('../images/no-image.jpg')}
                         onLoadEnd={() => { this.setState({ loaded: true }); }}
@@ -1402,8 +1402,9 @@ class LoadImage extends Component {
             <IconBadge
                 MainElement={
                     <Image style={[styles.thumb, { alignSelf: 'center',}]}
-                        resizeMode = {"contain"}
-                        resizeMethod = 'resize'
+                        resizeMode="stretch" resizeMethod="resize"
+                        // resizeMode = {"contain"}
+                        // resizeMethod = 'resize'
                         source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
                         onLoadEnd={() => { this.setState({ loaded: true }); }}
                         />

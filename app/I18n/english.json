@@ -63,7 +63,8 @@
         "pleaseselectcountry":"Plese Select Country",
         "pleaseenteraddr":"Plese Enter Address",
         "pleaseenterusertype":"Plese Select User Type",
-        "greetings":"Congratulations You Are Successfully Registered"
+        "greetings":"Congratulations You Are Successfully Registered",
+        "pickfromMap": "Pick Address From Map"
     },
     "venderregister":{
         "company":"Company",

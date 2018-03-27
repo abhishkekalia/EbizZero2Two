@@ -69,7 +69,9 @@
         "pleaseselectcountry":"الرجاء أختيار دولة",
         "pleaseenteraddr":"الرجاء تعبئة العنوان",
         "pleaseenterusertype":"الرجاء أختيار نوع المستخدم",
-        "greetings":"شكرا لأنضمامكم الى قائمة مستخدميناwishlistTitle"
+        "greetings":"شكرا لأنضمامكم الى قائمة",
+        "pickfromMap": "Pick Address From Map"
+
     },
     "venderregister":{
         "company":"اسم الشركة",
