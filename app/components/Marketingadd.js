@@ -72,6 +72,10 @@ class Marketingadd extends Component {
     uploadTocloud(){
         const { image, imageSelect , imageURl , avatarSource, videoSelect, u_id, user_type, country, amount, thumbnail_image, thumblinefiletype, fileType, Source, uploadFileName, thumblinename} = this.state;
         var isImage;
+
+        const { language} = this.props,
+        align = (language === 'ar') ?  'right': 'left';
+
         if(image === 'image') {
             isImage = "1"
         } else {
@@ -109,10 +113,13 @@ class Marketingadd extends Component {
         })
         .catch((errorMessage, statusCode) => {
             MessageBarManager.showAlert({
-                message: "error while opload add",
-                alertType: 'warning',
-                title:''
+                message: I18n.t('marketing.aduploaderr', { locale: language }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
+
             this.setState({
                 visibleModal : false,
             })

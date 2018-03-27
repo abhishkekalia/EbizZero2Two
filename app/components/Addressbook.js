@@ -189,6 +189,8 @@ class AddressBook extends Component {
 
     onRemove (data){
         const { u_id, country } = this.state;
+        const { language} = this.props,
+        align = (language === 'ar') ?  'right': 'left';
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -206,11 +208,13 @@ class AddressBook extends Component {
         fetch(Utils.gurl('deleteAddress'), config)
         .then((response) => response.json())
         .then((responseData) => {
-          MessageBarManager.showAlert({
-          message: responseData.data.message,
-          alertType: 'alert',
-          title:''
-          })
+            MessageBarManager.showAlert({
+  				message: I18n.t('addressbook.addrdeleted', { locale: language }),
+  				alertType: 'extra',
+  				title:'',
+  				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+  				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+  			})
         })
         .then(()=>this.fetchAddress())
         .catch((error) => {

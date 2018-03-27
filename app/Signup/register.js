@@ -507,8 +507,9 @@ class Register extends Component {
 			return false
 		}
 		if(password.length < 6){
+			//passwordvalidation
 			MessageBarManager.showAlert({
-				message: "Please enter atleast 6 character password ",
+				message: I18n.t('userregister.passwordvalidation', { locale: lang }),
 				title:'',
 				alertType: 'extra',
 				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },

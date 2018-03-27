@@ -239,9 +239,9 @@ class AddressBook extends Component {
         .then((response) => response.json())
         .then((responseData) => {
           MessageBarManager.showAlert({
-          message: responseData.data.message,
-          alertType: 'alert',
-          title:''
+              message: responseData.data.message,
+              alertType: 'alert',
+              title:''
           })
         })
         .then(()=>this.fetchAddress())
@@ -387,9 +387,9 @@ class SelectItem extends Component{
         .then((response) => response.json())
         .then((responseData) => {
           MessageBarManager.showAlert({
-          message: responseData.data.message,
-          alertType: 'alert',
-          title:''
+              message: responseData.data.message,
+              alertType: 'alert',
+              title:''
           })
         })
         .then(()=>this.props.callback())

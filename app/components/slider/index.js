@@ -103,6 +103,8 @@ export default class Slider extends Component<{}> {
     }
     addtoWishlist ( ){
         const {u_id, country, product_id } = this.props;
+        const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -121,10 +123,13 @@ export default class Slider extends Component<{}> {
         .then((responseData) => {
            if(responseData.status){
                 MessageBarManager.showAlert({
-                    message: responseData.data.message,
-                    alertType: 'alert',
-                    title:''
+                    message: I18n.t('home.wishlistmsg1', { locale: language }),
+                    alertType: 'extra',
+    				title:'',
+    				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+    				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                 })
+
             }
         })
         .then(()=>this.props.updateState())
@@ -136,6 +141,8 @@ export default class Slider extends Component<{}> {
     }
     removeToWishlist (){
         const {u_id, country, product_id } = this.props;
+        const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -153,9 +160,11 @@ export default class Slider extends Component<{}> {
         .then((response) => response.json())
         .then((responseData) => {
             MessageBarManager.showAlert({
-            message: responseData.data.message,
-            alertType: 'alert',
-            title:''
+                message: I18n.t('home.wishlistmsg2', { locale: language }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
         })
         .then(()=>this.props.updateState())

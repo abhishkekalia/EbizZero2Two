@@ -529,6 +529,9 @@ class SelectItem extends Component{
     editWishlist(size){
         const { color, } = this.state;
         const {u_id, country, product_id } = this.props;
+        const { lang } = this.props,
+        align = (lang === 'ar') ?  'right': 'left';
+
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
@@ -548,11 +551,13 @@ class SelectItem extends Component{
             .then((response) => response.json())
             .then((responseData) => {
                 MessageBarManager.showAlert({
-                        message: responseData.data.message,
+                        message: I18n.t('wishlist.changewishlistalert', { locale: lang }),
                         title:'',
-                        alertType: 'alert',
-                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        alertType: 'extra',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                     })
+
             })
             .then(()=>this.props.callback())
             .catch((error) => {

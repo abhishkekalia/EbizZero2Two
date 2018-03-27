@@ -74,6 +74,9 @@ export default class Myfaturah extends Component {
 
     orderPayment(status, id){
         const {u_id, country} = this.state;
+
+        const { language} = this.props,
+        align = (language === 'ar') ?  'right': 'left';
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
@@ -96,19 +99,23 @@ export default class Myfaturah extends Component {
         .then((responseData) => {
             if(responseData.status){
                 MessageBarManager.showAlert({
-                    message: "Payment Success",
-                    alertType: 'alert',
-                    title:''
+                    message: I18n.t('marketing.myAdFaturah.paymentsuccess', { locale: language }),
+                    alertType: 'extra',
+                    title:'',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                 })
                 routes.pop();
             }
         })
         .catch((error) => {
-                MessageBarManager.showAlert({
-                    message: "Payment Not Success",
-                    alertType: 'alert',
-                    title:''
-                })
+            MessageBarManager.showAlert({
+                message: I18n.t('marketing.myAdFaturah.paymenterr', { locale: language }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
         })
         .done();
     }
