@@ -378,7 +378,7 @@ class ProductDescription extends Component {
                             Utils.logout()
                             .then(logout)
                             .done()
-                        }} style={{fontSize: 12, fontWeight: 'bold'}}> Please login / register to add address
+                        }} style={{fontSize: 12, fontWeight: 'bold'}}> {I18n.t('servicedetail.logintoaddaddr', { locale: lang })}
                     </Text>
                     :
                     <Text/>

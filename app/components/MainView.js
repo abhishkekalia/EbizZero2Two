@@ -366,7 +366,7 @@ class MainView extends Component {
         );
     }
     sharing(product_id){
-        console.warn(product_id);
+        
     }
     fetchData(){
         const {u_id, country, deviceId } = this.props;

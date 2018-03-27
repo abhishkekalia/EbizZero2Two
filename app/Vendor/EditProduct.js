@@ -118,16 +118,16 @@ class EditProduct extends Component {
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
         let path = rows.length
-        if(path < 1){
-            MessageBarManager.showAlert({
-                message: I18n.t('vendoraddproduct.imageuploaderr', { locale: lang }),
-                alertType: 'extra',
-                title:'',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-            return false
-        }
+        // if(path < 1){
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('vendoraddproduct.imageuploaderr', { locale: lang }),
+        //         alertType: 'extra',
+        //         title:'',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        // }
         if (!productname.length){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.productnmempty', { locale: lang }),
@@ -154,7 +154,7 @@ class EditProduct extends Component {
                 alertType: 'extra',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align}
             })
             return false
         }
@@ -178,7 +178,7 @@ class EditProduct extends Component {
             })
             return false
         }
-        if ( special > price){
+        if ( parseInt(special) > parseInt(price)){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.sppriceerr', { locale: lang }),
                 alertType: 'extra',
@@ -188,16 +188,16 @@ class EditProduct extends Component {
             })
             return false
         }
-        if ( gender === undefined ){
-            MessageBarManager.showAlert({
-                message: I18n.t('userregister.pleaseselectgender', { locale: lang }),
-                alertType: 'extra',
-                title:'',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-            return false
-        }
+        // if ( gender === undefined ){
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('userregister.pleaseselectgender', { locale: lang }),
+        //         alertType: 'extra',
+        //         title:'',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        // }
         if (!product_name_in_arabic){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.productname_ar_err', { locale: lang }),
@@ -241,8 +241,16 @@ class EditProduct extends Component {
         } = this.state;
         const { u_id, country,lang, product_id} = this.props,
         align = (lang === 'ar') ?  'right': 'left';
+
         if(this.validate()) {
-            let genderty= gender.label == "Male" ? 1 : 0;
+            let genderty;
+
+            if (gender == undefined) {
+                genderty = "";
+            } else {
+                genderty= gender.label == "Male" ? 1 : 0
+            }
+
             this.setState({
                 visibleModal : true
             });

@@ -215,7 +215,9 @@ class Settings extends Component {
     }
 
     clearOrderHistory(){
-            const { u_id,country, } = this.state;
+        const { u_id,country, } = this.state;
+        const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
 
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -234,15 +236,15 @@ class Settings extends Component {
         .then((response) => {
             if(response.status){
                 MessageBarManager.showAlert({
-                message: response.data.message,
-                alertType: 'alert',
-                title:''
+                    message: response.data.message,
+                    alertType: 'alert',
+                    title:''
                 })
             }else{
                 MessageBarManager.showAlert({
-                message: response.data.message,
-                alertType: 'alert',
-                title:''
+                    message: response.data.message,
+                    alertType: 'alert',
+                    title:''
                 })
             }
 

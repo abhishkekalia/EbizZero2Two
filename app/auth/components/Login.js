@@ -66,11 +66,16 @@ class Login extends Component {
 		});
 	}
 	handleConnectionChange = (isConnected) => {
+		const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
+
 		this.setState({ netStatus: isConnected });
 		{this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({
-			message: `Internet connection not available`,
-			alertType: 'error',
-			title:''
+			message: I18n.t('login.internetconnection', { locale: language }),
+			alertType: 'extra',
+			title:'',
+			titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+			messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
 		})}
 	}
 	focusNextField(id) {
@@ -100,6 +105,9 @@ class Login extends Component {
     }
 	Forgotpassword(){
 		const { forgotemail } = this.state;
+		const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
+
 		let formData = new FormData();
 		formData.append('email', String(forgotemail));
 		const config = {
@@ -114,9 +122,21 @@ class Login extends Component {
 		.then((response) => response.json())
 		.then((responseData) => {
  		if (responseData.response.status) {
-		 		alert('email sent')
+			MessageBarManager.showAlert({
+				message: I18n.t('forgotpassword.pleasecheckyourmail', { locale: language }),
+				alertType: 'extra',
+				title:'',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
 			}else {
-				alert('you are not registerd user')
+				MessageBarManager.showAlert({
+					message: I18n.t('forgotpassword.usernotexists', { locale: language }),
+					alertType: 'extra',
+					title:'',
+					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+				})
 			}
 		})
 		.then(()=>this.setState({
@@ -132,6 +152,7 @@ class Login extends Component {
 		const { email } = this.state;
 		const { language} = this.props,
 		align = (language === 'ar') ?  'right': 'left';
+
 		if (!email.length){
 			MessageBarManager.showAlert({
 				message: I18n.t('login.pleaseenteremail', { locale: language }),

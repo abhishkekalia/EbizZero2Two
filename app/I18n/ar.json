@@ -18,10 +18,6 @@
         "forgotpassword":"نسيت كلمة السر",
         "newcustomer":"مستخدم جديد",
         "createaccountbtn":"انشاء حساب",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":" of use and ",
-        "privacypolicy4":"Privacy Policy",
         "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
         "skip":"تخطى التسجيل",
         "internetconnection":"لا يوجد أتصال بسبكة الأنترنت",
@@ -34,12 +30,13 @@
         "close" : "Close",
         "invaliduser": "invalid username and password",
         "passsnotmatch" : "Username and Password Does not matched",
-
     },
     "forgotpassword":{
         "emailaddress":"البريد الالكتروني",
         "cancelbtn":"الغاء",
-        "submitbtn":"موافق"
+        "submitbtn":"موافق",
+        "pleasecheckyourmail":"Please check your email",
+        "usernotexists":"User not exists"
     },
     "userregister":{
         "registertitle":"انشاء حساب",
@@ -70,6 +67,7 @@
         "pleaseenteraddr":"الرجاء تعبئة العنوان",
         "pleaseenterusertype":"الرجاء أختيار نوع المستخدم",
         "greetings":"شكرا لأنضمامكم الى قائمة",
+        "passwordvalidation":"Please enter atleast 6 character password",
         "pickfromMap": "Pick Address From Map"
 
     },
@@ -151,7 +149,8 @@
         "paymentsuccess":"تم قبول عملية الدفع بنجاح",
         "paymentfailure":"تم رفض عملية الدفع",
         "selectDate":"Plese Select Date",
-        "selectTime":"Plese Select Time Slot"
+        "selectTime":"Plese Select Time Slot",
+        "logintoaddaddr":"Please login / register to add address"
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -166,8 +165,8 @@
         "type":"النوع"
     },
     "sidemenu":{
-        "signup": "Signup",
-        "login": "Log in",
+        "signup": "تسجيل",
+        "login":"تسجيل الدخول",
         "notification":"تنبيهات",
         "deals":"Deals and Offers",
         "home":"الرئيسية",
@@ -215,7 +214,8 @@
         "ok":"تم",
         "pleaseselectitems":"الرجاء أختيار منتج",
         "removeitem":"تم الحذف من سلة المشتريات",
-        "somethingwentswrong":"حصل خطأ ما"
+        "somethingwentswrong":"حصل خطأ ما",
+        "cartUpdate":"Cart update successfully"
     },
     "profile":{
         "profiletitle":"الملف الشخصي",
@@ -309,7 +309,8 @@
                             "Price: 1 KD per picture  / 1.5 KD per video",
         "myAdFaturah":{
             "paymentsuccess":"تم الدفع بنجاح",
-            "paymenterr":"حصل خطأ أثناء الدفع"
+            "paymenterr":"حصل خطأ أثناء الدفع",
+            "productaddtofeature":"Product added to feature list"
         }
     },
     "editProfile":{
@@ -398,6 +399,8 @@
         "shortdesc_ar_err":"Plese Insert arabic Short description",
         "detaildesc_ar_err":"Plese Insert arabic Detail description",
         "errorwhileUpload":"error While Upload",
+        "english":"English",
+        "arabic": "اخت",
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",
@@ -501,7 +504,8 @@
         "imagevideoselection":"الرجاء أختيار صورة أو فيديو لتسويقة",
         "categoryerr":"الرجاء أختيار صنف الأعلان",
         "online":"يوجد أتصال بالأنترنت",
-        "offline":"ليس هناك شبكة أنترنت متاحة"
+        "offline":"ليس هناك شبكة أنترنت متاحة",
+        "productremovefeature":"Product removed from featured list"
     },
     "scheduleService":{
         "serviceTitle":"جدول",
@@ -514,6 +518,6 @@
     },
     "deals":{
         "dealTitle":"Deals & Offres",
-        "buyitnowbtn":"اشتر الان",
+        "buyitnowbtn":"اشتر الان"
     }
 }

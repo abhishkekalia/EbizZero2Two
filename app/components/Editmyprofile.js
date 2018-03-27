@@ -135,13 +135,17 @@ class Editmyprofile extends Component<{}> {
             address,
             email
         } = this.state;
+        const { language} = this.props,
+        align = (language === 'ar') ?  'right': 'left';
 
         if(!fullname.length)
         {
             MessageBarManager.showAlert({
-            message: "Please Enter Your FullName",
-            alertType: 'alert',
-            title:''
+                message: I18n.t('editProfile.enterfullname', { locale: language }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false;
         }
@@ -149,19 +153,23 @@ class Editmyprofile extends Component<{}> {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
         if(reg.test(email) === false)
           {
-          MessageBarManager.showAlert({
-                 message: "Plese Enter Valid Email",
-                 alertType: 'alert',
-                 title:''
-               })
+              MessageBarManager.showAlert({
+                  message: I18n.t('editProfile.enteremail', { locale: language }),
+                  alertType: 'extra',
+                  title:'',
+                  titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                  messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+              })
           return false;
         }
         if (!phone_no.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Enter Your Contact Number",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('editProfile.entercontact', { locale: language }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
@@ -169,9 +177,11 @@ class Editmyprofile extends Component<{}> {
         if (!country.length)
         {
             MessageBarManager.showAlert({
-                message: "Please Enter Your Country",
-                alertType: 'alert',
-                title:''
+                message: I18n.t('editProfile.entercountry', { locale: language }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
             return false
         }
