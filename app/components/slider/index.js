@@ -28,7 +28,8 @@ const Slide = props => {
     return (
         <View style={[styles.slide]}>
           <Image onLoad={props.loadHandle.bind(null, props.i)}
-                resizeMode={'center'}
+                resizeMode={'stretch'}
+                resizeMethod={'resize'}
             style={styles.image}
             source={{uri: props.uri}} />
             <Ionicons
@@ -228,7 +229,8 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent'
     },
     image: {
-      width : '100%',
+      width : width,
+      height: 170,
       flex: 1,
       backgroundColor: 'transparent'
     },
