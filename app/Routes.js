@@ -70,6 +70,8 @@ import MarketingCompaign from "./Vendor/marketing/MarketingCompaign";
 import ScheduleCalender from "./Vendor/Schedule/ScheduleCalender";
 import EventEmitter from "react-native-eventemitter";
 
+import SplashScreen from 'react-native-splash-screen';
+
 // import AddProduct from "./app/Vendor/Addproduct";
 
 // -------------vendor ----------
@@ -77,6 +79,7 @@ import EventEmitter from "react-native-eventemitter";
 // const reducerCreate = params => (state, action) => Reducer(params)(state, action);
 
 const reducerCreate = params => {
+    SplashScreen.hide();
   const defaultReducer = new Reducer(params);
   return (state, action) => {
     console.log('ACTION:', action);
