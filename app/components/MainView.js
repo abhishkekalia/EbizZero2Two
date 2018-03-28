@@ -99,12 +99,13 @@ class MainView extends Component {
                     isFilterProduct : true
                 })
                 this.filterByCategory(value.selCategory,value.selGender)
-            }else {
+            } else {
                 this.setState({
                     arrSelectedCategory:value.selCategory,
                     arrSelectedGender:value.selGender,
                     arrSelectedType:value.selType,
                 })
+                this.filterByCategory(value.selCategory,value.selGender)
             }
         });
         EventEmitter.removeAllListeners("reloadProducts");
@@ -366,7 +367,7 @@ class MainView extends Component {
         );
     }
     sharing(product_id){
-        
+
     }
     fetchData(){
         const {u_id, country, deviceId } = this.props;
@@ -439,7 +440,9 @@ class MainView extends Component {
         .done();
     }
     filterByCategory(selectedCategory,selectedGender){
-        const {u_id, country, user_type,rows } = this.state;
+        const {u_id, country, user_type,rows , arrSelectedType} = this.state;
+        console.warn(arrSelectedType);
+        const { deviceId } = this.props;
         var venderIds = this.state.rows.slice();
         if(venderIds.length == 0) {
             for (var i = 0; i < this.state.dataArray.length; i++) {
@@ -457,12 +460,13 @@ class MainView extends Component {
         }
         let type_ids = 1;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
+        // formData.append('u_id', String(u_id));
+        // formData.append('country', String(country));
         // formData.append('categoty_id', String(this.props.filterdBy));
         formData.append('category_id', String(selCat));
         formData.append('vendor_id', String(venderIds));
         formData.append('type_id', 1);
+        formData.append('device_uid', String(deviceId));
         formData.append('gender',String(selGen));
         console.log("request:=",formData);
         const config = {
@@ -613,41 +617,7 @@ class MainView extends Component {
                         },300);
                     }}>Google +
                 </Button>
-                <Button iconSrc={{ uri: EMAIL_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.shareSingle(Object.assign(shareOptions, {
-                                "social": "email"
-                            }));
-                        },300);
-                    }}>Email
-                </Button>
-                <Button
-                    iconSrc={{ uri: CLIPBOARD_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            if(typeof shareOptions["url"] !== undefined) {
-                                Clipboard.setString(shareOptions["url"]);
-                                if (Platform.OS === "android") {
-                                    ToastAndroid.show('Link Copied to Clipboard', ToastAndroid.SHORT);
-                                } else if (Platform.OS === "ios") {
-                                    AlertIOS.alert('Link Copied to Clipboard');
-                                }
-                            }
-                        },300);
-                    }}>Copy Link
-                </Button>
-                <Button iconSrc={{ uri: MORE_ICON }}
-                    onPress={()=>{
-                        this.onCancel();
-                        setTimeout(() => {
-                            Share.open(shareOptions)
-                        },300);
-                    }}>More
-                </Button>
-                <View style={{paddingBottom:40}}/>
+                <View style={{marginBottom: 150}}/>
             </ShareSheet>
         );
     }
@@ -876,13 +846,11 @@ class MainView extends Component {
             </ModalWrapper>
         );
     }
-
     renderAllServiceViews() {
         const { lang} = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left',
         position = (lang === 'ar') ?  'left': 'right';
-
         return(
             <ModalWrapper
                 containerStyle={{ flexDirection: direction, justifyContent: 'flex-end' }}
@@ -1366,7 +1334,6 @@ class LoadImage extends Component {
         }
     }
     render(){
-        console.log(this.props.productImages[0])
         var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
         return (
             imgUrl == "null" ?

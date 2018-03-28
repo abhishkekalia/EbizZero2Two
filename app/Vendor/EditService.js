@@ -33,7 +33,6 @@ import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width, height } = Dimensions.get('window');
-
 class EditService extends Component {
     constructor(props) {
         super(props);
@@ -59,7 +58,7 @@ class EditService extends Component {
             removed_images : [],
             languageChoose: '',
             is_feature:0,
-            is_weekend_work : 0
+            is_weekend_work :this.props.is_weekend
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
@@ -385,7 +384,7 @@ class EditService extends Component {
             is_feature = true
         }
         let is_weekend_work;
-        if(this.state.is_weekend === true){
+        if(this.state.is_weekend === 0){
             is_weekend_work = "checkbox-marked";
         } else {
             is_weekend_work = "checkbox-blank-outline";

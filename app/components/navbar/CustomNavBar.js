@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // import { EventEmitter } from 'events';
 import EE12 from "react-native-eventemitter";
 import {connect} from 'react-redux';
-
+import I18n from 'react-native-i18n';
 
 class CustomNavBar extends React.Component {
   // constructor(props) {
@@ -14,34 +14,36 @@ class CustomNavBar extends React.Component {
   // }
     _renderLeft() {
         const {lang}= this.props
-
         return (
             <TouchableOpacity
-            onPress={Actions.pop}
-            style={[styles.navBarItem, { alignSelf: 'center'}]}>
+                onPress={Actions.pop}
+                style={[styles.navBarItem, { alignSelf: 'center'}]}>
                 <Entypo name="cross"
-                size={30}
-                color="#fff"
-                style={{ textAlign: (lang == 'ar')?'right': 'left', padding: 10}}
-                />
+                    size={30}
+                    color="#fff"
+                    style={{ textAlign: (lang == 'ar')?'right': 'left', padding: 10}}
+                    />
             </TouchableOpacity>
         )
     }
 
     _renderMiddle() {
+        const {lang, title}= this.props
         return (
             <View style={[styles.navBarItem,{alignItems:'center'}]}>
-                <Text style={{color: '#fff' , fontSize: 15}}>Filters</Text>
+                <Text style={{color: '#fff' , fontSize: 15}}>{title}</Text>
             </View>
         )
     }
 
     _renderRight() {
+        const {lang}= this.props,
+        justiContent = lang === "ar" ? "center" :'flex-end';
         return (
-            <View style={[styles.navBarItem, { flexDirection: 'row',justifyContent: 'flex-end', alignItems: 'center', opacity:0 }]}>
+            <View style={[styles.navBarItem, { flexDirection: 'row', justifyContent: justiContent, alignItems: 'center', opacity:1 }]}>
                 <TouchableOpacity
                 onPress={() => EE12.emit("refreshFilterOption","")}
-                style={{ paddingRight: 10 }}>
+                style={{ paddingRight: 10}}>
                     <Ionicons name="ios-refresh"
                     size={30}
                     color="#fff"/>
