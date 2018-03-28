@@ -6,7 +6,8 @@ class Loader extends Component{
 render(){
 	return(
 	<View style={styles.container}>
- <LinesLoader color= {'#6a5acd'} barWidth={5} barHeight={40} barNumber={7} betweenSpace={5}/>
+  {/* <LinesLoader color= {'#6a5acd'} barWidth={5} barHeight={40} barNumber={2} betweenSpace={5}/>*/}
+  
 	</View>
 );}
 }
