@@ -21,7 +21,6 @@ import {connect} from "react-redux";
 import I18n from 'react-native-i18n';
 // import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 22.966425;
@@ -74,8 +73,8 @@ class Notification extends Component {
         try {
             const { country, u_id }= this.props;
             let formData = new FormData();
-            formData.append('u_id', String(7));
-            formData.append('country', String(1));
+            formData.append('u_id', String(u_id));
+            formData.append('country', String(country));
             const config = {
                 method: 'POST',
                 headers: {
@@ -127,62 +126,49 @@ class Notification extends Component {
             <View>
                 {listView}
                 <Modal
-                  animationType="slide"
-                  transparent={false}
-                  visible={this.state.visibleMap}
-                  onRequestClose={() => this.setState({ visibleMap :false})}>
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.visibleMap}
+                    onRequestClose={() => this.setState({ visibleMap :false})}>
                     <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: 10}}>
                         <Icon onPress ={()=>this.setState({ visibleMap :false})} name="close" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
                     </View>
                     <View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
                         <MapView
-                      initialRegion={{
-                        latitude: LATITUDE,
-                        longitude: LONGITUDE,
-                        latitudeDelta: LATITUDE_DELTA,
-                        longitudeDelta: LONGITUDE_DELTA,
-                      }}
-                      style={StyleSheet.absoluteFill}
-                      ref={c => this.mapView = c}
-                      onPress={this.onMapPress}
-                    >
-                      {this.state.coordinates.map((coordinate, index) =>
-                        <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} >
-                            <FontAwesome name="car" size={15} color="#FFCC7D"/>
-                            </MapView.Marker>
-                      )}
-                      {(this.state.coordinates.length >= 2) && (
-                        <MapViewDirections
-                          origin={this.state.coordinates[0]}
-                          waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
-                          destination={this.state.coordinates[this.state.coordinates.length-1]}
-                          apikey={GOOGLE_MAPS_APIKEY}
-                          strokeWidth={5}
-                          strokeColor="#a9d5d1"
-                          onStart={(params) => {
-                            console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-                          }}
-                          // onReady={(result) => {
-                          //   this.mapView.fitToCoordinates(result.coordinates, {
-                          //     edgePadding: {
-                          //       right: (width / 20),
-                          //       bottom: (height / 20),
-                          //       left: (width / 20),
-                          //       top: (height / 20),
-                          //     }
-                          //   });
-                          // }}
-                          onError={(errorMessage) => {
-                            // console.log('GOT AN ERROR');
-                          }}
-                        />
-                      )}
-                    </MapView>
-                  </View>
-
-
+                            initialRegion={{
+                                latitude: LATITUDE,
+                                longitude: LONGITUDE,
+                                latitudeDelta: LATITUDE_DELTA,
+                                longitudeDelta: LONGITUDE_DELTA,
+                            }}
+                            style={StyleSheet.absoluteFill}
+                            ref={c => this.mapView = c}
+                            onPress={this.onMapPress}
+                            >
+                            {this.state.coordinates.map((coordinate, index) =>
+                                <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} >
+                                    <FontAwesome name="car" size={15} color="#FFCC7D"/>
+                                </MapView.Marker>
+                            )}
+                            {(this.state.coordinates.length >= 2) && (
+                                <MapViewDirections
+                                    origin={this.state.coordinates[0]}
+                                    waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
+                                    destination={this.state.coordinates[this.state.coordinates.length-1]}
+                                    apikey={GOOGLE_MAPS_APIKEY}
+                                    strokeWidth={5}
+                                    strokeColor="#a9d5d1"
+                                    onStart={(params) => {
+                                        console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
+                                    }}
+                                    onError={(errorMessage) => {
+                                        console.log('GOT AN ERROR');
+                                    }}
+                                    />
+                            )}
+                        </MapView>
+                    </View>
                 </Modal>
-
             </View>
         );
     }
@@ -206,34 +192,34 @@ class Notification extends Component {
         };
         return (
             <View style={styles.row}>
-                    <View style={{ flexDirection : direction, justifyContent: 'space-between', height: 20, borderWidth: StyleSheet.hairlineWidth, alignItems: 'center', borderColor: "#fbcdc5"}}>
-                        <View style={{flexDirection: direction}}>
-                            <Text style={{color: "#a9d5d1", textAlign: align}}>productId</Text>
-                            <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
-                            <Text style={{ textAlign: align}}>{data.product_id}</Text>
-                        </View>
-                        <View style={{flexDirection: direction}}>
-                            <Text style={{color: "#a9d5d1", textAlign: align}}>orderId</Text>
-                            <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
-                            <Text style={{ textAlign: align}}>{data.order_id}</Text>
-                        </View>
+                <View style={{ flexDirection : direction, justifyContent: 'space-between', height: 20, borderWidth: StyleSheet.hairlineWidth, alignItems: 'center', borderColor: "#fbcdc5"}}>
+                    <View style={{flexDirection: direction}}>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>productId</Text>
+                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                        <Text style={{ textAlign: align}}>{data.product_id}</Text>
                     </View>
-                    <TouchableOpacity
-                        onPress ={()=>this.setState({
-                            visibleMap :true
-                        })}
-                        style={{justifyContent:'space-between', flexDirection : direction,alignItems: 'center', height: 30}}>
-                        <View style={{ flexDirection : direction}}>
-                            <Text style={{color: "#a9d5d1", textAlign: align}}>Delivery Status</Text>
-                            <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
-                            <Text style={{ textAlign: align}}>{Status}</Text>
-                        </View>
-                        <View style={{ flexDirection : direction}}>
-                            <Text style={{color: "#a9d5d1", textAlign: align}}>Type</Text>
-                            <Text style={{color: "#a9d5d1" , alignSelf: 'center'}}>:</Text>
-                            <Text  style={{ textAlign: align}}>{data.type}</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <View style={{flexDirection: direction}}>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>orderId</Text>
+                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                        <Text style={{ textAlign: align}}>{data.order_id}</Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    onPress ={()=>this.setState({
+                        visibleMap :true
+                    })}
+                    style={{justifyContent:'space-between', flexDirection : direction,alignItems: 'center', height: 30}}>
+                    <View style={{ flexDirection : direction}}>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>Delivery Status</Text>
+                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                        <Text style={{ textAlign: align}}>{Status}</Text>
+                    </View>
+                    <View style={{ flexDirection : direction}}>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>Type</Text>
+                        <Text style={{color: "#a9d5d1" , alignSelf: 'center'}}>:</Text>
+                        <Text  style={{ textAlign: align}}>{data.type}</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
         );
     }
