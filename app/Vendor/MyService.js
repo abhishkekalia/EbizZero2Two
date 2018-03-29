@@ -367,11 +367,11 @@ class Footer extends Component{
         })
         .done();
     }
-componentWillReceiveProps(){
-    this.setState({
-        is_approved : this.props.is_approved
-    })
-}
+    componentWillReceiveProps(){
+        this.setState({
+            is_approved : this.props.is_approved
+        })
+    }
 
     render(){
         const { lang } =this.props,
@@ -387,12 +387,17 @@ componentWillReceiveProps(){
             approved = I18n.t('vendorservice.pending', { locale: lang });
             approv_code = '1'
         }
+        console.warn(approved);
         return(
         <View style={[styles.bottom, {flexDirection: direction}]}>
                     <TouchableOpacity
                     style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
                     onPress={this.props.calllback}>
                         <Text style={{ color :'#fff', fontSize: 12}}>{I18n.t('vendorservice.previewbtn', { locale: lang })}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
+                        onPress={()=>this.productActiveDeactive(this.props.product_id, approv_code)}>
+                        <Text style={{ color :'#fff', fontSize : 12, textAlign: textline}}>{approved}</Text>
                     </TouchableOpacity>
 
                 </View>
