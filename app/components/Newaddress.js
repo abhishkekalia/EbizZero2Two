@@ -16,23 +16,24 @@ import {connect} from "react-redux";
 import I18n from 'react-native-i18n'
 import {Actions as routes} from "react-native-router-flux";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/Feather';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import EventEmitter from "react-native-eventemitter";
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
 
-// import Geocoder from 'react-native-geocoder';
-// // simply add your google key
-// Geocoder.fallbackToGoogle('AIzaSyD4T7njRubC7I7zYNwE5wnuTw0X5E_1Cc4');
-
 const { width, height } = Dimensions.get('window')
+const ASPECT_RATIO = width / height;
+// const LATITUDE = 22.966425;
+// const LONGITUDE = 72.615933;
+const LATITUDE_DELTA = 0.0922;
+// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
 
 class Newaddress extends Component{
     constructor(props) {
@@ -56,21 +57,27 @@ class Newaddress extends Component{
             address_id : props.isFromEdit ? props.address_id : '',
             u_id: '',
             FullMapVisible : false,
+            LATITUDE : 22.966425,
+			LONGITUDE : 72.615933,
+			LATITUDE_DELTA : 0.0922,
+			LONGITUDE_DELTA : LATITUDE_DELTA * ASPECT_RATIO,
+            lastLat :"",
+            lastLong :"",
+            region: {
+                latitude: 22.966425,
+                longitude: 72.615933,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              },
             initialRegion: {
-                latitude: 37.78825,
+                latitude: 22.966425,
                 longitude: -122.4324,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
-            region: {
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              },
             coordinate:{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: 22.966425,
+                longitude: 72.615933,
             }
         };
         this.inputs = {};
@@ -79,49 +86,55 @@ class Newaddress extends Component{
      // this.getKey()
      // .then(()=>this.fetchData())
      // .done();
-     this.fetchData()
-     navigator.geolocation.getCurrentPosition(
-         (position) => {
+         this.fetchData()
+             this.watchID = navigator.geolocation.watchPosition((position) => {
+                 let region = {
+                     latitude:       position.coords.latitude,
+                     longitude:      position.coords.longitude,
+                     latitudeDelta:  0.00922*1.5,
+                     longitudeDelta: 0.00421*1.5
+                 }
+                 console.warn(region);
+                 this.onRegionChange(region, region.latitude, region.longitude);
+             },
+             // (error) => console.log(error.error),
+             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
+         }
+         onRegionChange(region, lastLat, lastLong) {
              this.setState({
+                 region: region,
+                 lastLat: lastLat || this.state.lastLat,
+                 lastLong: lastLong || this.state.lastLong,
                  coordinate: {
-                     latitude: position.coords.latitude,
-                     longitude: position.coords.longitude,
-                 },
-                 region: {
-                     latitude: position.coords.latitude,
-                     longitude: position.coords.longitude,
-                     latitudeDelta: 0.0922,
-                     longitudeDelta: 0.0421,
-                 },
+                     latitude: region.latitude,
+                     longitude: region.longitude
+                 }
              });
-         },
-         (error) => console.log(error.error),
-         { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },);
- }
+         }
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');
             var response = JSON.parse(value);
             this.setState({
                 u_id: response.userdetail.u_id ,
-                country: response.userdetail.country
+                country: response.userdetail.country,
             });
         } catch (error) {
             console.log("Error retrieving data" + error);
         }
     }
 
-    getInitialState() {
-        return {
-          region: {
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          },
-        };
-    }
-
+    // getInitialState() {
+    //     return {
+    //       region: {
+    //         latitude: 37.78825,
+    //         longitude: -122.4324,
+    //         latitudeDelta: 0.0922,
+    //         longitudeDelta: 0.0421,
+    //       },
+    //     };
+    // }
+    //
     onRegionChange(region) {
         // this.setState({ region:region });
         console.log("region:=",region)
@@ -596,11 +609,21 @@ class Newaddress extends Component{
                         />
                         <TouchableOpacity style={{flex:1}} onPress={() => this.setState({FullMapVisible : true})}>
                             <View style={{ flex: 1,backgroundColor: 'white'}} >
-                            <MapView
-                                style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
-                                region={this.state.region}
-                                onRegionChange={this.onRegionChange.bind(this)}
-                                >
+                                <MapView
+                                    style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
+                                    provider={PROVIDER_GOOGLE}
+                                    initialRegion={{
+                                        latitude: this.state.LATITUDE,
+                                        longitude: this.state.LONGITUDE,
+                                        latitudeDelta: this.state.LATITUDE_DELTA,
+                                        longitudeDelta: this.state.LONGITUDE_DELTA
+                                    }}
+                                    region={this.state.region}
+                                    // style={StyleSheet.absoluteFill}
+                                    // ref={c => this.mapView = c}
+                                    // onPress={this.onMapPress}
+                                    onRegionChange={this.onRegionChange.bind(this)}
+                                    >
                                 <Marker
                                     coordinate={this.state.coordinate}
                                     onDragEnd={(e) => this.setState({
@@ -636,22 +659,39 @@ class Newaddress extends Component{
                     </TouchableOpacity>
                 </View>
 
-                    <MapView
-                        style = {{flex:1}}
-                        region={this.state.region}
-                        onRegionChange={this.onRegionChange.bind(this)}>
-                        <Marker draggable
-                            coordinate={this.state.coordinate}
-                            onDragEnd={(e) => this.setState({
-                                coordinate: e.nativeEvent.coordinate,
-                                region: {
-                                    latitude:e.nativeEvent.coordinate.latitude,
-                                    longitude:e.nativeEvent.coordinate.longitude,
-                                    latitudeDelta: this.state.region.latitudeDelta,
-                                    longitudeDelta: this.state.region.longitudeDelta
-                                }
-                            })}/>
-                        </MapView>
+                <MapView
+                    provider={PROVIDER_GOOGLE}
+                    initialRegion={{
+                        latitude: this.state.LATITUDE,
+                        longitude: this.state.LONGITUDE,
+                        latitudeDelta: this.state.LATITUDE_DELTA,
+                        longitudeDelta: this.state.LONGITUDE_DELTA
+                    }}
+                    region={this.state.region}
+                    style={StyleSheet.absoluteFill}
+                    ref={c => this.mapView = c}
+                    onPress={this.onMapPress}>
+
+                    <MapView.Marker draggable
+                        // annotations={markers}
+                        coordinate={{
+                            latitude: (this.state.LATITUDE + 0.00050) || -36.82339,
+                            longitude: (this.state.LONGITUDE + 0.00050) || -73.03569,
+                        }}
+                        // loadAddressFromMap
+                        onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+
+                        // onDragEnd={(e) => this.setState({
+                        // 	coordinate: e.nativeEvent.coordinate,
+                        // 	region: {
+                        // 		latitude:e.nativeEvent.coordinate.latitude,
+                        // 		longitude:e.nativeEvent.coordinate.longitude,
+                        // 		latitudeDelta: this.state.region.latitudeDelta,
+                        // 		longitudeDelta: this.state.region.longitudeDelta
+                        // 	}})}
+                            />
+
+                </MapView>
 
                 </Modal>
             </View>
