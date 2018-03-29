@@ -9,7 +9,8 @@ import {
   TextInput,
   TouchableOpacity,
   AsyncStorage,
-  Image
+  Image,
+  Modal
 } from 'react-native';
 import {connect} from "react-redux";
 import I18n from 'react-native-i18n'
@@ -54,6 +55,7 @@ class Newaddress extends Component{
             address_type : props.isFromEdit ? props.address_type : '1',
             address_id : props.isFromEdit ? props.address_id : '',
             u_id: '',
+            FullMapVisible : false,
             initialRegion: {
                 latitude: 37.78825,
                 longitude: -122.4324,
@@ -592,24 +594,27 @@ class Newaddress extends Component{
                         }}
                         onChangeText={(text) => this.setState({ direction: text })}
                         />
-                    <View style={{ flex: 1}}>
-                        <MapView
-                            style = {{height:200, marginRight:0, marginBottom:10,  marginTop:5,}}
-                            region={this.state.region}
-                            onRegionChange={this.onRegionChange.bind(this)}>
-                            <Marker draggable
-                                coordinate={this.state.coordinate}
-                                onDragEnd={(e) => this.setState({
-                                    coordinate: e.nativeEvent.coordinate,
-                                    region: {
-                                        latitude:e.nativeEvent.coordinate.latitude,
-                                        longitude:e.nativeEvent.coordinate.longitude,
-                                        latitudeDelta: this.state.region.latitudeDelta,
-                                        longitudeDelta: this.state.region.longitudeDelta
-                                    }
-                                })}/>
-                            </MapView>
-                        </View>
+                        <TouchableOpacity style={{flex:1}} onPress={() => this.setState({FullMapVisible : true})}>
+                            <View style={{ flex: 1,backgroundColor: 'white'}} >
+                            <MapView
+                                style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
+                                region={this.state.region}
+                                onRegionChange={this.onRegionChange.bind(this)}
+                                >
+                                <Marker
+                                    coordinate={this.state.coordinate}
+                                    onDragEnd={(e) => this.setState({
+                                        coordinate: e.nativeEvent.coordinate,
+                                        region: {
+                                            latitude:e.nativeEvent.coordinate.latitude,
+                                            longitude:e.nativeEvent.coordinate.longitude,
+                                            latitudeDelta: this.state.region.latitudeDelta,
+                                            longitudeDelta: this.state.region.longitudeDelta
+                                        }
+                                    })}/>
+                                </MapView>
+                            </View>
+                        </TouchableOpacity>
                         <TouchableOpacity style={{
                                 borderWidth:1, borderColor:'#ccc',height:40, justifyContent:'center', alignItems:'center',
                                 backgroundColor:'transparent', top : 0, marginBottom:10, alignItems:'center'}} onPress={()=>
@@ -620,10 +625,40 @@ class Newaddress extends Component{
                     </View>
                     <KeyboardSpacer/>
                 </ScrollView>
+                <Modal visible={this.state.FullMapVisible} animationType="slide" transparent={false} >
+                <View style={{ flexDirection: direction, position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: 10}}>
+                    <TouchableOpacity style={{
+                        borderWidth:1, borderColor:'#ccc',height:40, justifyContent:'center', alignItems:'center',
+                        backgroundColor:'transparent', top : 0, marginBottom:10, alignItems:'center'}} onPress={()=>
+                            this.loadAddressFromMap()
+                        }>
+                        <Text style={{ color:'grey',padding:0, borderColor:'grey', padding:10}} textAlign='center'>{I18n.t('newAddress.picklocation', { locale: lang })}</Text>
+                    </TouchableOpacity>
+                </View>
+
+                    <MapView
+                        style = {{flex:1}}
+                        region={this.state.region}
+                        onRegionChange={this.onRegionChange.bind(this)}>
+                        <Marker draggable
+                            coordinate={this.state.coordinate}
+                            onDragEnd={(e) => this.setState({
+                                coordinate: e.nativeEvent.coordinate,
+                                region: {
+                                    latitude:e.nativeEvent.coordinate.latitude,
+                                    longitude:e.nativeEvent.coordinate.longitude,
+                                    latitudeDelta: this.state.region.latitudeDelta,
+                                    longitudeDelta: this.state.region.longitudeDelta
+                                }
+                            })}/>
+                        </MapView>
+
+                </Modal>
             </View>
         );
     }
     loadAddressFromMap() {
+        this.setState({FullMapVisible : false})
         Geocoder.getFromLatLng(this.state.coordinate.latitude, this.state.coordinate.longitude).then(
             json => {
                 console.log("json.results[0]:=",json.results[0])
