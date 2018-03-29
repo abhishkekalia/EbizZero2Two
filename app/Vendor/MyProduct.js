@@ -82,6 +82,7 @@ class MyProduct extends Component {
     //     }
     // }
     fetchData(){
+
         const {u_id, country } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -225,7 +226,7 @@ class MyProduct extends Component {
             })
             return true
         } catch (e) {
-            console.warn(e);
+            
 
         }
     }

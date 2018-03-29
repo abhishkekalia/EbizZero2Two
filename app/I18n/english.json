@@ -413,7 +413,9 @@
         "spprice":"Special Price",
         "status":"Status",
         "previewbtn":"Preview",
-        "apierr":"error while fetching data"
+        "apierr":"error while fetching data",
+        "activate":"Activate",
+        "deactivate":"Deactivate",
     },
     "vendoraddservice":{
         "addservice":"Add Service",

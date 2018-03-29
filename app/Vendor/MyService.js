@@ -18,6 +18,7 @@ import Utils from 'app/common/Utils';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import Icon from 'react-native-vector-icons/Ionicons';
+import api from "app/Api/api";
 
 const { width, height } = Dimensions.get('window')
 
@@ -295,8 +296,8 @@ class MyService extends Component {
                 </TouchableOpacity>
                 <Footer calllback={()=>this.Description(data.service_name, data.serviceImages ,
                     data.short_description, data.detail_description, data.price ,data.special_price)}
-                    is_approved = {data.is_approved}
-                    product_id= {data.product_id}
+                    is_active = {data.is_active}
+                    service_id= {data.service_id}
                     calldata = {()=>this.fetchData()}
                     lang={lang}/>
             </View>
@@ -333,32 +334,15 @@ class Footer extends Component{
     constructor(props){
         super(props);
         this.state = {
-            is_approved : this.props.is_approved
+            is_active : this.props.is_active
         }
     }
-    productActiveDeactive(product_id, approv_code){
-        const {u_id, country } = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(2));
-        formData.append('country', String(1));
-        formData.append('product_id', String(product_id));
-        formData.append('active_flag', String(approv_code));
-
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-            }
-        fetch(Utils.gurl('productActiveDeactive'), config)
-        .then((response) => response.json())
+    serviceActiveDeactive(service_id, approv_code){
+        api.UpdateServiceStatus(service_id, approv_code)
         .then((responseData) => {
-            if(responseData.status){
+            if(responseData.response.status){
                 this.props.calldata();
-            }
-            else{
+            }else{
                 this.props.calldata();
             }
         })
@@ -369,7 +353,7 @@ class Footer extends Component{
     }
     componentWillReceiveProps(){
         this.setState({
-            is_approved : this.props.is_approved
+            is_active : this.props.is_active
         })
     }
 
@@ -380,14 +364,14 @@ class Footer extends Component{
 
          let approved
         let approv_code
-        if(this.state.is_approved === '1'){
-            approved = I18n.t('vendorservice.approved', { locale: lang });
+        if(this.state.is_active === '1'){
+            approved = I18n.t('vendorservice.deactivate', { locale: lang });
             approv_code = '0'
         }else {
-            approved = I18n.t('vendorservice.pending', { locale: lang });
+            approved = I18n.t('vendorservice.activate', { locale: lang });
             approv_code = '1'
         }
-        console.warn(approved);
+
         return(
         <View style={[styles.bottom, {flexDirection: direction}]}>
                     <TouchableOpacity
@@ -396,7 +380,8 @@ class Footer extends Component{
                         <Text style={{ color :'#fff', fontSize: 12}}>{I18n.t('vendorservice.previewbtn', { locale: lang })}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
-                        onPress={()=>this.productActiveDeactive(this.props.product_id, approv_code)}>
+                        onPress={()=>this.serviceActiveDeactive(this.props.service_id, approv_code)}
+                        >
                         <Text style={{ color :'#fff', fontSize : 12, textAlign: textline}}>{approved}</Text>
                     </TouchableOpacity>
 
