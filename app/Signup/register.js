@@ -85,10 +85,10 @@ class Register extends Component {
 			LATITUDE_DELTA : 0.0922,
 			LONGITUDE_DELTA : LATITUDE_DELTA * ASPECT_RATIO,
 			region: {
-				latitude: 37.78825,
-				longitude: -122.4324,
+				latitude: 22.966425,
+				longitude: 72.615933,
 				latitudeDelta: 0.0922,
-				longitudeDelta: 0.0421,
+				longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO,
 			  },
 		};
 		this.inputs = {};
@@ -401,7 +401,8 @@ class Register extends Component {
 								overflow:'hidden'
 							}
 						]}>
-						{!this.state.selectCountry ? undefined:
+						{
+							!this.state.selectCountry ? undefined:
 							<Image style={{height:40, width:40}}
 								resizeMode = 'center'
 								res100izeMethod = 'resize'
@@ -652,7 +653,6 @@ class Register extends Component {
 			return false
 		}
 		if(password.length < 6){
-			//passwordvalidation
 			MessageBarManager.showAlert({
 				message: I18n.t('userregister.passwordvalidation', { locale: lang }),
 				title:'',
@@ -817,7 +817,6 @@ const styles = StyleSheet.create({
         backgroundColor:'transparent',
         paddingTop:20
     },
-
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -829,7 +828,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F6F6F6',
         marginBottom : 10
     },
-
     countryIcon: {
         borderRightWidth: 1,
         borderColor: '#fbcdc5',

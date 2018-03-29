@@ -42,7 +42,7 @@ var api = {
             body: formData,
         }
         return fetch(Utils.gurl('addToOrder'), config).then((res) => res.json())
-    }
+    },
     UpdateServiceStatus( service_id, is_active){
         let formData = new FormData();
         formData.append('service_id', String(service_id));
