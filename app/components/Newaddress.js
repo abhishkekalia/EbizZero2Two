@@ -78,6 +78,8 @@ class Newaddress extends Component{
             coordinate:{
                 latitude: 22.966425,
                 longitude: 72.615933,
+                latitudeDelta:  0.0922,
+                longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO
             }
         };
         this.inputs = {};
@@ -135,9 +137,9 @@ class Newaddress extends Component{
     //     };
     // }
     //
-    onRegionChange(region) {
+    // onRegionChange(region) {
         // this.setState({ region:region });
-        console.log("region:=",region)
+        // console.log("region:=",region)
         // this.setState({
         //     region: region,
         //     // coordinate: {
@@ -145,7 +147,7 @@ class Newaddress extends Component{
         //     //     longitude: region.longitude
         //     // }
         // });
-    }
+    // }
 
     fetchData(){
         fetch(Utils.gurl('countryList'),{
@@ -250,8 +252,6 @@ class Newaddress extends Component{
             country,
             address_type
         } = this.state;
-
-
         let formData = new FormData();
         formData.append('address_id', String(this.state.address_id))
         formData.append('u_id', String(u_id));
@@ -418,6 +418,8 @@ class Newaddress extends Component{
                 selCountryObj = element
             }
         }
+        console.log(this.state.region);
+
         return (
             <View style={{ flex : 1}}>
                 <View style={{
@@ -648,7 +650,11 @@ class Newaddress extends Component{
                     </View>
                     <KeyboardSpacer/>
                 </ScrollView>
-                <Modal visible={this.state.FullMapVisible} animationType="slide" transparent={false} >
+                <Modal
+                    visible={this.state.FullMapVisible}
+                    animationType="slide"
+                    transparent={false}
+                    onRequestClose={() => this.setState({ FullMapVisible :false})}>
                 <View style={{ flexDirection: direction, position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: 10}}>
                     <TouchableOpacity style={{
                         borderWidth:1, borderColor:'#ccc',height:40, justifyContent:'center', alignItems:'center',
@@ -661,12 +667,7 @@ class Newaddress extends Component{
 
                 <MapView
                     provider={PROVIDER_GOOGLE}
-                    initialRegion={{
-                        latitude: this.state.LATITUDE,
-                        longitude: this.state.LONGITUDE,
-                        latitudeDelta: this.state.LATITUDE_DELTA,
-                        longitudeDelta: this.state.LONGITUDE_DELTA
-                    }}
+                    initialRegion={this.state.region}
                     region={this.state.region}
                     style={StyleSheet.absoluteFill}
                     ref={c => this.mapView = c}
@@ -674,21 +675,23 @@ class Newaddress extends Component{
 
                     <MapView.Marker draggable
                         // annotations={markers}
-                        coordinate={{
-                            latitude: (this.state.LATITUDE + 0.00050) || -36.82339,
-                            longitude: (this.state.LONGITUDE + 0.00050) || -73.03569,
+                        coordinate={this.state.coordinate}
+                        onDragEnd={(e) =>{
+                            this.setState({
+                                coordinate: {
+                                    latitude: e.nativeEvent.coordinate.latitude,
+                                    longitude: e.nativeEvent.coordinate.longitude,
+                                    latitudeDelta:  e.nativeEvent.coordinate.longitudeDelta,
+                                    longitudeDelta:  e.nativeEvent.coordinate.latitudeDelta
+                                },
+                                region: {
+                                    latitude:e.nativeEvent.coordinate.latitude,
+                                    longitude:e.nativeEvent.coordinate.longitude,
+                                    latitudeDelta: this.state.region.latitudeDelta,
+                                    longitudeDelta: this.state.region.longitudeDelta
+                                }
+                            })
                         }}
-                        // loadAddressFromMap
-                        onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
-
-                        // onDragEnd={(e) => this.setState({
-                        // 	coordinate: e.nativeEvent.coordinate,
-                        // 	region: {
-                        // 		latitude:e.nativeEvent.coordinate.latitude,
-                        // 		longitude:e.nativeEvent.coordinate.longitude,
-                        // 		latitudeDelta: this.state.region.latitudeDelta,
-                        // 		longitudeDelta: this.state.region.longitudeDelta
-                        // 	}})}
                             />
 
                 </MapView>
@@ -698,29 +701,36 @@ class Newaddress extends Component{
         );
     }
     loadAddressFromMap() {
-        this.setState({FullMapVisible : false})
         Geocoder.getFromLatLng(this.state.coordinate.latitude, this.state.coordinate.longitude).then(
             json => {
                 console.log("json.results[0]:=",json.results[0])
                 var address_component = json.results[0].address_components;
+
                 for (let index = 0; index < address_component.length; index++) {
                     const element = address_component[index];
                     if (element.types.includes('street_number')) {
-                        console.log("street_number matched")
                         this.setState({
-                            block_no:element.long_name
+                            block_no:element.long_name,
+                            FullMapVisible : false
                         });
                     }
                     else if (element.types.includes('locality')) {
                         this.setState({
-                            city: element.long_name
+                            city: element.long_name,
+                            FullMapVisible : false
                         });
                     }
                     else if (element.types.includes('administrative_area_level_1')) {
                         this.setState({
-                            street:element.long_name
+                            street : element.long_name
                         })
                     }
+                    else if (element.types.includes("country")) {
+                        this.setState({
+                            country : element.long_name
+                        })
+                    }
+
                 }
                 console.log("address_component:=",address_component[0].types[0])
                 console.log("locality:=",json.results[0].address_components.locality)
