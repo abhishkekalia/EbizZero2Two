@@ -21,6 +21,7 @@ import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Material from 'react-native-vector-icons/MaterialIcons';
 
 const { width, height } = Dimensions.get('window')
 
@@ -30,6 +31,7 @@ class MyProduct extends Component {
         this.state = {
             isLoading: true,
             dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2 }),
+            Shortrows : [],
             u_id : null,
             country : null,
             text: '',
@@ -80,6 +82,7 @@ class MyProduct extends Component {
     //     }
     // }
     fetchData(){
+
         const {u_id, country } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -109,6 +112,7 @@ class MyProduct extends Component {
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                    Shortrows : responseData.data,
                     isLoading : false,
                     productnames: productname
                 },()=>{
@@ -201,7 +205,31 @@ class MyProduct extends Component {
             </View>
         );
     }
+    shortingOrder(){
+        const { Shortrows } = this.state;
+        this.Ascending()
+        .then(()=>{
+            let rowRev = Shortrows.reverse()
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(rowRev),
+                isLoading : false
+            })
+        })
+        .done();
+    }
+    async Ascending(){
+        try {
+            const { Shortrows } = this.state;
+            this.setState({
+                dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
+                isLoading : true
+            })
+            return true
+        } catch (e) {
+            
 
+        }
+    }
     render() {
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
@@ -231,35 +259,45 @@ class MyProduct extends Component {
                             flexDirection: direction,
                             justifyContent: 'space-between',
                             marginTop: 5,
-                            borderWidth: 1,
-                            borderColor: '#ccc',
-                            borderRadius: 7
                         }}>
-                        <Icon size={20} color="#ccc" name="md-search" style={{ alignSelf: 'center', margin: 5}} onPress={()=>this.removeFilterFunction()}/>
-                        <TextInput
-                            style={[styles.TextInputStyleClass, {width: "75%", alignSelf: 'center', textAlign: textline}]}
-                            onChangeText={(text) => this.SearchFilterFunction(text)}
-                            value={this.state.text}
-                            controlled={true}
-                            underlineColorAndroid='transparent'
-                            placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
-                            />
-                        <TouchableOpacity style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: 35,
-                                borderRadius:  7,
-                                backgroundColor: "transparent"
-                            }} >
-                        <Icon size={25} color="#a9d5d1" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
-                        </TouchableOpacity>
+                        <View style={{
+                                flexDirection: direction,
+                                justifyContent: 'space-between',
+                                borderWidth: 1,
+                                borderColor: '#ccc',
+                                borderRadius: 7
+                            }}>
+                            <View style={{width: 40, height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
+                            <Icon size={20} color="#ccc" name="md-search" style={{ alignSelf: 'center', margin: 5}} onPress={()=>this.removeFilterFunction()}/>
+                            </View>
+                            <TextInput
+                                style={[styles.TextInputStyleClass, {width: "65%", alignSelf: 'center', textAlign: textline}]}
+                                onChangeText={(text) => this.SearchFilterFunction(text)}
+                                value={this.state.text}
+                                controlled={true}
+                                underlineColorAndroid='transparent'
+                                placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
+                                />
+                            <TouchableOpacity style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: 35,
+                                    borderRadius:  7,
+                                    backgroundColor: "transparent"
+                                }} >
+                                <Icon size={25} color="#a9d5d1" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
+                            </TouchableOpacity>
                         </View>
-                        <View style={{ flexDirection: direction}}>
-                            {data}
-                            <ScrollView style={{marginBottom: 50}}>
-                                { (this.state.dataSource.getRowCount() > 0 ) ? this.state.productnames.map((data, index) => this._renderRightLetters(data, index)) : undefined}
-                            </ScrollView>
+                        <View style={{width: 40, height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
+                            <Material name="short-text" color="#a9d5d1" size={30} onPress={()=>this.shortingOrder()}/>
                         </View>
+                    </View>
+                    <View style={{ flexDirection: direction}}>
+                        {data}
+                        <ScrollView style={{marginBottom: 50}}>
+                            { (this.state.dataSource.getRowCount() > 0 ) ? this.state.productnames.map((data, index) => this._renderRightLetters(data, index)) : undefined}
+                        </ScrollView>
+                    </View>
                 </View>
             );
         }

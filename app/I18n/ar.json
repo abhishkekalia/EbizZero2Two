@@ -410,7 +410,9 @@
         "spprice":"القيمة بعد الخصم",
         "status":"الحالة",
         "previewbtn":"معاينة",
-        "apierr":"حصل خطأ بالشبكة"
+        "apierr":"حصل خطأ بالشبكة",
+        "activate":"تفعيل",
+        "deactivate":"اخفاء"
     },
     "vendoraddservice":{
         "addservice":"اضف خدمة",
@@ -446,7 +448,7 @@
         "weekendlabel" : "هل تعمل في عطلة نهاية الأسبوع"
     },
     "productorder":{
-        "orderTitle":"Order",
+        "orderTitle":"طلباتي",
         "product":"المنتج",
         "vendorid":"رقم تسلسل البائع",
         "orderid":"رقم الطلب",

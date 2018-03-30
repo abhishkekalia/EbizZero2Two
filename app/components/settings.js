@@ -301,12 +301,15 @@ class Settings extends Component {
                       onValueChange={ (value) =>
                         this.setState({ is_notification : notify ? "0" : "1"},()=>this.fetchData())
                       }
+                      disabled={false}
+                      activeText={'On'}
+                      inActiveText={'Off'}
+                      backgroundActive={'green'}
+                      backgroundInactive={'gray'}
+                      circleActiveColor={'#30a566'}
+                      circleInActiveColor={'#000000'}
                       value={notify}
-                      onTintColor="#00ff00"
-                      thumbTintColor="#fff"
-                      tintColor="#000"
-                      onTintColor="#a9d5d1"
-                      thumbTintColor='black'/>
+                     />
                 </View>
 
                 <View style={{ flexDirection : 'column'}}>
