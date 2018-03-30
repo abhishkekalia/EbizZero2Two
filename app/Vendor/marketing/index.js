@@ -25,14 +25,12 @@ class Marketing extends Component {
             customStyleIndex: 0,
         }
     }
-
     handleSingleIndexSelect = (index) => {
         this.setState({
             ...this.state,
             selectedIndex: index,
         });
     }
-
     handleMultipleIndexSelect = (index) => {
         if (this.state.selectedIndices.includes(index)) {
             this.setState({
@@ -50,17 +48,15 @@ class Marketing extends Component {
             });
         }
     }
-
     handleCustomIndexSelect = (index) => {
         this.setState({
             ...this.state,
             customStyleIndex: index,
         });
     }
-
     render() {
         const {lang} = this.props;
-        
+
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
@@ -167,24 +163,29 @@ class UploadAdd extends Component {
             </View>
         )
     }
-        renderData(data: string, sectionID: number, rowID: number, index) {
+    renderData(data: string, sectionID: number, rowID: number, index) {
+        const {lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
+
         if (this.state.dataSource.getRowCount() === 0 ) {
             return this.noItemFound();
         }
         return (
-        <View style={{
-            flex : 1,
-            // justifyContent: 'center',
-            padding: 10,
-            // backgroundColor: '#fff'
-        }}>
-        <View style={{flex: 1, flexDirection: direction, justifyContent:'space-around' }}>
+            <View style={{
+                flex : 1,
+                // justifyContent: 'center',
+                padding: 10,
+                // backgroundColor: '#fff'
+            }}>
+            <View style={{flex: 1, flexDirection: direction, justifyContent:'space-around' }}>
             <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >Ad Price : { (data.ad_type === '1' ) ? "1KWD" : "1.5KWD"} </Text>
             <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >User Id:  {data.u_id} </Text>
-        </View>
-        <Image source={{uri :data.path }} style={{ height:100, width : width/2}}/>
+            </View>
+            <Image source={{uri :data.path }} style={{ height:100, width : width/2}}/>
             <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.expire_date} </Text>
-        </View>
+            </View>
         );
     }
 

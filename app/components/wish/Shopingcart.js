@@ -25,6 +25,8 @@ import {Actions as routes} from "react-native-router-flux";
 import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
 import { material } from 'react-native-typography';
 import EventEmitter from "react-native-eventemitter";
+import Drawer from 'react-native-drawer';
+import Menu from '../menu/MenuContainer';
 
 const { width, height } = Dimensions.get('window');
 // const SHORT_LIST = ['Small', 'Medium', 'Large'];
@@ -56,12 +58,10 @@ class Shopingcart extends Component {
         this.fetchData()
         EventEmitter.removeAllListeners("reloadCartlist");
         EventEmitter.on("reloadCartlist", (value)=>{
-            console.log("reloadCartlist", value);
             this.fetchData()
         });
         EventEmitter.removeAllListeners("redirectToFaturah");
         EventEmitter.on("redirectToFaturah", (value)=>{
-            console.log("redirectToFaturah", value);
             routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
         });
     }
@@ -73,7 +73,7 @@ class Shopingcart extends Component {
     }
     _renderLeftButton = () => {
          return(
-             <Feather name="menu" size={20} onPress={()=> routes.drawerOpen()} color="#fff" style={{ padding : 10}}/>
+             <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10}}/>
          );
      };
      _renderRightButton = () => {
@@ -188,7 +188,6 @@ class Shopingcart extends Component {
                 this.setState({
                     cartIdList:cartIdList
                 });
-                console.warn(this.state.cartIdList);
             }else {
                 this.setState({
                     status : responseData.status
@@ -266,22 +265,45 @@ class Shopingcart extends Component {
     }
     noItemFound(){
         const {lang} = this.props;
+        let side = lang === "ar" ? "right" : "left";
         return (
-            <View style={{flex: 1}}>
-                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                    {this._renderLeftButton()}
-                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
-                    {this._renderRightButton()}
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side= {side}
+                >
+                <View style={{flex: 1}}>
+                    <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                        {this._renderLeftButton()}
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                        {this._renderRightButton()}
+                    </View>
+                    <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
+                        <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
+                    </View>
                 </View>
-                <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
-                    <Text> {I18n.t('cart.noitem', { locale: lang })} </Text>
-                </View>
-            </View>
+            </Drawer>
         );
-        }
+    }
+    closeControlPanel = () => {
+        this._drawer.close()
+    };
+    openControlPanel = () => {
+        this._drawer.open()
+    };
     render() {
         const { itemcount, totalamount, subtotalamount } = this.state;
         const { lang } = this.props;
+        let side = lang === "ar" ? "right" : "left";
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -298,30 +320,45 @@ class Shopingcart extends Component {
             return this.noItemFound();
         }
         return (
-            <View style={{flex: 1, flexDirection: 'column'}}>
-                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                    {this._renderLeftButton()}
-                    <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
-                    {this._renderRightButton()}
-                </View>
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side={side}
+                >
+                <View style={{flex: 1, flexDirection: 'column'}}>
+                    <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                        {this._renderLeftButton()}
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                        {this._renderRightButton()}
+                    </View>
 
-                {listView}
-                {this.renderFooter(itemcount, totalamount, subtotalamount)}
-                <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
-                    <TouchableHighlight
-                        underlayColor ={"#fff"}
-                        style={[styles.shoping]}
-                        onPress={()=>routes.homePage()}>
-                        <Text style={{ color :'#fff'}}>{I18n.t('cart.shoping', { locale: lang })}</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight
-                        underlayColor ={"#fff"}
-                        style={[styles.checkout]}
-                        onPress={()=> this.procedToCheckout()}>
-                        <Text style={{ color : '#fff'}}>{I18n.t('cart.checkout', { locale: lang })}</Text>
-                    </TouchableHighlight>
+                    {listView}
+                    {this.renderFooter(itemcount, totalamount, subtotalamount)}
+                    <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
+                        <TouchableHighlight
+                            underlayColor ={"#fff"}
+                            style={[styles.shoping]}
+                            onPress={()=>routes.homePage()}>
+                            <Text style={{ color :'#fff'}}>{I18n.t('cart.shoping', { locale: lang })}</Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight
+                            underlayColor ={"#fff"}
+                            style={[styles.checkout]}
+                            onPress={()=> this.procedToCheckout()}>
+                            <Text style={{ color : '#fff'}}>{I18n.t('cart.checkout', { locale: lang })}</Text>
+                        </TouchableHighlight>
+                    </View>
                 </View>
-            </View>
+            </Drawer>
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
@@ -620,6 +657,18 @@ const styles = StyleSheet.create ({
         padding : 10
      }
 })
+const drawerStyles = {
+    drawer: {
+        backgroundColor:'#fff',
+        shadowColor: '#000000',
+        shadowOpacity: 0.8,
+        shadowRadius: 3
+    },
+    main: {
+        paddingLeft: 3,
+        backgroundColor:'#fff'
+    },
+}
 
 function mapStateToProps(state) {
     return {

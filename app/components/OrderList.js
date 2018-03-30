@@ -4,10 +4,11 @@ import {
     Text,
     View
 } from 'react-native';
-
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import ProductOrder from "./Order/ProductOrder";
 import ServiceOrder from "./Order/ServiceOrder";
+import {connect} from 'react-redux';
+import I18n from 'react-native-i18n';
 
 class OrderList extends Component {
     constructor(props) {
@@ -18,14 +19,12 @@ class OrderList extends Component {
             customStyleIndex: 0,
         }
     }
-
     handleSingleIndexSelect = (index) => {
         this.setState({
             ...this.state,
             selectedIndex: index,
         });
     }
-
     handleMultipleIndexSelect = (index) => {
         if (this.state.selectedIndices.includes(index)) {
             this.setState({
@@ -43,7 +42,6 @@ class OrderList extends Component {
             });
         }
     }
-
     handleCustomIndexSelect = (index) => {
         this.setState({
             ...this.state,
@@ -52,10 +50,11 @@ class OrderList extends Component {
     }
 
     render() {
+        const { lang } =this.props;
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
-                    values={['Product', 'Service']}
+                    values={[ I18n.t('productorder.product', { locale: lang }),I18n.t('serviceorder.servicetitle', { locale: lang })]}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -65,9 +64,9 @@ class OrderList extends Component {
                     tabTextStyle={{ color: '#ccc', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <ProductOrder/>}
+                    <ProductOrder lang={lang}/>}
                 {this.state.customStyleIndex === 1 &&
-                    <ServiceOrder/>}
+                    <ServiceOrder lang={lang}/>}
             </View>
         );
     }
@@ -111,5 +110,9 @@ const styles = StyleSheet.create({
         marginTop: 24
     }
 })
-
-export default OrderList
+function mapStateToProps(state) {
+    return {
+        lang: state.auth.lang,
+    }
+}
+export default connect(mapStateToProps)(OrderList);

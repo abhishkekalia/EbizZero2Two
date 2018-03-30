@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import {
-      ListView,
-      TouchableOpacity,
-      StyleSheet,
-      Text,
-      View,
-      Picker,
-      AsyncStorage,
-      ActivityIndicator,
-      ScrollView,
-      Button,
-      RefreshControl
-  } from 'react-native';
+    ListView,
+    TouchableOpacity,
+    StyleSheet,
+    Text,
+    View,
+    Picker,
+    AsyncStorage,
+    ActivityIndicator,
+    ScrollView,
+    Button,
+    RefreshControl
+} from 'react-native';
 import { Actions} from "react-native-router-flux";
-
+import I18n from 'react-native-i18n';
 import Utils from 'app/common/Utils';
 
 export default class ServiceOrder extends Component {
-     constructor(props) {
+    constructor(props) {
         super(props);
         this.state = {
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
@@ -28,13 +28,11 @@ export default class ServiceOrder extends Component {
             status : false
         };
     }
-
     componentDidMount() {
         this.getKey()
         .then(()=>this.fetchData())
         .done();
     }
-
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');
@@ -47,27 +45,25 @@ export default class ServiceOrder extends Component {
             console.log("Error retrieving data" + error);
         }
     }
-
-     _onRefresh () {
-    this.setState({refreshing: true}, ()=> {this.fetchData()});
-
-  }
-
+    _onRefresh () {
+        this.setState({
+            refreshing: true
+        }, ()=> {this.fetchData()
+        });
+    }
     fetchData (){
         const { u_id,country, } = this.state;
-
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
-            }
-
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
         fetch(Utils.gurl('getbookedServiceForUser'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -81,114 +77,111 @@ export default class ServiceOrder extends Component {
                 this.setState({
                     status: responseData.status,
                     loaded: true,
-
                 })
             }
         })
         .catch((errorMessage, statusCode) => {
-             this.setState({
-                loaded     : true,
-                status     : false
-            });
+            console.log(errorMessage);
         })
         .done();
-
     }
     noItemFound(){
+        const { lang} = this.props;
         return (
-            <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
-                <Text>You have no items in service</Text>
+            <View style={{ flex:1, justifyContent:'center', alignItems:'center'}}>
+                <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );
     }
-
     render() {
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
-
         if (!this.state.status) {
             return this.noItemFound();
         }
-
         let listView = (<View></View>);
-            listView = (
-               <ListView
+        listView = (
+            <ListView
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
                 renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
-            );
+        );
         return (
-        <View>
-            {listView}
-        </View>
-
+            <View>
+                {listView}
+            </View>
         );
     }
-
     renderLoadingView() {
         return (
             <ActivityIndicator
-            style={[styles.centering]}
-            color="#1e90ff"
-            size="large"/>
-            );
+                style={[styles.centering]}
+                color="#1e90ff"
+                size="large"/>
+        );
     }
     renderData(data, rowData, sectionID, rowID, index) {
-        console.warn(data);
-        let color = data.serviceDetail.special_price ? '#C5C8C9' : '#000';
+        let { lang } = this.props;
+        let direction = lang == 'ar'? 'row-reverse': 'row';
+        let color = data.serviceDetail.special_price ? '#000' : '#000';
         let textDecorationLine = data.serviceDetail.special_price ? 'line-through' : 'none';
-
         return (
             <TouchableOpacity
-            style={{ flexDirection : 'column'}}
-            key={rowID}
-            data={rowData}
-            onPress={()=>Actions.serviceusr({
-                title :data.addressDetail.fullname,
-                addressDetail : data.addressDetail,
-            })}>
-                <View style={styles.header}>
-                    <Text style={[styles.headerText, {color: '#fbcdc5'}]}>Booking Date : {data.service_datetime}</Text>
-                    <Text style={[styles.headerText, {color: '#a9d5d1'}]}>Amount : {data.amount}</Text>
+                style={{ flexDirection : 'column'}}
+                key={rowID}
+                data={rowData}
+                onPress={()=>Actions.serviceusr({
+                    title :data.addressDetail.fullname,
+                    addressDetail : data.addressDetail,
+                    lang:lang
+                })}>
+                <View style={[styles.header,{ flexDirection: direction}]}>
+                    <View style={{ flexDirection: direction}}>
+                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{I18n.t('userorderhistory.bookingdt', { locale: lang })}</Text>
+                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}>: </Text>
+                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{data.service_datetime}</Text>
+                    </View>
+                    <View style={{ flexDirection: direction}}>
+                        <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{I18n.t('userorderhistory.amount', { locale: lang })}</Text>
+                        <Text style={[styles.headerText, {color: '#a9d5d1'}]}>:</Text>
+                        <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{data.amount}</Text>
+                    </View>
                 </View>
                 <View style={{ flexDirection : 'column', paddingLeft:10, paddingTop:5, paddingBottom:5, backgroundColor: '#F6F6F6'}} >
-                    <View style={styles.row}>
-                    <Text style={styles.label}>Service Name : </Text>
-                    <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
-
+                    <View style={{flexDirection: direction, paddingTop:1}}>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.servicename', { locale: lang })}</Text>
+                            <Text style={styles.label}>: </Text>
+                        <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
                     </View>
-                    <View style={styles.row}>
-                    <Text style={styles.label}>Shop Name : </Text>
-                    <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
+                    <View style={{flexDirection: direction, paddingTop:1}}>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.customeremail', { locale: lang })}</Text>
+                            <Text style={styles.label}>: </Text>
+                        <Text style={styles.bodyText}>{data.serviceDetail.short_description}</Text>
                     </View>
-                    <View style={styles.row}>
-                    <Text style={[styles.label]}>Customer Email : </Text>
-                    <Text style={styles.bodyText}>{data.serviceDetail.short_description}</Text>
-                    </View>
-                    <View style={styles.row}>
-                    <Text style={styles.label}>Price : </Text>
-                    <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
-                    <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
-                    <Text style={styles.label}> KWD </Text>
+                    <View style={{flexDirection: direction, paddingTop:1}}>
+                        <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
+                        <Text style={styles.label}>: </Text>
+                        <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
+                        <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
+                        <Text style={styles.label}> KWD </Text>
                     </View>
                 </View>
-
             </TouchableOpacity>
-            );
+        );
     }
-
     _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
         return (
-        <View
-        key={`${sectionID}-${rowID}`}
-        style={{
-          height: adjacentRowHighlighted ? 4 : 1,
-          backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
-        }}/>
+            <View
+                key={`${sectionID}-${rowID}`}
+                style={{
+                    height: adjacentRowHighlighted ? 4 : 1,
+                    backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC'
+                }
+            }/>
         );
     }
 }
@@ -200,23 +193,13 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5FCFF'
     },
-
-    row: {
-        flexDirection: 'row',
-        // justifyContent: 'center',
-        // padding: 10,
-        // backgroundColor: '#F6F6F6'
-        paddingTop:1
-    },
     header: {
         padding:5,
-        flexDirection: 'row',
         justifyContent: 'space-around',
         backgroundColor: '#fff',
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: '#fbcdc5'
     },
-
     thumb: {
         width   :50,
         height  :50,
@@ -225,21 +208,18 @@ var styles = StyleSheet.create({
         color : "#a9d5d1",
         fontSize : 12
     },
-
     headerText :{
         fontSize: 12,
     },
     bodyText :{
         fontSize: 11,
     },
-
     centering: {
         flex:1,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20
     },
-
     heading: {
         paddingTop : 5,
         paddingBottom : 5,

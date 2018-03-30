@@ -12,6 +12,7 @@ import {
 	Dimensions,
 	StyleSheet,
 	Image,
+	Modal
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -19,6 +20,7 @@ import {Actions as routes} from "react-native-router-flux";
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -26,11 +28,13 @@ import { Picker } from 'react-native-picker-dropdown';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import FontAwesome from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actionsheet';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Geocoder from 'react-native-geocoding';
+Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
 
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
-
 const countryTitle = 'Select Country'
 const { width, height } = Dimensions.get('window')
 const INITIAL_STATE = {
@@ -42,6 +46,12 @@ const INITIAL_STATE = {
 	country: '',
 	address: '',
 };
+const ASPECT_RATIO = width / height;
+// const LATITUDE = 22.966425;
+// const LONGITUDE = 72.615933;
+const LATITUDE_DELTA = 0.0922;
+// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
 
 class Register extends Component {
 	constructor(props) {
@@ -69,14 +79,44 @@ class Register extends Component {
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			countries: ["0"],
 			otpVarification: false,
+			ShowMapLocation: false,
+			LATITUDE : 22.966425,
+			LONGITUDE : 72.615933,
+			LATITUDE_DELTA : 0.0922,
+			LONGITUDE_DELTA : LATITUDE_DELTA * ASPECT_RATIO,
+			region: {
+				latitude: 37.78825,
+				longitude: -122.4324,
+				latitudeDelta: 0.0922,
+				longitudeDelta: 0.0421,
+			  },
 		};
 		this.inputs = {};
 		this.showCountrysheet = this.showCountrysheet.bind(this)
 		this.handlePress = this.handlePress.bind(this)
 	}
 	componentDidMount(){
+		this.watchID = navigator.geolocation.watchPosition((position) => {
+			let region = {
+				latitude:       position.coords.latitude,
+				longitude:      position.coords.longitude,
+				latitudeDelta:  0.00922*1.5,
+				longitudeDelta: 0.00421*1.5
+			}
+			this.onRegionChange(region, region.latitude, region.longitude);
+		});
         this.fetchData();
         this.gettermandcondition()
+	}
+	onRegionChange(region, lastLat, lastLong) {
+		this.setState({
+			mapRegion: region,
+			lastLat: lastLat || this.state.lastLat,
+			lastLong: lastLong || this.state.lastLong
+		});
+	}
+	componentWillUnmount() {
+		navigator.geolocation.clearWatch(this.watchID);
 	}
 	focusNextField(id) {
 		this.inputs[id].focus();
@@ -86,6 +126,47 @@ class Register extends Component {
 			hidden : !this.state.hidden
     	})
     }
+	loadAddressFromMap(latitude, longitude) {
+		Geocoder.getFromLatLng(latitude, longitude).then(
+			json => {
+				var address_component = json.results[0].formatted_address;
+				this.setState({
+					address:address_component,
+					LATITUDE : latitude,
+					LONGITUDE : longitude
+				});
+
+				// for (let index = 0; index < address_component.length; index++) {
+				// 	const element = address_component[index];
+				// 	if (element.types.includes('street_number')) {
+				// 		console.log("street_number matched")
+				// 		this.setState({
+				// 			block_no:element.long_name
+				// 		});
+				// 	}
+				// 	else if (element.types.includes('locality')) {
+				// 		this.setState({
+				// 			city: element.long_name
+				// 		});
+				// 	}
+				// 	else if (element.types.includes('administrative_area_level_1')) {
+				// 		this.setState({
+				// 			street:element.long_name
+				// 		})
+				// 	}
+				// }
+				// console.warn("address_component:=",address_component[0].types[0])
+				// console.warn("locality:=",json.results[0].address_components.locality)
+			},
+			error => {
+				MessageBarManager.showAlert({
+					message: error,
+					alertType: 'alert',
+					title:''
+				})
+			}
+		);
+	}
     gettermandcondition(){
 		fetch(Utils.gurl('gettermandcondition'),{
 			method: "GET",
@@ -186,27 +267,28 @@ class Register extends Component {
 			}
 		}
 		return (
-			<ScrollView style={[ commonStyles.content,{marginTop:0,marginBottom:0,paddingTop:20,paddingBottom:20}]}
-				testID="Login"
-				showsVerticalScrollIndicator={false}
-				keyboardShouldPersistTaps={'handled'}>
-				<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
-					<View style ={commonStyles.iconusername}>
-						<TextInput
-							style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10, height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
-							value={this.state.fullname}
-							underlineColorAndroid = 'transparent'
-							autoCorrect={false}
-							placeholder={I18n.t('userregister.fullname', { locale: lang })}
-							maxLength={140}
+			<View style={{flex: 1}}>
+				<ScrollView style={[ commonStyles.content,{marginTop:0,marginBottom:0,paddingTop:20,paddingBottom:20}]}
+					testID="Login"
+					showsVerticalScrollIndicator={false}
+					keyboardShouldPersistTaps={'handled'}>
+					<View style ={[commonStyles.registerContent, {marginBottom : 10, borderColor:'#fbcdc5'}]}>
+						<View style ={commonStyles.iconusername}>
+							<TextInput
+								style={[commonStyles.inputusername, { borderTopLeftRadius : 10, borderTopRightRadius:10, height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
+								value={this.state.fullname}
+								underlineColorAndroid = 'transparent'
+								autoCorrect={false}
+								placeholder={I18n.t('userregister.fullname', { locale: lang })}
+								maxLength={140}
           					onSubmitEditing={(event) => {
           						this.focusNextField('two');
           					}}
-						  	autoFocus = {true}
+					  		autoFocus = {true}
           					returnKeyType={ "next" }
- 					        ref={ input => {
- 					        	this.inputs['one'] = input;
- 					        }}
+ 				        	ref={ input => {
+ 				        		this.inputs['one'] = input;
+ 				        	}}
 							onChangeText={(fullname) => this.setState({fullname})}/>
 					</View>
 					<View style ={commonStyles.iconusername}>
@@ -222,18 +304,18 @@ class Register extends Component {
           					}}
           					returnKeyType={ "next" }
 							// autoFocus = {true}
- 					        ref={ input => {
- 					        	this.inputs['two'] = input;
-							 }}
-							 keyboardType = {"email-address"}
+ 				        	ref={ input => {
+ 				        		this.inputs['two'] = input;
+						 	}}
+						 	keyboardType = {"email-address"}
 							onChangeText={(email) => this.setState({email})}
-						/>
+							/>
 					</View>
 					<View style ={[commonStyles.iconusername, { alignItems: align}]}>
 						<TextInput
 							style={[commonStyles.inputpassword,{height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
-                           	secureTextEntry={this.state.hidden}
-                           	value={this.state.password}
+                       		secureTextEntry={this.state.hidden}
+                       		value={this.state.password}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
 							placeholder={I18n.t('userregister.password', { locale: lang })}
@@ -242,11 +324,11 @@ class Register extends Component {
           						this.focusNextField('four');
           					}}
           					returnKeyType={ "next" }
- 					        ref={ input => {
- 					        	this.inputs['three'] = input;
- 					        }}
- 					        onChangeText={ (password) => this.setState({ password }) }
-						/>
+ 				        	ref={ input => {
+ 				        		this.inputs['three'] = input;
+ 				        	}}
+ 				        	onChangeText={ (password) => this.setState({ password }) }
+							/>
 					</View>
 					<TouchableOpacity style ={{
 							flexDirection: direction,
@@ -300,11 +382,11 @@ class Register extends Component {
           						this.focusNextField('five');
           					}}
           					returnKeyType={ "next" }
- 					        ref={ input => {
- 					        	this.inputs['four'] = input;
- 					        }}
- 					        onChangeText={(contact) => this.setState({contact})}
-						/>
+ 				        	ref={ input => {
+ 				        		this.inputs['four'] = input;
+ 				        	}}
+ 				        	onChangeText={(contact) => this.setState({contact})}
+							/>
 					</View>
 					<TouchableOpacity onPress={this.showCountrysheet}
 						style={[
@@ -313,7 +395,7 @@ class Register extends Component {
 								flexDirection: direction,
 								justifyContent: 'space-between',
 								alignItems: 'center' ,
-								marginBottom : 5,
+								// marginBottom : 5,
 								paddingLeft:5,
 								height:40,
 								overflow:'hidden'
@@ -337,13 +419,13 @@ class Register extends Component {
 					<ActionSheet
 						ref={o => this.countrySheet = o}
 						// title={!this.state.selectCountry? this.state.selectCountry : selCountryObj.country_name  }
-                        options={this.state.countries}
-                        cancelButtonIndex={CANCEL_INDEX}
-                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                        onPress={this.handlePress}/>
+                    	options={this.state.countries}
+                    	cancelButtonIndex={CANCEL_INDEX}
+                    	// destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                    	onPress={this.handlePress}/>
 					<View style={{ flexDirection: direction}}>
 						<TextInput
-							style={[commonStyles.inputpassword,{height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}] }
+							style={[commonStyles.inputpassword,{height:40, width: width-75, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5, zIndex: 1, position: 'relative'}] }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -354,41 +436,45 @@ class Register extends Component {
 								this.inputs['five'] = input;
 							}}
 							onChangeText={(address) => this.setState({address})}/>
-					</View>
-				</View>
-				<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
-					<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
-						<Text  style = {{color:"#FFFFFF", textAlign:textline}}>{I18n.t('userregister.createbtn', { locale: lang })}</Text>
-					</View>
-				</TouchableOpacity>
-				<View style={{flexDirection : 'column', alignItems : 'center', flex: 1}}>
-					<TouchableOpacity style={{padding :20}}
-						onPress={()=> routes.registerVendor()}>
-						<Text style={{textAlign: textline}} >{I18n.t('userregister.venderregister', { locale: lang })}</Text>
-					</TouchableOpacity>
-					<View style={{
-							flex: 1,
-							flexDirection: 'column',
-							justifyContent: 'center',
-							alignItems: 'center',
-							marginTop:20
-						}}>
-
-						<View style={{flexDirection: direction}}>
-							<TouchableOpacity onPress={()=> routes.terms({ title: this.state.termsandcondition_title, description: this.state.termsandcondition_description})}>
-								<Text style={{color :'#6969', fontSize : 10,textAlign:'center' }}>
-									{I18n.t('login.privacypolicy', { locale: lang })}
-								</Text>
-							</TouchableOpacity>
+						<Entypo name="location" size={20} color="#FFCC7D" style={{ alignSelf: 'center'}} onPress={()=>this.setState({
+								ShowMapLocation : true
+							})}/>
 						</View>
 					</View>
-					<View style={{height:40,width:'100%'}}>
+					<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
+						<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
+							<Text  style = {{color:"#FFFFFF", textAlign:textline}}>{I18n.t('userregister.createbtn', { locale: lang })}</Text>
+						</View>
+					</TouchableOpacity>
+					<View style={{flexDirection : 'column', alignItems : 'center', flex: 1}}>
+						<TouchableOpacity style={{padding :20}}
+							onPress={()=> routes.registerVendor()}>
+							<Text style={{textAlign: textline}} >{I18n.t('userregister.venderregister', { locale: lang })}</Text>
+						</TouchableOpacity>
+						<View style={{
+								flex: 1,
+								flexDirection: 'column',
+								justifyContent: 'center',
+								alignItems: 'center',
+								marginTop:20
+							}}>
+
+							<View style={{flexDirection: direction}}>
+								<TouchableOpacity onPress={()=> routes.terms({ title: this.state.termsandcondition_title, description: this.state.termsandcondition_description})}>
+									<Text style={{color :'#6969', fontSize : 10,textAlign:'center' }}>
+										{I18n.t('login.privacypolicy', { locale: lang })}
+									</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+						<View style={{height:40,width:'100%'}}>
+						</View>
 					</View>
-				</View>
+				</ScrollView>
 				<Modal
 					animationType="slide"
 					transparent={false}
-					isVisible={this.state.otpVarification}
+					visible={this.state.otpVarification}
 					onRequestClose={() => this.setState({ otpVarification :false})}>
 					<View style={{ flex: 0.4, backgroundColor: "#fff", justifyContent: 'center', alignItems: 'center', borderRadius: 10}}>
 						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center'}}>
@@ -397,7 +483,7 @@ class Register extends Component {
 								style={[commonStyles.inputpassword,{
 									borderBottomWidth: 1,
 									textAlign: 'center',
-									height: 30,
+									height: 40,
 									width: width/3, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]
 								}
 								// secureTextEntry={this.state.hidden}
@@ -421,7 +507,66 @@ class Register extends Component {
 						</TouchableOpacity>
 					</View>
 				</Modal>
-			</ScrollView>
+				<Modal
+					animationType="slide"
+					transparent={false}
+					visible={this.state.ShowMapLocation}
+					onRequestClose={() => this.setState({ ShowMapLocation :false})}>
+					<View style={{ flexDirection: direction, position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: 10}}>
+						<TextInput
+							style={{ width: "85%", height: 40, backgroundColor: "#fff", alignSelf: 'center', textAlign:textline,  marginLeft : lang == 'ar'? 0 : 5}}
+							editable = {false}
+							multiline = {true}
+							value={this.state.address}
+							placeholder={I18n.t('userregister.pickfromMap', { locale: lang })}
+							underlineColorAndroid = 'transparent'/>
+						{
+							!this.state.address.length ?
+							<Icon onPress ={()=>this.setState({ ShowMapLocation :false})} name="close" size={25} color="#000" style={ { alignSelf: 'center'} } />
+							:
+							<Icon onPress ={()=>this.setState({ ShowMapLocation :false})} name="check" size={25} color="#000" style={ { alignSelf: 'center'} } />
+						}
+					</View>
+					<View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
+						<MapView
+							provider={PROVIDER_GOOGLE}
+							initialRegion={{
+								latitude: this.state.LATITUDE,
+								longitude: this.state.LONGITUDE,
+								latitudeDelta: this.state.LATITUDE_DELTA,
+								longitudeDelta: this.state.LONGITUDE_DELTA
+							}}
+							region={this.state.mapRegion}
+							style={StyleSheet.absoluteFill}
+							ref={c => this.mapView = c}
+							onPress={this.onMapPress}>
+
+							<MapView.Marker draggable
+								// annotations={markers}
+								coordinate={{
+									latitude: (this.state.lastLat + 0.00050) || -36.82339,
+									longitude: (this.state.lastLong + 0.00050) || -73.03569,
+								}}
+								// loadAddressFromMap
+								onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+
+								// onDragEnd={(e) => this.setState({
+								// 	coordinate: e.nativeEvent.coordinate,
+								// 	region: {
+								// 		latitude:e.nativeEvent.coordinate.latitude,
+								// 		longitude:e.nativeEvent.coordinate.longitude,
+								// 		latitudeDelta: this.state.region.latitudeDelta,
+								// 		longitudeDelta: this.state.region.longitudeDelta
+								// 	}})}
+									>
+								<View style={{ position: 'absolute'}}>
+									<FontAwesome name="map-pin" size={35} color="green"/>
+								</View>
+							</MapView.Marker>
+						</MapView>
+					</View>
+				</Modal>
+			</View>
 		);
 	}
 	varifyOtp(u_id){
@@ -506,6 +651,17 @@ class Register extends Component {
 			})
 			return false
 		}
+		if(password.length < 6){
+			//passwordvalidation
+			MessageBarManager.showAlert({
+				message: I18n.t('userregister.passwordvalidation', { locale: lang }),
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
+			return false
+		}
 		if( gender.value === undefined){
 			MessageBarManager.showAlert({
 				message: I18n.t('userregister.pleaseselectgender', { locale: lang }),
@@ -515,6 +671,16 @@ class Register extends Component {
 				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
 			})
 			return false;
+		}
+		if(contact.length !== 12 ){
+			MessageBarManager.showAlert({
+				message: "Please enter 12 digit Mobile number ",
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
+			return false
 		}
 		if (!contact.length){
 			MessageBarManager.showAlert({

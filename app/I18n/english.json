@@ -21,17 +21,24 @@
         "privacypolicy":"By clicking on the registration \n"+"button the user agrees to the terms and conditions",
         "cancel":"Cancel",
         "submit":"Submit",
+        "close" : "Close",
+        "invaliduser": "invalid username and password",
+        "passsnotmatch" : "Username and Password Does not matched",
         "internetconnection":"Internet connection not available",
         "pleaseenteremail":"Please Enter Email",
         "pleaseenter_validemail":"Please Enter Valid Email Address",
         "pleaseenterpwd":"Please Enter Your Password",
         "passwordvalidation":"Password Must have Six Character",
-        "skip":"Skip Signing"
+        "skip":"Skip Signing",
+        "invaliduser": "invalid username and password",
+        "passsnotmatch" : "Username and Password Does not matched"
     },
     "forgotpassword":{
         "emailaddress":"Email Address",
         "cancelbtn":"Cancel",
-        "submitbtn":"Submit"
+        "submitbtn":"Submit",
+        "pleasecheckyourmail":"Please check your email",
+        "usernotexists":"User not exists"
     },
     "userregister":{
         "registertitle":"Create an Account",
@@ -51,6 +58,7 @@
         "otpplchldr" : "Enter 6 Digit Otp",
         "resendOtp": "Want to Resend Otp",
         "venderregister":"If you are vendor ? Register Here",
+        "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
         "pleaseenterfullname":"Plese Enter Your Fullname",
         "pleaseentervalidmail":"Plese Enter Valid Email",
         "maildomain":"mail domain name must be .com",
@@ -60,7 +68,9 @@
         "pleaseselectcountry":"Plese Select Country",
         "pleaseenteraddr":"Plese Enter Address",
         "pleaseenterusertype":"Plese Select User Type",
-        "greetings":"Congratulations You Are Successfully Registered"
+        "greetings":"Congratulations You Are Successfully Registered",
+        "passwordvalidation":"Please enter atleast 6 character password",
+        "pickfromMap": "Pick Address From Map"
     },
     "venderregister":{
         "company":"Company",
@@ -141,7 +151,8 @@
         "paymentsuccess":"Payment Success",
         "paymentfailure":"Payment Not Success",
         "selectDate":"Please Select Date",
-        "selectTime":"Please Select Time Slot"
+        "selectTime":"Please Select Time Slot",
+        "logintoaddaddr":"Please login / register to add address"
     },
     "bottomTabs":{
         "home":"Home",
@@ -300,7 +311,8 @@
                             "Price: 1 KD per picture  / 1.5 KD per video",
         "myAdFaturah":{
             "paymentsuccess":"Payment Success",
-            "paymenterr":"Error Ocurd while Payment"
+            "paymenterr":"Error Ocurd while Payment",
+            "productaddtofeature":"Product added to feature list"
         }
     },
     "editProfile":{
@@ -389,6 +401,8 @@
         "shortdesc_ar_err":"Plese Insert arabic Short description",
         "detaildesc_ar_err":"Plese Insert arabic Detail description",
         "errorwhileUpload":"error While Upload",
+        "english":"English",
+        "arabic":"Arabic"
     },
     "vendorservice":{
         "serviceTitle":"Service",
@@ -492,7 +506,8 @@
         "imagevideoselection":"Plese Select Image Or Video To Upload Advertisement",
         "categoryerr":"Plese Select Advertisement Category",
         "online":"Internet connection is available",
-        "offline":"Internet connection not available"
+        "offline":"Internet connection not available",
+        "productremovefeature":"Product removed from featured list"
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
@@ -502,5 +517,9 @@
         "orderId":"Order Id",
         "orderType":"Order Type",
         "deliveryStatus": "Delivery Status",
+    },
+    "deals":{
+        "dealTitle":"Deals & Offres",
+        "buyitnowbtn":"Buy It Now",
     }
 }

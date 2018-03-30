@@ -53,6 +53,7 @@ import Myuserfaturah from './components/Myuserfaturah';
 import OrderList from './components/OrderList';
 import ServiceUser from './components/Order/ServiceUser'
 import TrackOrder from './components/Order/TrackOrder'
+import DealsandOffers from './components/DealsandOffers'
 import Filter from './components/Filter';
 import MenuIcon from './images/imgpsh.png';
 
@@ -69,6 +70,8 @@ import MarketingCompaign from "./Vendor/marketing/MarketingCompaign";
 import ScheduleCalender from "./Vendor/Schedule/ScheduleCalender";
 import EventEmitter from "react-native-eventemitter";
 
+import SplashScreen from 'react-native-splash-screen';
+
 // import AddProduct from "./app/Vendor/Addproduct";
 
 // -------------vendor ----------
@@ -76,6 +79,7 @@ import EventEmitter from "react-native-eventemitter";
 // const reducerCreate = params => (state, action) => Reducer(params)(state, action);
 
 const reducerCreate = params => {
+    SplashScreen.hide();
   const defaultReducer = new Reducer(params);
   return (state, action) => {
     console.log('ACTION:', action);
@@ -110,26 +114,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                         type={ActionConst.REPLACE}
                         navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                         titleStyle={{color : "#FFF", alignSelf: 'center'}}/>
-                        <Drawer
-                        key="drawer"
-                        drawer ={true}
-                        type="overlay"
-                        drawerImage={MenuIcon}
-                        contentComponent={Menu}
-                        styles={drawerStyles.drawer}
-                        drawerPosition={I18n.t('home.sidemenu', { locale: lang })}
-                        onOpen={()=>Actions.refresh({key:state.key, open: true})}
-                        onClose={()=>Actions.refresh({key:state.key, open: false})}
-                        tapToClose={true}
-                        // initial={true}
-                        // initial={true}
-                        hideNavBar={true}
-                        initial={user}
-                        panOpenMask={0.80}
-                        easingFunc={Easing.ease}
-                        // captureGestures="open"
-                        >
-                            <Scene key="tab" hideNavBar>
+                            <Scene key="tab" hideNavBar initial={user}>
                                 <Tabs
                                 tabs
                                 key="tabbar"
@@ -216,7 +201,6 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     </Stack>
                                 </Tabs>
                             </Scene>
-                        </Drawer>
                         <Scene
                         key="vendortab"
                         hideNavBar
@@ -323,13 +307,22 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                         </Scene>
                     </Stack>
                 </Lightbox>
-                    <Stack key="registerPage" navBar={CustomGenNavBar} >
-                        <Scene
-                    key="register"
-                    component={Register}
-                    title={I18n.t("login.createaccountbtn", { locale: lang })}
-                    navBar={CustomGenNavBar}
-                    />
+                <Stack key="deals" >
+                    <Scene
+                        hideNavBar={true}
+                        key="register"
+                        component={DealsandOffers}
+                        title={I18n.t("login.createaccountbtn", { locale: lang })}
+                        navBar={CustomGenNavBar}
+                        />
+                </Stack>
+                <Stack key="registerPage" navBar={CustomGenNavBar} >
+                    <Scene
+                        key="register"
+                        component={Register}
+                        title={I18n.t("login.createaccountbtn", { locale: lang })}
+                        navBar={CustomGenNavBar}
+                        />
                 </Stack>
                 <Stack key="registerVendor" navBar={CustomGenNavBar} >
                     <Scene

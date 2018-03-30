@@ -4,6 +4,7 @@ import {
 	Text,
 	ScrollView,
 	TextInput,
+	StyleSheet,
 	TouchableOpacity,
 	Button,
 	Platform,
@@ -65,11 +66,16 @@ class Login extends Component {
 		});
 	}
 	handleConnectionChange = (isConnected) => {
+		const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
+
 		this.setState({ netStatus: isConnected });
 		{this.state.netStatus ? this.gettermandcondition() : MessageBarManager.showAlert({
-			message: `Internet connection not available`,
-			alertType: 'error',
-			title:''
+			message: I18n.t('login.internetconnection', { locale: language }),
+			alertType: 'extra',
+			title:'',
+			titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+			messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
 		})}
 	}
 	focusNextField(id) {
@@ -99,6 +105,9 @@ class Login extends Component {
     }
 	Forgotpassword(){
 		const { forgotemail } = this.state;
+		const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
+
 		let formData = new FormData();
 		formData.append('email', String(forgotemail));
 		const config = {
@@ -113,9 +122,21 @@ class Login extends Component {
 		.then((response) => response.json())
 		.then((responseData) => {
  		if (responseData.response.status) {
-		 		alert('email sent')
+			MessageBarManager.showAlert({
+				message: I18n.t('forgotpassword.pleasecheckyourmail', { locale: language }),
+				alertType: 'extra',
+				title:'',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
 			}else {
-				alert('you are not registerd user')
+				MessageBarManager.showAlert({
+					message: I18n.t('forgotpassword.usernotexists', { locale: language }),
+					alertType: 'extra',
+					title:'',
+					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+				})
 			}
 		})
 		.then(()=>this.setState({
@@ -131,6 +152,7 @@ class Login extends Component {
 		const { email } = this.state;
 		const { language} = this.props,
 		align = (language === 'ar') ?  'right': 'left';
+
 		if (!email.length){
 			MessageBarManager.showAlert({
 				message: I18n.t('login.pleaseenteremail', { locale: language }),
@@ -427,8 +449,8 @@ class Login extends Component {
 					</TouchableOpacity>
 					<Modal isVisible={this.state.visibleModal}>
 						<View style={{alignItems : 'center', padding:10}}>
-							{errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
-							{errorStatus ? <Text onPress = {()=> this.setState({ visibleModal : false})} style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
+							{errorStatus ?  <View style={{ backgroundColor: 'transparent', padding : 10, borderRadius :10}}><Text  style={{ color : '#fff', backgroundColor : 'transparent' }}>{I18n.t('login.passsnotmatch', { locale: language })}</Text></View> : undefined }
+							{errorStatus ? <Text onPress = {()=> this.setState({ visibleModal : false})} style={{ color : '#fff', backgroundColor : '#a9d5d1' ,padding : 10, borderRadius: 10 , borderWidth: StyleSheet.hairlineWidth, borderColor: "#fff"}}>{I18n.t('login.close', { locale: language })}</Text> : <CirclesLoader />}
 						</View>
 					</Modal>
 				</View>

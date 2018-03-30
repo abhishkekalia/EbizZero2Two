@@ -324,7 +324,14 @@ class AddProduct extends Component {
             product_name_in_arabic, short_description_in_arabic,
             detail_description_in_arabic,price_in_arabic, special_price_in_arabic
         } = this.state;
-        let genderty= gender.label == "Male" ? 1 : 0
+        let genderty;
+        console.log("gender",gender);
+        if (gender == "") {
+            genderty = "";
+        } else {
+            genderty= gender.label == "Male" ? 1 : 0
+        }
+
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
             if(this.validate()) {
@@ -354,6 +361,7 @@ class AddProduct extends Component {
                     { name : 'special_price_in_arabic', data: String(special)},
                     { name : 'discount', data: String(10)},
                     { name : 'final_price', data: String(special)},
+                    { name: 'quantity',data: "10"},
                     { name : 'quantity_for_product_size', data: quantityRows.toString()},
                     { name : 'size', data: sizeRows.toString()},
                     { name : 'is_feature', data: String(is_feature)},
@@ -363,7 +371,7 @@ class AddProduct extends Component {
                     console.log('uploaded', Math.floor(written/total*100) + '%')
                 })
                 .then((res)=>{
-                    console.log(res)
+                    console.log(res.data);
                     MessageBarManager.showAlert({
                         message: I18n.t('vendoraddproduct.productadded', { locale: lang }),
                         alertType: 'extra',
@@ -531,10 +539,10 @@ class AddProduct extends Component {
                         >
 
                         <RadioButton value='en' >
-                            <Text>English</Text>
+                            <Text> {I18n.t('vendoraddproduct.english', { locale: lang })}</Text>
                         </RadioButton>
                         <RadioButton value='ar'>
-                            <Text>Arabic</Text>
+                            <Text> {I18n.t('vendoraddproduct.arabic', { locale: lang })}</Text>
                         </RadioButton>
                     </RadioGroup>
                     <View style={commonStyles.formItems}>
@@ -836,7 +844,7 @@ class AddProduct extends Component {
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
                                 keyboardType={'numeric'}
-                                placeholder="Quantity"
+                                placeholder={I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}
                                 maxLength={3}
                                 onSubmitEditing={() => {
                                     this.focusNextField('two');
@@ -857,7 +865,7 @@ class AddProduct extends Component {
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
                                 keyboardType={'default'}
-                                placeholder="Size"
+                                placeholder={I18n.t('vendoraddproduct.sizelbl', { locale: lang })}
                                 maxLength={15}
                                 onSubmitEditing={() => {
                                 }}

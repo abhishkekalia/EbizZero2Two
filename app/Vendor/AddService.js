@@ -189,7 +189,7 @@ class AddService extends Component {
             })
             return false
         }
-        if ( special_price > price){
+        if ( parseInt(special_price) > parseInt(price)){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.specialpriceerr1', { locale: lang }),
                 alertType: 'extra',
@@ -251,10 +251,15 @@ class AddService extends Component {
                 { name : 'country', data: String(country)},
                 { name : 'service_type', data: String(service_type)},
                 { name : 'service_name', data: String(service_name)},
+                { name : 'service_name_in_arabic', data: String(service_name_in_arabic)},
                 { name : 'short_description', data: String(short_description)},
+                { name : 'short_description_in_arabic', data: String(short_description_in_arabic)},
                 { name : 'detail_description', data: String(detail_description)},
+                { name : 'detail_description_in_arabic', data: String(detail_description_in_arabic)},
                 { name : 'price', data: String(price)},
+                { name : 'price_in_arabic', data: String(price)},
                 { name : 'special_price', data: String(special_price)},
+                { name : 'special_price_in_arabic', data: String(special_price)},
             ])
             .uploadProgress((written, total) => {
                 console.warn('uploaded', Math.floor(written/total*100) + '%')

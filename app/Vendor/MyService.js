@@ -17,6 +17,8 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Utils from 'app/common/Utils';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const { width, height } = Dimensions.get('window')
 
 class MyService extends Component {
@@ -24,15 +26,17 @@ class MyService extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            dataSource : new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
+            dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2 }),
             u_id : null,
-            country : null
+            country : null,
+            text: ''
         }
         this.arrayholder = [] ;
     }
     componentDidMount(){
-        this.getKey()
-        .then( ()=>this.fetchData())
+        // this.getKey()
+        // .then( ()=>this.fetchData())
+        this.fetchData()
     }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton, left: this._renderLeftButton });
@@ -61,8 +65,7 @@ class MyService extends Component {
     }
 
     fetchData(){
-        const {u_id, country } = this.state;
-        const { lang } = this.props,
+        const {u_id, country , lang} = this.props;
         align = (lang === 'ar') ?  'right': 'left';
         let formData = new FormData();
         formData.append('u_id', String(u_id));
@@ -107,6 +110,20 @@ class MyService extends Component {
         const { lang } =this.props
 
         const newData = this.arrayholder.filter(function(item){
+            const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
+            const textData = text.toUpperCase()
+            return itemData.indexOf(textData) > -1
+        })
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(newData),
+            text: text
+        })
+    }
+    removeFilterFunction(){
+        const { lang } =this.props
+        let text = ""
+        const newData = this.arrayholder.filter(function(item){
+            // const itemData = item.product_name.toUpperCase()
             const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
             const textData = text.toUpperCase()
             return itemData.indexOf(textData) > -1
@@ -164,18 +181,39 @@ class MyService extends Component {
             );
         return (
         <View style={{paddingBottom : 53, backgroundColor: 'rgba(248,248,248,1)'}}>
-            <TextInput
-                style={[styles.TextInputStyleClass, {width: width-30,alignSelf: 'center',marginTop: 5}]}
-                onChangeText={(text) => this.SearchFilterFunction(text)}
-                value={this.state.text}
-                underlineColorAndroid='transparent'
-                placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
-                />
+            <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 5,
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    borderRadius: 7
+                }}>
+                <Icon size={20} color="#ccc" name="md-search" style={{ alignSelf: 'center', margin: 5}} onPress={()=>this.removeFilterFunction()}/>
+                <TextInput
+                    style={[styles.TextInputStyleClass, {width: "75%",alignSelf: 'center'}]}
+                    onChangeText={(text) => this.SearchFilterFunction(text)}
+                    value={this.state.text}
+                    underlineColorAndroid='transparent'
+                    placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
+                    />
+                <TouchableOpacity style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 35,
+                        borderTopRightRadius: 7,
+                        borderBottomRightRadius: 7,
+                        backgroundColor: "#a9d5d1"
+                    }} >
+                <Icon size={25} color="#fff" name="ios-backspace-outline" style={{}} onPress={()=>this.removeFilterFunction()}/>
+                </TouchableOpacity>
+                </View>
             {listView}
         </View>
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
+
         const { lang} = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left',
@@ -433,12 +471,11 @@ const styles = StyleSheet.create({
         fontWeight : 'bold'
     },
     TextInputStyleClass:{
-        textAlign: 'center',
         height: 40,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 7 ,
-        backgroundColor : "#FFFFFF"
+        // borderWidth: 1,
+        // borderColor: '#ccc',
+        // borderRadius: 7 ,
+        backgroundColor : "transparent"
     }
 });
 function mapStateToProps(state) {

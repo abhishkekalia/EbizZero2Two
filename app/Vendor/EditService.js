@@ -96,16 +96,16 @@ class EditService extends Component {
         align = (lang === 'ar') ?  'right': 'left';
 
         let path = Imagepath.length
-        if(path < 1){
-            MessageBarManager.showAlert({
-                message: I18n.t('vendoraddservice.imageuploaderr', { locale: lang }),
-                alertType: 'extra',
-                title:'',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-            return false
-            }
+        // if(path < 1){
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('vendoraddservice.imageuploaderr', { locale: lang }),
+        //         alertType: 'extra',
+        //         title:'',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        //     }
 
         if (!service_type.length){
             MessageBarManager.showAlert({
@@ -215,24 +215,24 @@ class EditService extends Component {
             short_description, detail_description, price,
             special_price, Imagepath, removed_images,is_feature, is_weekend_work
         } = this.state;
-        const { u_id, country, lang, service_id } = this.props,
+        const { u_id, country, lang, service_id } = this.state,
         align = (lang === 'ar') ?  'right': 'left';
 
-        // console.warn("u_id", u_id);
-        // console.warn("country", country);
-        // console.warn("service_type", service_type);
-        // console.warn("service_name", service_name);
-        // console.warn("service_name_in_arabic", service_name_in_arabic);
-        // console.warn("short_description", short_description);
-        // console.warn("short_description_in_arabic", short_description_in_arabic);
-        // console.warn("detail_description", detail_description);
-        // console.warn("detail_description_in_arabic", detail_description_in_arabic);
-        // console.warn("price", price);
-        // console.warn("special_price", special_price);
-        // console.warn("service_id", service_id);
-        // console.warn("removed_images", removed_images);
-        // console.warn("is_feature", is_feature);
-        // console.warn("is_weekend_work", is_weekend_work);
+        console.log("u_id", u_id);
+        console.log("country", country);
+        console.log("service_type", service_type);
+        console.log("service_name", service_name);
+        console.log("service_name_in_arabic", service_name_in_arabic);
+        console.log("short_description", short_description);
+        console.log("short_description_in_arabic", short_description_in_arabic);
+        console.log("detail_description", detail_description);
+        console.log("detail_description_in_arabic", detail_description_in_arabic);
+        console.log("price", price);
+        console.log("special_price", special_price);
+        console.log("service_id", service_id);
+        console.log("removed_images", removed_images);
+        console.log("is_feature", is_feature);
+        console.log("is_weekend_work", is_weekend_work);
         if(this.validate()) {
             this.setState({
                 visibleModal : true
@@ -266,6 +266,7 @@ class EditService extends Component {
                 console.log('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((res)=>{
+                console.log(res);
                 var getdata = JSON.parse(res.data);
                 if(getdata.status){
                     MessageBarManager.showAlert({
@@ -748,6 +749,8 @@ class EditService extends Component {
 function mapStateToProps(state) {
     return {
         lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
     }
 }
 export default connect(mapStateToProps)(EditService);

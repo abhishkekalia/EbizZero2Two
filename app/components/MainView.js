@@ -35,6 +35,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import ModalWrapper from 'react-native-modal-wrapper';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n'
+import Drawer from 'react-native-drawer';
+import Menu from './menu/MenuContainer';
 
 // import Image from 'react-native-image-progress';
 // import ProgressBar from 'react-native-progress/Circle';
@@ -79,7 +81,6 @@ class MainView extends Component {
             arrSelectedType :[],
         }
     }
-
     componentDidMount(){
         this.loadData()
         .then( ()=>this.fetchData())
@@ -116,13 +117,19 @@ class MainView extends Component {
     }
     _renderLeftButton = () => {
         return(
-            <Feather name="menu" size={20} onPress={()=> Actions.drawerOpen()} color="#fff" style={{ padding : 10, marginTop:Platform.OS === 'ios' ? 10 : 0}}/>
+            <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10}}/>
         );
     };
    _renderRightButton = () => {
        return(
            <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10, marginTop:Platform.OS === 'ios' ? 10 : 0}}/>
        );
+   };
+   closeControlPanel = () => {
+     this._drawer.close()
+   };
+   openControlPanel = () => {
+     this._drawer.open()
    };
    onCancel() {
        console.log("CANCEL")
@@ -194,20 +201,36 @@ class MainView extends Component {
    }
    renderLoadingView() {
        const {lang} = this.props;
+       let side = lang === "ar" ? "right" : "left";
        return (
-           <View style={{flex: 1}}>
-               <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                   {this._renderLeftButton()}
-                   <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
-                       resizeMode = 'contain'
-                       resizeMethod = 'resize'/>
-                   {this._renderRightButton()}
+           <Drawer
+               ref={(ref) => this._drawer = ref}
+               type="overlay"
+               content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+               tapToClose={true}
+               openDrawerOffset={0.2}
+               panCloseMask={0.2}
+               closedDrawerOffset={-3}
+               styles={drawerStyles}
+               tweenHandler={(ratio) => ({
+                   main: { opacity:(2-ratio)/2 }
+               })}
+               side= {side}
+               >
+               <View style={{flex: 1}}>
+                   <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                       {this._renderLeftButton()}
+                       <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                           resizeMode = 'contain'
+                           resizeMethod = 'resize'/>
+                       {this._renderRightButton()}
+                   </View>
+                   <ActivityIndicator
+                       style={[styles.centering]}
+                       color="#a9d5d1"
+                       size="large"/>
                </View>
-               <ActivityIndicator
-                   style={[styles.centering]}
-                   color="#a9d5d1"
-                   size="large"/>
-           </View>
+           </Drawer>
        );
    }
    blur() {
@@ -328,7 +351,6 @@ class MainView extends Component {
         return views;
     }
     renderCheckBox(data) {
-
         const { lang } = this.props;
         var leftText = data.ShopName;
         var icon_name = data.icon_name;
@@ -344,7 +366,7 @@ class MainView extends Component {
         );
     }
     sharing(product_id){
-        console.warn(product_id);
+        
     }
     fetchData(){
         const {u_id, country, deviceId } = this.props;
@@ -451,7 +473,6 @@ class MainView extends Component {
             },
             body: formData,
         }
-
         fetch(Utils.gurl('filterProducts'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -475,7 +496,6 @@ class MainView extends Component {
             console.log(error);
         })
         .done();
-
     }
     Description( service_id, product_name, productImages , short_description, detail_description, price ,special_price){
         Actions.vendordesc({
@@ -501,7 +521,22 @@ class MainView extends Component {
         if (!this.state.status) {
             return this.noItemFound();
         }
+        let side = lang === "ar" ? "right" : "left";
         return (
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side= {side}
+                >
             <View style={{backgroundColor: '#f9f9f9'}}>
                 <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                     {this._renderLeftButton()}
@@ -526,6 +561,7 @@ class MainView extends Component {
                 </ScrollView>
                 {this.renderShareSheet()}
             </View>
+        </Drawer>
         );
     }
     renderShareSheet() {
@@ -619,6 +655,8 @@ class MainView extends Component {
         const { lang} = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang == 'ar')? 'right': 'left';
+        let side = lang === "ar" ? "right" : "left";
+
         let listView = (<View></View>);
         listView = (
             <ListView
@@ -1046,23 +1084,39 @@ class MainView extends Component {
     }
     noItemFound(){
         const { lang , deviceId, country, u_id} = this.props,
-        align = (lang === 'ar') ?  'right': 'left';
+        align = (lang === 'ar') ?  'right': 'left',
+        side = (lang === 'ar') ?  'right': 'left';
         return (
-            <View style={{flex: 1}}>
-            <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                {this._renderLeftButton()}
-                <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
-                    resizeMode = 'contain'
-                    resizeMethod = 'resize'/>
-                {this._renderRightButton()}
-            </View>
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                {this.renderFilterOptions()}
-                {this.renderAllShopViews()}
-                {this.renderAllServiceViews()}
-                <Text style={{marginTop:10, textAlign: align}}>{I18n.t('home.noitem', { locale: lang })}</Text>
-            </View>
-            </View>
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side= {side}
+                >
+                <View style={{flex: 1}}>
+                    <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                        {this._renderLeftButton()}
+                        <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                            resizeMode = 'contain'
+                            resizeMethod = 'resize'/>
+                        {this._renderRightButton()}
+                    </View>
+                    <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+                        {this.renderFilterOptions()}
+                        {this.renderAllShopViews()}
+                        {this.renderAllServiceViews()}
+                        <Text style={{marginTop:10, textAlign: align}}>{I18n.t('home.noitem', { locale: lang })}</Text>
+                    </View>
+                </View>
+            </Drawer>
         );
     }
 // Service filter complete here
@@ -1257,10 +1311,10 @@ var styles = StyleSheet.create({
     thumb: {
         width: width/2-10,
         height: height/3,
-        borderTopLeftRadius: 2,
-        borderTopRightRadius: 2
+        borderTopLeftRadius: 4,
+        borderTopRightRadius: 4,
         // resizeMode : 'center',
-        // top : 20
+        top : StyleSheet.hairlineWidth
     },
 
     text: {
@@ -1274,6 +1328,10 @@ var styles = StyleSheet.create({
     },
     sidebar :{}
 });
+const drawerStyles = {
+  drawer: { backgroundColor:'#fff', shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
+  main: {paddingLeft: 3, backgroundColor:'#fff'},
+}
 
 const TWITTER_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg==";
 
@@ -1315,7 +1373,7 @@ class LoadImage extends Component {
             <IconBadge
                 MainElement={
                     <Image style={[styles.thumb, { alignSelf: 'center',}]}
-                        resizeMode = {"contain"}
+                        resizeMode = "center"
                         resizeMethod = 'resize'
                         source={require('../images/no-image.jpg')}
                         onLoadEnd={() => { this.setState({ loaded: true }); }}
@@ -1344,8 +1402,9 @@ class LoadImage extends Component {
             <IconBadge
                 MainElement={
                     <Image style={[styles.thumb, { alignSelf: 'center',}]}
-                        resizeMode = {"contain"}
-                        resizeMethod = 'resize'
+                        resizeMode="stretch" resizeMethod="resize"
+                        // resizeMode = {"contain"}
+                        // resizeMethod = 'resize'
                         source={this.state.loaded ? { uri : this.props.productImages[0] ? this.props.productImages[0].image : "" }: require('../images/marketing_img_active.png')}
                         onLoadEnd={() => { this.setState({ loaded: true }); }}
                         />

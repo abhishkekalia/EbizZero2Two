@@ -28,7 +28,10 @@ export default class Countmanager extends Component {
 
     updateQuantity(){
         const { Quentity } = this.state;
-        const { u_id, product_id , updatetype, country} = this.props;
+        const { u_id, product_id , updatetype, country,deviceId} = this.props;
+        const { language} = this.props,
+		align = (language === 'ar') ?  'right': 'left';
+
 
         this.setState({ loaded : false })
 
@@ -38,6 +41,7 @@ export default class Countmanager extends Component {
         formData.append('quantity', String(Quentity));
         formData.append('updatetype', String(updatetype));
         formData.append('country', String(country));
+        formData.append('device_uid', String(deviceId));
 
         const config = {
             method: 'POST',
@@ -52,17 +56,17 @@ export default class Countmanager extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                MessageBarManager.showAlert({
-                    message: responseData.data.message,
-                    alertType: 'alert',
-                    title:''
-                })
+                // MessageBarManager.showAlert({
+                //     message: responseData.data.message,
+                //     alertType: 'alert',
+                //     title:''
+                // })
             }else{
-                MessageBarManager.showAlert({
-                    message: responseData.data.message,
-                    alertType: 'success',
-                    title:''
-                })
+                // MessageBarManager.showAlert({
+                //     message: responseData.data.message,
+                //     alertType: 'success',
+                //     title:''
+                // })
             }
         })
         .then(()=>this.props.callback())

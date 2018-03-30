@@ -11,7 +11,8 @@ import {
 	Dimensions,
 	Keyboard,
 	StyleSheet,
-	Image
+	Image,
+	Modal
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -25,9 +26,13 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { Picker } from 'react-native-picker-dropdown';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
-
+import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actionsheet';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import Geocoder from 'react-native-geocoding';
+Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
+
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
 const countryTitle = 'Select Country'
@@ -52,6 +57,13 @@ const INITIAL_STATE = {
 // 	{ label:'Male', value: 'male' },
 //     { label:'Female', value: 'female'},
 //     { label:'Other', value: 'other' }];
+const ASPECT_RATIO = width / height;
+const LATITUDE = 22.966425;
+const LONGITUDE = 72.615933;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
+
 
 class Vendorreg extends Component {
 	constructor(props) {
@@ -76,14 +88,83 @@ class Vendorreg extends Component {
 			type : '3',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			countries: ["0"],
+			ShowMapLocation: false,
+			LATITUDE : 22.966425,
+			LONGITUDE : 72.615933,
+			LATITUDE_DELTA : 0.0922,
+			LONGITUDE_DELTA : LATITUDE_DELTA * ASPECT_RATIO,
+			region: {
+				latitude: 37.78825,
+				longitude: -122.4324,
+				latitudeDelta: 0.0922,
+				longitudeDelta: 0.0421,
+			  },
 		};
 	    this.inputs = {};
 		this.showCountrysheet = this.showCountrysheet.bind(this)
 		this.handlePress = this.handlePress.bind(this)
 	}
 	componentDidMount(){
+		this.watchID = navigator.geolocation.watchPosition((position) => {
+			let region = {
+				latitude:       position.coords.latitude,
+				longitude:      position.coords.longitude,
+				latitudeDelta:  0.00922*1.5,
+				longitudeDelta: 0.00421*1.5
+			}
+			this.onRegionChange(region, region.latitude, region.longitude);
+		});
         this.fetchData();
     }
+	onRegionChange(region, lastLat, lastLong) {
+		this.setState({
+			mapRegion: region,
+			lastLat: lastLat || this.state.lastLat,
+			lastLong: lastLong || this.state.lastLong
+		});
+	}
+	componentWillUnmount() {
+		navigator.geolocation.clearWatch(this.watchID);
+	}
+	loadAddressFromMap(latitude, longitude) {
+		Geocoder.getFromLatLng(latitude, longitude).then(
+			json => {
+				var address_component = json.results[0].formatted_address;
+				this.setState({
+					address:address_component
+				});
+
+				// for (let index = 0; index < address_component.length; index++) {
+				// 	const element = address_component[index];
+				// 	if (element.types.includes('street_number')) {
+				// 		console.log("street_number matched")
+				// 		this.setState({
+				// 			block_no:element.long_name
+				// 		});
+				// 	}
+				// 	else if (element.types.includes('locality')) {
+				// 		this.setState({
+				// 			city: element.long_name
+				// 		});
+				// 	}
+				// 	else if (element.types.includes('administrative_area_level_1')) {
+				// 		this.setState({
+				// 			street:element.long_name
+				// 		})
+				// 	}
+				// }
+				// console.warn("address_component:=",address_component[0].types[0])
+				// console.warn("locality:=",json.results[0].address_components.locality)
+			},
+			error => {
+				MessageBarManager.showAlert({
+					message: error,
+					alertType: 'alert',
+					title:''
+				})
+			}
+		);
+	}
     focusNextField(id) {
     	this.inputs[id].focus();
     }
@@ -166,6 +247,7 @@ class Vendorreg extends Component {
 			}
 		}
 		return (
+			<View style={{ flex: 1}}>
 			<ScrollView
 				showsVerticalScrollIndicator ={false}
 				style={[ commonStyles.content]}
@@ -247,9 +329,9 @@ class Vendorreg extends Component {
 							}}
 							onChangeText={(email) => this.setState({email})}/>
 					</View>
-					<View style ={commonStyles.iconusername}>
+					<View style ={[commonStyles.iconusername, { flexDirection: direction}]}>
 						<TextInput
-							style={[commonStyles.inputusername, {  height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
+							style={[commonStyles.inputpassword,{height:40, width: width-75, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5, zIndex: 1, position: 'relative'}] }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
 							autoCorrect={false}
@@ -263,6 +345,9 @@ class Vendorreg extends Component {
 								this.inputs['five'] = input;
 							}}
 							onChangeText={(address) => this.setState({address})}/>
+						<Entypo name="location" size={20} color="#FFCC7D" style={{ alignSelf: 'center'}} onPress={()=>this.setState({
+								ShowMapLocation : true
+							})}/>
 					</View>
 					<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
 						<TextInput
@@ -412,6 +497,66 @@ class Vendorreg extends Component {
 				</View>
 			</TouchableOpacity>
 		</ScrollView>
+		<Modal
+			animationType="slide"
+			transparent={false}
+			visible={this.state.ShowMapLocation}
+			onRequestClose={() => this.setState({ ShowMapLocation :false})}>
+			<View style={{ flexDirection: direction, position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: 10}}>
+				<TextInput
+					style={{ width: "85%", height: 40, backgroundColor: "#fff", alignSelf: 'center', textAlign:textline,  marginLeft : lang == 'ar'? 0 : 5}}
+					editable = {false}
+					multiline = {true}
+					value={this.state.address}
+					placeholder={I18n.t('userregister.pickfromMap', { locale: lang })}
+					underlineColorAndroid = 'transparent'/>
+				{
+					!this.state.address.length ?
+					<Icon onPress ={()=>this.setState({ ShowMapLocation :false})} name="close" size={25} color="#000" style={ { alignSelf: 'center'} } />
+					:
+					<Icon onPress ={()=>this.setState({ ShowMapLocation :false})} name="check" size={25} color="#000" style={ { alignSelf: 'center'} } />
+				}
+			</View>
+			<View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
+				<MapView
+					provider={PROVIDER_GOOGLE}
+					initialRegion={{
+						latitude: this.state.LATITUDE,
+						longitude: this.state.LONGITUDE,
+						latitudeDelta: this.state.LATITUDE_DELTA,
+						longitudeDelta: this.state.LONGITUDE_DELTA
+					}}
+					region={this.state.mapRegion}
+					style={StyleSheet.absoluteFill}
+					ref={c => this.mapView = c}
+					onPress={this.onMapPress}>
+
+					<MapView.Marker draggable
+						// annotations={markers}
+						coordinate={{
+							latitude: (this.state.lastLat + 0.00050) || -36.82339,
+							longitude: (this.state.lastLong + 0.00050) || -73.03569,
+						}}
+						// loadAddressFromMap
+						onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+
+						// onDragEnd={(e) => this.setState({
+						// 	coordinate: e.nativeEvent.coordinate,
+						// 	region: {
+						// 		latitude:e.nativeEvent.coordinate.latitude,
+						// 		longitude:e.nativeEvent.coordinate.longitude,
+						// 		latitudeDelta: this.state.region.latitudeDelta,
+						// 		longitudeDelta: this.state.region.longitudeDelta
+						// 	}})}
+							>
+						<View style={{ position: 'absolute'}}>
+							<FontAwesome name="map-pin" size={35} color="green"/>
+						</View>
+					</MapView.Marker>
+				</MapView>
+			</View>
+		</Modal>
+		</View>
 		);
 	}
 	validate(){
@@ -454,6 +599,17 @@ class Vendorreg extends Component {
 				})
 				return false
 			}
+			if(contact.length !== 12){
+				MessageBarManager.showAlert({
+					message: "Please enter valid Mobile number ",
+					title:'',
+					alertType: 'extra',
+					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+				})
+				return false
+			}
+
 			let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
 			if(reg.test(email) === false){
 				MessageBarManager.showAlert({
@@ -493,6 +649,16 @@ class Vendorreg extends Component {
 					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
 					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
         	})
+			return false
+		}
+		if(password.length < 6){
+			MessageBarManager.showAlert({
+				message: "Please enter atleast 6 character password ",
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
 			return false
 		}
 		if (!selectCountry.length){

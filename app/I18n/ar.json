@@ -18,24 +18,25 @@
         "forgotpassword":"نسيت كلمة السر",
         "newcustomer":"مستخدم جديد",
         "createaccountbtn":"انشاء حساب",
-        "privacypolicy1":"By Signing in you are agreeing to our",
-        "privacypolicy2":"Terms and Conditions",
-        "privacypolicy3":" of use and ",
-        "privacypolicy4":"Privacy Policy",
         "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
         "skip":"تخطى التسجيل",
         "internetconnection":"لا يوجد أتصال بسبكة الأنترنت",
         "pleaseenteremail":"الرجاء تعبئة البريد الألكتروني",
-        "pleaseenter_validemail":"Please Enter Valid Email Address",
+        "pleaseenter_validemail":"الرجاء إدخال عنوان بريد إلكتروني صالح",
         "pleaseenterpwd":"الرجاء ادخال كلمة السر",
         "passwordvalidation":"كلمة السر يجب أن تتكون من 6 أحرف أو أرقام",
         "cancel":"الغاء",
         "submit":"موافق",
+        "close" : "Close",
+        "invaliduser": "اسم المستخدم وكلمة المرور غير صالحة",
+        "passsnotmatch" : "اسم المستخدم وكلمة المرور غير متطابقين",
     },
     "forgotpassword":{
         "emailaddress":"البريد الالكتروني",
         "cancelbtn":"الغاء",
-        "submitbtn":"موافق"
+        "submitbtn":"موافق",
+        "pleasecheckyourmail":"تفقد بريدك الالكتروني من فضلك",
+        "usernotexists":"المستخدم غير موجود"
     },
     "userregister":{
         "registertitle":"انشاء حساب",
@@ -50,9 +51,9 @@
         "selectcountry":"اختر الدولة",
         "address":"العنوان",
         "createbtn":"انشاء حساب",
-        "otplabel" : "OTP",
-        "otpplchldr" : "Enter 6 Digit Otp",
-        "resendOtp": "Want to Resend Otp",
+        "otplabel" : "رمز تغعيل السري",
+        "otpplchldr" : "ادخل الرمز السري المكون من ٦ ارقام",
+        "resendOtp": "إعادة ارسال رمز تفعيل السري",
         "submitbtn":"موافق",
         "venderregister":"اذا كنت بائع، سجل هنا",
         "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
@@ -65,7 +66,9 @@
         "pleaseselectcountry":"الرجاء أختيار دولة",
         "pleaseenteraddr":"الرجاء تعبئة العنوان",
         "pleaseenterusertype":"الرجاء أختيار نوع المستخدم",
-        "greetings":"شكرا لأنضمامكم الى قائمة مستخدميناwishlistTitle"
+        "greetings":"شكرا لأنضمامكم الى قائمة",
+        "passwordvalidation":"يرجى إدخال كلمة مرور مؤلفة من 6 أحرف او ارقام على الأقل",
+        "pickfromMap": "Pick Address From Map"
     },
     "venderregister":{
         "company":"اسم الشركة",
@@ -140,12 +143,13 @@
         "booknow":"احجز الان",
         "schedule":"Schedule",
         "selectaddress":"اختر العنوان",
-        "noaddress":"No address Found",
+        "noaddress":"لم يتم العثور على عنوان",
         "productinfo":"تفاصيل الخدمة",
         "paymentsuccess":"تم قبول عملية الدفع بنجاح",
         "paymentfailure":"تم رفض عملية الدفع",
-        "selectDate":"Plese Select Date",
-        "selectTime":"Plese Select Time Slot"
+        "selectDate":"يرجى تحديد التاريخ",
+        "selectTime":"يرجى اختيار الوقت",
+        "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان"
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -160,10 +164,10 @@
         "type":"النوع"
     },
     "sidemenu":{
-        "signup": "Signup",
-        "login": "Log in",
+        "signup": "تسجيل",
+        "login":"تسجيل الدخول",
         "notification":"تنبيهات",
-        "deals":"Deals and Offers",
+        "deals":"الصفقات",
         "home":"الرئيسية",
         "contact":"اتصل بنا",
         "order":"طلباتي",
@@ -209,7 +213,8 @@
         "ok":"تم",
         "pleaseselectitems":"الرجاء أختيار منتج",
         "removeitem":"تم الحذف من سلة المشتريات",
-        "somethingwentswrong":"حصل خطأ ما"
+        "somethingwentswrong":"حصل خطأ ما",
+        "cartUpdate":"Cart update successfully"
     },
     "profile":{
         "profiletitle":"الملف الشخصي",
@@ -289,10 +294,10 @@
     },
     "marketing":{
         "advertisement":"دعاية",
-        "videopicker":"Video Picker",
-        "imagepicker":"Image Picker",
+        "videopicker":"اختر فيديو",
+        "imagepicker":"اختر صوره",
         "takeVideo":"Take Video...",
-        "choose_video":"Choose From Library",
+        "choose_video":"اختر من الالبوم",
         "SelectThumbline_lbl": "Select Thumbline Image",
         "SelectThumbline": "Please Select Thumbline Image",
         "uploadfiles":"اختر ملفات للتحميل",
@@ -303,7 +308,8 @@
                             "Price: 1 KD per picture  / 1.5 KD per video",
         "myAdFaturah":{
             "paymentsuccess":"تم الدفع بنجاح",
-            "paymenterr":"حصل خطأ أثناء الدفع"
+            "paymenterr":"حصل خطأ أثناء الدفع",
+            "productaddtofeature":"تم إضافة المنتج بقائمة المسوقه"
         }
     },
     "editProfile":{
@@ -350,8 +356,8 @@
         "deactivate":"اخفاء",
         "aproved":"تم التأكيد",
         "pending":"بانتظار التأكيد",
-        "deliverd":"Deliverd",
-        "searchHere" : "Search Here"
+        "deliverd":"تم التوصيل",
+        "searchHere" : "ابحث"
     },
     "vendoraddproduct":{
         "addproduct":"اضف منتج",
@@ -389,9 +395,11 @@
         "productupdadded":"Product Update Successfully",
         "updatefail":"Product Upload Failed",
         "productname_ar_err":"Plese Insert Product Name in arabic",
-        "shortdesc_ar_err":"Plese Insert arabic Short description",
-        "detaildesc_ar_err":"Plese Insert arabic Detail description",
-        "errorwhileUpload":"error While Upload",
+        "shortdesc_ar_err":"يرجى إدخال الوصف المختصر باللغه العربية",
+        "detaildesc_ar_err":"يرجى إدخال التفاصيل باللغه العربية",
+        "errorwhileUpload":"حدث خطا خلال التحميل",
+        "english":"English",
+        "arabic": "اخت",
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",
@@ -429,13 +437,13 @@
         "priceerr":"الرجاء تحديد السعر",
         "specialpriceerr":"الرجاء أختيار سعر بعد الخصم",
         "specialpriceerr1":"سعر الخصم يجب أن يكون أقل من السعر الأساسي",
-        "servicename_ar_err":"Plese Insert Service Name in arabic",
-        "shortdesc_ar_err":"Plese Insert arabic Short description",
-        "detaildesc_ar_err":"Plese Insert arabic Detail description",
-        "updateSuccess":"Product Update Successfully",
-        "updatefail":"Product Upload Failed",
-        "editButton" : "Update",
-        "weekendlabel" : "Are You Working on Weekends"
+        "servicename_ar_err":"يرجي ادخال اسم المنتج باللغه العربيه",
+        "shortdesc_ar_err":"يرجى إدخال الوصف المختصر باللغه العربية",
+        "detaildesc_ar_err":"يرجى إدخال التفاصيل باللغه العربية",
+        "updateSuccess":"تم تحديث المنتج بنجاح",
+        "updatefail":"فشل في تحميل المنتج",
+        "editButton" : "تحديث",
+        "weekendlabel" : "هل تعمل في عطلة نهاية الأسبوع"
     },
     "productorder":{
         "orderTitle":"Order",
@@ -495,15 +503,20 @@
         "imagevideoselection":"الرجاء أختيار صورة أو فيديو لتسويقة",
         "categoryerr":"الرجاء أختيار صنف الأعلان",
         "online":"يوجد أتصال بالأنترنت",
-        "offline":"ليس هناك شبكة أنترنت متاحة"
+        "offline":"ليس هناك شبكة أنترنت متاحة",
+        "productremovefeature":"تم الحذف من قائمة المنتجات المسوقه"
     },
     "scheduleService":{
         "serviceTitle":"جدول",
-        "addressvalidation":"Please Select Address First"
+        "addressvalidation":"يرجى اختيار العنوان"
     },
     "notification":{
-        "orderId":"Order Id",
-        "orderType":"Order Type",
-        "deliveryStatus": "Delivery Status",
+        "orderId":"رقم الطلب",
+        "orderType":"نوع الطلب",
+        "deliveryStatus": "حالة الطلب",
+    },
+    "deals":{
+        "dealTitle":"عروض",
+        "buyitnowbtn":"اشتر الان"
     }
 }
