@@ -31,6 +31,7 @@ import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window');
 class EditService extends Component {
@@ -278,6 +279,7 @@ class EditService extends Component {
                     this.setState({
                         visibleModal : false
                     })
+                    EventEmitter.emit("serviceList")
                     routes.service();
                 }else{
                     MessageBarManager.showAlert({

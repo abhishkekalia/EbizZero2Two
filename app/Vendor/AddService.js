@@ -87,7 +87,7 @@ class AddService extends Component {
         .done();
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton });
+        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton, hideNavBar : false });
     }
     _renderLeftButton = () => {
         return(

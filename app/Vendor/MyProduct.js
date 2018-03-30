@@ -22,6 +22,7 @@ import I18n from 'react-native-i18n';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialIcons';
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window')
 
@@ -40,12 +41,20 @@ class MyProduct extends Component {
         this.arrayholder = [] ;
     }
     componentDidMount(){
-        // this.getKey()
-        // .then( ()=>this.fetchData())
-        this.fetchData()
+        this.setState({
+            dataSource: this.props.dataSource,
+            isLoading : this.props.status
+        });
+    }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            dataSource: nextProps.dataSource,
+            productnames:nextProps.productnames,
+            isLoading : nextProps.status
+        });
     }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton});
+        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton, hideNavBar : true});
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
     }
@@ -81,79 +90,79 @@ class MyProduct extends Component {
     //         console.log("Error retrieving data" + error);
     //     }
     // }
-    fetchData(){
-        const {u_id, country } = this.props;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData
-        }
-        fetch(Utils.gurl('productList'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            let data = responseData.data,
-            length = data.length,
-            productname = [],
-            name,
-            shortname
-
-            for (let i = 0; i < length; i++) {
-                name = data[i].product_name
-                shortname = name.charAt(0).toUpperCase();
-                productname.push(shortname);
-            }
-            if(responseData.status){
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    Shortrows : responseData.data,
-                    isLoading : false,
-                    productnames: productname
-                },()=>{
-                    this.arrayholder = responseData.data ;
-                });
-            }
-            else{
-                this.setState({
-                    isLoading : false
-                })
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
-    SearchFilterFunction(text){
-        const { lang } =this.props
-        const newData = this.arrayholder.filter(function(item){
-            const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
-            const textData = text.toUpperCase()
-            return itemData.indexOf(textData) > -1
-        })
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(newData),
-            text: text
-        })
-    }
-    removeFilterFunction(){
-        const { lang } =this.props
-        let text = ""
-        const newData = this.arrayholder.filter(function(item){
-            const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
-            const textData = text.toUpperCase()
-            return itemData.indexOf(textData) > -1
-        })
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(newData),
-            text: text
-        })
-    }
+    // fetchData(){
+    //     const {u_id, country } = this.props;
+    //     let formData = new FormData();
+    //     formData.append('u_id', String(u_id));
+    //     formData.append('country', String(country));
+    //     const config = {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'multipart/form-data;',
+    //         },
+    //         body: formData
+    //     }
+    //     fetch(Utils.gurl('productList'), config)
+    //     .then((response) => response.json())
+    //     .then((responseData) => {
+    //         let data = responseData.data,
+    //         length = data.length,
+    //         productname = [],
+    //         name,
+    //         shortname
+    //
+    //         for (let i = 0; i < length; i++) {
+    //             name = data[i].product_name
+    //             shortname = name.charAt(0).toUpperCase();
+    //             productname.push(shortname);
+    //         }
+    //         if(responseData.status){
+    //             this.setState({
+    //                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+    //                 Shortrows : responseData.data,
+    //                 isLoading : false,
+    //                 productnames: productname
+    //             },()=>{
+    //                 this.arrayholder = responseData.data ;
+    //             });
+    //         }
+    //         else{
+    //             this.setState({
+    //                 isLoading : false
+    //             })
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     })
+    //     .done();
+    // }
+    // SearchFilterFunction(text){
+    //     const { lang } =this.props
+    //     const newData = this.arrayholder.filter(function(item){
+    //         const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
+    //         const textData = text.toUpperCase()
+    //         return itemData.indexOf(textData) > -1
+    //     })
+    //     this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(newData),
+    //         text: text
+    //     })
+    // }
+    // removeFilterFunction(){
+    //     const { lang } =this.props
+    //     let text = ""
+    //     const newData = this.arrayholder.filter(function(item){
+    //         const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
+    //         const textData = text.toUpperCase()
+    //         return itemData.indexOf(textData) > -1
+    //     })
+    //     this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(newData),
+    //         text: text
+    //     })
+    // }
 
     ListViewItemSeparator = () => {
         return (
@@ -171,6 +180,7 @@ class MyProduct extends Component {
                 price : price,
                 special_price : special_price,
             }
+
         )
     }
     // renderProductnames(){
@@ -204,31 +214,31 @@ class MyProduct extends Component {
             </View>
         );
     }
-    shortingOrder(){
-        const { Shortrows } = this.state;
-        this.Ascending()
-        .then(()=>{
-            let rowRev = Shortrows.reverse()
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(rowRev),
-                isLoading : false
-            })
-        })
-        .done();
-    }
-    async Ascending(){
-        try {
-            const { Shortrows } = this.state;
-            this.setState({
-                dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
-                isLoading : true
-            })
-            return true
-        } catch (e) {
-            console.warn(e);
-
-        }
-    }
+    // shortingOrder(){
+    //     const { Shortrows } = this.state;
+    //     this.Ascending()
+    //     .then(()=>{
+    //         let rowRev = Shortrows.reverse()
+    //         this.setState({
+    //             dataSource: this.state.dataSource.cloneWithRows(rowRev),
+    //             isLoading : false
+    //         })
+    //     })
+    //     .done();
+    // }
+    // async Ascending(){
+    //     try {
+    //         const { Shortrows } = this.state;
+    //         this.setState({
+    //             dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
+    //             isLoading : true
+    //         })
+    //         return true
+    //     } catch (e) {
+    //         console.warn(e);
+    //
+    //     }
+    // }
     render() {
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
@@ -254,43 +264,6 @@ class MyProduct extends Component {
             let data = (this.state.dataSource.getRowCount() < 1) ? this.noItemFound() :listView
             return (
                 <View style={{ flex: 1}}>
-                    <View style={{
-                            flexDirection: direction,
-                            justifyContent: 'space-between',
-                            marginTop: 5,
-                        }}>
-                        <View style={{
-                                flexDirection: direction,
-                                justifyContent: 'space-between',
-                                borderWidth: 1,
-                                borderColor: '#ccc',
-                                borderRadius: 7
-                            }}>
-                            <View style={{width: 40, height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
-                            <Icon size={20} color="#ccc" name="md-search" style={{ alignSelf: 'center', margin: 5}} onPress={()=>this.removeFilterFunction()}/>
-                            </View>
-                            <TextInput
-                                style={[styles.TextInputStyleClass, {width: "65%", alignSelf: 'center', textAlign: textline}]}
-                                onChangeText={(text) => this.SearchFilterFunction(text)}
-                                value={this.state.text}
-                                controlled={true}
-                                underlineColorAndroid='transparent'
-                                placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
-                                />
-                            <TouchableOpacity style={{
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    width: 35,
-                                    borderRadius:  7,
-                                    backgroundColor: "transparent"
-                                }} >
-                                <Icon size={25} color="#a9d5d1" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{width: 40, height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
-                            <Material name="short-text" color="#a9d5d1" size={30} onPress={()=>this.shortingOrder()}/>
-                        </View>
-                    </View>
                     <View style={{ flexDirection: direction}}>
                         {data}
                         <ScrollView style={{marginBottom: 50}}>
@@ -493,7 +466,8 @@ class Footer extends Component{
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                this.props.calldata();
+                EventEmitter.emit("productList")
+                // this.props.calldata();
             }
             else{
                 this.props.calldata();

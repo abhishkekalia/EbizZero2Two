@@ -18,6 +18,7 @@ import Utils from 'app/common/Utils';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import Icon from 'react-native-vector-icons/Ionicons';
+import api from 'app/Api/api';
 
 const { width, height } = Dimensions.get('window')
 
@@ -34,12 +35,26 @@ class MyService extends Component {
         this.arrayholder = [] ;
     }
     componentDidMount(){
-        // this.getKey()
-        // .then( ()=>this.fetchData())
-        this.fetchData()
+        this.setState({
+            dataSource: this.props.dataSource,
+            isLoading : this.props.status
+        });
     }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            dataSource: nextProps.dataSource,
+            isLoading : nextProps.status
+        });
+    }
+    // shouldComponentUpdate(nextProps) {
+    //     console.warn(nextProps.dataSource);
+    //     this.setState({
+    //         dataSource: nextProps.dataSource,
+    //         isLoading : nextProps.status
+    //     });
+    // }
     componentWillMount() {
-        routes.refresh({ right: this._renderRightButton, left: this._renderLeftButton });
+        routes.refresh({ right: this._renderRightButton, left: this._renderLeftButton , hideNavBar : true});
     }
     _renderLeftButton = () => {
          return(
@@ -51,88 +66,88 @@ class MyService extends Component {
             <Text style={{color : '#fff'}}></Text>
         );
     };
-    async getKey() {
-        try {
-            const value = await AsyncStorage.getItem('data');
-            var response = JSON.parse(value);
-            this.setState({
-                u_id: response.userdetail.u_id ,
-                country: response.userdetail.country
-            });
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-    }
-
-    fetchData(){
-        const {u_id, country , lang} = this.props;
-        align = (lang === 'ar') ?  'right': 'left';
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        fetch(Utils.gurl('serviceList'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            if(responseData.status){
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    isLoading : false
-                },()=>{
-                    this.arrayholder = responseData.data ;
-                });
-            }
-            else{
-                this.setState({
-                    isLoading : false
-                })
-            }
-        })
-        .catch((errorMessage, statusCode) => {
-            MessageBarManager.showAlert({
-                message: I18n.t('vendorservice.apierr', { locale: lang }),
-                title:'',
-                alertType: 'extra',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-        })
-        .done();
-    }
-    SearchFilterFunction(text){
-        const { lang } =this.props
-
-        const newData = this.arrayholder.filter(function(item){
-            const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
-            const textData = text.toUpperCase()
-            return itemData.indexOf(textData) > -1
-        })
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(newData),
-            text: text
-        })
-    }
-    removeFilterFunction(){
-        const { lang } =this.props
-        let text = ""
-        const newData = this.arrayholder.filter(function(item){
-            // const itemData = item.product_name.toUpperCase()
-            const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
-            const textData = text.toUpperCase()
-            return itemData.indexOf(textData) > -1
-        })
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(newData),
-            text: text
-        })
-    }
+    // async getKey() {
+    //     try {
+    //         const value = await AsyncStorage.getItem('data');
+    //         var response = JSON.parse(value);
+    //         this.setState({
+    //             u_id: response.userdetail.u_id ,
+    //             country: response.userdetail.country
+    //         });
+    //     } catch (error) {
+    //         console.log("Error retrieving data" + error);
+    //     }
+    // }
+    //
+    // fetchData(){
+    //     const {u_id, country , lang} = this.props;
+    //     align = (lang === 'ar') ?  'right': 'left';
+    //     // let formData = new FormData();
+    //     // formData.append('u_id', String(u_id));
+    //     // formData.append('country', String(country));
+    //     // const config = {
+    //     //     method: 'POST',
+    //     //     headers: {
+    //     //         'Accept': 'application/json',
+    //     //         'Content-Type': 'multipart/form-data;',
+    //     //     },
+    //     //     body: formData,
+    //     // }
+    //     // fetch(Utils.gurl('serviceList'), config)
+    //     // .then((response) => response.json())
+    //     api.serviceList( u_id, country)
+    //     .then((responseData) => {
+    //         if(responseData.status){
+    //             this.setState({
+    //                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+    //                 isLoading : false
+    //             },()=>{
+    //                 this.arrayholder = responseData.data ;
+    //             });
+    //         }
+    //         else{
+    //             this.setState({
+    //                 isLoading : false
+    //             })
+    //         }
+    //     })
+    //     .catch((errorMessage, statusCode) => {
+    //         MessageBarManager.showAlert({
+    //             message: I18n.t('vendorservice.apierr', { locale: lang }),
+    //             title:'',
+    //             alertType: 'extra',
+    //             titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+    //             messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+    //         })
+    //     })
+    //     .done();
+    // }
+    // SearchFilterFunction(text){
+    //     const { lang } =this.props
+    //
+    //     const newData = this.arrayholder.filter(function(item){
+    //         const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
+    //         const textData = text.toUpperCase()
+    //         return itemData.indexOf(textData) > -1
+    //     })
+    //     this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(newData),
+    //         text: text
+    //     })
+    // }
+    // removeFilterFunction(){
+    //     const { lang } =this.props
+    //     let text = ""
+    //     const newData = this.arrayholder.filter(function(item){
+    //         const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
+    //         const textData = text.toUpperCase()
+    //         return itemData.indexOf(textData) > -1
+    //     })
+    //     this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(newData),
+    //         text: text
+    //     })
+    // }
 
     ListViewItemSeparator = () => {
         return (
@@ -181,39 +196,11 @@ class MyService extends Component {
             );
         return (
         <View style={{paddingBottom : 53, backgroundColor: 'rgba(248,248,248,1)'}}>
-            <View style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 5,
-                    borderWidth: 1,
-                    borderColor: '#ccc',
-                    borderRadius: 7
-                }}>
-                <Icon size={20} color="#ccc" name="md-search" style={{ alignSelf: 'center', margin: 5}} onPress={()=>this.removeFilterFunction()}/>
-                <TextInput
-                    style={[styles.TextInputStyleClass, {width: "75%",alignSelf: 'center'}]}
-                    onChangeText={(text) => this.SearchFilterFunction(text)}
-                    value={this.state.text}
-                    underlineColorAndroid='transparent'
-                    placeholder={I18n.t('vendorproducts.searchHere', { locale: lang })}
-                    />
-                <TouchableOpacity style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: 35,
-                        borderTopRightRadius: 7,
-                        borderBottomRightRadius: 7,
-                        backgroundColor: "#a9d5d1"
-                    }} >
-                <Icon size={25} color="#fff" name="ios-backspace-outline" style={{}} onPress={()=>this.removeFilterFunction()}/>
-                </TouchableOpacity>
-                </View>
             {listView}
         </View>
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
-
         const { lang} = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left',
@@ -259,11 +246,11 @@ class MyService extends Component {
                         is_weekend:data.is_weekend,
                         serviceImages: data.serviceImages
                     })}>
+
                     <Image style={[styles.thumb, {margin: 10}]}
                         resizeMode={"stretch"}
                         source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null}}
                         />
-
                     <View style={{flexDirection: 'column', justifyContent: 'center'}}>
                         <Text style={{ color:'#222',fontWeight :'bold', marginTop: 10, textAlign: textline}} > {service_name}</Text>
                             <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>

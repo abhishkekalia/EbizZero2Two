@@ -56,6 +56,34 @@ var api = {
             body: formData,
         }
         return fetch(Utils.gurl('UpdateServiceStatus'), config).then((res) => res.json())
-    }
+    },
+    serviceList( u_id, country){
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        return fetch(Utils.gurl('serviceList'), config).then((res) => res.json())
+    },
+    productList(u_id, country){
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        return fetch(Utils.gurl('productList'), config).then((res) => res.json())
+    },
 };
 module.exports = api;
