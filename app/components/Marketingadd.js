@@ -303,12 +303,12 @@ class Marketingadd extends Component {
                             size= {30}
                             color={borderColorImage}
                             onPress={this.selectPhotoTapped.bind(this)}
-                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
+                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 36}} />
                         <Feather
                             name="play-circle" onPress={this.selectVideoTapped.bind(this)}
                             color={borderColorVideo}
                             size= {30}
-                            style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
+                            style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 36}} />
                     </View>
                 </View>
                 <View style={styles.cost}>

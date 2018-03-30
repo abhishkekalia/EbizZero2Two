@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage, TextInput } from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage, TextInput, Platform } from "react-native";
 import { Actions} from "react-native-router-flux";
 import Feather from 'react-native-vector-icons/Feather';
 import I18n from 'react-native-i18n'
@@ -44,7 +44,7 @@ class Profile extends Component {
     }
 	_renderLeftButton = () => {
 		 return(
-			 <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10}}/>
+			 <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
 		 );
 	 };
    _renderRightButton = () => {
@@ -158,9 +158,9 @@ class Profile extends Component {
 				side={side}
 				>
 				<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
-					<View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+					<View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
 						{this._renderLeftButton()}
-						<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
+						<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
 						{this._renderRightButton()}
 					</View>
 					<View style={[styles.content, {flexDirection :direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>

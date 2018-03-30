@@ -620,33 +620,63 @@ class Newaddress extends Component{
                         />
                         <TouchableOpacity style={{flex:1}} onPress={() => this.setState({FullMapVisible : true})}>
                             <View style={{ flex: 1,backgroundColor: 'white'}} >
-                                <MapView
-                                    style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
-                                    provider={PROVIDER_GOOGLE}
-                                    initialRegion={{
-                                        latitude: this.state.LATITUDE,
-                                        longitude: this.state.LONGITUDE,
-                                        latitudeDelta: this.state.LATITUDE_DELTA,
-                                        longitudeDelta: this.state.LONGITUDE_DELTA
-                                    }}
-                                    region={this.state.region}
-                                    // style={StyleSheet.absoluteFill}
-                                    // ref={c => this.mapView = c}
-                                    // onPress={this.onMapPress}
-                                    onRegionChange={this.onRegionChange.bind(this)}
-                                    >
-                                <Marker
-                                    coordinate={this.state.coordinate}
-                                    onDragEnd={(e) => this.setState({
-                                        coordinate: e.nativeEvent.coordinate,
-                                        region: {
-                                            latitude:e.nativeEvent.coordinate.latitude,
-                                            longitude:e.nativeEvent.coordinate.longitude,
-                                            latitudeDelta: this.state.region.latitudeDelta,
-                                            longitudeDelta: this.state.region.longitudeDelta
-                                        }
-                                    })}/>
-                                </MapView>
+                                {Platform.OS === 'ios' ? 
+                                    <MapView
+                                        style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
+                                        // provider={PROVIDER_GOOGLE}
+                                        initialRegion={{
+                                            latitude: this.state.LATITUDE,
+                                            longitude: this.state.LONGITUDE,
+                                            latitudeDelta: this.state.LATITUDE_DELTA,
+                                            longitudeDelta: this.state.LONGITUDE_DELTA
+                                        }}
+                                        region={this.state.region}
+                                        // style={StyleSheet.absoluteFill}
+                                        // ref={c => this.mapView = c}
+                                        // onPress={this.onMapPress}
+                                        onRegionChange={this.onRegionChange.bind(this)}
+                                        >
+                                    <Marker
+                                        coordinate={this.state.coordinate}
+                                        onDragEnd={(e) => this.setState({
+                                            coordinate: e.nativeEvent.coordinate,
+                                            region: {
+                                                latitude:e.nativeEvent.coordinate.latitude,
+                                                longitude:e.nativeEvent.coordinate.longitude,
+                                                latitudeDelta: this.state.region.latitudeDelta,
+                                                longitudeDelta: this.state.region.longitudeDelta
+                                            }
+                                        })}/>
+                                    </MapView>
+                                :
+                                    <MapView
+                                        style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
+                                        provider={PROVIDER_GOOGLE}
+                                        initialRegion={{
+                                            latitude: this.state.LATITUDE,
+                                            longitude: this.state.LONGITUDE,
+                                            latitudeDelta: this.state.LATITUDE_DELTA,
+                                            longitudeDelta: this.state.LONGITUDE_DELTA
+                                        }}
+                                        region={this.state.region}
+                                        // style={StyleSheet.absoluteFill}
+                                        // ref={c => this.mapView = c}
+                                        // onPress={this.onMapPress}
+                                        onRegionChange={this.onRegionChange.bind(this)}
+                                        >
+                                    <Marker
+                                        coordinate={this.state.coordinate}
+                                        onDragEnd={(e) => this.setState({
+                                            coordinate: e.nativeEvent.coordinate,
+                                            region: {
+                                                latitude:e.nativeEvent.coordinate.latitude,
+                                                longitude:e.nativeEvent.coordinate.longitude,
+                                                latitudeDelta: this.state.region.latitudeDelta,
+                                                longitudeDelta: this.state.region.longitudeDelta
+                                            }
+                                        })}/>
+                                    </MapView>
+                                }
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity style={{
@@ -674,36 +704,68 @@ class Newaddress extends Component{
                     </TouchableOpacity>
                 </View>
 
-                <MapView
-                    provider={PROVIDER_GOOGLE}
-                    initialRegion={this.state.region}
-                    region={this.state.region}
-                    style={StyleSheet.absoluteFill}
-                    ref={c => this.mapView = c}
-                    onPress={this.onMapPress}>
+                {Platform.OS === 'ios' ?  
+                    <MapView
+                        // provider={PROVIDER_GOOGLE}
+                        initialRegion={this.state.region}
+                        region={this.state.region}
+                        style={StyleSheet.absoluteFill}
+                        ref={c => this.mapView = c}
+                        onPress={this.onMapPress}>
 
-                    <MapView.Marker draggable
-                        // annotations={markers}
-                        coordinate={this.state.coordinate}
-                        onDragEnd={(e) =>{
-                            this.setState({
-                                coordinate: {
-                                    latitude: e.nativeEvent.coordinate.latitude,
-                                    longitude: e.nativeEvent.coordinate.longitude,
-                                    latitudeDelta:  e.nativeEvent.coordinate.longitudeDelta,
-                                    longitudeDelta:  e.nativeEvent.coordinate.latitudeDelta
-                                },
-                                region: {
-                                    latitude:e.nativeEvent.coordinate.latitude,
-                                    longitude:e.nativeEvent.coordinate.longitude,
-                                    latitudeDelta: this.state.region.latitudeDelta,
-                                    longitudeDelta: this.state.region.longitudeDelta
-                                }
-                            })
-                        }}
-                            />
+                        <MapView.Marker draggable
+                            // annotations={markers}
+                            coordinate={this.state.coordinate}
+                            onDragEnd={(e) =>{
+                                this.setState({
+                                    coordinate: {
+                                        latitude: e.nativeEvent.coordinate.latitude,
+                                        longitude: e.nativeEvent.coordinate.longitude,
+                                        latitudeDelta:  e.nativeEvent.coordinate.longitudeDelta,
+                                        longitudeDelta:  e.nativeEvent.coordinate.latitudeDelta
+                                    },
+                                    region: {
+                                        latitude:e.nativeEvent.coordinate.latitude,
+                                        longitude:e.nativeEvent.coordinate.longitude,
+                                        latitudeDelta: this.state.region.latitudeDelta,
+                                        longitudeDelta: this.state.region.longitudeDelta
+                                    }
+                                })
+                            }}
+                        />
+                    </MapView>
+                :
+                    <MapView
+                        provider={PROVIDER_GOOGLE}
+                        initialRegion={this.state.region}
+                        region={this.state.region}
+                        style={StyleSheet.absoluteFill}
+                        ref={c => this.mapView = c}
+                        onPress={this.onMapPress}>
 
-                </MapView>
+                        <MapView.Marker draggable
+                            // annotations={markers}
+                            coordinate={this.state.coordinate}
+                            onDragEnd={(e) =>{
+                                this.setState({
+                                    coordinate: {
+                                        latitude: e.nativeEvent.coordinate.latitude,
+                                        longitude: e.nativeEvent.coordinate.longitude,
+                                        latitudeDelta:  e.nativeEvent.coordinate.longitudeDelta,
+                                        longitudeDelta:  e.nativeEvent.coordinate.latitudeDelta
+                                    },
+                                    region: {
+                                        latitude:e.nativeEvent.coordinate.latitude,
+                                        longitude:e.nativeEvent.coordinate.longitude,
+                                        latitudeDelta: this.state.region.latitudeDelta,
+                                        longitudeDelta: this.state.region.longitudeDelta
+                                    }
+                                })
+                            }}
+                                />
+
+                    </MapView>
+                }                
 
                 </Modal>
             </View>

@@ -11,7 +11,8 @@ import {
     ScrollView,
     Dimensions,
     TouchableOpacity,
-    Image
+    Image,
+    Platform,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -171,11 +172,11 @@ class DealsandOffers extends Component {
                 side= {side}
                 >
                     <View style={{flex: 1}}>
-                        <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                        <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                             <TouchableOpacity onPress={()=>this.openControlPanel()}>
-                                <Feather name="menu" size={20} color="#fff" style={{ padding : 10}}/>
+                                <Feather name="menu" size={20} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
                             </TouchableOpacity>
-                            <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
+                            <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
                             <View/>
                         </View>
                         {listView}
