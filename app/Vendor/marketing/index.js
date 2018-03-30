@@ -56,7 +56,7 @@ class Marketing extends Component {
     }
     render() {
         const {lang} = this.props;
-
+    
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
