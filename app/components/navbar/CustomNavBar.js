@@ -40,6 +40,7 @@ class CustomNavBar extends React.Component {
         const {lang}= this.props,
         justiContent = lang === "ar" ? "center" :'flex-end';
         return (
+            //<View style={[styles.navBarItem, { flexDirection: 'row',justifyContent: 'flex-end', alignItems: 'center', opacity:1 }]}>
             <View style={[styles.navBarItem, { flexDirection: 'row', justifyContent: justiContent, alignItems: 'center', opacity:1 }]}>
                 <TouchableOpacity
                 onPress={() => EE12.emit("refreshFilterOption","")}

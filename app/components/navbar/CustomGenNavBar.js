@@ -25,10 +25,11 @@ class CustomGenNavBar extends React.Component {
                 onPress={Actions.pop}
                 style={
                     [styles.navBarItem,
-                { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 ,
+                { paddingLeft: Platform.OS === 'ios' ? 0 : 10, top: (Platform.OS === 'ios') ? 15 : 0 ,
                 width:'15%',
                 height: (Platform.OS === 'ios') ? '80%' : '100%',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                marginLeft: Platform.OS === 'ios' ? -10 : 0,
                 // transform: lang == 'ar'? [{ rotate: '180deg'}] : null
             }
                 ]}>
@@ -57,10 +58,11 @@ class CustomGenNavBar extends React.Component {
     _renderRight() {
         return (
             <View style={
-            { paddingLeft: 10, top: (Platform.OS === 'ios') ? 15 : 0 ,
+            { paddingLeft: 10, top: (Platform.OS === 'ios') ? 0 : 0 ,
             width:'15%',
             height: (Platform.OS === 'ios') ? '80%' : '100%',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingTop: Platform.OS === 'ios' ? 12 : 0
 
         }
             }>

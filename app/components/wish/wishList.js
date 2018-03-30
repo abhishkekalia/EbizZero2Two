@@ -16,7 +16,8 @@ import {
     Picker,
     Clipboard,
     ToastAndroid,
-    AlertIOS
+    AlertIOS,
+    Platform,
 } from 'react-native';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n'
@@ -66,7 +67,7 @@ class WishList extends Component {
     }
     _renderLeftButton = () => {
          return(
-             <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10}}/>
+             <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10, paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
          );
      };
    _renderRightButton = () => {
@@ -242,9 +243,9 @@ class WishList extends Component {
                 side={side}
                 >
                 <View style={{flex: 1}}>
-                    <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                         {this._renderLeftButton()}
-                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
                     <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
@@ -316,9 +317,9 @@ class WishList extends Component {
                 side= {side}
                 >
                 <View style={{flex :1}}>
-                    <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                         {this._renderLeftButton()}
-                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
                     <ScrollView>

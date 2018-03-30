@@ -9,7 +9,8 @@ import {
     ActivityIndicator,
     AsyncStorage,
     Alert,
-    Modal
+    Modal,
+    Platform,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -202,8 +203,8 @@ class ProductOrder extends Component{
                     transparent={false}
                     visible={this.state.visibleMap}
                     onRequestClose={() => this.setState({ visibleMap :false})}>
-                    <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: 10}}>
-                        <Icon onPress ={()=>this.setState({ visibleMap :false})} name="close-circle" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
+                    <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: Platform.OS === 'ios' ? 20 : 10}}>
+                        <Icon onPress ={()=>this.setState({ visibleMap :false})} name="close-circle" size={25} color= {Platform.OS === 'ios' ? "black" : "#fff" }  style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
                     </View>
                     <View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
                     <MapView

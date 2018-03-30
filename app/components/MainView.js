@@ -118,12 +118,12 @@ class MainView extends Component {
     }
     _renderLeftButton = () => {
         return(
-            <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10}}/>
+            <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10, paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
         );
     };
    _renderRightButton = () => {
        return(
-           <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10}}/>
+           <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10, marginTop:Platform.OS === 'ios' ? 10 : 0}}/>
        );
    };
    closeControlPanel = () => {
@@ -219,9 +219,9 @@ class MainView extends Component {
                side= {side}
                >
                <View style={{flex: 1}}>
-                   <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                   <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                        {this._renderLeftButton()}
-                       <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                       <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center', marginTop:Platform.OS === 'ios' ? 10 : 0}}
                            resizeMode = 'contain'
                            resizeMethod = 'resize'/>
                        {this._renderRightButton()}
@@ -542,9 +542,9 @@ class MainView extends Component {
                 side= {side}
                 >
             <View style={{backgroundColor: '#f9f9f9'}}>
-                <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                     {this._renderLeftButton()}
-                    <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                    <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center', marginTop:Platform.OS === 'ios' ? 10 : 0}}
                         resizeMode = 'contain'
                         resizeMethod = 'resize'/>
                     {this._renderRightButton()}
@@ -556,7 +556,7 @@ class MainView extends Component {
                     barStyle="light-content"/>
                 <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
                 <ScrollView
-                    contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: 100}}
+                    contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: Platform.OS === 'ios' ? 160 : 100}}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="always">
                     { this.renderListData()}
@@ -824,7 +824,7 @@ class MainView extends Component {
                 style={styles.sidebar}
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isModalVisible}>
-                <View style={{height:54,flexDirection : direction ,alignItems:'center',justifyContent : 'space-between',backgroundColor:'#a9d5d1'}}>
+                <View style={{height: Platform.OS === 'ios' ? 60 : 54,flexDirection : direction ,alignItems:'center',justifyContent : 'space-between',backgroundColor:'#a9d5d1'}}>
                     <Text>{null}</Text>
                     <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>{I18n.t('home.allshop', { locale: lang })}</Text>
                     <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyShop()} >
@@ -859,7 +859,7 @@ class MainView extends Component {
                 style={styles.sidebar}
                 shouldAnimateOnRequestClose={true}
                 visible={this.state.isService}>
-                <View style={{ height:54, flexDirection : direction, alignItems:'center', justifyContent : 'space-between', backgroundColor:'#a9d5d1'}}>
+                <View style={{ height:Platform.OS === 'ios' ? 60 : 54, flexDirection : direction, alignItems:'center', justifyContent : 'space-between', backgroundColor:'#a9d5d1'}}>
                     <Text>{null}</Text>
                     <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10, textAlign: align} : {fontSize:15, color:'#fff',textAlign: align }}>{I18n.t('home.allservice', { locale: lang })}</Text>
                     <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyService()} >
@@ -1070,9 +1070,9 @@ class MainView extends Component {
                 side= {side}
                 >
                 <View style={{flex: 1}}>
-                    <View style={{height: 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                    <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                         {this._renderLeftButton()}
-                        <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center'}}
+                        <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center', marginTop:Platform.OS === 'ios' ? 10 : 0}}
                             resizeMode = 'contain'
                             resizeMethod = 'resize'/>
                         {this._renderRightButton()}
