@@ -96,7 +96,6 @@ class Product extends Component {
         const { lang } =this.props
         let text = ""
         const newData = this.arrayholder.filter(function(item){
-            // const itemData = item.product_name.toUpperCase()
             const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
             const textData = text.toUpperCase()
             return itemData.indexOf(textData) > -1
@@ -176,23 +175,18 @@ class Product extends Component {
                                 flexDirection: direction,
                                 justifyContent: 'space-between',
                                 alignItems: 'center'
-                                // borderWidth: StyleSheet.hairlineWidth,
-                                // borderColor: '#fff',
-                                // borderRadius: 7
                             }}>
-                            <View style={{ width: 40, height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
-                                <TouchableOpacity style={{
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        width: 35,
-                                        borderRadius:  7,
-                                        backgroundColor: "transparent"
-                                    }}
-                                    onPress={()=>this.setState({ ShowSearch : false })}
-                                    >
-                                    <Icon size={20} color="#fff" name="ios-arrow-back" style={{ alignSelf: 'center', margin: 5}}/>
-                                </TouchableOpacity>
-                            </View>
+                            <TouchableOpacity style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: "10%",
+                                    borderRadius:  7,
+                                    backgroundColor: "transparent"
+                                }}
+                                onPress={()=>this.setState({ ShowSearch : false })}
+                                >
+                                <Icon size={20} color="#fff" name="ios-arrow-back"  style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}}/>
+                            </TouchableOpacity>
                             <TextInput
                                 style={{ width: "80%",height: 40, alignSelf: 'center', textAlign: textline, color: "#fff", borderWidth: StyleSheet.hairlineWidth, borderColor: '#fff', borderRadius: 20}}
                                 onChangeText={(text) => this.SearchFilterFunction(text)}
@@ -206,18 +200,23 @@ class Product extends Component {
                             <TouchableOpacity style={{
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    width: 35,
+                                    width: "10%",
                                     borderRadius:  7,
                                     backgroundColor: "transparent"
                                 }} >
-                                <Icon size={25} color="#fff" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
+                                {this.state.text.length > 0 ?
+                                    <Icon size={25} color="#fff" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
+                                    : <Text/>
+                                }
                             </TouchableOpacity>
                         </View>
                     </Animated.View> :
-                    <View style={{ shadowColor: "#000",shadowOffset:{height: 0.5}, shadowRadius: 0.5, height: 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center', width: width}}>
-                        <Text/>
-                        <Text style={{ color: "#fff", fontSize: 20, fontWeight: 'bold'}}>{I18n.t("vendorproducts.productTitle", { locale: lang })}</Text>
-                        <View style={{ flexDirection:"row", width: 75}}>
+                    <View style={{ shadowColor: "#000",shadowOffset:{height: 0.5}, shadowRadius: 0.5, height: 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center'}}>
+                        <View style={{ width:"20%" }}/>
+                            <View style={{ width:"60%",justifyContent: 'center',alignItems: 'center'}}>
+                            <Text style={{ color: "#fff", fontSize: 20, fontWeight: 'bold'}}>{I18n.t("vendorproducts.productTitle", { locale: lang })}</Text>
+                        </View>
+                        <View style={{ flexDirection:direction, width: "20%"}}>
                             <TouchableOpacity style={{
                                     justifyContent: 'center',
                                     alignItems: 'center',
@@ -233,7 +232,6 @@ class Product extends Component {
                             </View>
                         </View>
                     </View>
-
                     :
                     <View/>
                 }

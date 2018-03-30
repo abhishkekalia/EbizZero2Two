@@ -32,7 +32,7 @@ class Service extends Component {
             dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2 }),
             text: '',
             ShowSearch : false,
-            Shortrows : []
+            Shortrows : [],
         }
         this.arrayholder = [] ;
     }
@@ -78,7 +78,8 @@ class Service extends Component {
         })
         this.setState({
             dataSource: this.state.dataSource.cloneWithRows(newData),
-            text: text
+            text: text,
+            textInputwidth : "80%"
         })
     }
     removeFilterFunction(){
@@ -169,21 +170,19 @@ class Service extends Component {
                                 // borderColor: '#fff',
                                 // borderRadius: 7
                             }}>
-                            <View style={{ width: 40, height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
                                 <TouchableOpacity style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        width: 35,
+                                        width: "10%",
                                         borderRadius:  7,
                                         backgroundColor: "transparent"
                                     }}
                                     onPress={()=>this.setState({ ShowSearch : false })}
                                     >
-                                    <Icon size={20} color="#fff" name="ios-arrow-back" style={{ alignSelf: 'center', margin: 5}}/>
+                                    <Icon size={20} color="#fff" name="ios-arrow-back"  style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}}/>
                                 </TouchableOpacity>
-                                </View>
                                 <TextInput
-                                    style={{ width: "80%",height: 40, alignSelf: 'center', textAlign: textline, color: "#fff", borderWidth: StyleSheet.hairlineWidth, borderColor: '#fff', borderRadius: 20}}
+                                    style={{ width: "80%", height: 40, alignSelf: 'center', textAlign: textline, color: "#fff", borderWidth: StyleSheet.hairlineWidth, borderColor: '#fff', borderRadius: 20}}
                                     onChangeText={(text) => this.SearchFilterFunction(text)}
                                     placeholderTextColor="#fff"
                                     value={this.state.text}
@@ -195,29 +194,34 @@ class Service extends Component {
                                 <TouchableOpacity style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        width: 35,
+                                        width: "10%",
                                         borderRadius:  7,
                                         backgroundColor: "transparent"
                                     }} >
-                                    <Icon size={25} color="#fff" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
+                                    {this.state.text.length > 0 ?
+                                        <Icon size={25} color="#fff" name="ios-backspace-outline" style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}} onPress={()=>this.removeFilterFunction()}/>
+                                        : <Text/>
+                                    }
                                 </TouchableOpacity>
                         </View>
                     </Animated.View> :
                     <View style={{ shadowColor: "#000",shadowOffset:{height: 0.5}, shadowRadius: 0.5, height: 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center', width: width}}>
-                        <Text/>
+                        <View style={{ width:"20%" }}/>
+                            <View style={{ width:"60%",justifyContent: 'center',alignItems: 'center'}}>
                             <Text style={{ color: "#fff", fontSize: 20, fontWeight: 'bold'}}>{I18n.t("vendorservice.serviceTitle", { locale: lang })}</Text>
-                            <View style={{ flexDirection:"row", width: 75}}>
+                            </View>
+                            <View style={{ flexDirection:direction, width: "20%"}}>
                                 <TouchableOpacity style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        width: 35,
+                                        width: "50%",
                                         borderRadius:  7,
                                         backgroundColor: "transparent"
                                     }}
                                     onPress={()=>this.setState({ ShowSearch:true })}>
                                     <Icon size={20} color="#fff" name="md-search" style={{ alignSelf: 'center', margin: 5}} />
                                 </TouchableOpacity>
-                                <View style={{width: 40, height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
+                                <View style={{width: "50%", height: 40, backgroundColor: 'transparent', justifyContent: 'center',alignItems: 'center',}}>
                                     <Material name="short-text" color="#fff" size={30} onPress={()=>this.shortingOrder()}/>
                                 </View>
                             </View>
