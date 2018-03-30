@@ -205,8 +205,7 @@ const styles = StyleSheet.create({
 		borderColor: '#eee',
 		height: 350
 	},
-	row: {
-		flexDirection: 'row',
+	row: {		flexDirection: 'row',
 		marginTop : 1
 	},
 	qtybutton: {

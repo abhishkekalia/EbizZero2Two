@@ -28,6 +28,7 @@ export default class FeaturedProduct extends Component {
             country : null,
             status : false
         }
+        
     }
     GetItem (flower_name) {
         alert(flower_name);
@@ -50,57 +51,7 @@ export default class FeaturedProduct extends Component {
     _renderRightButton = () => {
         return null
     };
-    // async getKey() {
-    //     try {
-    //         const value = await AsyncStorage.getItem('data');
-    //         var response = JSON.parse(value);
-    //
-    //         this.setState({
-    //             u_id: response.userdetail.u_id,
-    //             country: response.userdetail.country
-    //         });
-    //     } catch (error) {
-    //         console.log("Error retrieving data" + error);
-    //     }
-    // }
 
-    // fetchData(){
-    //     const {u_id, country } = this.state;
-    //     let formData = new FormData();
-    //     formData.append('u_id', String(u_id));
-    //     formData.append('country', String(country));
-
-    //     const config = {
-    //         method: 'POST',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'multipart/form-data;',
-    //         },
-    //         body: formData,
-    //         }
-    //     fetch(Utils.gurl('MyProfile'), config)
-    //     .then((response) => response.json())
-    //     .then((responseData) => {
-    //         if(responseData.response.status){
-    //             this.setState({
-    //             dataSource: this.state.dataSource.cloneWithRows(responseData.response.feature_product),
-    //             isLoading : false,
-    //             status : responseData.response.status
-    //             });
-    //         }
-    //         else{
-    //             this.setState({
-    //             isLoading : false,
-    //             status : responseData.response.status
-
-    //             })
-    //         }
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //     })
-    //     .done();
-    // }
     ListViewItemSeparator = () => {
         return (
             <View

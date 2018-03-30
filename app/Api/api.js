@@ -44,6 +44,9 @@ var api = {
         return fetch(Utils.gurl('addToOrder'), config).then((res) => res.json())
     },
     UpdateServiceStatus( service_id, is_active){
+        console.warn("service_id",service_id);
+        console.warn("is_active",is_active);
+
         let formData = new FormData();
         formData.append('service_id', String(service_id));
         formData.append('is_active', String(is_active));

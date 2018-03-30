@@ -53,11 +53,11 @@ class Profile extends Component {
     }
     handleConnectionChange = (isConnected) => {
 		const {lang} = this.props;
-		align = lang == 'ar'? 'flex-end': 'flex-start';
+		align = lang == 'ar'? 'left': 'right';
         this.setState({ netStatus: isConnected });
         {this.state.netStatus ?
 			  MessageBarManager.showAlert({
-                message: I18n.t('venderprofile.online', { locale: language }),
+                message: I18n.t('venderprofile.online', { locale: lang }),
                 alertType: 'alert',
                 title:'',
 				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},

@@ -59,7 +59,8 @@ class EditService extends Component {
             removed_images : [],
             languageChoose: '',
             is_feature:0,
-            is_weekend_work :this.props.is_weekend
+            is_weekend:this.props.is_weekend,
+             is_weekend_work :this.props.is_weekend
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
@@ -213,7 +214,7 @@ class EditService extends Component {
     uploadTocloud(){
         const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic,
             short_description, detail_description, price,
-            special_price, Imagepath, removed_images,is_feature, is_weekend_work
+            special_price, Imagepath, removed_images,is_feature,is_weekend, is_weekend_work
         } = this.state;
         const { u_id, country, lang, service_id } = this.state,
         align = (lang === 'ar') ?  'right': 'left';
@@ -385,11 +386,14 @@ class EditService extends Component {
         } else {
             is_feature = true
         }
-        let is_weekend_work;
+        let is_weekend_work,
+            weekend_work_value;
         if(this.state.is_weekend === 0){
             is_weekend_work = "checkbox-marked";
+            weekend_work_value = 1;
         } else {
             is_weekend_work = "checkbox-blank-outline";
+            weekend_work_value = 0;
         }
 
         return (
@@ -687,10 +691,19 @@ class EditService extends Component {
                             circleActiveColor={'#30a566'}
                             circleInActiveColor={'#000000'}/>
                     </View>
-                    <TouchableOpacity style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]} onPress={()=> this.setState({
+                    <TouchableOpacity style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]} onPress={()=>{ this.setState({
                             is_weekend : !this.state.is_weekend,
-                            is_weekend_work : 1
-                        })}>
+                            is_weekend_work : weekend_work_value
+                        })
+                        if(this.stateis_weekend === 0){
+                            is_weekend_work = "checkbox-marked";
+                            weekend_work_value = 1;
+
+                        } else {
+                        is_weekend_work = "checkbox-blank-outline";
+                            weekend_work_value = 0;
+                        }
+                    }}>
                         <View style={{ flexDirection: direction}}>
                             <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })}</Text>
                             <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>

@@ -413,7 +413,8 @@ class Header extends Component{
             }
             else{
                 this.setState({
-                    isLoading : false
+                    isLoading : false,
+                    hideNavBar : true
                 })
             }
         })
