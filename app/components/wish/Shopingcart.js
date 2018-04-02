@@ -23,7 +23,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { MessageBarManager } from 'react-native-message-bar';
 import  Countmanager  from './Countmanager';
 import {Actions as routes} from "react-native-router-flux";
-import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
+import { SinglePickerMaterialDialog, MaterialDialog } from 'react-native-material-dialog';
 import { material } from 'react-native-typography';
 import EventEmitter from "react-native-eventemitter";
 import Drawer from 'react-native-drawer';
@@ -52,7 +52,8 @@ class Shopingcart extends Component {
             selectSize : false,
             // country : null,
             status : false,
-            cartIdList:[]
+            cartIdList:[],
+            nologin: false
         };
     }
     componentDidMount(){
@@ -225,13 +226,20 @@ class Shopingcart extends Component {
         this.setState({color});
     }
     procedToCheckout(){
-        if (this.validate()) {
-            routes.AddressLists({
-                order_detail : this.state.ShopingItems,
-                SetToList :this.state.SetToList,
-                totalAmount : this.state.subtotalamount,
-                cartIdList:this.state.cartIdList
+        let {lang, u_id} = this.props
+        if (u_id === undefined ){
+            this.setState({
+                nologin: true
             })
+        }else{
+            if (this.validate()) {
+                routes.AddressLists({
+                    order_detail : this.state.ShopingItems,
+                    SetToList :this.state.SetToList,
+                    totalAmount : this.state.subtotalamount,
+                    cartIdList:this.state.cartIdList
+                })
+            }
         }
     }
     renderFooter(itemcount, totalamount, subtotalamount){
@@ -261,6 +269,16 @@ class Shopingcart extends Component {
                     <Text style={{ color : "#87cefa", textAlign: align}} >{I18n.t('cart.crtsubtotal', { locale: lang })}</Text>
                     <Text style={{ color : "#87cefa", textAlign: align}}> KWD {subtotalamount}</Text>
                 </View>
+                <MaterialDialog
+                    title="You are not login Now"
+                    visible={this.state.nologin}
+                    onOk={() => this.setState({ nologin: false },()=>routes.loginPage())}
+                    onCancel={() => this.setState({ nologin: false })}>
+                    <Text style={styles.dialogText}>
+                        To checkout your cart please Login or SignUp
+                    </Text>
+                </MaterialDialog>
+
             </View>
         )
     }
@@ -275,7 +293,7 @@ class Shopingcart extends Component {
                 tapToClose={true}
                 openDrawerOffset={0.2}
                 panCloseMask={0.2}
-                closedDrawerOffset={-3}
+                closedDrawerOffset={0}
                 styles={drawerStyles}
                 tweenHandler={(ratio) => ({
                     main: { opacity:(2-ratio)/2 }
@@ -328,7 +346,7 @@ class Shopingcart extends Component {
                 tapToClose={true}
                 openDrawerOffset={0.2}
                 panCloseMask={0.2}
-                closedDrawerOffset={-3}
+                closedDrawerOffset={0}
                 styles={drawerStyles}
                 tweenHandler={(ratio) => ({
                     main: { opacity:(2-ratio)/2 }

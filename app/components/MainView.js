@@ -37,19 +37,13 @@ import {connect} from 'react-redux';
 import I18n from 'react-native-i18n'
 import Drawer from 'react-native-drawer';
 import Menu from './menu/MenuContainer';
-
-// import Image from 'react-native-image-progress';
-// import ProgressBar from 'react-native-progress/Circle';
-
 import EventEmitter from "react-native-eventemitter";
-
 const { width, height } = Dimensions.get('window')
 let index = 0;
 
 class MainView extends Component {
     constructor(props) {
         super(props);
-        this.fetchData = this.fetchData.bind(this);
         this.state={
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
@@ -89,9 +83,9 @@ class MainView extends Component {
         .done();
         EventEmitter.removeAllListeners("applyCategoryFilter");
         EventEmitter.on("applyCategoryFilter", (value)=>{
-            // console.log("applyCategoryFilter", value);
             if (value.selCategory.length > 0) {
                 this.setState({
+                    dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
                     loaded:false,
                     arrSelectedCategory:value.selCategory,
                     arrSelectedGender:value.selGender,
@@ -100,17 +94,18 @@ class MainView extends Component {
                 })
                 this.filterByCategory(value.selCategory,value.selGender)
             } else {
+                this.fetchData()
                 this.setState({
                     arrSelectedCategory:value.selCategory,
                     arrSelectedGender:value.selGender,
                     arrSelectedType:value.selType,
                 })
-                this.filterByCategory(value.selCategory,value.selGender)
+                // this.filterByCategory(value.selCategory,value.selGender)
             }
         });
         EventEmitter.removeAllListeners("reloadProducts");
         EventEmitter.on("reloadProducts", (value)=>{
-            this.fetchData()
+            // this.fetchData()
         });
     }
     componentWillMount() {
@@ -121,131 +116,130 @@ class MainView extends Component {
             <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10, paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
         );
     };
-   _renderRightButton = () => {
-       return(
-           <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10, marginTop:Platform.OS === 'ios' ? 10 : 0}}/>
-       );
-   };
-   closeControlPanel = () => {
-     this._drawer.close()
-   };
-   openControlPanel = () => {
-     this._drawer.open()
-   };
-   onCancel() {
-       console.log("CANCEL")
-       this.setState({visible:false});
-   }
-   onOpen(product_name, product_id, url) {
-       console.log("OPEN")
-       this.setState({
-           visible:true,
-           product_name : product_name,
-           product_id : product_id,
-           url : url
-       });
-   }
-   _onRefresh() {
-       this.setState({
-           refreshing: true,
-           dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-       });
-       this.fetchData();
-   }
-   modal = () => this.setState({
-       isModalVisible: !this.state.isModalVisible
-   })
-   filterbyShop = () => {
-       if (this.state.rows.length == 0) {
-           this.state.isModalVisible = !this.state.isModalVisible
-           this.state.isFilterProduct = true
-           this.fetchData()
-           return
-       }
-       this.setState({
-           isModalVisible: !this.state.isModalVisible,
-           loaded : false,
-           isFilterProduct : true
-       },this.fetchDataByShop())
-   }
-   fetchDataByShop(){
-       const { rows } = this.state;
-       const {u_id, country, deviceId } = this.props;
-       let un_id= (u_id === undefined) ? '' : u_id;
-       let formData = new FormData();
-       formData.append('u_id', String(un_id));
-       formData.append('country', String(country));
-       formData.append('vendor_id', String(rows));
-       formData.append('device_uid', String(deviceId));
-       const config = {
-           method: 'POST',
-           headers: {
-               'Accept': 'application/json',
-               'Content-Type': 'multipart/form-data;',
-           },
-           body: formData,
-       }
-       fetch(Utils.gurl('filterByShop'), config)
-       .then((response) => response.json())
-       .then((responseData) => {
-           this.setState({
-               dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-               status : responseData.status,
-               loaded: true,
-               refreshing: false
-           });
-       })
-       .catch((error) => {
-           console.log(error);
-       })
-       .done();
-   }
-   renderLoadingView() {
-       const {lang} = this.props;
-       let side = lang === "ar" ? "right" : "left";
-       return (
-           <Drawer
-               ref={(ref) => this._drawer = ref}
-               type="overlay"
-               content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
-               tapToClose={true}
-               openDrawerOffset={0.2}
-               panCloseMask={0.2}
-               closedDrawerOffset={-3}
-               styles={drawerStyles}
-               tweenHandler={(ratio) => ({
-                   main: { opacity:(2-ratio)/2 }
-               })}
-               side= {side}
-               >
-               <View style={{flex: 1}}>
-                   <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                       {this._renderLeftButton()}
-                       <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center', marginTop:Platform.OS === 'ios' ? 10 : 0}}
-                           resizeMode = 'contain'
-                           resizeMethod = 'resize'/>
-                       {this._renderRightButton()}
-                   </View>
-                   <ActivityIndicator
-                       style={[styles.centering]}
-                       color="#a9d5d1"
-                       size="large"/>
-               </View>
-           </Drawer>
-       );
-   }
-   blur() {
-       const {dataSource } = this.state;
-       dataSource && dataSource.blur();
-   }
-   focus() {
-       const {dataSource } = this.state;
-       dataSource && dataSource.focus();
-   }
-   async loadData (){
-       try {
-           const {u_id, country, deviceId } = this.props;
-           let formData = new FormData();
+    _renderRightButton = () => {
+        return(
+            <Feather name="filter" size={20} onPress={()=> Actions.filterBar({selectedRows:this.state.arrSelectedCategory, selGender:this.state.arrSelectedGender, selType:this.state.arrSelectedType})} color="#fff" style={{ padding : 10, marginTop:Platform.OS === 'ios' ? 10 : 0}}/>
+        );
+    };
+    closeControlPanel = () => {
+        this._drawer.close()
+    };
+    openControlPanel = () => {
+        this._drawer.open()
+    };
+    onCancel() {
+        console.log("CANCEL")
+        this.setState({visible:false});
+    }
+    onOpen(product_name, product_id, url) {
+        this.setState({
+            visible:true,
+            product_name : product_name,
+            product_id : product_id,
+            url : url
+        });
+    }
+    _onRefresh() {
+        this.setState({
+            refreshing: true,
+            dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+        });
+        this.fetchData();
+    }
+    modal = () => this.setState({
+        isModalVisible: !this.state.isModalVisible
+    })
+    filterbyShop = () => {
+        if (this.state.rows.length == 0) {
+            this.state.isModalVisible = !this.state.isModalVisible
+            this.state.isFilterProduct = true
+            this.fetchData()
+            return
+        }
+        this.setState({
+            isModalVisible: !this.state.isModalVisible,
+            loaded : false,
+            isFilterProduct : true
+        },this.fetchDataByShop())
+    }
+    fetchDataByShop(){
+        const { rows } = this.state;
+        const {u_id, country, deviceId } = this.props;
+        let un_id= (u_id === undefined) ? '' : u_id;
+        let formData = new FormData();
+        formData.append('u_id', String(un_id));
+        formData.append('country', String(country));
+        formData.append('vendor_id', String(rows));
+        formData.append('device_uid', String(deviceId));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        fetch(Utils.gurl('filterByShop'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                status : responseData.status,
+                loaded: true,
+                refreshing: false
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+    }
+    renderLoadingView() {
+        const {lang} = this.props;
+        let side = lang === "ar" ? "right" : "left";
+        return (
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side= {side}
+                >
+                <View style={{flex: 1}}>
+                    <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                        {this._renderLeftButton()}
+                        <Image source={require('../images/login_img.png')} style={{height: 25, width: '20%', alignSelf: 'center', marginTop:Platform.OS === 'ios' ? 10 : 0}}
+                            resizeMode = 'contain'
+                            resizeMethod = 'resize'/>
+                        {this._renderRightButton()}
+                    </View>
+                    <ActivityIndicator
+                        style={[styles.centering]}
+                        color="#a9d5d1"
+                        size="large"/>
+                </View>
+            </Drawer>
+        );
+    }
+    blur() {
+        const {dataSource } = this.state;
+        dataSource && dataSource.blur();
+    }
+    focus() {
+        const {dataSource } = this.state;
+        dataSource && dataSource.focus();
+    }
+    async loadData (){
+        try {
+            const {u_id, country, deviceId } = this.props;
+            let formData = new FormData();
             // formData.append('u_id', String(user_type));
             formData.append('country', String(country));
             const config = {
@@ -283,29 +277,6 @@ class MainView extends Component {
         this.setState({
             rows: newStateArray,
         });
-        // var indexOfObj = -1
-        // for (var i = 0; i < newStateArray.length; i++) {
-            // if (newStateArray[i] == data.u_id) {
-                // indexOfObj = i
-            // }
-        // }
-        // console.log("indexOfObj:=",indexOfObj)
-        // if (indexOfObj == -1) {
-            // newStateArray.push(data.u_id);
-        // }
-
-
-        // data.checked = !data.checked;
-        // console.log("data.checked:=",data.checked)
-        // let msg=data.checked? 'you checked ':'you unchecked '
-        // // console.log("check rows:=",this.state.rows)
-        // var arrData = this.state.dataArray
-        // for (var i = 0; i < arrData.length; i++) {
-        //     if (arrData[i].u_id == data.u_id) {
-        //         // console.log("Equal")
-        //         arrData[i] = data
-        //     }
-        // }
     }
     unCheck(data){
         var newStateArray = this.state.rows.slice();
@@ -314,18 +285,8 @@ class MainView extends Component {
             newStateArray.splice(index, 1);
         }
         this.setState({
-            // dataArray: arrData,
             rows: newStateArray
         });
-            // data.checked = !data.checked;
-            // console.log("unCheck rows:=",this.state.rows)
-        // var arrData = this.state.dataArray
-        // for (var i = 0; i < arrData.length; i++) {
-        //     if (arrData[i].u_id == data.u_id) {
-        //         // console.log("Equal")
-        //         arrData[i] = data
-        //     }
-        // }
     }
     renderView() {
         if (!this.state.dataArray || this.state.dataArray.length === 0)return;
@@ -365,9 +326,6 @@ class MainView extends Component {
                 lang={lang}
             />
         );
-    }
-    sharing(product_id){
-
     }
     fetchData(){
         const {u_id, country, deviceId } = this.props;
@@ -440,16 +398,15 @@ class MainView extends Component {
         .done();
     }
     filterByCategory(selectedCategory,selectedGender){
-        const {u_id, country, user_type,rows , arrSelectedType} = this.state;
-        console.warn(arrSelectedType);
-        const { deviceId } = this.props;
+        const {u_id, user_type,rows , arrSelectedType} = this.state;
+        const { deviceId, country } = this.props;
+        let ds = new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 });
         var venderIds = this.state.rows.slice();
         if(venderIds.length == 0) {
             for (var i = 0; i < this.state.dataArray.length; i++) {
                 venderIds.push(parseInt(this.state.dataArray[i].u_id,10))
             }
         }
-        console.log("venderIds:=",venderIds)
         var selCat = [];
         for (var i = 0; i < selectedCategory.length; i++) {
             selCat.push(parseInt(selectedCategory[i],10))
@@ -460,15 +417,12 @@ class MainView extends Component {
         }
         let type_ids = 1;
         let formData = new FormData();
-        // formData.append('u_id', String(u_id));
-        // formData.append('country', String(country));
-        // formData.append('categoty_id', String(this.props.filterdBy));
-        formData.append('category_id', String(selCat));
-        formData.append('vendor_id', String(venderIds));
-        formData.append('type_id', 1);
+        formData.append('country', String(country));
+        formData.append('category_id',selCat.toString());
+        formData.append('vendor_id', venderIds.toString());
+        formData.append('type_id', String(type_ids));
         formData.append('device_uid', String(deviceId));
         formData.append('gender',String(selGen));
-        console.log("request:=",formData);
         const config = {
             method: 'POST',
             headers: {
@@ -481,9 +435,8 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                console.log("responseData.data:=",responseData.data)
                 this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.data.product),
+                    dataSource: ds.cloneWithRows(responseData.data.product),
                     status : responseData.status,
                     loaded: true,
                     refreshing: false
@@ -516,9 +469,6 @@ class MainView extends Component {
     }
     render() {
         const {u_id, country, deviceId ,lang} = this.props;
-        // console.warn(this.props.deviceId);
-        // console.warn(this.props.country);
-        this.fetchData = this.fetchData.bind(this);
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
@@ -534,7 +484,7 @@ class MainView extends Component {
                 tapToClose={true}
                 openDrawerOffset={0.2}
                 panCloseMask={0.2}
-                closedDrawerOffset={-3}
+                closedDrawerOffset={0}
                 styles={drawerStyles}
                 tweenHandler={(ratio) => ({
                     main: { opacity:(2-ratio)/2 }
@@ -662,7 +612,7 @@ class MainView extends Component {
         if (this.state.arrSelectedType.length == 1) {
             if (this.state.arrSelectedType[0] == 1) {
                 return(
-                    <View>
+                    <View style={{ marginBottom: 50}}>
                         {
                             Platform.OS === 'ios' ?
                             <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
@@ -674,11 +624,11 @@ class MainView extends Component {
                         </View>
                     </View>
                 );
-                console.log("product product product")
+                // console.log("product product product")
             } else {
-                console.log("service service service")
+                // console.log("service service service")
                 return(
-                    <View>
+                    <View style={{ marginBottom: 50}}>
                         {
                             Platform.OS === 'ios' ?
                             <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
@@ -695,7 +645,7 @@ class MainView extends Component {
         else if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
             return(
                 this.state.isFilterProduct ?
-                <View>
+                <View style={{ marginBottom: 50}}>
                     {
                         Platform.OS === 'ios' ?
                         <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
@@ -716,7 +666,7 @@ class MainView extends Component {
                     </View>
                 </View>
                 :
-                <View>
+                <View style={{ marginBottom: 50}}>
                     {
                         Platform.OS === 'ios' ?
                         <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
@@ -923,12 +873,16 @@ class MainView extends Component {
         },this.fetchDataByService() )
     }
     fetchDataByService (){
-        const {u_id, country, user_type, servicerows } = this.state;
+        const {
+            // u_id,
+            // country,
+            user_type, servicerows } = this.state;
+        const { u_id, country} = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(servicerows));
+        formData.append('service_id', servicerows.toString());
         formData.append('country', String(country));
         // formData.append('u_id', String(user_type));
-        console.log("request:=",formData)
+        // console.log("request:=",formData)
         const config = {
             method: 'POST',
             headers: {
@@ -941,7 +895,6 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                console.log("status true")
                 this.setState({
                     dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
                     status : responseData.status,
@@ -1062,7 +1015,7 @@ class MainView extends Component {
                 tapToClose={true}
                 openDrawerOffset={0.2}
                 panCloseMask={0.2}
-                closedDrawerOffset={-3}
+                closedDrawerOffset={0}
                 styles={drawerStyles}
                 tweenHandler={(ratio) => ({
                     main: { opacity:(2-ratio)/2 }
@@ -1298,7 +1251,7 @@ var styles = StyleSheet.create({
 });
 const drawerStyles = {
   drawer: { backgroundColor:'#fff', shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
-  main: {paddingLeft: 3, backgroundColor:'#fff'},
+  main: {paddingLeft: 0, backgroundColor:'#fff'},
 }
 
 const TWITTER_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg==";

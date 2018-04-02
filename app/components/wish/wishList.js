@@ -235,7 +235,7 @@ class WishList extends Component {
                 tapToClose={true}
                 openDrawerOffset={0.2}
                 panCloseMask={0.2}
-                closedDrawerOffset={-3}
+                closedDrawerOffset={0}
                 styles={drawerStyles}
                 tweenHandler={(ratio) => ({
                     main: { opacity:(2-ratio)/2 }
@@ -309,7 +309,7 @@ class WishList extends Component {
                 tapToClose={true}
                 openDrawerOffset={0.2}
                 panCloseMask={0.2}
-                closedDrawerOffset={-3}
+                closedDrawerOffset={0}
                 styles={drawerStyles}
                 tweenHandler={(ratio) => ({
                     main: { opacity:(2-ratio)/2 }
