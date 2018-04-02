@@ -532,7 +532,7 @@ class Register extends Component {
 					<View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
 
 						{
-							Platform.OS === 'ios' ? 
+							Platform.OS === 'ios' ?
 							<MapView
 							initialRegion={{
 								latitude: this.state.LATITUDE,
@@ -563,8 +563,8 @@ class Register extends Component {
 								// 		longitudeDelta: this.state.region.longitudeDelta
 								// 	}})}
 									>
-								
-								
+
+
 							</MapView.Marker>
 						</MapView>
 							:
@@ -600,16 +600,16 @@ class Register extends Component {
 								// 		longitudeDelta: this.state.region.longitudeDelta
 								// 	}})}
 									>
-								
+
 								<View style={{ position: 'absolute'}}>
 								<FontAwesome name="map-pin" size={35} color="green"/>
-								</View>			
-								
+								</View>
+
 							</MapView.Marker>
 						</MapView>
 						}
 
-						
+
 					</View>
 				</Modal>
 			</View>
@@ -717,7 +717,7 @@ class Register extends Component {
 			})
 			return false;
 		}
-		if(contact.length !== 12 ){
+		if(contact.length !== 10 ){
 			MessageBarManager.showAlert({
 				message: "Please enter 12 digit Mobile number ",
 				title:'',

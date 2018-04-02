@@ -30,8 +30,7 @@
         "pleaseenterpwd":"Please Enter Your Password",
         "passwordvalidation":"Password Must have Six Character",
         "skip":"Skip Signing",
-        "invaliduser": "invalid username and password",
-        "passsnotmatch" : "Username and Password Does not matched"
+        "invaliduser": "invalid username and password"
     },
     "forgotpassword":{
         "emailaddress":"Email Address",
@@ -234,7 +233,8 @@
         "mobile":"M",
         "edit":"Edit",
         "delete":"Delete",
-        "addrdeleted":"address deleted"
+        "addrdeleted":"address deleted",
+        "noaddress":"No Address found"
     },
     "newAddress":{
         "newaddrtitle":"Add New Address",

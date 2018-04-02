@@ -60,7 +60,7 @@ export const login = (username, password, os) => {
 					alertType: 'error',
 					title:''
 				})
-				dispatch(loginFail(new Error('passsnotmatch')));
+				dispatch(loginFail(new Error('invalid username and password')));
 			}
 		})
 		.catch(err => {

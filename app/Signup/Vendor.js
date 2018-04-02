@@ -599,7 +599,7 @@ class Vendorreg extends Component {
 				})
 				return false
 			}
-			if(contact.length !== 12){
+			if(contact.length !== 10){
 				MessageBarManager.showAlert({
 					message: "Please enter valid Mobile number ",
 					title:'',

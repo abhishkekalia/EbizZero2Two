@@ -119,13 +119,20 @@ class AddProduct extends Component {
         routes.refresh ({hideTabBar: false})
     }
    _renderLeftButton = () => {
+       const { lang} = this.props;
         return(
+            lang === 'ar' ?
+            <TouchableOpacity onPress={() => this.uploadTocloud() } style={[commonStyles.submit, { margin: 5}]} >
+                <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
+            </TouchableOpacity>
+            :
             <Text style={{color : '#fff'}}></Text>
         );
     };
    _renderRightButton = () => {
        const { lang} = this.props;
         return(
+            lang === 'ar' ? <Text style={{color : '#fff'}}></Text> :
             <TouchableOpacity onPress={() => this.uploadTocloud() } style={[commonStyles.submit, { margin: 5}]} >
             <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
             </TouchableOpacity>
