@@ -278,9 +278,8 @@ class AddressBook extends Component {
     noItemFound(){
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text>You have no Added Address </Text>
-                <TouchableOpacity onPress={()=>routes.newaddress({isFromEdit:false})}><Text>Add From here</Text></TouchableOpacity>
-               </View> );
+                <Text>{I18n.t('addressbook.noaddress', { locale: lang })} </Text>
+           </View>);
     }
 
     render() {

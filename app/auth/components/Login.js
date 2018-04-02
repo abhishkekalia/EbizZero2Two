@@ -104,6 +104,7 @@ class Login extends Component {
         }).done();
     }
 	Forgotpassword(){
+		this.setState({ isForgotPassword:  false});
 		const { forgotemail } = this.state;
 		const { language} = this.props,
 		align = (language === 'ar') ?  'right': 'left';

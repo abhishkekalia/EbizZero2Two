@@ -173,7 +173,7 @@ class Profile extends Component {
 						</View>
 					</View>
 				</View>
-				<Text style={{textAlign: textline, alignSelf: 'center'}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
+				<Text style={{textAlign: textline}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
 				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}/>
 				<TouchableOpacity
                 onPress={()=>{ Utils.logout()

@@ -49,7 +49,7 @@ class WelcomeScreen extends Component {
     }
     handlePress(i) {
         const { dataSource , countries} = this.state;
-        console.log(i)
+        console.log("after selected",i);
         if(i === 0){
             this.setState({
                 selectCountry: '',
@@ -102,7 +102,7 @@ class WelcomeScreen extends Component {
             }
         }
     }
-    componentwillMount(){
+    componentWillMount(){
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
         NetInfo.isConnected.fetch().done(
             (isConnected) => { this.setState({ netStatus: isConnected }); }
@@ -157,7 +157,7 @@ class WelcomeScreen extends Component {
                     dataSource : responseData.response.data,
                     loaded: true
                 })
-            }, 1000);
+            }, 10);
         })
         .catch((error) => {
             console.log(error);

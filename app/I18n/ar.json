@@ -231,7 +231,8 @@
         "mobile":"رقم الهاتف",
         "edit":"تعديل",
         "delete":"حذف",
-        "addrdeleted":"تم مسح العنوان"
+        "addrdeleted":"تم مسح العنوان",
+        "noaddress":"No Address found"
     },
     "newAddress":{
         "newaddrtitle":"إضافة عنوان جديد",

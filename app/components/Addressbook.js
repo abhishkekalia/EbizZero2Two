@@ -246,11 +246,11 @@ class AddressBook extends Component {
         else this.onRemove(data)
     }
     noItemFound(){
+        const { lang} = this.props;
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
-                <Text>You have no Added Address </Text>
-                <TouchableOpacity onPress={()=>routes.newaddress()}><Text>Add From here</Text></TouchableOpacity>
-               </View> );
+                <Text>{I18n.t('addressbook.noaddress', { locale: lang })} </Text>
+           </View> );
     }
 
     render() {
