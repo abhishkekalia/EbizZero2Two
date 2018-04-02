@@ -228,58 +228,60 @@ class Login extends Component {
 					</Text>
 				</View>
 				<View style={{ padding : 20, top : 20}}>
-					<View style ={[commonStyles.inputcontent,{borderColor:'#fbcdc5',borderWidth:0.5}]}>
-						<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5', flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row'}]}>
-							<Ionicons
-								name="ios-mail-outline"
-								size={30}
-								color="#fbcdc5"
-								style= {{ padding: 10, width: '20%'}}
-								/>
-							<TextInput
-								style={[commonStyles.inputusername,{ textAlign: (this.props.language == 'ar') ? 'right' : 'left', width: '80%'}]}
-								onBlur={ () => this.onBlurUser() }
-								value={this.state.email}
-								underlineColorAndroid = 'transparent'
-								autoCorrect={false}
-								keyboardType={'email-address'}
-								placeholder={I18n.t('login.emailaddress', { locale: language })}
-								maxLength={140}
-								onSubmitEditing={() => {
-									this.focusNextField('two');
-								}}
-						  		returnKeyType={ "next" }
-						 		ref={ input => {
-									this.inputs['one'] = input;
-								}}
-								onChangeText={(email) => this.setState({email})}
-								/>
+					<ScrollView keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false}>
+						<View style ={[commonStyles.inputcontent,{borderColor:'#fbcdc5',borderWidth:0.5}]}>
+							<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5', flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row'}]}>
+								<Ionicons
+									name="ios-mail-outline"
+									size={30}
+									color="#fbcdc5"
+									style= {{ padding: 10, width: '20%'}}
+									/>
+								<TextInput
+									style={[commonStyles.inputusername,{ textAlign: (this.props.language == 'ar') ? 'right' : 'left', width: '80%'}]}
+									onBlur={ () => this.onBlurUser() }
+									value={this.state.email}
+									underlineColorAndroid = 'transparent'
+									autoCorrect={false}
+									keyboardType={'email-address'}
+									placeholder={I18n.t('login.emailaddress', { locale: language })}
+									maxLength={140}
+									onSubmitEditing={() => {
+										this.focusNextField('two');
+									}}
+									returnKeyType={ "next" }
+									ref={ input => {
+										this.inputs['one'] = input;
+									}}
+									onChangeText={(email) => this.setState({email})}
+									/>
+							</View>
+							<View style ={[commonStyles.iconpassword, {flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row'}]}>
+								<Ionicons
+									name="ios-lock-outline"
+									size={30}
+									color="#fbcdc5"
+									style= {{ padding: 10, width: '20%'}}
+									/>
+								<TextInput
+									style={[commonStyles.inputpassword,{textAlign: (this.props.language == 'ar') ? 'right' : 'left',  width: '80%'}]}
+									value={this.state.password}
+									underlineColorAndroid = 'transparent'
+									autoCorrect={false}
+									placeholder={I18n.t('login.password', { locale: language })}
+									secureTextEntry
+									maxLength={140}
+									onSubmitEditing={() => {
+										this.onSubmit();
+									}}
+									returnKeyType={ "done" }
+									ref={ input => {
+										this.inputs['two'] = input;
+									}}
+									onChangeText={(password) => this.setState({password})}/>
+							</View>
 						</View>
-						<View style ={[commonStyles.iconpassword, {flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row'}]}>
-							<Ionicons
-								name="ios-lock-outline"
-								size={30}
-								color="#fbcdc5"
-								style= {{ padding: 10, width: '20%'}}
-								/>
-							<TextInput
-								style={[commonStyles.inputpassword,{textAlign: (this.props.language == 'ar') ? 'right' : 'left',  width: '80%'}]}
-								value={this.state.password}
-								underlineColorAndroid = 'transparent'
-								autoCorrect={false}
-								placeholder={I18n.t('login.password', { locale: language })}
-								secureTextEntry
-								maxLength={140}
-								onSubmitEditing={() => {
-									this.onSubmit();
-								}}
-								returnKeyType={ "done" }
-								ref={ input => {
-									this.inputs['two'] = input;
-								}}
-								onChangeText={(password) => this.setState({password})}/>
-						</View>
-					</View>
+					</ScrollView>
 					<TouchableOpacity style ={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.onSubmit()}>
 						<Text style = {{color:"#FFFFFF"}}>{I18n.t('login.login_btn', { locale: language })}</Text>
 					</TouchableOpacity>
@@ -303,6 +305,7 @@ class Login extends Component {
 							{errorStatus ? <Text onPress = {()=> this.setState({ visibleModal : false})} style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
 						</View>
 					</Modal>
+
 				</View>
 				<View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: 10, paddingTop: 10 }}>
 					<View style={{flexDirection:(this.props.language == 'ar') ? 'row-reverse' : 'row', width:'100%', justifyContent:'center'}}>

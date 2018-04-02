@@ -30,8 +30,8 @@
         "pleaseenterpwd":"Please Enter Your Password",
         "passwordvalidation":"Password Must have Six Character",
         "skip":"Skip Signing",
-        "invaliduser": "invalid username and password",
-        "passsnotmatch" : "Username and Password Does not matched"
+        "invaliduser": "invalid username and password"
+        
     },
     "forgotpassword":{
         "emailaddress":"Email Address",
