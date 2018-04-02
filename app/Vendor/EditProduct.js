@@ -777,6 +777,14 @@ class UpdateQuan extends Component {
           editSizeModal:true
       });
     }
+    newSize(){
+      this.setState({
+          size_id:0,
+          size:"",
+          quantity:"",
+          editSizeModal:true
+      });
+    }
     updateQuantity(){
         let arr2 = [];
         arr2.push({
@@ -808,7 +816,7 @@ class UpdateQuan extends Component {
                             <Text style={{ alignSelf: 'center'}}> Quantity </Text>
                             <Text style={{ alignSelf: 'center'}}> Action </Text>
                                 <TouchableOpacity
-                                onPress={() => this.editSize(1, "", "")}>
+                                onPress={() => this.newSize()}>
                                     <Icon style={{padding:5}} name='add' size={25} color="#a9d5d1" />
                                 </TouchableOpacity>
 

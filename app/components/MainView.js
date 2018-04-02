@@ -89,7 +89,7 @@ class MainView extends Component {
         .done();
         EventEmitter.removeAllListeners("applyCategoryFilter");
         EventEmitter.on("applyCategoryFilter", (value)=>{
-            console.log("applyCategoryFilter", value);
+            // console.log("applyCategoryFilter", value);
             if (value.selCategory.length > 0) {
                 this.setState({
                     loaded:false,
