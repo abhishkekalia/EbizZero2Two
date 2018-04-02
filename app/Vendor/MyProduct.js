@@ -43,6 +43,7 @@ class MyProduct extends Component {
     componentDidMount(){
         this.setState({
             dataSource: this.props.dataSource,
+            productnames:this.props.productnames,
             isLoading : this.props.status
         });
     }

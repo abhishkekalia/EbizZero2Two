@@ -19,7 +19,7 @@ import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import Icon from 'react-native-vector-icons/Ionicons';
 import api from "app/Api/api";
-
+import EventEmitter from "react-native-eventemitter";
 const { width, height } = Dimensions.get('window')
 
 class MyService extends Component {
@@ -46,13 +46,6 @@ class MyService extends Component {
             isLoading : nextProps.status
         });
     }
-    // shouldComponentUpdate(nextProps) {
-    //     console.warn(nextProps.dataSource);
-    //     this.setState({
-    //         dataSource: nextProps.dataSource,
-    //         isLoading : nextProps.status
-    //     });
-    // }
     componentWillMount() {
         routes.refresh({ right: this._renderRightButton, left: this._renderLeftButton , hideNavBar : true});
     }
@@ -66,89 +59,6 @@ class MyService extends Component {
             <Text style={{color : '#fff'}}></Text>
         );
     };
-    // async getKey() {
-    //     try {
-    //         const value = await AsyncStorage.getItem('data');
-    //         var response = JSON.parse(value);
-    //         this.setState({
-    //             u_id: response.userdetail.u_id ,
-    //             country: response.userdetail.country
-    //         });
-    //     } catch (error) {
-    //         console.log("Error retrieving data" + error);
-    //     }
-    // }
-    //
-    // fetchData(){
-    //     const {u_id, country , lang} = this.props;
-    //     align = (lang === 'ar') ?  'right': 'left';
-    //     // let formData = new FormData();
-    //     // formData.append('u_id', String(u_id));
-    //     // formData.append('country', String(country));
-    //     // const config = {
-    //     //     method: 'POST',
-    //     //     headers: {
-    //     //         'Accept': 'application/json',
-    //     //         'Content-Type': 'multipart/form-data;',
-    //     //     },
-    //     //     body: formData,
-    //     // }
-    //     // fetch(Utils.gurl('serviceList'), config)
-    //     // .then((response) => response.json())
-    //     api.serviceList( u_id, country)
-    //     .then((responseData) => {
-    //         if(responseData.status){
-    //             this.setState({
-    //                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-    //                 isLoading : false
-    //             },()=>{
-    //                 this.arrayholder = responseData.data ;
-    //             });
-    //         }
-    //         else{
-    //             this.setState({
-    //                 isLoading : false
-    //             })
-    //         }
-    //     })
-    //     .catch((errorMessage, statusCode) => {
-    //         MessageBarManager.showAlert({
-    //             message: I18n.t('vendorservice.apierr', { locale: lang }),
-    //             title:'',
-    //             alertType: 'extra',
-    //             titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-    //             messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-    //         })
-    //     })
-    //     .done();
-    // }
-    // SearchFilterFunction(text){
-    //     const { lang } =this.props
-    //
-    //     const newData = this.arrayholder.filter(function(item){
-    //         const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
-    //         const textData = text.toUpperCase()
-    //         return itemData.indexOf(textData) > -1
-    //     })
-    //     this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(newData),
-    //         text: text
-    //     })
-    // }
-    // removeFilterFunction(){
-    //     const { lang } =this.props
-    //     let text = ""
-    //     const newData = this.arrayholder.filter(function(item){
-    //         const itemData = lang === 'ar'?  item.service_name_in_arabic.toUpperCase() : item.service_name.toUpperCase()
-    //         const textData = text.toUpperCase()
-    //         return itemData.indexOf(textData) > -1
-    //     })
-    //     this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(newData),
-    //         text: text
-    //     })
-    // }
-
     ListViewItemSeparator = () => {
         return (
             <View
@@ -157,6 +67,14 @@ class MyService extends Component {
                 width: "100%",
               }}
             />
+        );
+    }
+    noItemFound(){
+        const { lang} = this.props;
+        return (
+            <View style={{ justifyContent:'center', alignItems:'center'}}>
+                <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
+            </View>
         );
     }
 
@@ -194,9 +112,10 @@ class MyService extends Component {
                 renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
+            let data = (this.state.dataSource.getRowCount() < 1) ? this.noItemFound() :listView
         return (
         <View style={{paddingBottom : 53, backgroundColor: 'rgba(248,248,248,1)'}}>
-            {listView}
+            {data}
         </View>
         );
     }
@@ -298,22 +217,20 @@ class Header extends Component{
             isLoading : true
         }
     }
-
-  render() {
-      const { lang } =this.props,
-      direction = lang == 'ar'? 'row-reverse': 'row',
-      textline = lang == 'ar'? 'right': 'left';
-
-    return (
-      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc', flexDirection: direction}]}>
-          <View style={{ flexDirection : direction, height: 40}}>
-              <Text style={{color:"#fbcdc5", fontSize: 12, textAlign: textline, alignSelf: 'center'}}> {I18n.t('vendorservice.categories', { locale: lang })}</Text>
-              <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline ,  alignSelf: 'center'}}> :</Text>
-              <Text style={{ color:"#222", fontSize: 12,textAlign: textline, alignSelf: 'center'}}>{ this.props.service_type ? this.props.service_type: undefined} </Text>
-          </View>
-      </View>
-    );
-  }
+    render() {
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+        return (
+            <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc', flexDirection: direction}]}>
+                <View style={{ flexDirection : direction, height: 40}}>
+                    <Text style={{color:"#fbcdc5", fontSize: 12, textAlign: textline, alignSelf: 'center'}}> {I18n.t('vendorservice.categories', { locale: lang })}</Text>
+                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline ,  alignSelf: 'center'}}> :</Text>
+                    <Text style={{ color:"#222", fontSize: 12,textAlign: textline, alignSelf: 'center'}}>{ this.props.service_type ? this.props.service_type: undefined} </Text>
+                </View>
+            </View>
+        );
+    }
 }
 
 class Footer extends Component{
@@ -327,9 +244,9 @@ class Footer extends Component{
         api.UpdateServiceStatus(service_id, approv_code)
         .then((responseData) => {
             if(responseData.response.status){
-                this.props.calldata();
+                EventEmitter.emit("serviceList")
             }else{
-                this.props.calldata();
+                EventEmitter.emit("serviceList")
             }
         })
         .catch((error) => {
@@ -342,13 +259,11 @@ class Footer extends Component{
             is_active : this.props.is_active
         })
     }
-
     render(){
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
-
-         let approved
+        let approved
         let approv_code
         if(this.state.is_active === '1'){
             approved = I18n.t('vendorservice.deactivate', { locale: lang });
@@ -357,21 +272,18 @@ class Footer extends Component{
             approved = I18n.t('vendorservice.activate', { locale: lang });
             approv_code = '1'
         }
-
         return(
-        <View style={[styles.bottom, {flexDirection: direction}]}>
-                    <TouchableOpacity
+            <View style={[styles.bottom, {flexDirection: direction}]}>
+                <TouchableOpacity
                     style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
                     onPress={this.props.calllback}>
-                        <Text style={{ color :'#fff', fontSize: 12}}>{I18n.t('vendorservice.previewbtn', { locale: lang })}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
-                        onPress={()=>this.serviceActiveDeactive(this.props.service_id, approv_code)}
-                        >
-                        <Text style={{ color :'#fff', fontSize : 12, textAlign: textline}}>{approved}</Text>
-                    </TouchableOpacity>
-
-                </View>
+                    <Text style={{ color :'#fff', fontSize: 12}}>{I18n.t('vendorservice.previewbtn', { locale: lang })}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
+                    onPress={()=>this.serviceActiveDeactive(this.props.service_id, approv_code)}>
+                    <Text style={{ color :'#fff', fontSize : 12, textAlign: textline}}>{approved}</Text>
+                </TouchableOpacity>
+            </View>
         )
     }
 }
@@ -380,14 +292,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         padding : 10
     },
-
     row: {
         marginTop : 1
     },
     qtybutton: {
         paddingLeft: 10,
         paddingRight: 10,
-
         alignItems: 'center',
         borderWidth : 0.5,
         borderColor : "#ccc",
@@ -399,8 +309,6 @@ const styles = StyleSheet.create({
         height:40,
         padding :10
     },
-
-
     lowerButton :{
         // alignItems : 'center',
         borderWidth : 0.5,
@@ -408,19 +316,16 @@ const styles = StyleSheet.create({
         padding : 5,
         borderRadius : 5
     },
-
     thumb: {
         width   : "20%",
         height  :width/5 ,
     },
-
     textQue :{
         flex: 1,
         fontSize: 18,
         fontWeight: '400',
         left : 5
     },
-
     centering: {
         flex:1,
         alignItems: 'center',
@@ -432,7 +337,6 @@ const styles = StyleSheet.create({
         backgroundColor : "transparent",
         padding : 5
     },
-
     headline: {
         paddingTop : 10,
         paddingBottom : 10,
@@ -449,9 +353,6 @@ const styles = StyleSheet.create({
     },
     TextInputStyleClass:{
         height: 40,
-        // borderWidth: 1,
-        // borderColor: '#ccc',
-        // borderRadius: 7 ,
         backgroundColor : "transparent"
     }
 });
