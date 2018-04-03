@@ -67,7 +67,8 @@
         "pleaseselectcountry":"Plese Select Country",
         "pleaseenteraddr":"Plese Enter Address",
         "pleaseenterusertype":"Plese Select User Type",
-        "greetings":"Congratulations You Are Successfully Registered",
+        "greetingsmsg":"Congratulations You Are Successfully Registered",
+        "greetings":"Otp has been sent to registered Eamil kindly check your email",
         "passwordvalidation":"Please enter atleast 6 character password",
         "pickfromMap": "Pick Address From Map"
     },
