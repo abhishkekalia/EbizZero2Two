@@ -28,7 +28,7 @@ export default class Countmanager extends Component {
 
     updateQuantity(){
         const { Quentity } = this.state;
-        const { u_id, product_id , updatetype, country,deviceId} = this.props;
+        const { u_id, product_id , updatetype, country , deviceId} = this.props;
         const { language} = this.props,
 		align = (language === 'ar') ?  'right': 'left';
 
