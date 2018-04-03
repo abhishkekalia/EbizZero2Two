@@ -719,7 +719,7 @@ class Register extends Component {
 		}
 		if(contact.length !== 10 ){
 			MessageBarManager.showAlert({
-				message: "Please enter 12 digit Mobile number ",
+				message: "Please enter 10 digit Mobile number ",
 				title:'',
 				alertType: 'extra',
 				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
