@@ -478,7 +478,15 @@ class Register extends Component {
 					transparent={false}
 					visible={this.state.otpVarification}
 					onRequestClose={() => this.setState({ otpVarification :false})}>
-					<View style={{ flex: 0.4, backgroundColor: "#fff", justifyContent: 'center', alignItems: 'center', borderRadius: 10}}>
+					<View style={{
+							flex: 1,
+							flexDirection: 'column',
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: "transparent"}
+						}>
+						<Text style={{ fontSize: 12, color: "#6969"}}>{I18n.t('userregister.greetings', { locale: lang })}</Text>
+
 						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center'}}>
 							<Text style={{ fontSize: 15, color: "#6969"}}>{I18n.t('userregister.otplabel', { locale: lang })}</Text>
 							<TextInput
@@ -494,9 +502,6 @@ class Register extends Component {
 								autoCorrect={false}
 								placeholder={I18n.t('userregister.otpplchldr', { locale: lang })}
 								maxLength={140}
-								onSubmitEditing={(event) => {
-									// this.focusNextField('four');
-								}}
 								returnKeyType={ "done" }
 								onChangeText={ (otp) => this.setState({ otp }) }/>
 						</View>
@@ -563,12 +568,9 @@ class Register extends Component {
 								// 		longitudeDelta: this.state.region.longitudeDelta
 								// 	}})}
 									>
-
-
 							</MapView.Marker>
 						</MapView>
 							:
-
 							<MapView
 							provider={PROVIDER_GOOGLE}
 							initialRegion={{
@@ -608,24 +610,25 @@ class Register extends Component {
 							</MapView.Marker>
 						</MapView>
 						}
-
-
 					</View>
 				</Modal>
 			</View>
 		);
 	}
-	varifyOtp(u_id){
+	varifyOtp(){
 		this.OtpVerification()
-		.then(()=> this.openOtpVarification())
+		// .then(()=> this.openOtpVarification())
+		// .then(()=>routes.loginPage())
 		.catch((error) => {
 			console.log(error);
 		})
 		// .done();
 	}
 	async OtpVerification(){
+		const { lang } = this.props,
+		align = lang === 'ar' ? "right" : "left";
 		try {
-			const { otp,  u_id} = this.state;
+			const { otp, u_id} = this.state;
 			let formData = new FormData();
 			formData.append('u_id', String(u_id));
 			formData.append('otp', String(otp));
@@ -640,7 +643,19 @@ class Register extends Component {
 			fetch(Utils.gurl('OtpVerification'), config)
 			.then((response) => response.json())
 			.then((responseData) => {
-				console.warn(responseData);
+				if(responseData.response.status){
+					this.openOtpVarification()
+					routes.loginPage()
+				}else{
+					MessageBarManager.showAlert({
+						message: "Otp Varification Failed",
+						title:'',
+						alertType: 'extra',
+						titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+						messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+					})
+					this.openOtpVarification()
+				}
 			})
 			.catch((error) => {
 				console.log(error);
@@ -719,7 +734,7 @@ class Register extends Component {
 		}
 		if(contact.length !== 10 ){
 			MessageBarManager.showAlert({
-				message: "Please enter 12 digit Mobile number ",
+				message: "Please enter 10 digit Mobile number ",
 				title:'',
 				alertType: 'extra',
 				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -771,8 +786,8 @@ class Register extends Component {
 	}
 	register (){
 		onSubmit()
-		.then(()=>this.openOtpVarification())
-		.then(()=>routes.loginPage())
+		// .then(()=>this.openOtpVarification())
+		// .then(()=>routes.loginPage())
 		.done();
 	}
 	async onSubmit() {
@@ -812,7 +827,7 @@ class Register extends Component {
 				.then((responseData) => {
 					// routes.loginPage()
 					if(responseData.response.status){
-						let u_id : responseData.response.data.u_id
+						let u_id = responseData.response.data.u_id
 						MessageBarManager.showAlert({
 							message: I18n.t('userregister.greetings', { locale: lang }),
 							title:'',

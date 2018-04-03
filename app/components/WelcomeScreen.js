@@ -23,8 +23,7 @@ const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
 const countryTitle = 'Select Country'
 const deliveryTitle = 'Select Deliveryarea'
-const { width, height } = Dimensions.get('window')
-
+const { width, height } = Dimensions.get('window');
 class WelcomeScreen extends Component {
     constructor(props) {
         super(props);
@@ -38,6 +37,7 @@ class WelcomeScreen extends Component {
             refreshing: false,
             loaded: false,
             deliveryarea : '',
+            SelectedcountryId: ""
         }
         this.handlePress = this.handlePress.bind(this);
         this.handleDeliveryPress = this.handleDeliveryPress.bind(this);
@@ -61,13 +61,14 @@ class WelcomeScreen extends Component {
             });
             let countryId = data[0].country_id
             this.setState({
-                selectCountry: i.toString()
+                selectCountry: i.toString(),
+                SelectedcountryId: countryId
             })
-            data = dataSource.filter((item)=>{
-                return item.country_name == countries[i];
-            }).map((item)=>{
-                return item;
-            });
+            // data = dataSource.filter((item)=>{
+            //     return item.country_name == countries[i];
+            // }).map((item)=>{
+            //     return item;
+            // });
             var source_data = data[0].city,
             length = data[0].city.length,
             city_list= []
@@ -80,7 +81,6 @@ class WelcomeScreen extends Component {
             this.setState({
                 deliveryareas: city_list
             })
-            this.props.SetCountry(countryId)
         }
     }
     showDelivery() {
@@ -196,8 +196,9 @@ class WelcomeScreen extends Component {
         );
     }
     gotologin(){
-        const { deliveryarea, selectCountry } = this.state
+        const { deliveryarea, selectCountry , SelectedcountryId} = this.state
         if (deliveryarea.length && selectCountry.length ) {
+            this.props.SetCountry(SelectedcountryId)
             Actions.loginPage();
         }
     }

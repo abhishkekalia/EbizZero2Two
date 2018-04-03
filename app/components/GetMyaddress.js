@@ -276,6 +276,9 @@ class AddressBook extends Component {
         else this.onRemove(data)
     }
     noItemFound(){
+        const { lang } =this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text>{I18n.t('addressbook.noaddress', { locale: lang })} </Text>

@@ -17,7 +17,6 @@ import Entypo from 'react-native-vector-icons/FontAwesome';
 import Utils from 'app/common/Utils';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 const { width, height } = Dimensions.get('window');
-
 class ScheduleCalender extends Component {
 	constructor(props) {
     	super(props);
@@ -75,6 +74,10 @@ class ScheduleCalender extends Component {
 					this.setState ({
 						ScheduleDate: arrNew,
 						status: responseData.status
+					})
+				}else{
+					this.setState ({
+						status: true
 					})
 				}
 			})

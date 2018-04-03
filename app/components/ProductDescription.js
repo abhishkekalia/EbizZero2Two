@@ -250,10 +250,12 @@ class ProductDescription extends Component {
         }
     }
     fetchData(){
-        const {u_id, country, user_type } = this.state;
+        const {user_type } = this.state;
+        const {u_id, country } = this.props;
+
         let formData = new FormData();
-        formData.append('u_id', String(user_type));
-        formData.append('country', String(country));
+        // formData.append('u_id', String(user_type));
+        // formData.append('country', String(country));
         formData.append('product_id', String(this.props.product_id));
 
         const config = {
