@@ -166,7 +166,7 @@ class Menu extends React.Component {
                     style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.deals', { locale: lang })}</Text>
                     <View style={styles.starsix}>
                     <TriangleUp style={styles.starSixUp} />
-                    <Text style={{position: 'absolute',textAlign: 'center',zIndex: 2, color: "#fff", fontSize: 8, alignSelf: 'center'}}>OFF</Text>
+                    <Text style={{position: 'absolute',textAlign: 'center',zIndex: 2, color: "#fff", fontSize: 8, alignSelf: 'center', backgroundColor:'transparent'}}>OFF</Text>
                     <TriangleDown style={styles.starSixDown} />
                     </View>
                 </View>
