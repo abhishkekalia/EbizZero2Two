@@ -7,7 +7,8 @@ import {
     TextInput,
     ListView,
     Dimensions,
-    Animated
+    Animated,
+    Platform,
 } from 'react-native';
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import AddService from "./AddService";
@@ -161,11 +162,12 @@ class Service extends Component {
                 {
                     this.state.customStyleIndex === 0 ?
                     this.state.ShowSearch ?
-                    <Animated.View style={{shadowColor: "#000", height: 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center', width: width}}>
+                    <Animated.View style={{shadowColor: "#000", height: Platform.OS === 'ios' ? 64 : 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center', width: width}}>
                         <View style={{
                                 flexDirection: direction,
                                 justifyContent: 'space-between',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                marginTop: Platform.OS === 'ios' ? 14 : 0,
                                 // borderWidth: StyleSheet.hairlineWidth,
                                 // borderColor: '#fff',
                                 // borderRadius: 7
@@ -182,7 +184,7 @@ class Service extends Component {
                                     <Icon size={20} color="#fff" name="ios-arrow-back"  style={{transform: lang == 'ar'? [{ rotate: '180deg'}] : [{ rotate: '0deg'}]}}/>
                                 </TouchableOpacity>
                                 <TextInput
-                                    style={{ width: "80%", height: 40, alignSelf: 'center', textAlign: textline, color: "#fff", borderWidth: StyleSheet.hairlineWidth, borderColor: '#fff', borderRadius: 20}}
+                                    style={{ width: "80%", height: 40, alignSelf: 'center', textAlign: textline, color: "#fff", borderWidth: StyleSheet.hairlineWidth, borderColor: '#fff', borderRadius: 20, paddingLeft:15,}}
                                     onChangeText={(text) => this.SearchFilterFunction(text)}
                                     placeholderTextColor="#fff"
                                     value={this.state.text}
@@ -205,12 +207,12 @@ class Service extends Component {
                                 </TouchableOpacity>
                         </View>
                     </Animated.View> :
-                    <View style={{ shadowColor: "#000",shadowOffset:{height: 0.5}, shadowRadius: 0.5, height: 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center', width: width}}>
+                    <View style={{ shadowColor: "#000",shadowOffset:{height: 0.5}, shadowRadius: 0.5, height: Platform.OS === 'ios' ? 64 : 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center', width: width}}>
                         <View style={{ width:"20%" }}/>
                             <View style={{ width:"60%",justifyContent: 'center',alignItems: 'center'}}>
-                            <Text style={{ color: "#fff", fontSize: 20, fontWeight: 'bold'}}>{I18n.t("vendorservice.serviceTitle", { locale: lang })}</Text>
+                            <Text style={{ color: "#fff", fontSize: 20, fontWeight: 'bold',paddingTop: Platform.OS === 'ios' ? 7 : 0}}>{I18n.t("vendorservice.serviceTitle", { locale: lang })}</Text>
                             </View>
-                            <View style={{ flexDirection:direction, width: "20%"}}>
+                            <View style={{ flexDirection:direction, width: "20%",paddingTop: Platform.OS === 'ios' ? 7 : 0}}>
                                 <TouchableOpacity style={{
                                         justifyContent: 'center',
                                         alignItems: 'center',
