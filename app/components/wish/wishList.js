@@ -94,7 +94,7 @@ class WishList extends Component {
         let formData = new FormData();
         formData.append('device_uid', String(deviceId));
         formData.append('country', String(country));
-
+        console.log(formData);
         const config = {
             method: 'POST',
             headers: {
@@ -448,10 +448,10 @@ class WishList extends Component {
                                 <Text style={{fontSize: 13 ,alignSelf: 'center'}}> : </Text>
                                 <Countmanager
                                 quantity={data.quantity}
-                                u_id={this.state.u_id}
+                                u_id={this.props.u_id}
                                 product_id={data.product_id}
                                 updatetype={"0"}
-                                country={this.state.country}
+                                country={this.props.country}
                                 deviceId={deviceId}
                                 callback={this.refreshfromCount.bind(this)}
                                 />
