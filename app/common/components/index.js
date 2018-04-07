@@ -1,9 +1,9 @@
-import Button from './Button';
+import SizeButton from './SizeButton';
 import Footer from './Footer';
 import Loader from './Loader';
 
 export {
-	Button,
+	SizeButton,
 	Footer,
 	Loader
 };

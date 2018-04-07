@@ -79,15 +79,15 @@ class Menu extends React.Component {
                     {
                         u_id == undefined ?
                         <View style={{ height: "85%", width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
-                            <TouchableOpacity onPress={Actions.registerPage} style={{alignSelf: 'center'}} >
+                            <TouchableOpacity onPress={Actions.registerPage} style={{alignSelf: 'center', borderRadius: 10, borderWidth :1, backgroundColor: '#a9d5d1', borderColor:"#fff"}} >
                                 <Text style={styles.signinbtn}>{I18n.t('sidemenu.signup', { locale: lang })}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={Actions.profile} style={styles.username}>
                                 <View style= {styles.guest}>
-                                    <Zocial name='guest' color="#000" size={15} />
+                                    <Zocial name='guest' color="#fff" size={15} />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity  onPress={Actions.loginPage} style={{alignSelf: 'center'}}>
+                            <TouchableOpacity  onPress={Actions.loginPage} style={{alignSelf: 'center', borderRadius: 10, borderWidth :1, backgroundColor: '#a9d5d1', borderColor:"#fff"}} >
                                 <Text style={styles.signinbtn}>{I18n.t('sidemenu.login', { locale: lang })}</Text>
                             </TouchableOpacity>
                         </View>
@@ -213,19 +213,11 @@ class Menu extends React.Component {
                     style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.rateus', { locale: lang })}</Text>
                     */
                 }
-                {
-                    u_id == undefined ? <Text/>
-                    :
+
                     <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
-                }
-                {
-                        u_id == undefined ?
-                        <Text/>
-                        :
                         <Text
                             onPress={()=>this.postad()}
                             style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
-                }
                 {
                     u_id == undefined ? <Text/>
                     :
@@ -379,15 +371,11 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     signinbtn:{
-
         padding:5,
         marginLeft: 10,
         marginRight: 10,
-        borderRadius: 10,
         height : 30,
-        textAlign: 'center',
         color: 'white',
-        backgroundColor: '#a9d5d1',
     },
     avatar: {
         width :60,

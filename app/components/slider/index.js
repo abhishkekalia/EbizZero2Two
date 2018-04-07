@@ -14,6 +14,7 @@ import Utils from 'app/common/Utils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { MessageBarManager } from 'react-native-message-bar';
+import I18n from 'react-native-i18n';
 
 const {width,height} = Dimensions.get('window');
 
@@ -103,14 +104,14 @@ export default class Slider extends Component<{}> {
         }
     }
     addtoWishlist ( ){
-        const {u_id, country, product_id } = this.props;
-        const { language} = this.props,
-		align = (language === 'ar') ?  'right': 'left';
-
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        formData.append('product_id', String(product_id));
+      const {u_id, country, product_id, deviceId, lang} = this.props;
+      let un_id= (u_id === undefined) ? '' : u_id,
+      align = (lang === 'ar') ?  'right': 'left';
+      let formData = new FormData();
+      formData.append('u_id', String(un_id));
+      formData.append('country', String(country));
+      formData.append('product_id', String(product_id));
+      formData.append('device_uid', String(deviceId));
         const config = {
                 method: 'POST',
                 headers: {
@@ -124,7 +125,7 @@ export default class Slider extends Component<{}> {
         .then((responseData) => {
            if(responseData.status){
                 MessageBarManager.showAlert({
-                    message: I18n.t('home.wishlistmsg1', { locale: language }),
+                    message: I18n.t('home.wishlistmsg1', { locale: lang }),
                     alertType: 'extra',
     				title:'',
     				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -141,14 +142,13 @@ export default class Slider extends Component<{}> {
 
     }
     removeToWishlist (){
-        const {u_id, country, product_id } = this.props;
-        const { language} = this.props,
-		align = (language === 'ar') ?  'right': 'left';
-
+      const {u_id, country, product_id, deviceId, lang} = this.props;
+	       align = (lang === 'ar') ?  'right': 'left';
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
+        formData.append('device_uid', String(deviceId));
         const config = {
                 method: 'POST',
                 headers: {
@@ -161,7 +161,7 @@ export default class Slider extends Component<{}> {
         .then((response) => response.json())
         .then((responseData) => {
             MessageBarManager.showAlert({
-                message: I18n.t('home.wishlistmsg2', { locale: language }),
+                message: I18n.t('home.wishlistmsg2', { locale: lang }),
                 alertType: 'extra',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
