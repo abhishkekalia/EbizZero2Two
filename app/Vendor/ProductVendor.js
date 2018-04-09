@@ -28,7 +28,6 @@ import Share, {ShareSheet} from 'react-native-share';
 import {CirclesLoader} from 'react-native-indicator';
 import EventEmitter from "react-native-eventemitter";
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 
@@ -102,6 +101,7 @@ class ProductVendor extends Component {
             ScheduleDate : {},
             dateSelected: "",
             service_date: "",
+            scheduleTime: "",
             BookingTime : ["5.30 AM",],
             calanderShow : false
         }
@@ -263,19 +263,17 @@ class ProductVendor extends Component {
         return true
     }
     validateSlot(time){
-
         const {dateSelected,ScheduleDate} = this.state;
         let timeString = this.state.BookingTime;
 
         if(ScheduleDate !== {})
         {
             let dt = new Date();
-
             let currentdate= dt.getFullYear() +'-'+ ((dt.getMonth() + 1) < 10 ? ('0' + parseInt(dt.getMonth()+1)) : parseInt(dt.getMonth()+1))  + '-'+ dt.getDate();
                 console.log(currentdate);
-            ScheduleDate.forEach(function (item) {
-                console.log(item);
-            });
+            // ScheduleDate.forEach(function (item) {
+            //     console.log(item);
+            // });
             for (i=0;i< this.state.BookingTime.length;i++) {
                 var obj = { selected: true, selectedColor: '#a9d5d1'};
                 let strTime = timeString[i]
@@ -290,6 +288,7 @@ class ProductVendor extends Component {
                     return false;
                 }
             }
+            return true;
         }
         return true;
     }
@@ -308,14 +307,16 @@ class ProductVendor extends Component {
             .done()
     }
     async addToOrder(value){
-        const { u_id, country, date_in, service_provider_id} = this.state;
-        currentdate = date_in + ' '+ new Date().toLocaleTimeString();
+        const { u_id, country, date_in, service_provider_id, service_date, scheduleTime} = this.state;
+        currentdate = service_date + ' '+ new Date().toLocaleTimeString();
         try {
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('service_id', String(this.props.service_id));
             formData.append('service_datetime', String(currentdate));
+            // formData.append('service_date', String(service_date));
+            // formData.append('service_time', String(scheduleTime));
             formData.append('address_id', String(value));
             formData.append('service_provider_id', String(service_provider_id));
             formData.append('amount', String(this.props.special_price));
@@ -388,14 +389,17 @@ class ProductVendor extends Component {
         }
     }
     validateScheduleTimings(b){
-
         var availabletime =  this.validateSlot(b);
-        if(availabletime){
-
+        if(this.validateSlot(b)){
+          MessageBarManager.showAlert({
+              message: " Available to book time Slot",
+              alertType: 'extra',
+              title:'',
+              titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+              messageStyle: { color: 'white', fontSize: 16 , textAlign:"left"},
+          })
         }
     }
-
-
     render () {
         const { date_in, count, ScheduleDate, BookingTime } = this.state;
         let color = this.props.special_price ? '#a9d5d1' : '#000';
@@ -406,7 +410,7 @@ class ProductVendor extends Component {
         textline = lang == 'ar'? 'right': 'left';
         const renderedButtons =  bookingSlot.map((b, i) => {
             return <TouchableOpacity onPress ={()=>this.validateScheduleTimings(b)}
-                style={{ marginLeft: 10,width:50, height: 50, backgroundColor: "#a9d5d1", borderRadius:30, overflow:'hidden', flexDirection: 'row'}}>
+                style={{ marginLeft: 10, width:50, height: 50, backgroundColor: "#a9d5d1", borderRadius:25, overflow:'hidden', flexDirection: 'row', justifyContent:"center"}}>
                 <Text  style={{backgroundColor:"transparent" , color : '#fff', alignSelf: 'center',textAlign:'center' }}
                     key={i}
                     // onPress={()=>this.setState({
@@ -453,21 +457,21 @@ class ProductVendor extends Component {
                                     <TouchableOpacity onPress={this.validateService.bind(this)}  style={{backgroundColor: "#a9d5d1", justifyContent: 'center',alignItems: 'center', height: 40, marginTop: 10}}>
                                         <Text style={{ fontSize: 15, color: "#fff", fontWeight: 'bold'}}>{I18n.t('servicedetail.schedule', { locale: lang })}</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={this.onOpen.bind(this)} >
-                                        <View style= {{ flexDirection :direction, justifyContent: "space-between", padding : 5}}>
+                                        <TouchableOpacity style= {{ flexDirection :direction, justifyContent: "space-between", padding : 5, alignItems: "center"}} onPress={this.onOpen.bind(this)}>
                                             <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
-                                            <TextInput style ={{
+                                            <View style ={{
                                                     height:40,
                                                     width : width-50,
                                                     borderWidth : StyleSheet.hairlineWidth,
                                                     borderColor: "#ccc",
-                                                    textAlign: (lang === 'ar') ? 'right': 'left'
+                                                    // textAlign: (lang === 'ar') ? 'right': 'left',
+                                                    justifyContent: "center"
                                                 }}
-                                                value={this.state.selectedAddress}
-                                                editable={false}
-                                                underlineColorAndroid={'transparent'}
-                                                />
-                                        </View>
+                                              >
+                                              <Text style={{ padding : 10}}>
+                                                {this.state.selectedAddress}
+                                                </Text>
+                                                </View>
                                     </TouchableOpacity>
                                 </View>
                                 : undefined

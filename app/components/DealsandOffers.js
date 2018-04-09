@@ -193,19 +193,38 @@ class DealsandOffers extends Component {
         return (
             <View style={styles.row}>
                 <View style={{flex: 1}}>
-                    <Image source={{uri: data.image}} style={{width: "100%", height: width/3 }} resizeMode="stretch" resizeMethod="resize"/>
+                    <Image source={{uri: data.image}} style={{
+                            width: "100%", 
+                            height: 210 //width/3 
+                        }} 
+                        resizeMode="stretch" 
+                        resizeMethod="resize"
+                    />
                 </View>
                 <View style={{flex: 1, backgroundColor: "#a9d5d1"}}>
                     <View style={{flexDirection: direction, justifyContent: 'space-between'}}>
-                        <Text style={{color: "#fff"}}>{data.dealsOROfferName}</Text>
-                        <View style={{flexDirection: direction}}>
+                        <Text style={{
+                                color: "#fff",
+                                marginLeft:5,
+                                marginTop:5,
+                            }}>{data.dealsOROfferName}</Text>
+                        <View style={{
+                                flexDirection: direction, 
+                                marginRight:5,
+                                marginTop:5,
+                            }}>
                             <Text style={{color: "#fff"}}>KWD</Text>
                             <Text style={{color: "#fff"}}>{data.Price}</Text>
                         </View>
                     </View>
                     <View style={{flexDirection: direction, justifyContent: 'space-between'}}>
                         <View style={{flexDirection: direction}}>
-                            <Text style={{color: "#fff"}}>{I18n.t('userorderhistory.quantity', { locale: lang })}</Text>
+                            <Text style={{
+                                    color: "#fff",
+                                    marginTop: 5,
+                                    marginLeft:5,
+                                    marginBottom:5,
+                                }}>{I18n.t('userorderhistory.quantity', { locale: lang })}</Text>
                             <Text style={{color: "#fff", marginLeft:3, marginRight: 3}}>:</Text>
                             <Text style={{color: "#fff", alignSelf: 'center'}}>{data.quantity}</Text>
                         </View>

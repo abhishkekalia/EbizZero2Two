@@ -55,38 +55,43 @@ class Filter extends Component {
     onSelectionsChange = (selected) => {
         this.setState({ selected })
     }
+    refresh = ()=> {
+        this.fetchData()
+    }
     componentDidMount(){
-        this.getKey()
-        .then( ()=>this.fetchData())
-        .done();
+        // this.getKey()
+        // .then( ()=>this.fetchData())
+        // .done();
+        this.fetchData()
         EventEmitter.removeAllListeners("refreshFilterOption");
         EventEmitter.on("refreshFilterOption", (value)=>{
-            console.log("refreshFilterOption:=");
-            this.state.rows = []
-            this.state.selGender = []
-            this.state.selType = []
+            // this.state.rows = []
+            // this.state.selGender = []
+            // this.state.selType = []
             this.setState({
                 rows:[],
+                category: [],
                 selGender:[],
                 selType:[],
                 selectedIndexOfFilter:1
             })
+            this.refresh()
         });
     }
-    async getKey() {
-        try {
-            const value = await AsyncStorage.getItem('data');
-            var response = JSON.parse(value);
-            this.setState({
-                u_id: response.userdetail.u_id ,
-                country: response.userdetail.country ,
-            });
-        } catch (error) {
-            console.log("Error retrieving data" + error);
-        }
-    }
+    // async getKey() {
+    //     try {
+    //         const value = await AsyncStorage.getItem('data');
+    //         var response = JSON.parse(value);
+    //         this.setState({
+    //             u_id: response.userdetail.u_id ,
+    //             country: response.userdetail.country ,
+    //         });
+    //     } catch (error) {
+    //         console.log("Error retrieving data" + error);
+    //     }
+    // }
     fetchData() {
-        const {u_id, country, } = this.state;
+        const {u_id, country, } = this.props;
         let formData = new FormData();
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
@@ -553,7 +558,10 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
 	return {
-		lang: state.auth.lang,
+        lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
 	};
 }
 

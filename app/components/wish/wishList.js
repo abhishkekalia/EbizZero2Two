@@ -262,12 +262,36 @@ class WishList extends Component {
         this.setState({color});
     }
     renderLoadingView() {
+        const {lang} = this.props;
+        let side = lang === "ar" ? "right" : "left";
         return (
-                <ActivityIndicator
-            style={styles.centering}
-            color="#a9d5d1"
-            size="small"/>
-            );
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={-3}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side= {side}
+                >
+                <View style={{flex: 1}}>
+                    <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                        {this._renderLeftButton()}
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                        {this._renderRightButton()}
+                    </View>
+                    <ActivityIndicator
+                        style={[styles.centering]}
+                        color="#a9d5d1"
+                        size="large"/>
+                </View>
+            </Drawer>
+        );
     }
     render() {
         const { lang } = this.props;
@@ -427,7 +451,7 @@ class WishList extends Component {
                     borderColor : "#ccc",
                     borderRadius : 5}
                 }>
-                <SelectItem product_id={data.product_id} u_id={u_id} deviceId= {deviceId} country={country} callback={this.refreshfromCount.bind(this)} size_arr={data.size_arr} lang={lang}>
+                <SelectItem wishlist_id={data.wishlist_id} product_id={data.product_id} u_id={u_id} deviceId= {deviceId} country={country} callback={this.refreshfromCount.bind(this)} size_arr={data.size_arr} lang={lang}>
                     <View style={{
                             flexDirection: direction,
                             backgroundColor : "#fff", alignItems : 'center'}
@@ -529,21 +553,23 @@ class SelectItem extends Component{
     }
     editWishlist(size){
         const { color, } = this.state;
-        const {u_id, country, product_id } = this.props;
+        const {wishlist_id, u_id, country, product_id, deviceId } = this.props;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
 
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        formData.append('product_id', String(product_id));
+        // formData.append('u_id', String(u_id));
+        // formData.append('country', String(country));
+        // formData.append('device_uid', String(deviceId));
+        // formData.append('product_id', String(product_id));
+        formData.append('wishlist_id', String(wishlist_id));
         formData.append('size', String(size));
         formData.append('color', String(color));
         const config = {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
+                'Content-Type': 'multipart/form-data',
             },
             body: formData,
         }
@@ -718,8 +744,8 @@ const drawerStyles = {
         shadowRadius: 3
     },
     main: {
-        paddingLeft: 3,
-        backgroundColor:'#fff'
+        // paddingLeft: 3,
+        backgroundColor:'transparent'
     },
 }
 

@@ -283,9 +283,9 @@ const drawerStyles = {
         shadowOpacity: 0.8,
         shadowRadius: 3
     },
-    main: {
-        paddingLeft: 3,
-        backgroundColor:'#fff'
+	main: {
+        // paddingLeft: 3,
+        backgroundColor:'transparent'
     },
 }
 const styles = StyleSheet.create({

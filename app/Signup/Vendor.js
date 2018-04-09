@@ -29,6 +29,7 @@ import I18n from 'react-native-i18n';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actionsheet';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
@@ -496,17 +497,41 @@ class Vendorreg extends Component {
 					<Text style = {{color:"#FFFFFF"}}>{I18n.t('venderregister.createbtn', { locale: lang })}</Text>
 				</View>
 			</TouchableOpacity>
+			<KeyboardSpacer/>
 		</ScrollView>
 		<Modal
 			animationType="slide"
 			transparent={false}
 			visible={this.state.ShowMapLocation}
 			onRequestClose={() => this.setState({ ShowMapLocation :false})}>
-			<View style={{ flexDirection: direction, position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: 10}}>
+			<View style={{ 
+				flexDirection: direction, 
+				position: 'absolute',  
+				zIndex: 1,
+				backgroundColor: "transparent", 
+				justifyContent: 'space-around', 
+				height: 40, 
+				width: "90%", 
+				alignSelf: 'center', 
+				marginTop: Platform.OS === 'ios' ? 20 : 10,
+				borderRadius:5,
+				// backgroundColor:'red'
+				paddingVertical:10,
+				// alignItems:'center'
+			}}>
 				<TextInput
-					style={{ width: "85%", height: 40, backgroundColor: "#fff", alignSelf: 'center', textAlign:textline,  marginLeft : lang == 'ar'? 0 : 5}}
+					style={{ 
+						width: "85%", 
+						height: Platform.OS === 'ios' ? 40 : 40, 
+						backgroundColor: "#fff", 
+						alignSelf: 'center', 
+						textAlign: 'center', //textline,  
+						marginLeft : lang == 'ar'? 0 : 5,
+						// backgroundColor:'yellow'
+						borderRadius:5,
+					}}
 					editable = {false}
-					multiline = {true}
+					multiline = {false}
 					value={this.state.address}
 					placeholder={I18n.t('userregister.pickfromMap', { locale: lang })}
 					underlineColorAndroid = 'transparent'/>
@@ -518,7 +543,43 @@ class Vendorreg extends Component {
 				}
 			</View>
 			<View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
+			{Platform.OS === 'ios' ? 
 				<MapView
+				initialRegion={{
+					latitude: this.state.LATITUDE,
+					longitude: this.state.LONGITUDE,
+					latitudeDelta: this.state.LATITUDE_DELTA,
+					longitudeDelta: this.state.LONGITUDE_DELTA
+				}}
+				region={this.state.mapRegion}
+				style={StyleSheet.absoluteFill}
+				ref={c => this.mapView = c}
+				onPress={this.onMapPress}>
+
+				<MapView.Marker draggable
+					// annotations={markers}
+					coordinate={{
+						latitude: (this.state.lastLat + 0.00050) || -36.82339,
+						longitude: (this.state.lastLong + 0.00050) || -73.03569,
+					}}
+					// loadAddressFromMap
+					onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+
+					// onDragEnd={(e) => this.setState({
+					// 	coordinate: e.nativeEvent.coordinate,
+					// 	region: {
+					// 		latitude:e.nativeEvent.coordinate.latitude,
+					// 		longitude:e.nativeEvent.coordinate.longitude,
+					// 		latitudeDelta: this.state.region.latitudeDelta,
+					// 		longitudeDelta: this.state.region.longitudeDelta
+					// 	}})}
+						>
+				</MapView.Marker>
+			</MapView>
+
+					:
+
+					<MapView
 					provider={PROVIDER_GOOGLE}
 					initialRegion={{
 						latitude: this.state.LATITUDE,
@@ -554,6 +615,8 @@ class Vendorreg extends Component {
 						</View>
 					</MapView.Marker>
 				</MapView>
+			}
+			
 			</View>
 		</Modal>
 		</View>

@@ -217,7 +217,8 @@
         "pleaseselectitems":"Please Select Items For Your Cart",
         "removeitem":"product remove from cart",
         "somethingwentswrong":"something wents wrong",
-        "cartUpdate":"Cart update successfully"
+        "cartUpdate":"Cart update successfully",
+        "shipingchage": "Shipping Charges"
     },
     "profile":{
         "profiletitle":"Profile",
@@ -520,6 +521,9 @@
         "orderId":"Order Id",
         "orderType":"Order Type",
         "deliveryStatus": "Delivery Status",
+        "product_id": "Product Id",
+        "nonotification" : "NO NOTIFICATIONS",
+        "notifyonce": "We Will Notify You Once We Have \n"+" Something For You"
     },
     "deals":{
         "dealTitle":"Deals & Offres",
