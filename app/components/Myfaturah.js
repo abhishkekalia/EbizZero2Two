@@ -74,6 +74,9 @@ export default class Myfaturah extends Component {
     }
       orderPayment(status, id){
         const {u_id, country} = this.state;
+
+        let cartList =this.props.cartIdList !== undefined ? this.props.cartIdList.toString() : "";
+        console.log("CartList of id",cartList);
         const { language} = this.props,
         align = (language === 'ar') ?  'right': 'left';
         let cartIdList = this.props.cartIdList ? this.props.cartIdList : "";
@@ -84,7 +87,8 @@ export default class Myfaturah extends Component {
         formData.append('payment_id', String(id));
         formData.append('payment_status', String(status));
         formData.append('amount', String(5));
-        formData.append('cart_id',cartIdList.toString());
+
+        formData.append('cart_id',cartList);
 
         const config = {
             method: 'POST',

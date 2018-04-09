@@ -136,6 +136,8 @@ class Shopingcart extends Component {
         // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         formData.append('device_uid', String(deviceId));
+        console.log(formData);
+
         const config = {
             method: 'POST',
             headers: {
@@ -416,10 +418,11 @@ class Shopingcart extends Component {
                                         <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center'}}> : </Text>
                                     <Countmanager
                                         quantity={data.quantity}
-                                        u_id={this.state.u_id}
+                                        u_id={u_id}
                                         product_id={data.product_id}
                                         updatetype={"1"}
-                                        country={this.state.country}
+                                        country={country}
+                                        deviceId={deviceId}
                                         callback={this.fetchData.bind(this)}
                                         />
                                 </View>
