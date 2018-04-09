@@ -409,6 +409,7 @@ class ProductDescription extends Component {
                     borderColor:this.state.sizeindex === i ? '#a9d5d1' : '#ccc',
                     borderWidth:1,
                     borderRadius:10,
+                    marginHorizontal:5
                   }}>
                 <SizeButton
                     height={40}

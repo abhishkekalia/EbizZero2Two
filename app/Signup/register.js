@@ -472,7 +472,9 @@ class Register extends Component {
 						<View style={{height:40,width:'100%'}}>
 						</View>
 					</View>
+					<KeyboardSpacer/>
 				</ScrollView>
+				
 				<Modal
 					animationType="slide"
 					transparent={false}
@@ -519,11 +521,34 @@ class Register extends Component {
 					transparent={false}
 					visible={this.state.ShowMapLocation}
 					onRequestClose={() => this.setState({ ShowMapLocation :false})}>
-					<View style={{ flexDirection: direction, position: 'absolute',  zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: Platform.OS === 'ios' ? 20 : 10 }}>
+					<View style={{ 
+						flexDirection: direction, 
+						position: 'absolute',  
+						zIndex: 1,
+						backgroundColor: "transparent", 
+						justifyContent: 'space-around', 
+						height: 40, 
+						width: "90%", 
+						alignSelf: 'center', 
+						marginTop: Platform.OS === 'ios' ? 20 : 10 , 
+						borderRadius:5,
+						// backgroundColor:'red'
+						paddingVertical:10,
+						// alignItems:'center'
+					}}>
 						<TextInput
-							style={{ width: "85%", height: 40, backgroundColor: "#fff", alignSelf: 'center', textAlign:textline,  marginLeft : lang == 'ar'? 0 : 5}}
+							style={{ 
+								width: "85%", 
+								height: Platform.OS === 'ios' ? 40 : 40, 
+								backgroundColor: "#fff", 
+								alignSelf: 'center', 
+								textAlign: 'center' ,//textline,  
+								marginLeft : lang == 'ar'? 0 : 5,
+								// backgroundColor:'yellow'
+								borderRadius:5,
+							}}
 							editable = {false}
-							multiline = {true}
+							multiline = {false}
 							value={this.state.address}
 							placeholder={I18n.t('userregister.pickfromMap', { locale: lang })}
 							underlineColorAndroid = 'transparent'/>

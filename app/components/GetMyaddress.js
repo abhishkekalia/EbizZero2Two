@@ -328,19 +328,20 @@ class AddressBook extends Component {
                 <View style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff' }} >
                     <SelectItem data={data} u_id={this.state.u_id} country={this.state.country} callback={this.fetchAddress.bind(this)} lang={lang}>
                         <View style={{ flexDirection: 'column' }}>
-                            <View style={{ flexDirection: direction, }}>
+                            <View style={{ flexDirection: direction, marginTop:5,marginLeft:5}}>
                                 <View style={{ flexDirection: direction}}>
-                                <Text style={{ fontSize : 15, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.name', { locale: lang })}</Text>
+                                <Text style={{ fontSize : 15, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.name', { locale: lang }) + ' '}</Text>
                                 <Text style={{ fontSize: 15, color: '#000',  textAlign: textline}}>{data.full_name}</Text>
                                 </View>
                                 {/* <PopupMenu actions={['Edit', 'Remove']} onPress={this.onPopupEvent.bind(this, data)} /> */}
                             </View>
 
-                            <View style={{ flexDirection: direction}}>
-                            <Text style={{ fontSize : 10, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.mobile', { locale: lang })}</Text>
+                            <View style={{ flexDirection: direction, marginTop:5,marginLeft:5}}>
+                            <Text style={{ fontSize : 10, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.mobile', { locale: lang }) + ' '}</Text>
+                            <Text style={{ fontSize : 10, color: 'red'}}> : </Text>
                             <Text style={{ fontSize : 10,  textAlign: textline}}>{data.mobile_number}</Text>
                             </View>
-                            <Text style={{fontSize:12,  textAlign: textline}}>
+                            <Text style={{fontSize:12,  textAlign: textline, marginTop:5,marginLeft:5}}>
                             {[data.block_no ," ", data.street , " ", data.houseno,"\n", data.appartment, " ",data.floor, " ",
                         data.jadda,"\n",data.city," ",data.direction]}
                         </Text>

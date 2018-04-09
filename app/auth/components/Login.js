@@ -197,7 +197,7 @@ class Login extends Component {
 							Object.keys(I18n.translations).map((item, key)=>( language === item ?
 								undefined
 								:
-								<Text style={{ bottom:  5, color: '#fff'}}
+								<Text style={{ bottom:  Platform.OS === 'ios' ? 17 : 5, marginRight:Platform.OS === 'ios' ? 5 : 0, color: '#fff'}}
 									key={key}
 									// {I18n.translations[item].id }
 									onPress={ this.SampleFunction.bind(this, item) }>
