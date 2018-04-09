@@ -7,9 +7,9 @@ let Utils = {
         // return `http://192.168.0.152/zerototwo/index.php/Webservice/${usersPath}`;
     },
 
-    // murl: (usersPath)=> {
-    //     return `http://192.168.0.23/zerototwo/index.php/Webservice/${usersPath}`;
-    // },
+    murl: (usersPath)=> {
+        return `http://192.168.0.152/delicon/index.php/generalApi/${usersPath}`;
+    },
 
     async getKey() {
         try {

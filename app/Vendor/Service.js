@@ -243,7 +243,7 @@ class Service extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <MyService dataSource={this.state.dataSource} status={this.state.status}/>}
+                    <MyService dataSource={this.state.dataSource} isLoading={this.state.isLoading}/>}
                 {this.state.customStyleIndex === 1 &&
                     <AddService/>}
 

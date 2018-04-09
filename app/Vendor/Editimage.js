@@ -80,7 +80,7 @@ export default class Editimage extends Component {
 }
 const styles = StyleSheet.create({
     imageViewContainer: {
-        width: 100,
+        width: 125,
         height: '100%',
         // position: 'relative',
         // zIndex: 0,

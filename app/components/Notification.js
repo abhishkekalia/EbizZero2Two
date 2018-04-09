@@ -6,7 +6,7 @@ import {
     Dimensions,
     Text,
     View,
-    Image ,
+    Image,
     RefreshControl,
     Modal,
     ActivityIndicator
@@ -86,11 +86,18 @@ class Notification extends Component {
             fetch(Utils.gurl('notificationList'), config)
             .then((response) => response.json())
             .then((responseData) => {
-                this.setState({
-                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    loaded: true,
-                    refreshing: false
-                });
+                if(responseData.status){
+                    this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                        loaded: true,
+                        refreshing: false
+                    });
+                }else{
+                    this.setState({
+                        loaded: true,
+                        refreshing: false
+                    });
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -100,6 +107,18 @@ class Notification extends Component {
             console.log(error);
         }
     }
+    noItemFound(){
+        const {lang} = this.props;
+        let side = lang === "ar" ? "right" : "left";
+        return (
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
+                <Text> {I18n.t('notification.nonotification', { locale: lang })} </Text>
+                <Image source={require("app/images/notification_img.png")} style={{width: 80, height: 80}}/>
+                <Text style={{ color: "#fbcdc5", alignSelf: 'center'}}> {I18n.t('notification.notifyonce', { locale: lang })} </Text>
+            </View>
+        );
+    }
+
     render() {
         const {lang} = this.props;
         if (!this.state.loaded) {
@@ -122,9 +141,10 @@ class Notification extends Component {
                 showsVerticalScrollIndicator={false}
                 />
         );
+        let data = (this.state.dataSource.getRowCount() < 1) ? this.noItemFound() : listView;
         return (
-            <View>
-                {listView}
+            <View style={{flex:1}}>
+                {data}
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -181,6 +201,7 @@ class Notification extends Component {
         );
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+        console.log(data);
         const { lang } = this.props,
         direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left';
@@ -192,15 +213,15 @@ class Notification extends Component {
         };
         return (
             <View style={styles.row}>
-                <View style={{ flexDirection : direction, justifyContent: 'space-between', height: 20, borderWidth: StyleSheet.hairlineWidth, alignItems: 'center', borderColor: "#fbcdc5"}}>
+                <View style={{ flexDirection : 'column', justifyContent: 'space-between'}}>
                     <View style={{flexDirection: direction}}>
-                        <Text style={{color: "#a9d5d1", textAlign: align}}>productId</Text>
-                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>{I18n.t('notification.product_id', { locale: lang })}</Text>
+                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}> : </Text>
                         <Text style={{ textAlign: align}}>{data.product_id}</Text>
                     </View>
                     <View style={{flexDirection: direction}}>
-                        <Text style={{color: "#a9d5d1", textAlign: align}}>orderId</Text>
-                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>{I18n.t('notification.orderId', { locale: lang })}</Text>
+                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}> : </Text>
                         <Text style={{ textAlign: align}}>{data.order_id}</Text>
                     </View>
                 </View>
@@ -208,15 +229,15 @@ class Notification extends Component {
                     onPress ={()=>this.setState({
                         visibleMap :true
                     })}
-                    style={{justifyContent:'space-between', flexDirection : direction,alignItems: 'center', height: 30}}>
+                    style={{justifyContent:'space-between', flexDirection : 'column'}}>
                     <View style={{ flexDirection : direction}}>
-                        <Text style={{color: "#a9d5d1", textAlign: align}}>Delivery Status</Text>
-                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}>:</Text>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>{I18n.t('notification.deliveryStatus', { locale: lang })}</Text>
+                        <Text style={{color: "#a9d5d1", alignSelf: 'center'}}> : </Text>
                         <Text style={{ textAlign: align}}>{Status}</Text>
                     </View>
                     <View style={{ flexDirection : direction}}>
-                        <Text style={{color: "#a9d5d1", textAlign: align}}>Type</Text>
-                        <Text style={{color: "#a9d5d1" , alignSelf: 'center'}}>:</Text>
+                        <Text style={{color: "#a9d5d1", textAlign: align}}>{I18n.t('notification.orderType', { locale: lang })}</Text>
+                        <Text style={{color: "#a9d5d1" , alignSelf: 'center'}}> : </Text>
                         <Text  style={{ textAlign: align}}>{data.type}</Text>
                     </View>
                 </TouchableOpacity>

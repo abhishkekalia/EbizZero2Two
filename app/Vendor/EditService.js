@@ -60,7 +60,7 @@ class EditService extends Component {
             languageChoose: '',
             is_feature:0,
             is_weekend:this.props.is_weekend,
-             is_weekend_work :this.props.is_weekend
+            is_weekend_work :this.props.is_weekend
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
@@ -233,7 +233,7 @@ class EditService extends Component {
         console.log("service_id", service_id);
         console.log("removed_images", removed_images);
         console.log("is_feature", is_feature);
-        console.log("is_weekend_work", is_weekend_work);
+        console.warn("is_weekend_work", is_weekend);
         if(this.validate()) {
             this.setState({
                 visibleModal : true
@@ -261,7 +261,7 @@ class EditService extends Component {
                 { name : 'service_id', data: String(service_id)},
                 { name : 'removed_images', data: removed_images.toString()},
                 { name : 'is_feature', data: String(is_feature)},
-                { name : 'is_weekend', data: String(is_weekend_work)},
+                { name : 'is_weekend', data: String(is_weekend)},
             ])
             .uploadProgress((written, total) => {
                 console.log('uploaded', Math.floor(written/total*100) + '%')
@@ -375,11 +375,12 @@ class EditService extends Component {
     }
     render() {
         const { lang } =this.props,
-        { imageSelect, quantityRows, sizeRows, languageChoose} = this.state,
+        { imageSelect, quantityRows, sizeRows, languageChoose, is_weekend} = this.state,
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d',
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
+
         let is_feature;
         if(this.state.is_feature === '0' ){
             is_feature = false
@@ -388,12 +389,12 @@ class EditService extends Component {
         }
         let is_weekend_work,
             weekend_work_value;
-        if(this.state.is_weekend === 0){
-            is_weekend_work = "checkbox-marked";
-            weekend_work_value = 1;
-        } else {
+        if(is_weekend === '0'){
             is_weekend_work = "checkbox-blank-outline";
-            weekend_work_value = 0;
+            weekend_work_value = '1';
+        } else {
+            is_weekend_work = "checkbox-marked";
+            weekend_work_value = '0';
         }
 
         return (
@@ -691,19 +692,10 @@ class EditService extends Component {
                             circleActiveColor={'#30a566'}
                             circleInActiveColor={'#000000'}/>
                     </View>
-                    <TouchableOpacity style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]} onPress={()=>{ this.setState({
-                            is_weekend : !this.state.is_weekend,
-                            is_weekend_work : weekend_work_value
-                        })
-                        if(this.stateis_weekend === 0){
-                            is_weekend_work = "checkbox-marked";
-                            weekend_work_value = 1;
-
-                        } else {
-                        is_weekend_work = "checkbox-blank-outline";
-                            weekend_work_value = 0;
-                        }
-                    }}>
+                    <TouchableOpacity style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]}
+                        onPress={()=> this.setState({
+                            is_weekend : weekend_work_value,
+                        })}>
                         <View style={{ flexDirection: direction}}>
                             <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })}</Text>
                             <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>

@@ -12,7 +12,6 @@ import {
     TextInput,
     Keyboard,
     ScrollView
-    // AsyncStorage,
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
@@ -23,7 +22,6 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Material from 'react-native-vector-icons/MaterialIcons';
 import EventEmitter from "react-native-eventemitter";
-
 const { width, height } = Dimensions.get('window')
 
 class MyProduct extends Component {
@@ -44,14 +42,14 @@ class MyProduct extends Component {
         this.setState({
             dataSource: this.props.dataSource,
             productnames:this.props.productnames,
-            isLoading : this.props.status
+            isLoading : this.props.isLoading
         });
     }
     componentWillReceiveProps(nextProps) {
         this.setState({
             dataSource: nextProps.dataSource,
             productnames:nextProps.productnames,
-            isLoading : nextProps.status
+            isLoading : nextProps.isLoading
         });
     }
     componentWillMount() {
@@ -64,10 +62,10 @@ class MyProduct extends Component {
         this.keyboardDidHideListener.remove();
     }
     _keyboardDidShow () {
-        routes.refresh ({hideTabBar: true})
+        routes.refresh ({ hideTabBar: true })
     }
     _keyboardDidHide () {
-        routes.refresh ({hideTabBar: false})
+        routes.refresh ({ hideTabBar: false })
     }
     _renderLeftButton = () => {
          return(
@@ -79,92 +77,6 @@ class MyProduct extends Component {
             <Text style={{color : '#fff'}}></Text>
         );
     };
-    // async getKey() {
-    //     try {
-    //         const value = await AsyncStorage.getItem('data');
-    //         var response = JSON.parse(value);
-    //         this.setState({
-    //             u_id: response.userdetail.u_id ,
-    //             country: response.userdetail.country
-    //         });
-    //     } catch (error) {
-    //         console.log("Error retrieving data" + error);
-    //     }
-    // }
-    // fetchData(){
-    //     const {u_id, country } = this.props;
-    //     let formData = new FormData();
-    //     formData.append('u_id', String(u_id));
-    //     formData.append('country', String(country));
-    //     const config = {
-    //         method: 'POST',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'multipart/form-data;',
-    //         },
-    //         body: formData
-    //     }
-    //     fetch(Utils.gurl('productList'), config)
-    //     .then((response) => response.json())
-    //     .then((responseData) => {
-    //         let data = responseData.data,
-    //         length = data.length,
-    //         productname = [],
-    //         name,
-    //         shortname
-    //
-    //         for (let i = 0; i < length; i++) {
-    //             name = data[i].product_name
-    //             shortname = name.charAt(0).toUpperCase();
-    //             productname.push(shortname);
-    //         }
-    //         if(responseData.status){
-    //             this.setState({
-    //                 dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-    //                 Shortrows : responseData.data,
-    //                 isLoading : false,
-    //                 productnames: productname
-    //             },()=>{
-    //                 this.arrayholder = responseData.data ;
-    //             });
-    //         }
-    //         else{
-    //             this.setState({
-    //                 isLoading : false
-    //             })
-    //         }
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //     })
-    //     .done();
-    // }
-    // SearchFilterFunction(text){
-    //     const { lang } =this.props
-    //     const newData = this.arrayholder.filter(function(item){
-    //         const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
-    //         const textData = text.toUpperCase()
-    //         return itemData.indexOf(textData) > -1
-    //     })
-    //     this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(newData),
-    //         text: text
-    //     })
-    // }
-    // removeFilterFunction(){
-    //     const { lang } =this.props
-    //     let text = ""
-    //     const newData = this.arrayholder.filter(function(item){
-    //         const itemData = lang === 'ar'?  item.product_name_in_arabic.toUpperCase() : item.product_name.toUpperCase()
-    //         const textData = text.toUpperCase()
-    //         return itemData.indexOf(textData) > -1
-    //     })
-    //     this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(newData),
-    //         text: text
-    //     })
-    // }
-
     ListViewItemSeparator = () => {
         return (
             <View style={{ height: StyleSheet.hairlineWidth, width: "100%"}}/>
@@ -184,12 +96,7 @@ class MyProduct extends Component {
 
         )
     }
-    // renderProductnames(){
-    //                 {this.state.letters.map((letter, index) => this._renderRightLetters(letter, index))}
-    //     return this.state.productnames.map((data, index) => this._renderRightLetters(letter, index)))
-    // }
     _scrollTo(index, letter) {
-        // this.refs.toast.close();
         let position = 0;
         for (let i = 0; i < index; i++) {
             // position += totalheight[i]
@@ -215,31 +122,6 @@ class MyProduct extends Component {
             </View>
         );
     }
-    // shortingOrder(){
-    //     const { Shortrows } = this.state;
-    //     this.Ascending()
-    //     .then(()=>{
-    //         let rowRev = Shortrows.reverse()
-    //         this.setState({
-    //             dataSource: this.state.dataSource.cloneWithRows(rowRev),
-    //             isLoading : false
-    //         })
-    //     })
-    //     .done();
-    // }
-    // async Ascending(){
-    //     try {
-    //         const { Shortrows } = this.state;
-    //         this.setState({
-    //             dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
-    //             isLoading : true
-    //         })
-    //         return true
-    //     } catch (e) {
-    //         console.warn(e);
-    //
-    //     }
-    // }
     render() {
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
@@ -371,7 +253,6 @@ class MyProduct extends Component {
                 );
             }
         }
-
 class Header extends Component{
     constructor(props){
         super(props);

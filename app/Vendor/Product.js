@@ -75,11 +75,24 @@ class Product extends Component {
                     isLoading : false
                 })
             }
+            // this.fetchcity()
         })
         .catch((errorMessage, statusCode) => {
             console.log(errorMessage);
         })
         .done();
+    }
+    fetchcity(){
+        let eid = "zeroTotwo@gmail.com"
+        api.orderHistory(eid)
+        .then((responseData) => {
+            console.warn(responseData);
+        })
+        .catch((errorMessage, statusCode) => {
+            console.log(errorMessage);
+        })
+        .done();
+
     }
     SearchFilterFunction(text){
         const { lang } =this.props
@@ -248,7 +261,7 @@ class Product extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <MyProduct dataSource={this.state.dataSource} status={this.state.status} productnames={this.state.productnames}/>}
+                    <MyProduct dataSource={this.state.dataSource} isLoading={this.state.isLoading} productnames={this.state.productnames}/>}
                 {this.state.customStyleIndex === 1 &&
                     <AddProduct/>}
             </View>

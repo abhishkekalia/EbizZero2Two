@@ -214,7 +214,8 @@
         "pleaseselectitems":"الرجاء أختيار منتج",
         "removeitem":"تم الحذف من سلة المشتريات",
         "somethingwentswrong":"حصل خطأ ما",
-        "cartUpdate":"Cart update successfully"
+        "cartUpdate":"Cart update successfully",
+        "shipingchage": "Shipping Charges"
     },
     "profile":{
         "profiletitle":"الملف الشخصي",
@@ -517,6 +518,9 @@
         "orderId":"رقم الطلب",
         "orderType":"نوع الطلب",
         "deliveryStatus": "حالة الطلب",
+        "product_id": "Product Id",
+        "nonotification" : "NO NOTIFICATIONS",
+        "notifyonce": "We Will Notify You Once We Have \n"+" Something For You"
     },
     "deals":{
         "dealTitle":"عروض",

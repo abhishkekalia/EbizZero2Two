@@ -37,13 +37,13 @@ class MyService extends Component {
     componentDidMount(){
         this.setState({
             dataSource: this.props.dataSource,
-            isLoading : this.props.status
+            isLoading : this.props.isLoading
         });
     }
     componentWillReceiveProps(nextProps) {
         this.setState({
             dataSource: nextProps.dataSource,
-            isLoading : nextProps.status
+            isLoading : nextProps.isLoading
         });
     }
     componentWillMount() {
