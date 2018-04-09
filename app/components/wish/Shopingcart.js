@@ -466,8 +466,8 @@ class Footer extends Component {
             color : 'blue',
             selectSize : false,
             SHORT_LIST : ['0'],
-            showFare : false,
-            fleatFaresdata : ""
+            // showFare : false,
+            // fleatFaresdata : ""
         };
     }
     openDialog(product_id){
@@ -498,32 +498,32 @@ class Footer extends Component {
             SHORT_LIST: sizeList,
         })
     }
-    showPrice = ()=> {
-        this.setState({
-            showFare: !this.state.showFare
-        });
-        !this.state.fleatFaresdata ?
-        this.fleetCompanyFilter() : undefined
-    }
-    fleetCompanyFilter(){
-        let order_id = "119",
-        pickUp_latitude = "23.011863",
-        pickUp_longitude = "72.576027",
-        min_price = "0",
-        max_price = "50000";
-        api.fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price)
-        .then((responseData)=> {
-            if(responseData.response.status){
-                this.setState({
-                    fleatFaresdata: responseData.response.data[0].price,
-                });
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
+    // showPrice = ()=> {
+    //     this.setState({
+    //         showFare: !this.state.showFare
+    //     });
+        // !this.state.fleatFaresdata ?
+        // this.fleetCompanyFilter() : undefined
+    // }
+    // fleetCompanyFilter(){
+    //     let order_id = "119",
+    //     pickUp_latitude = "23.011863",
+    //     pickUp_longitude = "72.576027",
+    //     min_price = "0",
+    //     max_price = "50000";
+    //     api.fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price)
+    //     .then((responseData)=> {
+    //         if(responseData.response.status){
+    //             this.setState({
+    //                 fleatFaresdata: responseData.response.data[0].price,
+    //             });
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     })
+    //     .done();
+    // }
     removeFromCart(cart_id, product_id){
         const {u_id, country, user_type ,deviceId, lang} = this.props;
         align = (lang === 'ar') ?  'right': 'left';
@@ -609,19 +609,6 @@ class Footer extends Component {
         align = (lang === 'ar') ?  'right': 'left';
         return(
             <View style={{backgroundColor: "transparent"}}>
-            <View style={{ flexDirection : direction, justifyContent: 'space-between'}}>
-                <Icon name="local-shipping" size={20} color="#fbcdc5" onPress={()=>this.showPrice()}/>
-                {
-                    showFare ?
-                    <View style={{ flexDirection : direction, justifyContent: 'space-around'}}>
-                        <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: "left"}}>{I18n.t('cart.shipingchage', { locale: lang })}</Text>
-                        <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: "left"}}>:</Text>
-                        <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: "left"}}>{fleatFaresdata}</Text>
-                    </View>
-                    :
-                    <Text/>
-                }
-            </View>
             <View style={[styles.bottom, {flexDirection: direction}]}>
                 <TouchableOpacity
                     onPress={()=> this.removeFromCart( cart_id, product_id)}

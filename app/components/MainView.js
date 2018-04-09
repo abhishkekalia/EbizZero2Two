@@ -769,7 +769,7 @@ class MainView extends Component {
                     <Text>{null}</Text>
                     <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10 } : {fontSize:15, color:'#fff' }}>{I18n.t('home.allshop', { locale: lang })}</Text>
                     <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyShop()} >
-                        <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10, textAlign: align} : {color:'#fff',marginLeft:10}}>{I18n.t('home.done', { locale: lang })}</Text>
+                        <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10, textAlign: align} : {color:'#fff',marginLeft:10, marginRight:10, textAlign: align}}>{I18n.t('home.done', { locale: lang })}</Text>
                     </TouchableOpacity>
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
@@ -804,7 +804,7 @@ class MainView extends Component {
                     <Text>{null}</Text>
                     <Text style={Platform.OS === 'ios' ?  {fontSize:15, color:'#fff',marginTop:10, textAlign: align} : {fontSize:15, color:'#fff',textAlign: align }}>{I18n.t('home.allservice', { locale: lang })}</Text>
                     <TouchableOpacity underlayColor ={"#fff"} onPress={()=>this.filterbyService()} >
-                        <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10 ,textAlign: align} : {color:'#fff', marginLeft:10, textAlign: align}}>{I18n.t('home.done', { locale: lang })}</Text>
+                        <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10, marginRight:10 ,textAlign: align} : {color:'#fff', marginRight:10,  marginLeft:10, textAlign: align}}>{I18n.t('home.done', { locale: lang })}</Text>
                     </TouchableOpacity>
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
