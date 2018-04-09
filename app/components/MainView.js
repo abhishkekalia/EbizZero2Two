@@ -1288,6 +1288,7 @@ class LoadImage extends Component {
     }
     render(){
         var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
+        
         return (
             imgUrl == "null" ?
             <IconBadge
