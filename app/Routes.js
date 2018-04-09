@@ -226,6 +226,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 title={"vendorproducts.productTitle"}
                                 icon={TabIcon}
                                 iconName="tag"
+                                hideNavBar
                                 // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
                                 navigationBarStyle={{
                                   backgroundColor: '#a9d5d1',
@@ -236,6 +237,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     key="product"
                                     titleStyle={{alignSelf: 'center'}}
                                     component={Product}
+                                    hideNavBar
                                     title={I18n.t("vendorproducts.productTitle", { locale: lang })}
                                     // navigationBarStyle={{backgroundColor: '#1e2226'}}
                                     titleStyle={{color : "#FFF", alignSelf: 'center'}}
@@ -248,10 +250,12 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 key="Service"
                                 title={"vendorservice.serviceTitle"}
                                 icon={TabIcon}
+                                hideNavBar
                                 iconName="tag"
                                 navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                                     <Scene
                                     key="service"
+                                    hideNavBar
                                     titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}
                                     component={Service}

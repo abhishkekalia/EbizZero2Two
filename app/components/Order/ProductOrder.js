@@ -293,25 +293,30 @@ class ProductOrder extends Component{
                     visibleMap :true
                 })}
                 >
-                <View style={[styles.rowStyle, { flexDirection: direction}]}>
-                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                <View style={[styles.rowStyle, {flexDirection: 'column'}]}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.productid', { locale: lang })}</Text>
-                        <Text style={styles.rowText}>#{rowID.product_id} </Text>
+                            <Text style={styles.rowText}> : </Text>
+                            <Text style={styles.rowText}>{rowID.product_id} </Text>
                     </View>
-                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.productnm', { locale: lang })}</Text>
+                            <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{rowID.product_name} </Text>
                     </View>
-                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.quantity', { locale: lang })}</Text>
+                            <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{rowID.quantity} </Text>
                     </View>
-                    <View style={{ flexDirection : 'column', borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#fbcdc5', alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.orderstatus', { locale: lang })}</Text>
+                            <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{ rowID.order_status ? 'pending' : 'paid'} </Text>
                     </View>
-                    <View style={{ flexDirection : 'column', alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction, alignItems: 'center'}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
+                            <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{rowID.price} </Text>
                     </View>
                 </View>

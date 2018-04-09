@@ -20,6 +20,7 @@ import I18n from 'react-native-i18n'
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { MessageBarManager } from 'react-native-message-bar';
 import  Countmanager  from './Countmanager';
 import {Actions as routes} from "react-native-router-flux";
@@ -28,6 +29,7 @@ import { material } from 'react-native-typography';
 import EventEmitter from "react-native-eventemitter";
 import Drawer from 'react-native-drawer';
 import Menu from '../menu/MenuContainer';
+import api from "app/Api/api";
 
 const { width, height } = Dimensions.get('window');
 // const SHORT_LIST = ['Small', 'Medium', 'Large'];
@@ -341,45 +343,44 @@ class Shopingcart extends Component {
             return this.noItemFound();
         }
         return (
-            <Drawer
-                ref={(ref) => this._drawer = ref}
-                type="overlay"
-                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
-                tapToClose={true}
-                openDrawerOffset={0.2}
-                panCloseMask={0.2}
-                closedDrawerOffset={0}
-                styles={drawerStyles}
-                tweenHandler={(ratio) => ({
-                    main: { opacity:(2-ratio)/2 }
-                })}
-                side={side}
-                >
                 <View style={{flex: 1, flexDirection: 'column'}}>
-                    <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                        {this._renderLeftButton()}
-                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
-                        {this._renderRightButton()}
-                    </View>
-
-                    {listView}
-                    {this.renderFooter(itemcount, totalamount, subtotalamount)}
-                    <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
-                        <TouchableHighlight
-                            underlayColor ={"#fff"}
-                            style={[styles.shoping]}
-                            onPress={()=>routes.homePage()}>
-                            <Text style={{ color :'#fff'}}>{I18n.t('cart.shoping', { locale: lang })}</Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight
-                            underlayColor ={"#fff"}
-                            style={[styles.checkout]}
-                            onPress={()=> this.procedToCheckout()}>
-                            <Text style={{ color : '#fff'}}>{I18n.t('cart.checkout', { locale: lang })}</Text>
-                        </TouchableHighlight>
-                    </View>
-                </View>
-            </Drawer>
+                    <Drawer
+                        ref={(ref) => this._drawer = ref}
+                        type="overlay"
+                        content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                        tapToClose={true}
+                        openDrawerOffset={0.2}
+                        panCloseMask={0.2}
+                        closedDrawerOffset={0}
+                        styles={drawerStyles}
+                        tweenHandler={(ratio) => ({
+                            main: { opacity:(2-ratio)/2 }
+                        })}
+                        side={side}
+                        >
+                        <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                            {this._renderLeftButton()}
+                            <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                            {this._renderRightButton()}
+                        </View>
+                        {listView}
+                        {this.renderFooter(itemcount, totalamount, subtotalamount)}
+                        <View style={{ flexDirection : (lang == 'ar')? "row-reverse" :"row", justifyContent : 'space-around'}}>
+                            <TouchableHighlight
+                                underlayColor ={"#fff"}
+                                style={[styles.shoping]}
+                                onPress={()=>routes.homePage()}>
+                                <Text style={{ color :'#fff'}}>{I18n.t('cart.shoping', { locale: lang })}</Text>
+                            </TouchableHighlight>
+                            <TouchableHighlight
+                                underlayColor ={"#fff"}
+                                style={[styles.checkout]}
+                                onPress={()=> this.procedToCheckout()}>
+                                <Text style={{ color : '#fff'}}>{I18n.t('cart.checkout', { locale: lang })}</Text>
+                            </TouchableHighlight>
+                        </View>
+                </Drawer>
+        </View>
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
@@ -464,7 +465,9 @@ class Footer extends Component {
             size : '',
             color : 'blue',
             selectSize : false,
-            SHORT_LIST : ['0']
+            SHORT_LIST : ['0'],
+            showFare : false,
+            fleatFaresdata : ""
         };
     }
     openDialog(product_id){
@@ -494,6 +497,32 @@ class Footer extends Component {
         this.setState({
             SHORT_LIST: sizeList,
         })
+    }
+    showPrice = ()=> {
+        this.setState({
+            showFare: !this.state.showFare
+        });
+        !this.state.fleatFaresdata ?
+        this.fleetCompanyFilter() : undefined
+    }
+    fleetCompanyFilter(){
+        let order_id = "119",
+        pickUp_latitude = "23.011863",
+        pickUp_longitude = "72.576027",
+        min_price = "0",
+        max_price = "50000";
+        api.fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price)
+        .then((responseData)=> {
+            if(responseData.response.status){
+                this.setState({
+                    fleatFaresdata: responseData.response.data[0].price,
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
     }
     removeFromCart(cart_id, product_id){
         const {u_id, country, user_type ,deviceId, lang} = this.props;
@@ -574,18 +603,33 @@ class Footer extends Component {
         .done();
     }
     render(){
-        const{lang} =this.props;
-        let {product_id,cart_id } = this.props
-        let {SHORT_LIST } = this.state
+        let {product_id,cart_id , lang} = this.props
+        let {SHORT_LIST, showFare , fleatFaresdata} = this.state
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left';
         return(
-            <View style={[styles.bottom, {flexDirection: (lang === 'ar') ?  'row-reverse': 'row'}]}>
+            <View style={{backgroundColor: "transparent"}}>
+            <View style={{ flexDirection : direction, justifyContent: 'space-between'}}>
+                <Icon name="local-shipping" size={20} color="#fbcdc5" onPress={()=>this.showPrice()}/>
+                {
+                    showFare ?
+                    <View style={{ flexDirection : direction, justifyContent: 'space-around'}}>
+                        <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: "left"}}>{I18n.t('cart.shipingchage', { locale: lang })}</Text>
+                        <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: "left"}}>:</Text>
+                        <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: "left"}}>{fleatFaresdata}</Text>
+                    </View>
+                    :
+                    <Text/>
+                }
+            </View>
+            <View style={[styles.bottom, {flexDirection: direction}]}>
                 <TouchableOpacity
                     onPress={()=> this.removeFromCart( cart_id, product_id)}
-                    style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}>
+                    style={[styles.wishbutton, {flexDirection : direction, justifyContent: "center"}]}>
                     <Entypo name="cross" size={20} color="#a9d5d1"/>
                     <Text style={{ left : 5}}>{I18n.t('cart.remove', { locale: lang })}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.wishbutton, {flexDirection : (lang === 'ar') ?  'row-reverse': 'row', justifyContent: "center"}]}
+                <TouchableOpacity style={[styles.wishbutton, {flexDirection : direction, justifyContent: "center"}]}
                     onPress={()=>this.openDialog(product_id)}>
                     <Entypo name="edit" size={20} color="#a9d5d1"/>
                     <Text style={{ left :5}}>{I18n.t('cart.edit', { locale: lang })}</Text>
@@ -601,6 +645,8 @@ class Footer extends Component {
                     okLabel={I18n.t('cart.ok', { locale: lang })}
                     />
             </View>
+        </View>
+
         )
     }
 }
@@ -687,8 +733,8 @@ const drawerStyles = {
         shadowRadius: 3
     },
     main: {
-        paddingLeft: 3,
-        backgroundColor:'#fff'
+        // paddingLeft: 3,
+        backgroundColor:'transparent'
     },
 }
 
