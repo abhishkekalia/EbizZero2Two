@@ -36,10 +36,9 @@ import { material } from 'react-native-typography';
 import EventEmitter from "react-native-eventemitter";
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
-
 import * as authActions from "app/auth/auth.actions";
 import {bindActionCreators} from 'redux';
-
+import SizeButton from "app/common/components/SizeButton";
 const {width,height} = Dimensions.get('window');
 const buttons = [
     {
@@ -181,7 +180,6 @@ class ProductDescription extends Component {
             .then((response) => response.json())
             .then((responseData) => {
                 if(responseData.status){
-                    // console.warn("calling my Fatureh")
                     routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
                 }else{
                     this.removeLoader
@@ -407,20 +405,21 @@ class ProductDescription extends Component {
         }
         const renderedButtons =  this.state.Size.map((b, i) => {
             return <View style={{
-                    backgroundColor: '#a9d5d1',
+                    backgroundColor: '#fff',
                     borderColor:this.state.sizeindex === i ? '#a9d5d1' : '#ccc',
                     borderWidth:1,
                     borderRadius:10,
-                    overflow:'hidden'}}>
-                <Button
-                    height={30}
-                    backgroundColor = {this.state.sizeindex === i ? '#a9d5d1' : '#ccc'}
+                  }}>
+                <SizeButton
+                    height={40}
+                    textAlign={"center"}
+                    color = {this.state.sizeindex === i ? '#000' : '#ccc'}
                     key={b.size}
                     onPress={()=>this.setState({
                         size: b.size,
                         sizeindex : i
                     })}
-                    >{b.size}</Button>
+                    >{b.size}</SizeButton>
             </View>
         });
         let listView = (<View></View>);
@@ -447,6 +446,8 @@ class ProductDescription extends Component {
                             u_id= {this.state.u_id }
                             country= {this.state.country }
                             product_id={this.props.product_id}
+                            deviceId= {deviceId}
+                            lang= {lang}
                             share={()=> this.openShare()}/>
                     </View>
                     <View style={{
@@ -486,9 +487,9 @@ class ProductDescription extends Component {
                                         />
                                     <Text style={{color:'#a9d5d1', textAlign: align, alignSelf: 'center'}}>{I18n.t('productdetail.selctsize', { locale: lang })}</Text>
                                 </View>
-                                <View style={{flexDirection : direction, justifyContent: 'space-around'}}>
+                                <ScrollView contentContainerStyle={{flexDirection : direction, justifyContent: 'center', alignItems:"center"}} horizontal={true} showsHorizontalScrollIndicator={false}>
                                     {renderedButtons}
-                                </View>
+                                </ScrollView>
                                 <View style={{flexDirection : direction ,alignItems:'center', justifyContent:'space-around'}}>
                                     { /*<TouchableOpacity
                                         style={{ borderWidth: StyleSheet.hairlineWidth, borderColor:'#a9d5d1', padding : 10, borderRadius: 10}}

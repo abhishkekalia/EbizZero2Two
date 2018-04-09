@@ -502,7 +502,7 @@ class Vendorreg extends Component {
 			transparent={false}
 			visible={this.state.ShowMapLocation}
 			onRequestClose={() => this.setState({ ShowMapLocation :false})}>
-			<View style={{ flexDirection: direction, position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: 10}}>
+			<View style={{ flexDirection: direction, position: 'absolute',  zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: Platform.OS === 'ios' ? 20 : 10 }}>
 				<TextInput
 					style={{ width: "85%", height: 40, backgroundColor: "#fff", alignSelf: 'center', textAlign:textline,  marginLeft : lang == 'ar'? 0 : 5}}
 					editable = {false}
@@ -518,42 +518,80 @@ class Vendorreg extends Component {
 				}
 			</View>
 			<View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
+			{
+				Platform.OS === 'ios' ?
 				<MapView
-					provider={PROVIDER_GOOGLE}
-					initialRegion={{
-						latitude: this.state.LATITUDE,
-						longitude: this.state.LONGITUDE,
-						latitudeDelta: this.state.LATITUDE_DELTA,
-						longitudeDelta: this.state.LONGITUDE_DELTA
+				initialRegion={{
+					latitude: this.state.LATITUDE,
+					longitude: this.state.LONGITUDE,
+					latitudeDelta: this.state.LATITUDE_DELTA,
+					longitudeDelta: this.state.LONGITUDE_DELTA
+				}}
+				region={this.state.mapRegion}
+				style={StyleSheet.absoluteFill}
+				ref={c => this.mapView = c}
+				onPress={this.onMapPress}>
+
+				<MapView.Marker draggable
+					// annotations={markers}
+					coordinate={{
+						latitude: (this.state.lastLat + 0.00050) || -36.82339,
+						longitude: (this.state.lastLong + 0.00050) || -73.03569,
 					}}
-					region={this.state.mapRegion}
-					style={StyleSheet.absoluteFill}
-					ref={c => this.mapView = c}
-					onPress={this.onMapPress}>
+					// loadAddressFromMap
+					onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
 
-					<MapView.Marker draggable
-						// annotations={markers}
-						coordinate={{
-							latitude: (this.state.lastLat + 0.00050) || -36.82339,
-							longitude: (this.state.lastLong + 0.00050) || -73.03569,
-						}}
-						// loadAddressFromMap
-						onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+					// onDragEnd={(e) => this.setState({
+					// 	coordinate: e.nativeEvent.coordinate,
+					// 	region: {
+					// 		latitude:e.nativeEvent.coordinate.latitude,
+					// 		longitude:e.nativeEvent.coordinate.longitude,
+					// 		latitudeDelta: this.state.region.latitudeDelta,
+					// 		longitudeDelta: this.state.region.longitudeDelta
+					// 	}})}
+						>
+				</MapView.Marker>
+			</MapView>
+				:
+				<MapView
+				provider={PROVIDER_GOOGLE}
+				initialRegion={{
+					latitude: this.state.LATITUDE,
+					longitude: this.state.LONGITUDE,
+					latitudeDelta: this.state.LATITUDE_DELTA,
+					longitudeDelta: this.state.LONGITUDE_DELTA
+				}}
+				region={this.state.mapRegion}
+				style={StyleSheet.absoluteFill}
+				ref={c => this.mapView = c}
+				onPress={this.onMapPress}>
 
-						// onDragEnd={(e) => this.setState({
-						// 	coordinate: e.nativeEvent.coordinate,
-						// 	region: {
-						// 		latitude:e.nativeEvent.coordinate.latitude,
-						// 		longitude:e.nativeEvent.coordinate.longitude,
-						// 		latitudeDelta: this.state.region.latitudeDelta,
-						// 		longitudeDelta: this.state.region.longitudeDelta
-						// 	}})}
-							>
-						<View style={{ position: 'absolute'}}>
-							<FontAwesome name="map-pin" size={35} color="green"/>
-						</View>
-					</MapView.Marker>
-				</MapView>
+				<MapView.Marker draggable
+					// annotations={markers}
+					coordinate={{
+						latitude: (this.state.lastLat + 0.00050) || -36.82339,
+						longitude: (this.state.lastLong + 0.00050) || -73.03569,
+					}}
+					// loadAddressFromMap
+					onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+
+					// onDragEnd={(e) => this.setState({
+					// 	coordinate: e.nativeEvent.coordinate,
+					// 	region: {
+					// 		latitude:e.nativeEvent.coordinate.latitude,
+					// 		longitude:e.nativeEvent.coordinate.longitude,
+					// 		latitudeDelta: this.state.region.latitudeDelta,
+					// 		longitudeDelta: this.state.region.longitudeDelta
+					// 	}})}
+						>
+
+					<View style={{ position: 'absolute'}}>
+					<FontAwesome name="map-pin" size={35} color="green"/>
+					</View>
+
+				</MapView.Marker>
+			</MapView>
+			}
 			</View>
 		</Modal>
 		</View>

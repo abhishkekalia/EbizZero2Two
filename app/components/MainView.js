@@ -583,7 +583,7 @@ class MainView extends Component {
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh} />
+                        onRefresh={this._onRefresh.bind(this)} />
                 }
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource}
@@ -599,7 +599,7 @@ class MainView extends Component {
                 refreshControl={
                     <RefreshControl
                         refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh} />
+                        onRefresh={this._onRefresh.bind(this)} />
                 }
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource2}
@@ -615,9 +615,9 @@ class MainView extends Component {
                     <View style={{ marginBottom: 50}}>
                         {
                             Platform.OS === 'ios' ?
-                            <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                             :
-                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                         }
                         <View>
                             {listView}
@@ -631,9 +631,9 @@ class MainView extends Component {
                     <View style={{ marginBottom: 50}}>
                         {
                             Platform.OS === 'ios' ?
-                            <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                             :
-                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                         }
                         <View>
                             {serviceListview}
@@ -648,18 +648,18 @@ class MainView extends Component {
                 <View style={{ marginBottom: 50}}>
                     {
                         Platform.OS === 'ios' ?
-                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                         :
-                        <Text style={{  textAlign: align,  fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                     }
                     <View>
                         {listView}
                     </View>
                     {
                         Platform.OS === 'ios' ?
-                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                         :
-                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                     }
                     <View>
                         {serviceListview}
@@ -669,18 +669,18 @@ class MainView extends Component {
                 <View style={{ marginBottom: 50}}>
                     {
                         Platform.OS === 'ios' ?
-                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                         :
-                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
                     }
                     <View>
                         {serviceListview}
                     </View>
                     {
                         Platform.OS === 'ios' ?
-                        <Text style={{  textAlign: align, fontWeight : 'bold'}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                         :
-                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica"}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
                     }
                     <View>
                         {listView}
@@ -712,7 +712,7 @@ class MainView extends Component {
                     <TouchableOpacity  style={styles.name}
                         // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                         >
-                        <Text style={{fontSize : 13, color :'#000' ,textAlign:align }}>{service_name}</Text>
+                        <Text style={{fontSize : 15, color :'#989898' ,textAlign:align }}>{service_name}</Text>
                     </TouchableOpacity>
                     <Text style={[styles.description, {textAlign:align }]}>{short_description}</Text>
                 </View>
@@ -865,15 +865,11 @@ class MainView extends Component {
     }
     fetchDataByService (){
         const {
-            // u_id,
-            // country,
             user_type, servicerows } = this.state;
         const { u_id, country} = this.props;
         let formData = new FormData();
         formData.append('service_id', servicerows.toString());
         formData.append('country', String(country));
-        // formData.append('u_id', String(user_type));
-        // console.log("request:=",formData)
         const config = {
             method: 'POST',
             headers: {
@@ -1069,22 +1065,14 @@ class MainView extends Component {
                     <TouchableOpacity  style={styles.name}
                     onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}
                     >
-                    <Text style={{fontSize : 10, color :'#989898', textAlign: align }}>{product_name}</Text>
+                    <Text style={{fontSize : 15, color :'#989898', textAlign: align }}>{product_name}</Text>
                     </TouchableOpacity>
-                    <View style={styles.description}>
+                    <View style={{ marginTop : 10}}>
                         <Header
                         product_category= {data.product_category}
                         u_id={u_id}
                         country={country}
                         lang={lang}/>
-                    </View>
-                    <View style={{
-                        flexDirection: direction,
-                        justifyContent: 'space-between',
-                        marginTop : 10
-                    }}>
-                        <Text style={[styles.special_price,{ textAlign:align}]}>{data.special_price} KWD</Text>
-                        <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine, textAlign: align}}>{data.price} KWD</Text>
                     </View>
                 </View>
             </View>
@@ -1179,6 +1167,7 @@ var styles = StyleSheet.create({
     },
     description : {
         marginTop : 15,
+        fontSize : 15
     },
     special_price : {
         fontSize : 10,
@@ -1236,7 +1225,7 @@ var styles = StyleSheet.create({
     },
     category:{
         color :'#000',
-        fontSize : 10
+        fontSize : 15
     },
     sidebar :{}
 });
