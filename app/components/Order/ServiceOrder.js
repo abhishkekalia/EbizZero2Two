@@ -152,17 +152,17 @@ export default class ServiceOrder extends Component {
                     </View>
                 </View>
                 <View style={{ flexDirection : 'column', paddingLeft:10, paddingTop:5, paddingBottom:5, backgroundColor: '#F6F6F6'}} >
-                    <View style={{flexDirection: direction, paddingTop:1}}>
+                    <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.servicename', { locale: lang })}</Text>
                             <Text style={styles.label}>: </Text>
                         <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
                     </View>
-                    <View style={{flexDirection: direction, paddingTop:1}}>
+                    <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.customeremail', { locale: lang })}</Text>
                             <Text style={styles.label}>: </Text>
                         <Text style={styles.bodyText}>{data.serviceDetail.short_description}</Text>
                     </View>
-                    <View style={{flexDirection: direction, paddingTop:1}}>
+                    <View style={{flexDirection: direction, paddingTop:1, marginTop:5, marginBottom:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
                         <Text style={styles.label}>: </Text>
                         <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>

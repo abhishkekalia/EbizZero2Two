@@ -694,13 +694,37 @@ class Newaddress extends Component{
                     animationType="slide"
                     transparent={false}
                     onRequestClose={() => this.setState({ FullMapVisible :false})}>
-                <View style={{ flexDirection: direction, position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'space-around', height: 40, width: "90%", alignSelf: 'center', marginTop: 10}}>
+                <View style={{ 
+                    flexDirection: direction, 
+                    position: 'absolute', 
+                    zIndex: 1,
+                    // backgroundColor: "transparent", 
+                    justifyContent: 'space-around', 
+                    height: 40, 
+                    width: "90%", 
+                    alignSelf: 'center', 
+                    marginTop: Platform.OS === 'ios' ? 25 : 10,
+                }}>
                     <TouchableOpacity style={{
-                        borderWidth:1, borderColor:'#ccc',height:40, justifyContent:'center', alignItems:'center',
-                        backgroundColor:'transparent', top : 0, marginBottom:10, alignItems:'center'}} onPress={()=>
+                        borderWidth:1, 
+                        borderColor:'black',
+                        height:40, 
+                        justifyContent:'center', 
+                        alignItems:'center',
+                        // backgroundColor:'transparent', 
+                        top : 0, 
+                        marginBottom:10, 
+                        alignItems:'center',
+                        backgroundColor:'white',
+                    }} onPress={()=>
                             this.loadAddressFromMap()
                         }>
-                        <Text style={{ color:'grey',padding:0, borderColor:'grey', padding:10}} textAlign='center'>{I18n.t('newAddress.picklocation', { locale: lang })}</Text>
+                        <Text style={{ 
+                            color:'black',
+                            padding:0, 
+                            // borderColor:'black', 
+                            padding:10
+                        }} textAlign='center'>{I18n.t('newAddress.picklocation', { locale: lang })}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -797,9 +821,20 @@ class Newaddress extends Component{
                         })
                     }
                     else if (element.types.includes("country")) {
-                        this.setState({
-                            country : element.long_name
-                        })
+                        console.log("this.state.countryList:=",this.state.countryList)
+                        for (let index = 0; index < this.state.countryList.length; index++) {
+                            let countryObj = this.state.countryList[index];
+                            if (countryObj.country_name == element.long_name) {
+                                // selCountryObj = element
+                                this.setState({
+                                    country : countryObj.country_id
+                                })
+                            }
+                        }
+
+                        // this.setState({
+                        //     country : element.long_name
+                        // })
                     }
 
                 }

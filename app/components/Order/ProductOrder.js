@@ -122,6 +122,7 @@ class ProductOrder extends Component{
         fetch(Utils.gurl('userOrderList'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("responseData:=",responseData)
             var orders = responseData.data,
             length = orders.length,
             dataBlob = {},
@@ -271,13 +272,13 @@ class ProductOrder extends Component{
         return (
             <View style={[styles.section, { flexDirection: direction}]}>
                 <View style={{flexDirection: direction}}>
-                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>{I18n.t('userorderhistory.productid', { locale: lang })}</Text>
-                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>:</Text>
+                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>{I18n.t('userorderhistory.orderdt', { locale: lang })}</Text>
+                    <Text style={[styles.text,{ color: '#fbcdc5'}]}> : </Text>
                     <Text style={[styles.text,{ color: '#fbcdc5'}]}>{sectionData}</Text>
                 </View>
                 <View style={{flexDirection: direction}}>
                     <Text style={[styles.text,{ color: '#a9d5d1'}]}>{I18n.t('userorderhistory.orderid', { locale: lang })}</Text>
-                    <Text style={[styles.text,{ color: '#a9d5d1'}]}>:</Text>
+                    <Text style={[styles.text,{ color: '#a9d5d1'}]}> : </Text>
                     <Text style={[styles.text,{ color: '#a9d5d1'}]}>{sectionID}</Text>
                 </View>
             </View>
@@ -288,7 +289,7 @@ class ProductOrder extends Component{
         let direction = lang == 'ar'? 'row-reverse': 'row';
         return (
             <TouchableOpacity
-                style={{ padding : 10}}
+                style={{ padding : 10, paddingTop:5}}
                 onPress ={()=>this.setState({
                     visibleMap :true
                 })}
@@ -299,22 +300,22 @@ class ProductOrder extends Component{
                             <Text style={styles.rowText}> : </Text>
                             <Text style={styles.rowText}>{rowID.product_id} </Text>
                     </View>
-                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center', marginTop:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.productnm', { locale: lang })}</Text>
                             <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{rowID.product_name} </Text>
                     </View>
-                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center', marginTop:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.quantity', { locale: lang })}</Text>
                             <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{rowID.quantity} </Text>
                     </View>
-                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center', marginTop:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.orderstatus', { locale: lang })}</Text>
                             <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{ rowID.order_status ? 'pending' : 'paid'} </Text>
                     </View>
-                    <View style={{ flexDirection : direction, alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction, alignItems: 'center', marginTop:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
                             <Text style={styles.rowText}> : </Text>
                         <Text style={styles.rowText}>{rowID.price} </Text>
