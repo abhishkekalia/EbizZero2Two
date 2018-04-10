@@ -259,7 +259,7 @@
         "enterblock":"الرجاء أختيار القطعة",
         "enterstreet":"الرجاء أختيار الشارع",
         "enterhouseno":"الرجاء أختيار رقم المنزل",
-        "entercountry":"الرجاء أختيار دولة",
+        "entercountry":"الرجاء أختيار دولة"
     },
     "settings":{
         "notification":"تنبيه",
@@ -401,7 +401,7 @@
         "detaildesc_ar_err":"يرجى إدخال التفاصيل باللغه العربية",
         "errorwhileUpload":"حدث خطا خلال التحميل",
         "english":"English",
-        "arabic": "اخت",
+        "arabic": "اخت"
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",

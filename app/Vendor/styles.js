@@ -68,8 +68,9 @@ export default StyleSheet.create({
     	// left : 10
     },
     label : {
-    	left : 10,
-    	color : '#a9d5d1'
+    	left : 0,
+        color : '#a9d5d1',
+        marginVertical:10
     },
     chip : {
         justifyContent: 'space-between',

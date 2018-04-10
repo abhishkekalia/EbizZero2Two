@@ -105,6 +105,7 @@ class MyService extends Component {
         let listView = (<View></View>);
             listView = (
                <ListView
+                contentContainerStyle={{paddingBottom:64,paddingTop:10}}
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
@@ -171,27 +172,27 @@ class MyService extends Component {
                         source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null}}
                         />
                     <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-                        <Text style={{ color:'#222',fontWeight :'bold', marginTop: 10, textAlign: textline}} > {service_name}</Text>
+                            <Text style={{ color:'#222', fontSize:15, fontWeight :'bold', marginTop: 0, textAlign: textline}} >{service_name}</Text>
                             <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>
                             <View style={{ flexDirection : direction}}>
-                                <View style={{ flexDirection : direction}}>
-                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {I18n.t('vendorservice.price', { locale: lang })}</Text>
+                                <View style={{ flexDirection : direction, marginTop:5}}>
+                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}>{I18n.t('vendorservice.price', { locale: lang })}</Text>
                                     <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline, alignSelf: 'center'}}> :</Text>
-                                    <Text style={{ color: '#696969', fontSize: 10, alignSelf: 'center'}}>{price} KWD</Text>
+                                    <Text style={{ color: '#696969', fontSize: 12, alignSelf: 'center'}}>{price} KWD</Text>
                                 </View>
                             </View>
                             <View style={{ flexDirection : direction}}>
-                                <View style={{ flexDirection : direction}}>
-                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {I18n.t('vendorservice.spprice', { locale: lang })}</Text>
+                                <View style={{ flexDirection : direction, marginTop:5}}>
+                                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}>{I18n.t('vendorservice.spprice', { locale: lang })}</Text>
                                     <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> :</Text>
-                                        <Text style={{color : '#696969', fontSize: 10,  alignSelf: 'center'}} >{data.special_price} KWD</Text>
+                                        <Text style={{color : '#696969', fontSize: 12,  alignSelf: 'center'}} >{data.special_price} KWD</Text>
                                 </View>
                             </View>
                             <View style={{ flexDirection : direction}}>
-                                <View style={{ flexDirection : direction}}>
-                                    <Text style={{color : '#696969', fontSize: 10}} >{I18n.t('vendorservice.status', { locale: lang })}</Text>
-                                    <Text style={{color : '#696969', fontSize: 10}} >:</Text>
-                                    <Text style={{color : '#696969', fontSize: 10,  alignSelf: 'center'}} >{data.is_approved}</Text>
+                                <View style={{ flexDirection : direction, marginTop:5}}>
+                                    <Text style={{color : '#a9d5d1', fontSize: 12}} >{I18n.t('vendorservice.status', { locale: lang })}</Text>
+                                    <Text style={{color : '#a9d5d1', fontSize: 12}} >:</Text>
+                                    <Text style={{color : '#696969', fontSize: 12,  alignSelf: 'center'}} > {data.is_approved}</Text>
                                </View>
                             </View>
 
@@ -224,9 +225,9 @@ class Header extends Component{
         return (
             <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc', flexDirection: direction}]}>
                 <View style={{ flexDirection : direction, height: 40}}>
-                    <Text style={{color:"#fbcdc5", fontSize: 12, textAlign: textline, alignSelf: 'center'}}> {I18n.t('vendorservice.categories', { locale: lang })}</Text>
-                    <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline ,  alignSelf: 'center'}}> :</Text>
-                    <Text style={{ color:"#222", fontSize: 12,textAlign: textline, alignSelf: 'center'}}>{ this.props.service_type ? this.props.service_type: undefined} </Text>
+                    <Text style={{color:"#fbcdc5", fontSize: 14, textAlign: textline, alignSelf: 'center', fontWeight:'bold', marginLeft:5}}> {I18n.t('vendorservice.categories', { locale: lang })}</Text>
+                    <Text style={{color:"#a9d5d1", fontSize: 14, textAlign: textline ,  alignSelf: 'center'}}> :</Text>
+                    <Text style={{ color:"#222", fontSize: 14,textAlign: textline, alignSelf: 'center'}}> { this.props.service_type ? this.props.service_type: undefined} </Text>
                 </View>
             </View>
         );
@@ -275,11 +276,11 @@ class Footer extends Component{
         return(
             <View style={[styles.bottom, {flexDirection: direction}]}>
                 <TouchableOpacity
-                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
+                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1', marginLeft:10}]}
                     onPress={this.props.calllback}>
                     <Text style={{ color :'#fff', fontSize: 12}}>{I18n.t('vendorservice.previewbtn', { locale: lang })}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
+                <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5', marginRight:10}]}
                     onPress={()=>this.serviceActiveDeactive(this.props.service_id, approv_code)}>
                     <Text style={{ color :'#fff', fontSize : 12, textAlign: textline}}>{approved}</Text>
                 </TouchableOpacity>

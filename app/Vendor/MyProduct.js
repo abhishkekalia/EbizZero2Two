@@ -34,21 +34,21 @@ class MyProduct extends Component {
             u_id : null,
             country : null,
             text: '',
-            productnames: []
+            // productnames: []
         }
         this.arrayholder = [] ;
     }
     componentDidMount(){
         this.setState({
             dataSource: this.props.dataSource,
-            productnames:this.props.productnames,
+            // productnames:this.props.productnames,
             isLoading : this.props.isLoading
         });
     }
     componentWillReceiveProps(nextProps) {
         this.setState({
             dataSource: nextProps.dataSource,
-            productnames:nextProps.productnames,
+            // productnames:nextProps.productnames,
             isLoading : nextProps.isLoading
         });
     }
@@ -126,7 +126,7 @@ class MyProduct extends Component {
         const { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
-        let asce = this.state.productnames.sort((a, b)=>{return a});
+        // let asce = this.state.productnames.sort((a, b)=>{return a});
         if (this.state.isLoading) {
             return (
                 <View style={{flex: 1, paddingTop: 20, justifyContent: 'center'}}>
@@ -134,7 +134,7 @@ class MyProduct extends Component {
                 </View>
             );
         }
-        let listView = (<View></View>);
+            let listView = (<View></View>);
             listView = (
                 <ListView
                     enableEmptySections={true}
@@ -149,9 +149,9 @@ class MyProduct extends Component {
                 <View style={{ flex: 1}}>
                     <View style={{ flexDirection: direction}}>
                         {data}
-                        <ScrollView style={{marginBottom: 50}}>
+                        {/* <ScrollView style={{marginBottom: 50}}>
                             { (this.state.dataSource.getRowCount() > 0 ) ? this.state.productnames.map((data, index) => this._renderRightLetters(data, index)) : undefined}
-                        </ScrollView>
+                        </ScrollView> */}
                     </View>
                 </View>
             );
@@ -215,29 +215,29 @@ class MyProduct extends Component {
                             source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                             />
                         <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                            <Text style={ { color:'#222',fontWeight :'bold', marginTop: 10, textAlign: textline}} >  {product_name} </Text>
-                            <Text style={{ fontSize : 12, color : '#222',  textAlign: textline}} > {short_description} </Text>
-                            <View style={{ flexDirection : direction}}>
-                                <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {I18n.t('vendorproducts.quantity', { locale: lang })}</Text>
+                            <Text style={ { color:'#222', fontSize : 16, fontWeight :'bold', marginTop: 10, textAlign: textline}}>{product_name}</Text>
+                            <Text style={{ fontSize : 12, color : '#222',  textAlign: textline, marginTop:5}}>{short_description} </Text>
+                            <View style={{ flexDirection : direction, marginTop:5}}>
+                                <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}>{I18n.t('vendorproducts.quantity', { locale: lang })}</Text>
                                 <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> :</Text>
                                 <Text style={{color:"#a9d5d1", fontSize: 12, textAlign: textline}}> {data.quantity} </Text>
                             </View>
                             <View style={{ flexDirection : "column", justifyContent : 'space-between'}}>
-                                <View style={{ flexDirection : direction}}>
+                                <View style={{ flexDirection : direction, marginTop:5}}>
                                     <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}} >{I18n.t('vendorproducts.price', { locale: lang })} </Text>
                                     <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}} >: </Text>
-                                    <Text style={{ color: '#222', fontSize:12,  textAlign: textline}}> {data.price} KWD</Text>
+                                    <Text style={{ color: '#222', fontSize:12,  textAlign: textline}}>{data.price} KWD</Text>
                                 </View>
-                                <View style={{ flexDirection : direction}}>
+                                <View style={{ flexDirection : direction, marginTop:5}}>
                                     <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>{I18n.t('vendorproducts.special_price', { locale: lang })}</Text>
                                     <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>:</Text>
                                     <Text style={{ color: '#222', fontSize:12, textAlign: textline}}> {data.special_price} KWD</Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection : direction}}>
+                            <View style={{ flexDirection : direction, marginTop:5, marginBottom:10}}>
                                 <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>{I18n.t('vendorproducts.status', { locale: lang })}</Text>
                                 <Text style={{color : '#fbcdc5', fontSize:12, textAlign: textline}}>:</Text>
-                                <Text style={{color: '#222',fontSize:12, textAlign: textline}}>{data.is_approved ? I18n.t('vendorproducts.aproved', { locale: lang }) : I18n.t('vendorproducts.pending', { locale: lang })} </Text>
+                                <Text style={{color: '#a9d5d1',fontSize:12, textAlign: textline}}> {data.is_approved ? I18n.t('vendorproducts.aproved', { locale: lang }) : I18n.t('vendorproducts.pending', { locale: lang })} </Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -314,7 +314,7 @@ class Header extends Component{
         textline = lang == 'ar'? 'right': 'left';
         return (
             <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor:'#ccc', flexDirection: direction}}>
-                <Text style={{ color : '#fbcdc5', padding: 10, textAlign: textline}}>{I18n.t('vendorproducts.categories', { locale: lang })}</Text>
+                <Text style={{ color : '#fbcdc5', padding: 10, textAlign: textline, fontWeight: 'bold'}}>{I18n.t('vendorproducts.categories', { locale: lang })}</Text>
                 <Text style={{ color : '#fbcdc5', alignSelf: 'center'}}>:</Text>
                 <Text style={{padding: 10, color:"#222", textAlign: textline}}>{ this.state.product_category ? resultObject: undefined}
                 </Text>
@@ -385,13 +385,13 @@ class Footer extends Component{
             approv_code = '1'
         }
         return(
-            <View style={[styles.bottom, { flexDirection: direction}]}>
+            <View style={[styles.bottom, { flexDirection: direction, backgroundColor:'rgba(247,246,245,1)'}]}>
                 <TouchableOpacity
-                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1'}]}
+                    style={[styles.lowerButton,{ backgroundColor : '#a9d5d1', marginLeft:10}]}
                     onPress={this.props.calllback}>
                     <Text style={{ color :'#fff', fontSize: 12, textAlign: textline}}>{I18n.t('vendorproducts.preview', { locale: lang })}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5'}]}
+                <TouchableOpacity style={[styles.lowerButton, { backgroundColor : '#fbcdc5', marginRight:10}]}
                     onPress={()=>this.productActiveDeactive(this.props.product_id, approv_code)}>
                     <Text style={{ color :'#fff', fontSize : 12, textAlign: textline}}>{approved}</Text>
                 </TouchableOpacity>

@@ -417,7 +417,7 @@
         "previewbtn":"Preview",
         "apierr":"error while fetching data",
         "activate":"Activate",
-        "deactivate":"Deactivate",
+        "deactivate":"Deactivate"
     },
     "vendoraddservice":{
         "addservice":"Add Service",
@@ -527,6 +527,6 @@
     },
     "deals":{
         "dealTitle":"Deals & Offres",
-        "buyitnowbtn":"Buy It Now",
+        "buyitnowbtn":"Buy It Now"
     }
 }

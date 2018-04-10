@@ -459,7 +459,7 @@ class EditProduct extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                                 value={this.state.product_name_in_arabic}
                                 // onFocus={()=>this.hidetab()}
                                 underlineColorAndroid = 'transparent'
@@ -483,7 +483,7 @@ class EditProduct extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                                 value={this.state.productname}
                                 // onFocus={()=>this.hidetab()}
                                 underlineColorAndroid = 'transparent'
@@ -511,7 +511,7 @@ class EditProduct extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                                 value={this.state.short_description_in_arabic}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
@@ -534,7 +534,7 @@ class EditProduct extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                                 value={this.state.shortdescription}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
@@ -561,7 +561,7 @@ class EditProduct extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                                 value={this.state.detail_description_in_arabic}
                                 numberOfLines={3}
                                 multiline
@@ -589,7 +589,7 @@ class EditProduct extends Component {
                             <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                         </View>
                         <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height), textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                             value={this.state.detaildescription}
                             numberOfLines={3}
                             multiline
@@ -618,7 +618,7 @@ class EditProduct extends Component {
                         <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                     </View>
                     <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10, paddingRight:10}]}
                         value={this.state.price}
                         keyboardType={'numeric'}
                         underlineColorAndroid = 'transparent'
@@ -641,7 +641,7 @@ class EditProduct extends Component {
                         <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                     </View>
                     <TextInput
-                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                        style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10, paddingRight:10}]}
                         value={this.state.special}
                         underlineColorAndroid = 'transparent'
                         keyboardType={'numeric'}
@@ -810,20 +810,22 @@ class UpdateQuan extends Component {
         return(
             <View>
                 <View>
-                    <View style={{ flexDirection:'row', justifyContent: 'space-around', alignItems: 'center'}}>
-                            <Text style={{ alignSelf: 'center'}}> #Id</Text>
-                            <Text style={{ alignSelf: 'center'}}>Size </Text>
-                            <Text style={{ alignSelf: 'center'}}> Quantity </Text>
-                            <Text style={{ alignSelf: 'center'}}> Action </Text>
-                                <TouchableOpacity
+                    <TouchableOpacity
                                 onPress={() => this.newSize()}>
+                                <View style={{flexDirection:'row', alignItems:'center', marginRight:10,marginBottom:10}}>
+                                    <Text style={{color:'#a9d5d1'}}>{I18n.t('vendoraddproduct.sizequantitybtn', { locale: lang })}</Text>
                                     <Icon style={{padding:5}} name='add' size={25} color="#a9d5d1" />
-                                </TouchableOpacity>
-
+                                </View>
+                    </TouchableOpacity>
+                    <View style={{ flexDirection:'row', justifyContent: 'space-around', alignItems: 'center'}}>
+                        <Text style={{ alignSelf: 'center'}}>#Id</Text>
+                        <Text style={{ alignSelf: 'center'}}>Size</Text>
+                        <Text style={{ alignSelf: 'center'}}>Quantity</Text>
+                        <Text style={{ alignSelf: 'center'}}>Action</Text>
                     </View>
                     {
                         sizeRows.map((prop, key) => { return (
-                            <View style={{flex:1,flexDirection:'row', justifyContent: 'space-around'}}>
+                            <View style={{flex:1,flexDirection:'row', justifyContent: 'space-around', alignItems: 'center'}}>
                                   <Text style={{ alignSelf: 'center'}}>{prop.size_id} </Text>
                                   <Text style={{ alignSelf: 'center'}}> {prop.size} </Text>
                                   <Text style={{ alignSelf: 'center'}}> {prop.quantity} </Text>
@@ -833,19 +835,20 @@ class UpdateQuan extends Component {
                                     <Icon style={{padding:5}} name='create' size={25} color="#a9d5d1" />
                                 </TouchableOpacity>
                               </View>
-                          </View>
-                    );
-                 })}
+                            </View>
+                        );
+                        })
+                    }
                 </View>
                 <Modal isVisible={this.state.editSizeModal}>
-                  <View style={{ padding:10, backgroundColor : '#fff'}}>
-                      <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center'}}>Edit Quantity & Size</Text>
-                      <View style={{flexDirection: direction, width: '90%'}}>
+                  <View style={{ padding:10, backgroundColor : '#fff', borderRadius:5}}>
+                      <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center', marginTop:10}}>Edit Quantity & Size</Text>
+                      <View style={{flexDirection: direction, width: '90%', marginTop:10}}>
                           <Text style={{color :"#a9d5d1" ,bottom : 10}}>Quantity</Text>
                           <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
                       </View>
                         <TextInput
-                          style={[commonStyles.inputs, { bottom : 20,  textAlign: textline, width: '90%'}]}
+                          style={[commonStyles.inputs, { bottom : 20,  textAlign: textline, width: '90%', marginTop:5, paddingLeft:5}]}
                           value={this.state.quantity}
                           underlineColorAndroid = 'transparent'
                           autoCorrect={false}
@@ -865,7 +868,7 @@ class UpdateQuan extends Component {
                           <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
                       </View>
                       <TextInput
-                          style={[commonStyles.inputs, {bottom : 20,  textAlign: textline, width: '90%'}]}
+                          style={[commonStyles.inputs, {bottom : 20,  textAlign: textline, width: '90%', marginTop:5, paddingLeft:5}]}
                           value={this.state.size}
                           underlineColorAndroid = 'transparent'
                           autoCorrect={false}

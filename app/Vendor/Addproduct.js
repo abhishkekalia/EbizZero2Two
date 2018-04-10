@@ -512,8 +512,8 @@ class AddProduct extends Component {
 
                 <KeyboardAwareScrollView>
                     <View style={commonStyles.ImageAdd}>
-                        <Text style={{color: borderColorImage, marginBottom : 10, textAlign: textline}}>{I18n.t('vendoraddproduct.selectprodimg', { locale: lang })}</Text>
-                        <Text style={{color: "#696969", fontSize:12, marginBottom : 5,textAlign: textline}}>{I18n.t('vendoraddproduct.clickimgtoupload', { locale: lang })}</Text>
+                        <Text style={{color: borderColorImage, marginBottom : 10, textAlign: textline, marginTop:20}}>{I18n.t('vendoraddproduct.selectprodimg', { locale: lang })}</Text>
+                        <Text style={{color: "#696969", fontSize:12, marginBottom : 10,textAlign: textline}}>{I18n.t('vendoraddproduct.clickimgtoupload', { locale: lang })}</Text>
                         <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
                             <Feather
                                 onPress={this.selectPhotoTapped.bind(this)}
@@ -524,8 +524,8 @@ class AddProduct extends Component {
                                 <SelectedImage
                                     productImages={this.state.rows}/>}
                         </View>
-                        <TouchableOpacity style={commonStyles.addCat} onPress={this.showActionSheet}>
-                            <Text style={{textAlign: textline}}>{ this.state.product_category ? this.state.options[this.state.product_category] : I18n.t('vendoraddproduct.addproductcategory', { locale: lang })}</Text>
+                        <TouchableOpacity style={[commonStyles.addCat,{marginTop:25}]} onPress={this.showActionSheet}>
+                            <Text style={{textAlign: textline, paddingVertical:5}}>{ this.state.product_category ? this.state.options[this.state.product_category] : I18n.t('vendoraddproduct.addproductcategory', { locale: lang })}</Text>
                             <ActionSheet
                                 ref={o => this.ActionSheet = o}
                                 title={title}
@@ -561,7 +561,7 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10,}]}
                                     value={this.state.product_name_in_arabic}
                                     // onFocus={()=>this.hidetab()}
                                     underlineColorAndroid = 'transparent'
@@ -585,7 +585,7 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10,}]}
                                     value={this.state.productname}
                                     // onFocus={()=>this.hidetab()}
                                     underlineColorAndroid = 'transparent'
@@ -612,7 +612,7 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10,}]}
                                     value={this.state.short_description_in_arabic}
                                     // onFocus={this.textInputFocused.bind(this)}
                                     underlineColorAndroid = 'transparent'
@@ -636,7 +636,7 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10,}]}
                                     value={this.state.shortdescription}
                                     // onFocus={this.textInputFocused.bind(this)}
                                     underlineColorAndroid = 'transparent'
@@ -663,10 +663,10 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10,}]}
                                     value={this.state.detail_description_in_arabic}
                                     numberOfLines={3}
-                                    multiline
+                                    multiline={true}
                                     underlineColorAndroid = 'transparent'
                                     autoCorrect={false}
                                     placeholder={I18n.t('vendoraddproduct.detaildesc', { locale: languageChoose })}
@@ -691,10 +691,10 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10,}]}
                                     value={this.state.detaildescription}
                                     numberOfLines={3}
-                                    multiline
+                                    multiline = {true}
                                     underlineColorAndroid = 'transparent'
                                     autoCorrect={false}
                                     placeholder={I18n.t('vendoraddproduct.detaildesc', { locale: languageChoose })}
@@ -721,7 +721,7 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10,paddingRight:10,}]}
                                     value={this.state.price}
                                     keyboardType={'numeric'}
                                     underlineColorAndroid = 'transparent'
@@ -746,7 +746,7 @@ class AddProduct extends Component {
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                                 </View>
                                 <TextInput
-                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                    style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10,paddingRight:10,}]}
                                     value={this.state.special}
                                     underlineColorAndroid = 'transparent'
                                     keyboardType={'numeric'}
@@ -772,9 +772,8 @@ class AddProduct extends Component {
                                     fontSize: 15,
                                     fontWeight: 'bold',
                                     // fontFamily: 'Snell Roundhand'
-                                    alignItems: align
+                                    alignItems: align,
                                 }}
-
                                 containerStyle= {{
                                     marginLeft: 10,
                                     marginRight: 10,
@@ -819,12 +818,12 @@ class AddProduct extends Component {
                                 <View style={[commonStyles.textField, {flexDirection: direction}]}>
                                     <Text style={commonStyles.label}>{I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}</Text>
                                     <Text style={commonStyles.label}>*</Text>
-                                    <Text style={{ color : '#000', left : 20 }}>{quantityRows.toString()}</Text>
+                                    <Text style={{ color : '#000', left : 20, marginTop:10 }}>{quantityRows.toString()}</Text>
                                 </View>
                                 <View style={[commonStyles.textField, {flexDirection: direction}]}>
                                     <Text style={commonStyles.label}>{I18n.t('vendoraddproduct.sizelbl', { locale: lang })}</Text>
                                     <Text style={commonStyles.label}>*</Text>
-                                    <Text style={{ color : '#000',left : 20}}>{sizeRows.toString()}</Text>
+                                    <Text style={{ color : '#000',left : 20, marginTop:10 }}>{sizeRows.toString()}</Text>
                                 </View>
                             </View>
                             <TouchableOpacity style={{
@@ -839,14 +838,14 @@ class AddProduct extends Component {
                         </View>
                     </View>
                     <Modal isVisible={this.state.additional}>
-                        <View style={{ padding:10, backgroundColor : '#fff'}}>
-                            <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center'}}>{I18n.t('vendoraddproduct.sizequantitybtn', { locale: lang })}</Text>
-                            <View style={{flexDirection: direction, width: '90%'}}>
+                        <View style={{ padding:10, backgroundColor : '#fff', borderRadius:5}}>
+                            <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center', marginTop:10}}>{I18n.t('vendoraddproduct.sizequantitybtn', { locale: lang })}</Text>
+                            <View style={{flexDirection: direction, width: '90%', marginTop:10}}>
                                 <Text style={{color :"#a9d5d1" ,bottom : 10}}>{I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}</Text>
                                 <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputs, { bottom : 20,  textAlign: textline, width: '90%'}]}
+                                style={[commonStyles.inputs, { bottom : 20,  textAlign: textline, width: '90%', marginTop:5, paddingLeft:5}]}
                                 value={this.state.quantity}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
@@ -861,13 +860,13 @@ class AddProduct extends Component {
                                     this.inputs['one'] = input;
                                 }}
                                 onChangeText={(quantity) => this.setState({quantity})}
-                                />
+                            />
                             <View style={{flexDirection: direction, width: '90%'}}>
                                 <Text style={{color :"#a9d5d1" ,bottom : 10}}>{I18n.t('vendoraddproduct.sizelbl', { locale: lang })}</Text>
                                 <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputs, {bottom : 20,  textAlign: textline, width: '90%'}]}
+                                style={[commonStyles.inputs, {bottom : 20,  textAlign: textline, width: '90%', marginTop:5, paddingLeft:5}]}
                                 value={this.state.Size}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}

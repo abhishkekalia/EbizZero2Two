@@ -429,7 +429,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5,textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5,textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                                 value={this.state.service_type}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
@@ -452,7 +452,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                                 value={this.state.service_type}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
@@ -478,7 +478,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                                 value={this.state.service_name_in_arabic}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
@@ -501,7 +501,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                                style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                                 value={this.state.service_name}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
@@ -527,7 +527,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                             value={this.state.short_description_in_arabic}
                             underlineColorAndroid = 'transparent'
                             autoCorrect={false}
@@ -550,7 +550,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                             value={this.state.short_description}
                             underlineColorAndroid = 'transparent'
                             autoCorrect={false}
@@ -576,7 +576,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                             value={this.state.detail_description_in_arabic}
                             numberOfLines={3}
                             multiline
@@ -604,7 +604,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5, height: Math.max(35, this.state.height),  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                             value={this.state.detail_description}
                             numberOfLines={3}
                             multiline
@@ -634,7 +634,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10, paddingRight:10}]}
                             value={this.state.price}
                             keyboardType={'numeric'}
                             underlineColorAndroid = 'transparent'
@@ -659,7 +659,7 @@ class EditService extends Component {
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
                             <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left'}]}
+                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10, paddingRight:10}]}
                             value={this.state.special_price}
                             underlineColorAndroid = 'transparent'
                             keyboardType={'numeric'}
@@ -674,7 +674,7 @@ class EditService extends Component {
                             />
                         </View>
                     {/* --------------------------service special price end-----------*/}
-                    <View style={[commonStyles.feature, { flexDirection: direction}]}>
+                    <View style={[commonStyles.feature, { flexDirection: direction,marginTop:10}]}>
                         <View style={{ width: '80%', flexDirection: direction}}>
                             <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.isfeature', { locale: lang })}</Text>
                             <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
@@ -700,7 +700,7 @@ class EditService extends Component {
                             <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })}</Text>
                             <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
                         </View>
-                        <Icon name={is_weekend_work} size={20}/>
+                        <Icon name={is_weekend_work} size={20} style={{marginTop:8}}/>
                     </TouchableOpacity>
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
