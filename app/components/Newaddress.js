@@ -431,13 +431,13 @@ class Newaddress extends Component{
                         alignItems : (Platform.OS === 'ios') ? 'flex-end' :'center',
                     }
                 }>
-                <Ionicons name="ios-arrow-back" size={25} color='#fff' 
-                style={lang == 'ar' ? 
-                {transform: [{ rotate: '180deg'}], padding: 10 } 
-                : 
-                {paddingLeft: (Platform.OS === 'ios') ? 10 : 10, marginTop: Platform.OS === 'ios' ? 12 : 0 , alignSelf: 'center'} 
-                } 
-                
+                <Ionicons name="ios-arrow-back" size={25} color='#fff'
+                style={lang == 'ar' ?
+                {transform: [{ rotate: '180deg'}], padding: 10 }
+                :
+                {paddingLeft: (Platform.OS === 'ios') ? 10 : 10, marginTop: Platform.OS === 'ios' ? 12 : 0 , alignSelf: 'center'}
+                }
+
                 onPress={()=> routes.pop()}
                 />
                 <Text style={{color:'#fff', top:Platform.OS === 'ios' ? -15 : 0 }}>{ this.props.address_id ? I18n.t('newAddress.updateaddr', { locale: lang }) : I18n.t('newAddress.newaddrtitle', { locale: lang })}</Text>
@@ -620,7 +620,7 @@ class Newaddress extends Component{
                         />
                         <TouchableOpacity style={{flex:1}} onPress={() => this.setState({FullMapVisible : true})}>
                             <View style={{ flex: 1,backgroundColor: 'white'}} >
-                                {Platform.OS === 'ios' ? 
+                                {Platform.OS === 'ios' ?
                                     <MapView
                                         style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
                                         // provider={PROVIDER_GOOGLE}
@@ -728,7 +728,7 @@ class Newaddress extends Component{
                     </TouchableOpacity>
                 </View>
 
-                {Platform.OS === 'ios' ?  
+                {Platform.OS === 'ios' ?
                     <MapView
                         // provider={PROVIDER_GOOGLE}
                         initialRegion={this.state.region}
@@ -789,7 +789,7 @@ class Newaddress extends Component{
                                 />
 
                     </MapView>
-                }                
+                }
 
                 </Modal>
             </View>
