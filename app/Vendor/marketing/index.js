@@ -145,13 +145,15 @@ class UploadAdd extends Component {
         return (
         <View style={{
             flex: 1,
-            justifyContent: 'space-between',
+            justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'white',
+            // backgroundColor:'red',
+            alignContent:'center',
         }}>
             <TouchableOpacity style={styles.upload} onPress={()=> Actions.marketingcompaign()}>
             <Feather name="upload-cloud" size= {20} color="#fff" />
-            <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
+            <Text style={{color : '#fff',  marginLeft:5}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
             </TouchableOpacity>
             <View style={{
                 flex: 1,
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
         // position :'absolute',
         padding : 10,
         backgroundColor : '#fbcdc5',
-        marginLeft : 70,
+        marginLeft : 0,
         top : 10,
         flexDirection : 'row',
         borderRadius : 5

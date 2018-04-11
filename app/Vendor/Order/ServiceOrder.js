@@ -69,6 +69,7 @@ export default class ServiceOrder extends Component {
         fetch(Utils.gurl('getbookedServiceForVendor'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("responseData:=",responseData)
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
@@ -152,37 +153,37 @@ export default class ServiceOrder extends Component {
                 title :data.userDetail.fullname,
                 addressDetail : data.addressDetail,
             })}>
-                <View style={[styles.header, { flexDirection: direction}]}>
+                <View style={[styles.header, { flexDirection: direction, marginHorizontal:10, marginTop:5}]}>
                     <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.bookingdt', { locale: lang })}</Text>
-                            <Text style={styles.label}>:</Text>
+                            <Text style={styles.label}> : </Text>
                         <Text style={styles.bodyText}>{data.service_datetime}</Text>
                     </View>
                     <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.amount', { locale: lang })}</Text>
-                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.label}> : </Text>
                         <Text style={styles.bodyText}>{data.amount}</Text>
                     </View>
                 </View>
-                <View style={lang == 'ar'? { right : 10}: { left : 10}} >
+                <View style={lang == 'ar'? { right : 10}: { left : 10, marginHorizontal:10, marginTop:5}}>
                     <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.servicenm', { locale: lang })}</Text>
-                            <Text style={styles.label}>:</Text>
+                            <Text style={styles.label}> : </Text>
                         <Text style={styles.bodyText}>{service_name}</Text>
                     </View>
-                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff', marginTop:5}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.customername', { locale: lang })}</Text>
-                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.label}> : </Text>
                         <Text style={styles.bodyText}>{data.userDetail.fullname}</Text>
                     </View>
-                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff', marginTop:5}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.customeremail', { locale: lang })}</Text>
-                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.label}> : </Text>
                         <Text style={styles.bodyText}>{data.userDetail.email}</Text>
                     </View>
-                    <View style={{flexDirection: direction, backgroundColor: '#fff'}}>
+                    <View style={{flexDirection: direction, backgroundColor: '#fff', marginTop:5, marginBottom:5}}>
                         <Text style={[styles.label,{ textAlign: textline}]}>{I18n.t('serviceorder.price', { locale: lang })}</Text>
-                        <Text style={styles.label}>:</Text>
+                        <Text style={styles.label}> : </Text>
                         <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
                         <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
                     </View>
@@ -232,7 +233,7 @@ var styles = StyleSheet.create({
     },
     label : {
         color : "#a9d5d1",
-        fontSize : 12
+        fontSize : 13
     },
 
     headerText :{
@@ -240,7 +241,7 @@ var styles = StyleSheet.create({
         color : '#696969'
     },
     bodyText :{
-        fontSize: 11,
+        fontSize: 13,
     },
 
     centering: {

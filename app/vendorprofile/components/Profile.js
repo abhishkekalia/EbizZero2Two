@@ -128,7 +128,55 @@ class Profile extends Component {
 		textline = lang == 'ar'? 'right': 'left';
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
-				<View style={{flexDirection: direction, justifyContent: 'space-around', marginTop: 5,marginBottom: 5}}>
+				<View style={{
+					flexDirection: 'column', 
+					justifyContent: 'space-around', 
+					marginTop: 5,
+					marginBottom: 5,
+					marginHorizontal:10,
+					// backgroundColor:'red',
+					borderColor : 'rgba(228,229,228,1)',
+					borderWidth : 1,
+					borderRadius : 3,
+					paddingTop: 5,
+					// padding:5,
+					// paddingBottom:0,
+				}}>
+					<View style={{
+							flexDirection: direction, 
+							justifyContent: 'space-around'
+						}}>
+						<PercentageCircle radius={35} percent={chart.total_sales} color={"#fbcdc5"} borderWidth={10}></PercentageCircle>
+						<PercentageCircle radius={35} percent={chart.monthly_total_sales} color={"#a9d5d1"} borderWidth={10}></PercentageCircle>
+						<PercentageCircle radius={35} percent={chart.feature_product_sales} color={"#FFCC7D"}  borderWidth={10}></PercentageCircle>
+					</View>
+					<View style={{
+							flexDirection: direction, 
+							justifyContent: 'space-around', 
+							backgroundColor:'white',
+							marginTop:5,
+							paddingBottom:10,
+							borderColor : 'rgba(228,229,228,1)',
+							borderWidth : 1,
+						}}>
+						<Text style={styles.chart }>{I18n.t('venderprofile.totalsales', { locale: lang })}</Text>
+						<Text style={styles.chart }>{I18n.t('venderprofile.monthlysales', { locale: lang })}</Text>
+						<Text style={styles.chart}>{I18n.t('venderprofile.fearuresales', { locale: lang })}</Text>
+					</View>
+				</View>
+
+				{/* <View style={{
+					flexDirection: direction, 
+					justifyContent: 'space-around', 
+					marginTop: 5,
+					marginBottom: 5,
+					marginHorizontal:10,
+					// backgroundColor:'red',
+					borderColor : 'rgba(228,229,228,1)',
+					borderWidth : 1,
+					borderRadius : 3,
+					padding:5,
+				}}>
 					<View style={{flexDirection: 'column',}}>
 						<PercentageCircle radius={35} percent={chart.total_sales} color={"#fbcdc5"} borderWidth={10}></PercentageCircle>
 						<Text style={styles.chart }>{I18n.t('venderprofile.totalsales', { locale: lang })}</Text>
@@ -141,8 +189,9 @@ class Profile extends Component {
 						<PercentageCircle radius={35} percent={chart.feature_product_sales} color={"#FFCC7D"}  borderWidth={10}></PercentageCircle>
 						<Text style={styles.chart}>{I18n.t('venderprofile.fearuresales', { locale: lang })}</Text>
 					</View>
-				</View>
-				<View style={[styles.content, {flexDirection : direction, justifyContent: 'space-between' ,padding : 0}]}>
+				</View> */}
+				
+				<View style={[styles.content, {flexDirection : direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'white'}]}>
 					<View style={{ flexDirection : direction, }}>
 						<View style={{ width :60, height:60, justifyContent: 'center', alignItems : 'center'}}>
 							<Entypo
@@ -155,25 +204,31 @@ class Profile extends Component {
 								backgroundColor : '#ccc',
 								alignItems : align,
 								borderRadius : 17 ,
+								overflow:'hidden'
 							}}/>
 						</View>
-						<View style={{flexDirection : 'column'}}>
+						<View style={{flexDirection : 'column', marginTop:10}}>
                             <Text style={[styles.label, { color : '#696969', textAlign: textline}]}>{dataSource.fullname}</Text>
-                            <Text style={[styles.label, { color : '#a9d5d1', textAlign: textline}]}>Product Manager</Text>
-                            <View style={{flexDirection:direction}}>
-								<Text style={[styles.label, { color : '#fbcdc5', textAlign: textline}]}> {I18n.t('venderprofile.email', { locale: lang })}</Text>
-									<Text style={[styles.label, { color : '#fbcdc5', textAlign: textline}]}> :</Text>
+                            <Text style={[styles.label, { color : '#a9d5d1', textAlign: textline, marginTop:5}]}>Product Manager</Text>
+                            <View style={{flexDirection:direction, marginTop:5}}>
+								<Text style={[styles.label, { color : '#fbcdc5', textAlign: textline}]}>{I18n.t('venderprofile.email', { locale: lang })}</Text>
+									<Text style={[styles.label, { color : '#fbcdc5', textAlign: textline}]}> : </Text>
                             <Text style={[styles.label, { color : '#696969', textAlign: textline}]}>{this.state.email}</Text>
 							</View>
-                            <View style={{flexDirection:direction}}>
-								<Text style={[styles.label, { color : '#fbcdc5'}]}> {I18n.t('venderprofile.phone', { locale: lang })} </Text>
-								<Text style={[styles.label, { color : '#fbcdc5'}]}>: </Text>
+                            <View style={{flexDirection:direction, marginTop:5, marginBottom:5}}>
+								<Text style={[styles.label, { color : '#fbcdc5'}]}>{I18n.t('venderprofile.phone', { locale: lang })}</Text>
+								<Text style={[styles.label, { color : '#fbcdc5'}]}> : </Text>
                             <Text style={[styles.label, { color : '#a9d5d1'}]}>{dataSource.mobile}</Text>
                             </View>
 						</View>
 					</View>
 				</View>
-				<Text style={{textAlign: textline}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
+				<Text style={{
+						textAlign: textline,
+						marginLeft:10,
+						marginTop:10,
+						marginBottom:10,
+					}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
 				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}/>
 				<TouchableOpacity
                 onPress={()=>{ Utils.logout()
@@ -208,10 +263,12 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		fontSize: 12,
-		fontStyle: 'italic'
+		// fontStyle: 'italic'
 	},
 	chart : {
-		fontSize:  12
+		fontSize:  12,
+		marginTop:10,
+		// backgroundColor:'red',
 	}
 });
 export default Profile;

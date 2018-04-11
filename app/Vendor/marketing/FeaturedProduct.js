@@ -121,7 +121,9 @@ export default class FeaturedProduct extends Component {
                     marginTop : 2,
                     borderWidth : 1,
                     borderColor : "#ccc",
-                    borderRadius : 2
+                    borderRadius : 5,
+                    overflow:'hidden',
+                    marginTop:5,
                 }}>
                 <Header product_id= {data.product_id} lang={lang}/>
                 <TouchableOpacity style={{
@@ -154,23 +156,22 @@ export default class FeaturedProduct extends Component {
                         resizeMode={"stretch"}
                         source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}
                         />
-                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
-                        <Text style={[styles.row, { color:'#000',fontWeight :'bold', textAlign: textline}]} > {product_name} </Text>
-                        <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline}} > {short_description} </Text>
-                        <View style={{ flexDirection:direction}}>
+                    <View style={{flexDirection: 'column',}}>
+                        <Text style={[styles.row, { color:'#000',fontWeight :'bold', textAlign: textline, marginTop:5}]} >{product_name}</Text>
+                        <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline, marginTop:5}} >{short_description} </Text>
+                        <View style={{ flexDirection:direction, marginTop:5}}>
                             <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >{I18n.t('venderprofile.quantity', { locale: lang })}</Text>
-                            <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >: </Text>
-                            <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} > {data.quantity} </Text>
+                            <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} > : </Text>
+                            <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} >{data.quantity}</Text>
                         </View>
-                        <View style={{ flexDirection : direction, justifyContent : 'space-between'}}>
-                            <View style={{ flexDirection : direction}}>
+                        <View style={{ flexDirection : direction, justifyContent : 'space-between', marginBottom:10}}>
+                            <View style={{ flexDirection : direction, marginTop:5}}>
                                 <Text style={{color : '#fbcdc5', textAlign: textline}} >{I18n.t('venderprofile.price', { locale: lang })}</Text>
-                                <Text style={{color : '#fbcdc5',textAlign: textline}} >:</Text>
-                                <Text> {data.special_price} </Text>
-                                <Text style={{ color: color, textDecorationLine: textDecorationLine, textAlign: textline}}> {data.price} </Text>
+                                <Text style={{color : '#fbcdc5',textAlign: textline}} > : </Text>
+                                <Text>{data.special_price}</Text>
+                                <Text style={{ color: color, textDecorationLine: textDecorationLine, textAlign: textline}}> {data.price}</Text>
                             </View>
-                            <Text style={{color : '#ccc'}} >KWD</Text>
-
+                            <Text style={{color : '#ccc', marginTop:5}} > KWD</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -188,7 +189,13 @@ class Header extends Component{
       textline = lang == 'ar'? 'right': 'left';
 
     return (
-      <View style={[styles.row, { borderBottomWidth: 0.5, borderColor:'#ccc', flexDirection: direction}]}>
+      <View style={[
+          styles.row, { 
+                borderBottomWidth: 0.5, 
+                borderColor:'#ccc', 
+                flexDirection: direction,
+                paddingVertical:10,
+              }]}>
           <Text style={{ color : '#fbcdc5', paddingLeft: 10, textAlign: textline}}>{I18n.t('venderprofile.productid', { locale: lang })}</Text>
           <Text style={{ color : '#fbcdc5', paddingLeft: 10,  textAlign: textline}}>:</Text>
           <Text style={[styles.welcome]}>{this.props.product_id }</Text>
@@ -280,8 +287,8 @@ class Footer extends Component{
                     // onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
                     value={is_feature == "2" ? false : true } />
                 <View style={{flexDirection: direction}}>
-                    <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
-                    <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>:</Text>
+                    <Text style={{ color :'#fbcdc5', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
+                    <Text style={{ color :'#fbcdc5', fontSize : 12, alignSelf: 'center'}}> : </Text>
                     <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{this.props.inserted_date}</Text>
                 </View>
             </View>

@@ -265,6 +265,7 @@ class WishList extends Component {
         const {lang} = this.props;
         let side = lang === "ar" ? "right" : "left";
         return (
+            <View style={{ flex: 1, backgroundColor: '#f9f9f9'}}>
             <Drawer
                 ref={(ref) => this._drawer = ref}
                 type="overlay"
@@ -291,6 +292,7 @@ class WishList extends Component {
                         size="large"/>
                 </View>
             </Drawer>
+            </View>
         );
     }
     render() {

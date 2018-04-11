@@ -75,17 +75,17 @@ class ProductOrder extends Component{
         }
     }
     changeorderstatus(order_id, status){
-        this.setState({
-            loaded: false,
-            dataSource : new ListView.DataSource({
-                u_id                    : null,
-                country                 : null,
-                getSectionData          : null,
-                getRowData              : null,
-                rowHasChanged           : (row1, row2) => row1 !== row2,
-                sectionHeaderHasChanged : (s1, s2) => s1 !== s2
-            })
-        })
+        // this.setState({
+        //     loaded: false,
+        //     dataSource : new ListView.DataSource({
+        //         u_id                    : null,
+        //         country                 : null,
+        //         getSectionData          : null,
+        //         getRowData              : null,
+        //         rowHasChanged           : (row1, row2) => row1 !== row2,
+        //         sectionHeaderHasChanged : (s1, s2) => s1 !== s2
+        //     })
+        // })
         let formData = new FormData();
         formData.append('order_id', String(order_id));
         formData.append('status', String(status));
@@ -129,6 +129,8 @@ class ProductOrder extends Component{
         fetch(Utils.gurl('orderList'), config)
             .then((response) => response.json())
             .then((responseData) => {
+            
+                console.log("responseData:=",responseData)
             var orders = responseData.data,
                 length = orders.length,
                 dataBlob = {},
@@ -141,7 +143,7 @@ class ProductOrder extends Component{
             for (i = 0; i < length; i++) {
                 order = orders[i];
                 sectionIDs.push(order.order_id);
-                dataBlob[order.order_id] = order.vendor_id;
+                dataBlob[order.order_id] = order.order_id;
 
                 orderDetail = order.orderDetail;
                 orderLength = orderDetail.length;
@@ -150,17 +152,24 @@ class ProductOrder extends Component{
 
                 for(j = 0; j < orderLength; j++) {
                     // orderDetail = orderDetail[j];
-                    rowIDs[i].push(orderDetail[j]);
-                    dataBlob[orderDetail] = orderDetail;
+                    rowIDs[i].push(orderDetail[j].product_id);
+                    dataBlob[order.order_id + ':' + orderDetail[j].product_id ] = orderDetail[j];
                 }
             }
 
+            console.log("Data:=dataBlob:=",dataBlob,"sectionIDs:=",sectionIDs,"rowIDs:=",rowIDs)
+
             if (responseData.status) {
-            this.setState({
-                dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
-                loaded     : true,
-                status     : responseData.status
-            });
+                // this.setState({
+                //     dataSource : this.state.dataSource.cloneWithRowsAndSections({}, [], []),
+                //     loaded     : true,
+                //     status     : responseData.status
+                // });
+                this.setState({
+                    dataSource : this.state.dataSource.cloneWithRowsAndSections(dataBlob, sectionIDs, rowIDs),
+                    loaded     : true,
+                    status     : responseData.status
+                });
             }else {
                 this.setState({
                     loaded     : true,
@@ -233,18 +242,19 @@ class ProductOrder extends Component{
     }
 
     renderSectionHeader(sectionData, sectionID) {
+        console.log("Header:=sectionData:=",sectionData,"sectionID:=",sectionID)
         const { lang} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
         return (
-            <View style={[styles.section, { flexDirection: direction}]}>
-                <View style={{flexDirection :direction}}>
+            <View style={[styles.section, { flexDirection: direction, flexDirection:'row', marginLeft:5, marginRight:5, marginTop:5, borderTopLeftRadius:3, borderTopRightRadius:3}]}>
+                {/* <View style={{flexDirection :direction}}>
                     <Text style={styles.label}>{I18n.t('productorder.vendorid', { locale: lang })}</Text>
                     <Text style={styles.label}>:</Text>
                     <Text style={styles.text}>{sectionData}</Text>
-                </View>
-                <View style={{flexDirection :direction}}>
+                </View> */}
+                <View style={{flexDirection :direction, marginLeft:5}}>
                     <Text style={styles.label}>{I18n.t('productorder.orderid', { locale: lang })}</Text>
                     <Text style={styles.label}>:</Text>
                     <Text style={styles.text}>{sectionID}</Text>
@@ -253,58 +263,75 @@ class ProductOrder extends Component{
         );
     }
     renderRow (rowData, sectionID, rowID) {
+        console.log("Row:=rowData:=",rowData,"sectionID:=",sectionID,"rowID:=",rowID)
         const { lang} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
-        product_name = lang == 'ar'? rowID.product_name_in_arabic: rowID.product_name;
+        product_name = lang == 'ar'? rowData.product_name_in_arabic: rowData.product_name;
         let label,
         ord_status;
-        if(rowID.order_status === '1'){
+        if(rowData.order_status === '1'){
             label = I18n.t('vendorproducts.pending', { locale: lang });
             ord_status = 0;
         }
-        else if(rowID.order_status === '0'){
+        else if(rowData.order_status === '0'){
             label = I18n.t('vendorproducts.deliverd', { locale: lang });
             ord_status = 1;
         }
         return (
             <View style={styles.row}>
-                <View style={{ flexDirection : direction, backgroundColor:'#fff'}}>
-                    <Text style={styles.label}>{I18n.t('productorder.productid', { locale: lang })} </Text>
-                        <Text style={styles.label}>:</Text>
-                    <Text style={[styles.rowText, { alignSelf: 'center'}]}>{rowID.product_id} </Text>
-                </View>
+                
                 <View style={{ flexDirection : direction}}>
-                <Text style={[styles.rowText, {color : '#222', textAlign: textline, alignSelf: 'center'}]}>{product_name} </Text>
+                <Text style={[styles.rowText, {color : '#222', textAlign: textline, alignSelf: 'center', fontSize:18, marginTop:5, marginLeft:10}]}>{product_name} </Text>
                 </View>
-                <View style={{ flexDirection : direction}}>
-                    <Text style={[styles.rowText, { color : '#a9d5d1',  textAlign: textline, alignSelf: 'center'}]}>{I18n.t('productorder.qty', { locale: lang })}</Text>
-                    <Text style={[styles.rowText, { color : '#a9d5d1', textAlign: textline, alignSelf: 'center'}]}>:</Text>
-                    <Text style={[styles.rowText, { color : '#ccc',  textAlign: textline, alignSelf: 'center'}]}>{rowID.quantity} </Text>
+                <View style={{ flexDirection : direction, backgroundColor:'#fff', marginTop:5, marginLeft:10}}>
+                    <Text style={[styles.label,{fontSize:14}]}>{I18n.t('productorder.productid', { locale: lang })} </Text>
+                        <Text style={[styles.label,{fontSize:14}]}> : </Text>
+                    <Text style={[styles.rowText, { alignSelf: 'center',fontSize:14}]}>{rowData.product_id} </Text>
                 </View>
-                <View style={{ flexDirection : direction}}>
-                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>{I18n.t('productorder.price', { locale: lang })}</Text>
-                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>:</Text>
-                    <Text style={styles.rowText}>{rowID.price} </Text>
+                <View style={{ flexDirection : direction, marginTop:5, marginLeft:10}}>
+                    <Text style={[styles.rowText, { color : '#a9d5d1',  textAlign: textline, alignSelf: 'center',fontSize:14}]}>{I18n.t('productorder.qty', { locale: lang })}</Text>
+                    <Text style={[styles.rowText, { color : '#a9d5d1', textAlign: textline, alignSelf: 'center',fontSize:14}]}> : </Text>
+                    <Text style={[styles.rowText, { color : '#ccc',  textAlign: textline, alignSelf: 'center',fontSize:14}]}>{rowData.quantity} </Text>
                 </View>
-                <View style={{ flexDirection : direction}}>
-                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>{I18n.t('productorder.specialprice', { locale: lang })}</Text>
-                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'}]}>:</Text>
-                    <Text style={styles.rowText}>{rowID.special_price} </Text>
+                <View style={{ flexDirection : direction, marginTop:5, marginLeft:10}}>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center',fontSize:14}]}>{I18n.t('productorder.price', { locale: lang })}</Text>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center',fontSize:14}]}> : </Text>
+                    <Text style={[styles.rowText, {fontSize:14}]}>{rowData.price} </Text>
                 </View>
-                <View style={[styles.footer, { flexDirection: direction}]}>
+                <View style={{ flexDirection : direction, marginTop:5, marginLeft:10}}>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center',fontSize:14}]}>{I18n.t('productorder.specialprice', { locale: lang })}</Text>
+                    <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center',fontSize:14}]}> : </Text>
+                    <Text style={[styles.rowText, {fontSize:14}]}>{rowData.special_price} </Text>
+                </View>
+                <View style={[styles.footer, { flexDirection: direction, marginTop:5, backgroundColor:'rgba(247,245,246,1)', height:35, marginLeft:0}]}>
                     <View style={{ flexDirection : direction}}>
-                        <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'} ]}>{I18n.t('productorder.orderstatus', { locale: lang })} </Text>
+                        <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center', marginLeft:10} ]}>{I18n.t('productorder.orderstatus', { locale: lang })} </Text>
                             <Text style={[styles.rowText, {color : '#fbcdc5', textAlign: textline, alignSelf: 'center'} ]}>:</Text>
-                        <TouchableOpacity onPress={()=>this.changeorderstatus(rowID.order_id, ord_status)}>
-                        <Text style={[styles.rowText, { color : '#a9d5d1', textAlign: textline, alignSelf: 'center'}]}>{label} </Text>
+                        <TouchableOpacity style={{
+                                height:'100%', 
+                                // backgroundColor:'red', 
+                                justifyContent:'center'
+                            }} onPress={()=>this.changeorderstatus(rowData.order_id, ord_status)}>
+                            <Text style={
+                                [styles.rowText, { 
+                                    color : '#a9d5d1', 
+                                    textAlign: textline, 
+                                    alignSelf: 'center', 
+                                    // backgroundColor:'yellow',
+                                    // height:'100%',
+                                    textAlign:'center'
+                                }]}>{label} </Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ flexDirection : direction}}>
+                    <View style={{
+                            flexDirection : direction,
+                            alignItems:'center',
+                        }}>
                         <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>{I18n.t('productorder.orderdate', { locale: lang })}</Text>
-                            <Text style={[styles.rowText, , {color : '#fbcdc5'}]}>:</Text>
-                        <Text style={styles.rowText}>{ rowID.order_date} </Text>
+                        <Text style={[styles.rowText, , {color : '#fbcdc5'}]}> : </Text>
+                        <Text style={styles.rowText}>{ rowData.order_date} </Text>
                     </View>
                 </View>
             </View>
@@ -350,7 +377,11 @@ var styles = StyleSheet.create({
     footer : {
         justifyContent : 'space-between',
         borderWidth : StyleSheet.hairlineWidth,
-        borderColor : '#ccc',
+        borderColor : 'rgba(228,229,228,1)',
+        borderWidth: 1,
+        borderBottomLeftRadius:3,
+        borderBottomEndRadius:3,
+        // marginBottom:5,
         // borderRadius : 2
     },
     rowText: {
@@ -368,7 +399,7 @@ var styles = StyleSheet.create({
         padding: 5,
         backgroundColor: '#fff',
         borderWidth :StyleSheet.hairlineWidth,
-        borderColor : '#fbcdc5'
+        borderColor : 'rgba(228,229,228,1)'
     },
      container: {
         flex: 1,
@@ -381,8 +412,15 @@ var styles = StyleSheet.create({
     row: {
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: 5,
-        backgroundColor: '#fff'
+        // padding: 5,
+        backgroundColor: '#fff',
+        borderColor:'rgba(228,229,228,1)',
+        borderWidth:1,
+        marginLeft:5,
+        marginRight:5,
+        borderWidth: 1,
+        borderBottomLeftRadius:3,
+        borderBottomEndRadius:3,
     },
 
     thumb: {

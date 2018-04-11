@@ -140,9 +140,9 @@ export default class ServiceOrder extends Component {
                     lang:lang
                 })}>
                 <View style={[styles.header,{ flexDirection: direction}]}>
-                    <View style={{ flexDirection: direction}}>
+                    <View style={{ flexDirection: direction, }}>
                         <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{I18n.t('userorderhistory.bookingdt', { locale: lang })}</Text>
-                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}>: </Text>
+                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}> : </Text>
                         <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{data.service_datetime}</Text>
                     </View>
                     <View style={{ flexDirection: direction}}>

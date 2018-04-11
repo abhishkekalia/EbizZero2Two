@@ -25,14 +25,20 @@ class ServiceCustomer extends Component{
             <View style={styles.container}>
 
             <View style={{
-                borderWidth : 1,
+                // borderWidth : 1,
                 borderColor : '#ccc',
-                width: width ,
+                width: '100%', // width ,
                 flexDirection : direction,
-                backgroundColor: '#FFCC7D',
-
+                // backgroundColor: '#FFCC7D',
+                marginHorizontal:20,
+                // backgroundColor:'yellow',
            }}>
-                <View style ={{flexDirection : 'column', width : width/2-10}}>
+                <View style ={{
+                        flexDirection : 'column', 
+                        // backgroundColor:'red',
+                        // width : '80%' //width/2-10
+                        width:'100%',
+                    }}>
                     <View style={{flexDirection : direction}}>
                         <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.fullname', { locale: lang })}</Text>
                         <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
@@ -48,24 +54,29 @@ class ServiceCustomer extends Component{
                         <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
                         <Text style={styles.contentbody}> {addressDetail.mobile_number}</Text>
                     </View>
-                </View>
-                <View style={{flexDirection : direction}}>
-                    <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.address', { locale: lang })}</Text>
-                    <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
-                    <Text style={[styles.contentbody, { width : width/2.5-20,  textAlign: textline}]}>
-                    {addressDetail.block_no} {" "}
-                    {addressDetail.houseno}{" "}
-                    {addressDetail.street}{" "}
-                    {addressDetail.appartment} {" "}
-                    {addressDetail.floor} {" "}
-                    {addressDetail.jadda} {" "}
-                    {addressDetail.city} {" "}
-                    {addressDetail.direction} {" "}
-                    {addressDetail.country} {" "}
-                    </Text>
-                </View>
+
+                    <View style={{flexDirection : direction}}>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.address', { locale: lang })}</Text>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
+                        <Text style={[
+                            styles.contentbody, { 
+                                // width : width/2.5-20,  
+                                textAlign: textline
+                            }]}>
+                        {addressDetail.block_no} {" "}
+                        {addressDetail.houseno}{" "}
+                        {addressDetail.street}{" "}
+                        {addressDetail.appartment} {" "}
+                        {addressDetail.floor} {" "}
+                        {addressDetail.jadda} {" "}
+                        {addressDetail.city} {" "}
+                        {addressDetail.direction} {" "}
+                        {addressDetail.country} {" "}
+                        </Text>
+                    </View>
                 </View>
             </View>
+        </View>
         );
     }
 }
@@ -85,10 +96,11 @@ const styles = StyleSheet.create({
     // textAlign: 'center',
     color: '#fff',
     marginBottom: 5,
+    fontSize: 14,
   },
   contentbody : {
-    color: '#fff',
-    fontSize : 11
+    // color: '#fff',
+    fontSize : 14,
   }
 });
 

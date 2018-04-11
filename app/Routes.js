@@ -589,6 +589,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     title={I18n.t("venderprofile.marketing", { locale: lang })}
                     navBar={CustomGenNavBar}
                     type={ActionConst.ANDROID_BACK}
+                    // hideNavBar={true}
                     />
                 </Stack>
             </Modal>
