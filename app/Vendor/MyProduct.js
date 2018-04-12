@@ -378,10 +378,10 @@ class Footer extends Component{
         let approved
         let approv_code
         if(this.props.is_active === '1'){
-            approved = I18n.t('vendorproducts.deactivate', { locale: lang });
+            approved = I18n.t('vendorproducts.inActive', { locale: lang });
             approv_code = '0'
         }else {
-            approved = I18n.t('vendorproducts.activate', { locale: lang });
+            approved = I18n.t('vendorproducts.active', { locale: lang });
             approv_code = '1'
         }
         return(

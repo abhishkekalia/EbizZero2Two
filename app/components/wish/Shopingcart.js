@@ -401,8 +401,9 @@ class Shopingcart extends Component {
                     marginTop : 2,
                     borderWidth : StyleSheet.hairlineWidth,
                     borderColor : "#ccc",
-                    borderRadius : 5}
-                }>
+                    borderRadius : 5,
+                    marginTop:5,
+                }}>
                 <View style={{
                         flexDirection: direction,
                         backgroundColor : "transparent"}
@@ -412,10 +413,10 @@ class Shopingcart extends Component {
                             <Image style={[styles.thumb, {margin: 10}]}
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}/>
                             <View style={{flexDirection : 'column'}}>
-                                <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}> {product_name} </Text>
-                                <Text style={{ fontSize:10, color:'#696969', marginBottom:5, textAlign: align}}> {short_description} </Text>
+                                <Text style={{ fontSize:18, marginTop: 10, color:'#696969', marginBottom:5, textAlign: align}}>{product_name}</Text>
+                                <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}>{short_description}</Text>
                                 <View style={{ flexDirection :direction,  width:width/1.5}}>
-                                    <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center'}}> {I18n.t('cart.quantity', { locale: lang })} </Text>
+                                    <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center', fontSize:15}}> {I18n.t('cart.quantity', { locale: lang })} </Text>
                                         <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center'}}> : </Text>
                                     <Countmanager
                                         quantity={data.quantity}
@@ -427,19 +428,19 @@ class Shopingcart extends Component {
                                         callback={this.fetchData.bind(this)}
                                         />
                                 </View>
-                                <View style={{ flexDirection : direction ,justifyContent: 'flex-start'}}>
-                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign: align}}>{I18n.t('cart.size', { locale: lang })}</Text>
-                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign: align}}>:</Text>
-                                    <Text style={{ fontSize:13, color:'#696969', paddingRight: 5,marginBottom:5, textAlign:align}}>{size}</Text>
+                                <View style={{ flexDirection : direction ,justifyContent: 'flex-start', marginTop:5}}>
+                                    <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}>{I18n.t('cart.size', { locale: lang })}</Text>
+                                    <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}> : </Text>
+                                    <Text style={{ fontSize:15, color:'#696969', paddingRight: 5,marginBottom:5, textAlign:align}}>{size}</Text>
                                 </View>
-                                <View style={{ flexDirection : direction, justifyContent:"space-between"}}>
-                                    <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign: align}}> {data.special_price} KWD</Text>
+                                <View style={{ flexDirection : direction, justifyContent:"space-between", marginTop:5}}>
+                                    <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign: align}}>{data.special_price} KWD</Text>
                                     <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine, textAlign: align}}> {data.price} KWD</Text>
                                 </View>
-                                <View style={{ flexDirection : direction}}>
-                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: align}}>{I18n.t('cart.subtotal', { locale: lang })}</Text>
-                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5,textAlign: align}}>:</Text>
-                                    <Text style={{ fontSize:13, color:'#696969', marginBottom:5, textAlign: align}}>{ data.quantity*data.special_price}</Text>
+                                <View style={{ flexDirection : direction, marginTop:5, marginBottom:5}}>
+                                    <Text style={{ fontSize:15, color:'#fbcdc5', marginBottom:5,textAlign: align}}>{I18n.t('cart.subtotal', { locale: lang })}</Text>
+                                    <Text style={{ fontSize:15, color:'#fbcdc5', marginBottom:5,textAlign: align}}> : </Text>
+                                    <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}>{ data.quantity*data.special_price}</Text>
                                 </View>
                             </View>
                         </View>
@@ -612,7 +613,7 @@ class Footer extends Component {
             <View style={[styles.bottom, {flexDirection: direction}]}>
                 <TouchableOpacity
                     onPress={()=> this.removeFromCart( cart_id, product_id)}
-                    style={[styles.wishbutton, {flexDirection : direction, justifyContent: "center"}]}>
+                    style={[styles.wishbutton, {flexDirection : direction, justifyContent: "center", padding:10}]}>
                     <Entypo name="cross" size={20} color="#a9d5d1"/>
                     <Text style={{ left : 5}}>{I18n.t('cart.remove', { locale: lang })}</Text>
                 </TouchableOpacity>

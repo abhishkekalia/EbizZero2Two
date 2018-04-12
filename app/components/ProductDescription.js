@@ -475,7 +475,8 @@ class ProductDescription extends Component {
                                     <Text style={{ color:'#fff', textAlign: align}}>{I18n.t('productdetail.buyitnowbtn', { locale: lang })}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.buttonCart,{ flexDirection:direction, justifyContent:'center'}]} onPress={()=> this.addtoCart()}>
-                                    <Ionicons name="md-basket" size={25} color="#fff" />
+                                    {/* <Ionicons name="md-basket" size={25} color="#fff" /> */}
+                                    <Image source={require('EbizZero2Two/app/images/cart_icon_white_sh.png')} style={{ width:30, height : 30}}/>
                                     <Text style={{ color:'#fff', paddingLeft:5, textAlign: align}}>{I18n.t('productdetail.addtocartbtn', { locale: lang })}</Text>
                                 </TouchableOpacity>
                             </View>

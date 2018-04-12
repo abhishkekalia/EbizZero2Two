@@ -148,11 +148,11 @@ export default class Moreproduct extends Component {
                 <View style={{ flex: 0, flexDirection: direction, justifyContent: 'space-between', top : 5}}>
                     <View style={{flexDirection: direction}}>
                         <Text style={[styles.special_price, {textAlign:align}]}>{special_price}</Text>
-                        <Text style={[styles.special_price, {textAlign:align}]}>Aed</Text>
+                        <Text style={[styles.special_price, {textAlign:align}]}>KWD</Text>
                     </View>
                     <View style={{flexDirection: direction}}>
                         <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine, textAlign: align}}>{price}</Text>
-                        <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine, textAlign: align}}>Aed</Text>
+                        <Text style={{fontSize:10, color: color, textDecorationLine: textDecorationLine, textAlign: align}}>KWD</Text>
                     </View>
                 </View>
                 </View>

@@ -136,6 +136,7 @@ export default class ServiceOrder extends Component {
             );
     }
     renderData(data, rowData, sectionID, rowID, index) {
+        console.log("service data:=",data)
         let color = data.serviceDetail.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.serviceDetail.special_price ? 'line-through' : 'none';
 

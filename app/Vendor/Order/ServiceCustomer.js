@@ -57,7 +57,7 @@ class ServiceCustomer extends Component{
 
                     <View style={{flexDirection : direction}}>
                         <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> {I18n.t('servicecustomer.address', { locale: lang })}</Text>
-                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> :</Text>
+                        <Text style={[styles.label ,{color : '#a9d5d1', textAlign: textline}]}> : </Text>
                         <Text style={[
                             styles.contentbody, { 
                                 // width : width/2.5-20,  

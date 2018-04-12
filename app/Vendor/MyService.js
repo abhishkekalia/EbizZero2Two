@@ -267,10 +267,10 @@ class Footer extends Component{
         let approved
         let approv_code
         if(this.state.is_active === '1'){
-            approved = I18n.t('vendorservice.deactivate', { locale: lang });
+            approved = I18n.t('vendorservice.inActive', { locale: lang });
             approv_code = '0'
         }else {
-            approved = I18n.t('vendorservice.activate', { locale: lang });
+            approved = I18n.t('vendorservice.active', { locale: lang });
             approv_code = '1'
         }
         return(

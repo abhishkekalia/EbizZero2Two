@@ -68,7 +68,8 @@
         "pleaseenterusertype":"الرجاء أختيار نوع المستخدم",
         "greetings":"شكرا لأنضمامكم الى قائمة",
         "passwordvalidation":"يرجى إدخال كلمة مرور مؤلفة من 6 أحرف او ارقام على الأقل",
-        "pickfromMap": "Pick Address From Map"
+        "pickfromMap": "Pick Address From Map",
+        "mobileValidatetionText":"Please enter 8 digit Mobile number"
     },
     "venderregister":{
         "company":"اسم الشركة",
@@ -100,7 +101,8 @@
         "fbpage":"الرجاء ادخال رابط صفحة فيس بوك",
         "twitterpage":"الرجاء ادخال رابط صفحة تويتر",
         "instapage":"الرجاء ادخال رابط صفحة أنستاغرام",
-        "snapchatpage":"الرجاء ادخال رابط صفحة سناب شات"
+        "snapchatpage":"الرجاء ادخال رابط صفحة سناب شات",
+        "mobileValidatetionText":"Please enter 8 digit Mobile number"
     },
     "home":{
         "sidemenu": "right",
@@ -119,7 +121,9 @@
         "linkcopied":"تم نسخ الأختيار",
         "wishlistmsg1":"تم أضافة المنتج الى المفضلة",
         "wishlistmsg2":"تم حذف المنتج من المفضلة",
-        "wishlistmsg3":"حصل خطأ ما"
+        "wishlistmsg3":"حصل خطأ ما",
+        "shop":"Shop",
+        "service":"Service"
     },
     "productdetail":{
         "wishlistmsg1":"تم إضافة المنتج في قائمة الأمنيات",
@@ -194,7 +198,8 @@
         "productadded":"تم اضافة المنتج",
         "somedatamissing":"بعض البيانات مفقودة",
         "pleaseselectcolor":"يرجى اختيار اللون",
-        "wishlistupdate":"تحديث قائمة الامنيات بنجاح"
+        "wishlistupdate":"تحديث قائمة الامنيات بنجاح",
+        "shareItem":"Share Item"
     },
     "cart":{
         "carttitle":"السلة",
@@ -359,7 +364,9 @@
         "aproved":"تم التأكيد",
         "pending":"بانتظار التأكيد",
         "deliverd":"تم التوصيل",
-        "searchHere" : "ابحث"
+        "searchHere" : "ابحث",
+        "active" : "Active",
+        "inActive" : "InActive"
     },
     "vendoraddproduct":{
         "addproduct":"اضف منتج",
@@ -401,7 +408,7 @@
         "detaildesc_ar_err":"يرجى إدخال التفاصيل باللغه العربية",
         "errorwhileUpload":"حدث خطا خلال التحميل",
         "english":"English",
-        "arabic": "اخت"
+        "arabic": "عربي"
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",

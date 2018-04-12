@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage, TextInput, Platform } from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage, TextInput, Platform, ActivityIndicator } from "react-native";
 import { Actions} from "react-native-router-flux";
 import Feather from 'react-native-vector-icons/Feather';
 import I18n from 'react-native-i18n'
@@ -24,6 +24,7 @@ class Profile extends Component {
             email : null,
             phone_no : null,
 			visibleModal: false,
+			isLoading: false,
         };
     }
 
@@ -31,6 +32,9 @@ class Profile extends Component {
 	    // this.getKey()
 	    // .then(()=>this.getAddress())
 		// .done()
+		this.setState({
+			isLoading: true
+		})
 		this.getAddress()
 
 		EventEmitter.removeAllListeners("reloadAddressProfile");
@@ -84,12 +88,16 @@ class Profile extends Component {
         .then((response) => response.json())
         .then((responseData) => {
         this.setState({
+				isLoading : false,
             	status : responseData.response.status,
             	dataSource : responseData.response.data,
             	address : responseData.response.address
             });
 		})
 		.catch((error) => {
+			this.setState({
+				isLoading:false
+			})
             console.log(error);
         })
         .done();
@@ -99,10 +107,10 @@ class Profile extends Component {
 		const { lang } = this.props;
 		if(this.state.address == '') {
 			return (
-				<View style={{padding:10}}>
-					<Text  style={{ fontSize :15, color:'#696969', textAlign: lang == 'ar'? 'right' :'left'}}>
+				<View style={{padding:0}}>
+					{/* <Text  style={{ fontSize :15, color:'#696969', textAlign: lang == 'ar'? 'right' :'left'}}>
 						{I18n.t('profile.addressbook', { locale: lang })}
-					</Text>
+					</Text> */}
 				</View>
 			)
 		}else {
@@ -131,6 +139,43 @@ class Profile extends Component {
 		}
 	}
 	render() {
+
+		if (this.state.isLoading) {
+			return(
+				<Drawer
+					ref={(ref) => this._drawer = ref}
+					type="overlay"
+					content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+					tapToClose={true}
+					openDrawerOffset={0.2}
+					panCloseMask={0.2}
+					closedDrawerOffset={0}
+					styles={drawerStyles}
+					tweenHandler={(ratio) => ({
+						main: { opacity:(2-ratio)/2 }
+					})}
+					side={side}
+					>
+					<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
+						<View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+							{this._renderLeftButton()}
+							<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
+							{this._renderRightButton()}
+						</View>
+						<ActivityIndicator
+                        style={{
+							flex:1,
+							alignItems: 'center',
+							justifyContent: 'center',
+							padding: 20
+						}}
+                        color="#a9d5d1"
+                        size="large"/>
+					</View>
+				</Drawer>
+			)
+		}
+
 		const {identity, logout, lang} = this.props,
 		{data, u_id, address, dataSource, chart} = this.state,
 		direction = lang == 'ar'? 'row-reverse': 'row',

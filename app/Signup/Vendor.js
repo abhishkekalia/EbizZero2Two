@@ -662,9 +662,9 @@ class Vendorreg extends Component {
 				})
 				return false
 			}
-			if(contact.length !== 10){
+			if(contact.length !== 8){
 				MessageBarManager.showAlert({
-					message: "Please enter 10 digit Mobile number ",
+					message: I18n.t('userregister.mobileValidatetionText', {locale: lang}),
 					title:'',
 					alertType: 'extra',
 					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -716,7 +716,7 @@ class Vendorreg extends Component {
 		}
 		if(password.length < 6){
 			MessageBarManager.showAlert({
-				message: "Please enter atleast 6 character password ",
+				message: I18n.t('venderregister.passwordvalidation', { locale: lang }),
 				title:'',
 				alertType: 'extra',
 				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },

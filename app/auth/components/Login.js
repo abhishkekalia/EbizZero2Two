@@ -12,7 +12,9 @@ import {
 	Keyboard,
 	Dimensions,
 	NetInfo,
-	Picker
+	Picker,
+	TouchableHighlight,
+	TouchableWithoutFeedback,
 } from "react-native";
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {Actions as routes} from "react-native-router-flux";
@@ -26,10 +28,16 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
 import Utils from 'app/common/Utils';
+import ActionSheet from 'react-native-actionsheet';
+
 const { width, height } = Dimensions.get('window')
 
 const INITIAL_STATE = {email: '', password: ''};
 const deviceId = DeviceInfo.getUniqueID();
+
+const CANCEL_INDEX = 0;
+const DESTRUCTIVE_INDEX = 0
+
 class Login extends Component {
 	constructor() {
 		super();
@@ -43,6 +51,7 @@ class Login extends Component {
 			visibleModal: false,
 			isForgotPassword: false,
 			forgotemail: '',
+			arrLanguageType:['Cancel','Arabic','English'],
 		};
 		this.inputs = {};
 	}
@@ -189,10 +198,68 @@ class Login extends Component {
 		return (
 			<View style={{flex:1}}>
 				<View style= {{height:64,backgroundColor: '#a9d5d1', zIndex: 0}}>
-					<Text style = {{color : "#FFF", alignSelf: 'center', paddingTop:28, fontSize:16}}>
+
+					{Platform.OS === 'ios' ? 
+					<TouchableWithoutFeedback style={{
+						position:'absolute'
+						}}onPress={this.onClickLanguage.bind(this)}>
+						<View style={{
+						height:25,
+						width:80,
+						// backgroundColor:'grey',
+						position:'absolute',
+						zIndex:50,
+						marginTop:28,
+						marginLeft:5,
+						alignItems:'center',
+						borderColor:'white',
+						borderWidth:1,
+						borderRadius:10,
+						justifyContent:'center'
+						}}>
+						<Text style={{
+							color:'white'
+						}}>
+							Language
+						</Text>
+						</View>
+					</TouchableWithoutFeedback>
+					:      
+					// <TouchableHighlight style={{position:'absolute'}}onPress={this.onClickLanguage.bind(this)}>
+						<View style={{
+						height:25,
+						width:80,
+						// backgroundColor:'grey',
+						position:'absolute',
+						zIndex:50,
+						marginTop:20,
+						marginLeft:5,
+						alignItems:'center',
+						borderColor:'white',
+						borderWidth:1,
+						borderRadius:10,
+						justifyContent:'center'
+						}}>
+						<TouchableWithoutFeedback style={{
+							position:'absolute',
+							height:'100%',  
+							width:'100%',
+						}}onPress={this.onClickLanguage.bind(this)}>
+						<Text style={{
+							textAlign:'center',
+							color:'white',
+						}}>
+							Language
+						</Text>
+						</TouchableWithoutFeedback>
+						</View>
+				
+					}
+
+					<Text style = {{color : "#FFF", alignSelf: 'center', paddingTop: Platform.OS === 'ios' ? 28 : 22, fontSize:16}}>
 						{I18n.t('login.logintitle', { locale: language })}
 					</Text>
-					<View style={{ flexDirection: (language === 'ar') ? 'row' : 'row-reverse', zIndex: 1}}>
+					{/* <View style={{ flexDirection: (language === 'ar') ? 'row' : 'row-reverse', zIndex: 1}}>
 						{
 							Object.keys(I18n.translations).map((item, key)=>( language === item ?
 								undefined
@@ -201,16 +268,41 @@ class Login extends Component {
 									key={key}
 									// {I18n.translations[item].id }
 									onPress={ this.SampleFunction.bind(this, item) }>
+									{console.log("language:=",language)}
 									{I18n.t('login.language', { locale: language })}
 								</Text>)
 							)
 						}
-					</View>
+					</View> */}
 				</View>
 				{ Platform.OS === 'ios' ? this.getIOSView() : this.getAndroidView()}
+				<ActionSheet
+					ref='laguageSheet'
+					options={this.state.arrLanguageType}
+					cancelButtonIndex={CANCEL_INDEX}
+					onPress={this.onLanguageSelection.bind(this)}/>
 			</View>
 		);
 	}
+	
+	onClickLanguage() {
+		this.refs['laguageSheet'].show()
+		console.log("language Id:=", this.state.languageId)
+	}
+
+	onLanguageSelection(selected) {
+		console.log("onLanguageSelection clicked:=",selected);
+		if(selected === 0) {
+		  
+		}
+		else if (selected === 1) {
+			this.props.languageChange('ar')
+		}
+		else if (selected === 2) {
+			this.props.languageChange('en')
+		}
+	  }
+
 	getIOSView () {
 		const {errorStatus, loading, language} = this.props;
 		return(

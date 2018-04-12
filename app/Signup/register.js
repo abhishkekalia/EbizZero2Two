@@ -756,9 +756,9 @@ class Register extends Component {
 			})
 			return false;
 		}
-		if(contact.length !== 10 ){
+		if(contact.length !== 8 ){
 			MessageBarManager.showAlert({
-				message: "Please enter 10 digit Mobile number ",
+				message: I18n.t('userregister.mobileValidatetionText', {locale: lang}),
 				title:'',
 				alertType: 'extra',
 				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },

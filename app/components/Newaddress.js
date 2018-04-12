@@ -727,6 +727,15 @@ class Newaddress extends Component{
                         }} textAlign='center'>{I18n.t('newAddress.picklocation', { locale: lang })}</Text>
                     </TouchableOpacity>
                 </View>
+                <Icons onPress ={()=>this.setState({ FullMapVisible :false})} name="close" size={25} color="black" style={{ 
+                        alignSelf: 'flex-end',
+                        position: 'absolute',    
+                        marginTop:30,         
+                        marginRight:50,
+                        paddingRight:20,
+                        zIndex:2,       
+                        backgroundColor:'transparent',
+                    }} />
 
                 {Platform.OS === 'ios' ?
                     <MapView

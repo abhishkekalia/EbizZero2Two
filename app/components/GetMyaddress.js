@@ -280,7 +280,7 @@ class AddressBook extends Component {
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', paddingTop:20}}>
                 <Text>{I18n.t('addressbook.noaddress', { locale: lang })} </Text>
            </View>);
     }

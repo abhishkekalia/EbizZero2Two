@@ -249,16 +249,16 @@ class AddProduct extends Component {
             })
             return false
         }
-        if (!special){
-            MessageBarManager.showAlert({
-                message: I18n.t('vendoraddproduct.providespprice', { locale: lang }),
-                alertType: 'extra',
-                title:'',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-            return false
-        }
+        // if (!special){
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('vendoraddproduct.providespprice', { locale: lang }),
+        //         alertType: 'extra',
+        //         title:'',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        // }
         if ( special > price){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.sppriceerr', { locale: lang }),

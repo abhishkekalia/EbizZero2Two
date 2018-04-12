@@ -129,6 +129,7 @@ export default class Editwish extends Component {
                 onPress={()=>this.changeLabel() }
                 style={{
                     left : width/2-50,
+                    top : 5,
                     position : 'absolute',
                     zIndex: 1,
                     width : 50,

@@ -70,7 +70,8 @@
         "greetingsmsg":"Congratulations You Are Successfully Registered",
         "greetings":"Otp has been sent to registered Eamil kindly check your email",
         "passwordvalidation":"Please enter atleast 6 character password",
-        "pickfromMap": "Pick Address From Map"
+        "pickfromMap": "Pick Address From Map",
+        "mobileValidatetionText":"Please enter 8 digit Mobile number"
     },
     "venderregister":{
         "company":"Company",
@@ -103,7 +104,7 @@
         "twitterpage":"Plese Enter Twitter Bussiness Page",
         "instapage":"Plese Enter Instagram Bussiness Page",
         "snapchatpage":"Plese Enter Snapchat Bussiness Page",
-
+        "mobileValidatetionText":"Please enter 8 digit Mobile number"
     },
     "home":{
         "sidemenu": "left",
@@ -123,6 +124,8 @@
         "wishlistmsg1":"product added in wishlist",
         "wishlistmsg2":"product remove from wishlist",
         "wishlistmsg3":"something wents wrong",
+        "shop":"Shop",
+        "service":"Service"
     },
     "productdetail":{
         "wishlistmsg1":"product added in wishlist",
@@ -187,7 +190,7 @@
         "selectsize":"Select Size",
         "cancel":"Cancel",
         "ok":"OK",
-        "quantity":" Quantity",
+        "quantity":"Quantity",
         "changewishlistalert":"Wishlist update successfully",
         "share":"Share WishList",
         "movetocart":"Move to Cart",
@@ -197,12 +200,13 @@
         "productadded":"product added in cart",
         "somedatamissing":"some data is missing",
         "pleaseselectcolor":"Please Select Color",
-        "wishlistupdate":"Wishlist update successfully"
+        "wishlistupdate":"Wishlist update successfully",
+        "shareItem":"Share Item"
     },
     "cart":{
         "carttitle":"Cart",
         "size":"Size",
-        "quantity":" Quantity",
+        "quantity":"Quantity",
         "subtotal":"SubTotal",
         "remove":"Remove",
         "edit":"EditCart",
@@ -362,7 +366,9 @@
         "aproved":"Approved",
         "pending":"Pending",
         "deliverd":"Deliverd",
-        "searchHere" : "Search Here"
+        "searchHere" : "Search Here",
+        "active" : "Active",
+        "inActive" : "InActive"
     },
     "vendoraddproduct":{
         "addproduct":"Add Product",
@@ -417,7 +423,9 @@
         "previewbtn":"Preview",
         "apierr":"error while fetching data",
         "activate":"Activate",
-        "deactivate":"Deactivate"
+        "deactivate":"Deactivate",
+        "active" : "Active",
+        "inActive" : "InActive"
     },
     "vendoraddservice":{
         "addservice":"Add Service",

@@ -187,31 +187,13 @@ class MainView extends Component {
         fetch(Utils.gurl('filterByShop'), config)
         .then((response) => response.json())
         .then((responseData) => {
-            var arrTmp = responseData.data
-            var merge = []
-            if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                if (this.state.arrServiceList.length > 0) {
-                    merge = arrTmp.concat(this.state.arrServiceList)
-                }
+            var arrTmp = response.data
+            if (this.state.arrServiceList.length > 0) {
+                arrTmp.concat(this.state.arrServiceList)
             }
-            else {
-                if (this.state.arrSelectedType[0] == 1) {
-                    merge = arrTmp
-                }
-                else {
-                    if (this.state.arrServiceList.length > 0) {
-                        merge = this.state.arrServiceList
-                    }
-                }
-            }
-            // if (this.state.arrServiceList.length > 0) {
-            //     merge = arrTmp.concat(this.state.arrServiceList)
-            // }
-            console.log("arrTmp:=",arrTmp)
-            console.log("merge:=",merge)
-            this.state.arrProductList = responseData.data
-            this.setState({                
-                dataSource: this.state.dataSource.cloneWithRows(merge),
+            this.setState({
+                
+                dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                 arrProductList: responseData.data,
                 status : responseData.status,
                 loaded: true,
@@ -375,32 +357,9 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                var arrTmp = responseData.data
-                var merge = []
-                if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    if (this.state.arrServiceList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrServiceList)
-                    }
-                }
-                else {
-                    if (this.state.arrSelectedType[0] == 1) {
-                        merge = arrTmp
-                    }
-                    else {
-                        if (this.state.arrServiceList.length > 0) {
-                            merge = this.state.arrServiceList
-                        }
-                    }
-                }
-                // if (this.state.arrServiceList.length > 0) {
-                //     merge = arrTmp.concat(this.state.arrServiceList)
-                // }
-                console.log("arrTmp:=",arrTmp)
-                console.log("merge:=",merge)
-                this.state.arrProductList = responseData.data
                 this.setState({
-                    arrProductList:responseData.data,
-                    dataSource: this.state.dataSource.cloneWithRows(merge),
+                    arrProductList:[],
+                    dataSource: this.state.dataSource.cloneWithRows(responseData.data),
                     status : responseData.status,
                     loaded: true,
                     refreshing: false
@@ -435,32 +394,9 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                var arrTmp = responseData.data
-                var merge = []
-                if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    if (this.state.arrProductList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrProductList)
-                    }
-                }
-                else {
-                    if (this.state.arrSelectedType[0] == 1) {
-                        if (this.state.arrProductList.length > 0) {
-                            merge = this.state.arrProductList
-                        }
-                    }
-                    else {
-                        merge = arrTmp
-                    }
-                }
-                // if (this.state.arrProductList.length > 0) {
-                //     merge = arrTmp.concat(this.state.arrProductList)
-                // }
-                console.log("arrTmp:=",arrTmp)
-                console.log("merge:=",merge)
                 this.setState({
                     arrServiceList: responseData.data,
-                    // dataSource2: this.state.dataSource2.cloneWithRows(arrTmp),
-                    dataSource: this.state.dataSource.cloneWithRows(merge),
+                    dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
                     isLoading : false
                 });
             }
@@ -513,31 +449,8 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                var arrTmp = responseData.data.product
-                var merge = []
-                if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    if (this.state.arrServiceList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrServiceList)
-                    }
-                }
-                else {
-                    if (this.state.arrSelectedType[0] == 1) {
-                        merge = arrTmp
-                    }
-                    else {
-                        if (this.state.arrServiceList.length > 0) {
-                            merge = this.state.arrServiceList
-                        }
-                    }
-                }
-                // if (this.state.arrServiceList.length > 0) {
-                //     merge = arrTmp.concat(this.state.arrServiceList)
-                // }
-                console.log("arrTmp:=",arrTmp)
-                console.log("merge:=",merge)
-                this.state.arrProductList = responseData.data.product
                 this.setState({
-                    dataSource: ds.cloneWithRows(merge),
+                    dataSource: ds.cloneWithRows(responseData.data.product),
                     arrProductList: responseData.data.product,
                     status : responseData.status,
                     loaded: true,
@@ -695,37 +608,22 @@ class MainView extends Component {
                 showsVerticalScrollIndicator={false}
                 />
         );
-        // let serviceListview = (<View></View>);
-        // serviceListview = (
-        //     <ListView
-        //         refreshControl={
-        //             <RefreshControl
-        //                 refreshing={this.state.refreshing}
-        //                 onRefresh={this._onRefresh.bind(this)} />
-        //         }
-        //         contentContainerStyle={styles.list}
-        //         dataSource={this.state.dataSource2}
-        //         renderRow={ this.renderService.bind(this)}
-        //         enableEmptySections={true}
-        //         automaticallyAdjustContentInsets={false}
-        //         showsVerticalScrollIndicator={false}
-        //         />
-        // );
-
-        return(
-            <View style={{ marginBottom: 0}}>
-                {/* {
-                    Platform.OS === 'ios' ?
-                    <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-                    :
-                    <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-                } */}
-                <View>
-                    {listView}
-                </View>
-            </View>
+        let serviceListview = (<View></View>);
+        serviceListview = (
+            <ListView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh.bind(this)} />
+                }
+                contentContainerStyle={styles.list}
+                dataSource={this.state.dataSource2}
+                renderRow={ this.renderService.bind(this)}
+                enableEmptySections={true}
+                automaticallyAdjustContentInsets={false}
+                showsVerticalScrollIndicator={false}
+                />
         );
-
         if (this.state.arrSelectedType.length == 1) {
             if (this.state.arrSelectedType[0] == 1) {
                 return(
@@ -1138,32 +1036,9 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
-                var arrTmp = responseData.data
-                var merge = []
-                if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    if (this.state.arrProductList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrProductList)
-                    }
-                }
-                else {
-                    if (this.state.arrSelectedType[0] == 1) {
-                        if (this.state.arrProductList.length > 0) {
-                            merge = this.state.arrProductList
-                        }
-                    }
-                    else {
-                        // if (this.state.arrProductList.length > 0) {
-                            merge = arrTmp
-                        // }
-                    }
-                }
-                
-                console.log("arrTmp:=",arrTmp)
-                console.log("merge:=",merge)
                 this.setState({
                     arrServiceList: responseData.data,
-                    // dataSource2: this.state.dataSource2.cloneWithRows(arrTmp),
-                    dataSource: this.state.dataSource.cloneWithRows(merge),
+                    dataSource2: this.state.dataSource2.cloneWithRows(responseData.data),
                     status : responseData.status,
                     loaded: true,
                     refreshing: false
@@ -1309,90 +1184,54 @@ class MainView extends Component {
     }
 // Service filter complete here
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-        console.log("data:=",data,"rowData:=",rowData)
-
-        if ("product_id" in data) {
-            const { lang , deviceId, country, u_id} = this.props;
-            let color = data.special_price ? '#696969' : '#000';
-            let textDecorationLine = data.special_price ? 'line-through' : 'none';
-            let url =  data.productImages[0] ? data.productImages[0].image : "null";
-            let direction = (lang === 'ar') ? 'row-reverse' :'row',
-            align = (lang === 'ar') ?  'right': 'left',
-            product_name = (lang == 'ar')? data.product_name_in_arabic : data.product_name,
-            short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
-            detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
-            price = (lang == 'ar')? data.price_in_arabic : data.price,
-            special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
-            return (
-                <View style={styles.row} >
-                    <View style={{flexDirection: direction , justifyContent: "center"}}>
-                        <TouchableOpacity
-                        onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}>
-                            <LoadImage productImages={data.productImages} special_price={special_price}/>
-                        </TouchableOpacity>
-                        <EvilIcons style={{ position : 'absolute', left : 5, top:5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
-                            name="share-google"
-                            size={25}
-                            color="#a9d5d1"
-                            onPress={()=>this.onOpen(product_name, data.product_id , url )}/>
-                        <Editwish
-                            u_id={u_id}
-                            country={country}
-                            is_wishlist={data.is_wishlist}
-                            product_id={data.product_id}
-                            fetchData={()=>this.fetchData()}
-                            deviceId={deviceId}
-                            lang={lang}/>
-                    </View>
-                    <View style={{ padding :10}}>
-                        <TouchableOpacity  style={styles.name}
-                        onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}
-                        >
-                        <Text style={{fontSize : 15, color :'#989898', textAlign: align }}>{product_name}</Text>
-                        </TouchableOpacity>
-                        {/* <View style={{ marginTop : 10}}>
-                            <Header
-                            product_category= {data.product_category}
-                            u_id={u_id}
-                            country={country}
-                            lang={lang}/>
-                        </View> */}
-                    </View>
+        const { lang , deviceId, country, u_id} = this.props;
+        let color = data.special_price ? '#696969' : '#000';
+        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        let url =  data.productImages[0] ? data.productImages[0].image : "null";
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        product_name = (lang == 'ar')? data.product_name_in_arabic : data.product_name,
+        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
+        detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
+        price = (lang == 'ar')? data.price_in_arabic : data.price,
+        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
+        return (
+            <View style={styles.row} >
+                <View style={{flexDirection: direction , justifyContent: "center"}}>
+                    <TouchableOpacity
+                    onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}>
+                        <LoadImage productImages={data.productImages} special_price={special_price}/>
+                    </TouchableOpacity>
+                    <EvilIcons style={{ position : 'absolute', left : 5, top:5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
+                        name="share-google"
+                        size={25}
+                        color="#a9d5d1"
+                        onPress={()=>this.onOpen(product_name, data.product_id , url )}/>
+                    <Editwish
+                        u_id={u_id}
+                        country={country}
+                        is_wishlist={data.is_wishlist}
+                        product_id={data.product_id}
+                        fetchData={()=>this.fetchData()}
+                        deviceId={deviceId}
+                        lang={lang}/>
                 </View>
-            );
-        }
-        else {
-            let color = data.special_price ? '#C5C8C9' : '#000';
-            let textDecorationLine = data.special_price ? 'line-through' : 'none';
-            const { lang} = this.props;
-            let direction = (lang === 'ar') ? 'row-reverse' :'row',
-            align = (lang === 'ar') ?  'right': 'left',
-            service_name = (lang == 'ar')? data.service_name_in_arabic : data.service_name,
-            short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
-            detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
-            price = (lang == 'ar')? data.price_in_arabic : data.price,
-            special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
-            return (
-                <View style={styles.row} >
-                    <View style={{flexDirection: direction, justifyContent: "center"}}>
-                        <TouchableOpacity
-                            onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price)}>
-                            <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages} special_price={special_price}/>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ padding :15}}>
-                        <TouchableOpacity  style={styles.name}
-                            // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
-                            >
-                            <Text style={{fontSize : 15, color :'#989898' ,textAlign:align }}>{service_name}</Text>
-                        </TouchableOpacity>
-                        {/* <Text style={[styles.description, {textAlign:align }]}>{short_description}</Text> */}
-                    </View>
+                <View style={{ padding :10}}>
+                    <TouchableOpacity  style={styles.name}
+                    onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}
+                    >
+                    <Text style={{fontSize : 15, color :'#989898', textAlign: align }}>{product_name}</Text>
+                    </TouchableOpacity>
+                    {/* <View style={{ marginTop : 10}}>
+                        <Header
+                        product_category= {data.product_category}
+                        u_id={u_id}
+                        country={country}
+                        lang={lang}/>
+                    </View> */}
                 </View>
-            );
-        }
-
-        
+            </View>
+        );
     }
 }
 class Header extends Component{

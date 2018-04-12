@@ -451,8 +451,9 @@ class WishList extends Component {
                     marginTop : 2,
                     borderWidth : 0.5,
                     borderColor : "#ccc",
-                    borderRadius : 5}
-                }>
+                    borderRadius : 5,
+                    marginTop: 5,
+                }}>
                 <SelectItem wishlist_id={data.wishlist_id} product_id={data.product_id} u_id={u_id} deviceId= {deviceId} country={country} callback={this.refreshfromCount.bind(this)} size_arr={data.size_arr} lang={lang}>
                     <View style={{
                             flexDirection: direction,
@@ -466,12 +467,12 @@ class WishList extends Component {
                                     title: data.product_name,
                                     product_id : data.product_id})
                                 }>
-                                <Text style={{fontSize: 13, color: '#696969', marginTop: 10, marginBottom:5 ,textAlign:align}} > {product_name} </Text>
+                                <Text style={{fontSize: 18, color: '#696969', marginTop: 10, marginBottom:5 ,textAlign:align}} >{product_name} </Text>
                             </TouchableOpacity>
-                            <Text style={{ fontSize : 10, color : '#696969',bottom:5, textAlign:align}} > {short_description} </Text>
+                            <Text style={{ fontSize : 15, color : '#696969',bottom:5, textAlign:align, marginTop:5}} >{short_description} </Text>
                             <View style={{ flexDirection: direction}}>
-                                <Text style={{fontSize: 13 ,alignSelf: 'center'}}> {I18n.t('wishlist.quantity', { locale: lang })}  </Text>
-                                <Text style={{fontSize: 13 ,alignSelf: 'center'}}> : </Text>
+                                <Text style={{fontSize: 15 ,alignSelf: 'center'}}>{I18n.t('wishlist.quantity', { locale: lang })}  </Text>
+                                <Text style={{fontSize: 15 ,alignSelf: 'center'}}> : </Text>
                                 <Countmanager
                                 quantity={data.quantity}
                                 u_id={this.props.u_id}
@@ -482,15 +483,15 @@ class WishList extends Component {
                                 callback={this.refreshfromCount.bind(this)}
                                 />
                             </View>
-                            <View style={{ flexDirection: direction}}>
-                                <Text style={{fontSize :12}}>{I18n.t('wishlist.sizelbl', { locale: lang })} </Text>
-                                <Text style={{fontSize :12}}> : </Text>
-                                <Text style={{fontSize:12}}> {size}</Text>
+                            <View style={{ flexDirection: direction, marginTop:5}}>
+                                <Text style={{fontSize :15}}>{I18n.t('wishlist.sizelbl', { locale: lang })} </Text>
+                                <Text style={{fontSize :15}}> : </Text>
+                                <Text style={{fontSize:15}}> {size}</Text>
                             </View>
                             <View style={{ flexDirection: direction, justifyContent:"space-between"}}>
-                            <View style={{ flexDirection: direction}}>
-                                <Text style={{fontWeight :'bold'}}> {special_price} </Text>
-                                <Text style={{fontWeight:'bold'}}> KWD</Text>
+                            <View style={{ flexDirection: direction, marginTop:10, marginBottom:5}}>
+                                <Text style={{fontWeight :'bold', fontSize:15}}>{special_price} </Text>
+                                <Text style={{fontWeight:'bold', fontSize:15}}> KWD</Text>
                             </View>
                             </View>
                         </View>
@@ -498,7 +499,7 @@ class WishList extends Component {
                     <View style={[styles.bottom, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}]}>
                         <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
                             <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
-                            <Text style={{ left : 5}}>{I18n.t('wishlist.share', { locale: lang })}</Text>
+                            <Text style={{ left : 5}}>{I18n.t('wishlist.shareItem', { locale: lang })}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]}
                             onPress={()=>this.addtoCart(data.quantity, data.product_id, data.size)}>
@@ -697,7 +698,7 @@ const styles = StyleSheet.create ({
         width : width/2-10,
         borderWidth : 0.5,
         borderColor : "#ccc",
-        padding : 5
+        padding : 10
     },
     thumb: {
       resizeMode: 'center',

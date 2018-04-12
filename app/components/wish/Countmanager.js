@@ -122,7 +122,7 @@ export default class Countmanager extends Component {
             return this.renderLoadingView();
         }
 		return(
-			<View style={{ flexDirection: 'row'}}>
+			<View style={{ flexDirection: 'row', marginLeft:10, marginTop:5}}>
 			<TouchableOpacity
 			style={styles.qtybutton}
 			onPress= {()=> this.decrement()}
