@@ -68,6 +68,7 @@ import ServiceCustomer from './Vendor/Order/ServiceCustomer'
 import ProfileVendor from "./vendorprofile/ProfileVendor";
 import MarketingCompaign from "./Vendor/marketing/MarketingCompaign";
 import ScheduleCalender from "./Vendor/Schedule/ScheduleCalender";
+import ScheduleDetail from "./Vendor/Schedule/ScheduleDetail";
 import EventEmitter from "react-native-eventemitter";
 
 import SplashScreen from 'react-native-splash-screen';
@@ -175,6 +176,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     is_vector={true}
                                     hideNavBar={true}
                                     iconName= {require('./images/cart_icon.png')}
+                                    iconNameSel= {require('./images/h_cart_icon.png')}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
                                         <Scene
                                         key="shopingCart"
@@ -587,6 +589,16 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     key="compaign"
                     component={MarketingCompaign}
                     title={I18n.t("venderprofile.marketing", { locale: lang })}
+                    navBar={CustomGenNavBar}
+                    type={ActionConst.ANDROID_BACK}
+                    // hideNavBar={true}
+                    />
+                </Stack>
+                <Stack key="scheduleDetail">
+                    <Scene
+                    key="scheduleDtl"
+                    component={ScheduleDetail}
+                    title={I18n.t("scheduleDetail.title", { locale: lang })}
                     navBar={CustomGenNavBar}
                     type={ActionConst.ANDROID_BACK}
                     // hideNavBar={true}

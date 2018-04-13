@@ -1,5 +1,5 @@
 {
-    "id": "اخت",
+    "id": "عربي",
     "landing": {
         "selCountry":"اختر الدولة",
         "selDelivery":"اختر المنطقة",
@@ -532,5 +532,8 @@
     "deals":{
         "dealTitle":"عروض",
         "buyitnowbtn":"اشتر الان"
+    },
+    "scheduleDetail":{
+        "title":"Schedule Detail"
     }
 }

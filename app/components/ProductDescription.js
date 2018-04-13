@@ -204,7 +204,7 @@ class ProductDescription extends Component {
 
         if (this.validate()) {
             let formData = new FormData();
-            // formData.append('u_id', String(u_id));
+            formData.append('u_id', String(u_id));
             formData.append('product_id', String(this.props.product_id));
             formData.append('country', String(country));
             formData.append('size', String(size));

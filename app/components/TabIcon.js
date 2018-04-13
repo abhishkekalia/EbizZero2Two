@@ -21,7 +21,7 @@ class TabIcon extends Component {
     }
     render() {
         const color = this.props.selected ? '#fbcdc5' : '#a9d5d1',
-        { lang, iconName } = this.props;
+        { lang, iconName, iconNameSel } = this.props;
         return (
             <View style={{flex:1, flexDirection:'column', alignItems:'center', alignSelf:'center', justifyContent: 'center', position:'absolute'}}>
                 {
@@ -34,7 +34,7 @@ class TabIcon extends Component {
                         }}
                         resizeMode = {"contain"}
                         resizeMethod = 'resize'
-                        source={iconName}
+                        source={ this.props.focused ? iconNameSel : iconName}
                         size={18}/>
                     :
                     <Icon style={{color: this.props.focused ? '#fbcdc5' : '#a9d5d1'}} name={this.props.iconName || "circle"} size={this.props.focused ? 20 : 18}/>

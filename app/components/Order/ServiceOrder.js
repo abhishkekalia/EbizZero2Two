@@ -134,11 +134,12 @@ export default class ServiceOrder extends Component {
                 style={{ flexDirection : 'column'}}
                 key={rowID}
                 data={rowData}
-                onPress={()=>Actions.serviceusr({
-                    title :data.addressDetail.fullname,
-                    addressDetail : data.addressDetail,
-                    lang:lang
-                })}>
+                // onPress={()=>Actions.serviceusr({
+                //     title :data.addressDetail.fullname,
+                //     addressDetail : data.addressDetail,
+                //     lang:lang
+                // })}
+                >
                 <View style={[styles.header,{ flexDirection: direction}]}>
                     <View style={{ flexDirection: direction, }}>
                         <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{I18n.t('userorderhistory.bookingdt', { locale: lang })}</Text>

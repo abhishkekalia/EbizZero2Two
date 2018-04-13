@@ -188,26 +188,36 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             var arrTmp = responseData.data
+            console.log("arrTmp:=",arrTmp.length)
             var merge = []
-            if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                if (this.state.arrServiceList.length > 0) {
-                    merge = arrTmp.concat(this.state.arrServiceList)
-                }
-            }
-            else {
-                if (this.state.arrSelectedType[0] == 1) {
-                    merge = arrTmp
-                }
-                else {
+
+                if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrServiceList.length > 0) {
-                        merge = this.state.arrServiceList
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp.concat(this.state.arrServiceList)
+                        }
+                        else {
+                            merge = []
+                        }
                     }
                 }
-            }
-            // if (this.state.arrServiceList.length > 0) {
-            //     merge = arrTmp.concat(this.state.arrServiceList)
-            // }
-            console.log("arrTmp:=",arrTmp)
+                else {
+                    if (this.state.arrSelectedType[0] == 1) {
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp
+                        }
+                    }
+                    else {
+                        if (this.state.arrServiceList.length > 0) {
+                            merge = this.state.arrServiceList
+                        }
+                    }
+                }
+                // if (this.state.arrServiceList.length > 0) {
+                //     merge = arrTmp.concat(this.state.arrServiceList)
+                // }
+                console.log("arrTmp:=",arrTmp)
+            
             console.log("merge:=",merge)
             this.state.arrProductList = responseData.data
             this.setState({                
@@ -379,12 +389,19 @@ class MainView extends Component {
                 var merge = []
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrServiceList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrServiceList)
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp.concat(this.state.arrServiceList)
+                        }
+                        else {
+                            merge = []
+                        }
                     }
                 }
                 else {
                     if (this.state.arrSelectedType[0] == 1) {
-                        merge = arrTmp
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp
+                        }
                     }
                     else {
                         if (this.state.arrServiceList.length > 0) {
@@ -439,7 +456,12 @@ class MainView extends Component {
                 var merge = []
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrProductList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrProductList)
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp.concat(this.state.arrProductList)
+                        }
+                        else {
+                            merge = []
+                        }
                     }
                 }
                 else {
@@ -449,7 +471,9 @@ class MainView extends Component {
                         }
                     }
                     else {
-                        merge = arrTmp
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp
+                        }
                     }
                 }
                 // if (this.state.arrProductList.length > 0) {
@@ -517,12 +541,16 @@ class MainView extends Component {
                 var merge = []
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrServiceList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrServiceList)
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp.concat(this.state.arrServiceList)
+                        }
                     }
                 }
                 else {
                     if (this.state.arrSelectedType[0] == 1) {
-                        merge = arrTmp
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp
+                        }
                     }
                     else {
                         if (this.state.arrServiceList.length > 0) {
@@ -1142,7 +1170,9 @@ class MainView extends Component {
                 var merge = []
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrProductList.length > 0) {
-                        merge = arrTmp.concat(this.state.arrProductList)
+                        if (arrTmp.length > 0) {
+                            merge = arrTmp.concat(this.state.arrProductList)
+                        }
                     }
                 }
                 else {
@@ -1152,9 +1182,9 @@ class MainView extends Component {
                         }
                     }
                     else {
-                        // if (this.state.arrProductList.length > 0) {
+                        if (arrTmp.length > 0) {
                             merge = arrTmp
-                        // }
+                        }   
                     }
                 }
                 

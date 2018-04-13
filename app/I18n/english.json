@@ -536,5 +536,8 @@
     "deals":{
         "dealTitle":"Deals & Offres",
         "buyitnowbtn":"Buy It Now"
+    },
+    "scheduleDetail":{
+        "title":"Schedule Detail"
     }
 }

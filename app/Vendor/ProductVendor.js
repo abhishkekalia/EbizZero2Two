@@ -181,10 +181,12 @@ class ProductVendor extends Component {
             },
             body: formData,
         }
+        console.log("Request serviceDetail:=",config)
         fetch(Utils.gurl('serviceDetail'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
+                console.log("service responseData:=",responseData)
                 let	data = responseData.data.booked_slot;
                 // var data = ['2018-03-16','2018-03-17','2018-03-18','2018-03-19'];
                 var arrNew = {};
@@ -265,7 +267,7 @@ class ProductVendor extends Component {
     validateSlot(time){
         const {dateSelected,ScheduleDate} = this.state;
         let timeString = this.state.BookingTime;
-
+        console.log("timeString:=",timeString)
         if(ScheduleDate !== {})
         {
             let dt = new Date();
@@ -328,9 +330,11 @@ class ProductVendor extends Component {
                 },
                 body: formData,
             }
+            console.log("Request bookService:=",config)
             fetch(Utils.gurl('bookService'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("Response bookService:=",responseData)
                 if(responseData.status){
                     routes.bookmyservice({
                         uri : responseData.data.url,

@@ -16,7 +16,10 @@ import {connect} from "react-redux";
 import Entypo from 'react-native-vector-icons/FontAwesome';
 import Utils from 'app/common/Utils';
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import {Actions as routes} from "react-native-router-flux";
+
 const { width, height } = Dimensions.get('window');
+
 class ScheduleCalender extends Component {
 	constructor(props) {
     	super(props);
@@ -113,10 +116,11 @@ class ScheduleCalender extends Component {
 				},
 				body: formData,
 			}
+			console.log("Request:=",config)
 			fetch(Utils.gurl('getSchedulelist'), config)
 			.then((response) => response.json())
 			.then((responseData) => {
-				console.log(responseData.data.anUserBookedSlot);
+				console.log("Response getSchedulelist:=",responseData.data.anUserBookedSlot);
 				this.setState({
 					dataSource: this.state.dataSource.cloneWithRows(responseData.data.anUserBookedSlot),
 				})
@@ -184,19 +188,69 @@ class ScheduleCalender extends Component {
 		align = (lang === 'ar') ?  'right': 'left';
 		return (
 			<View>
-				<TouchableOpacity style={{ flexDirection: direction, marginTop : 1, borderColor: "#a9d5d1", borderWidth: StyleSheet.hairlineWidth}} key={rowID} data={rowData} onPress={() => console.log(data.schedule_id)}>
-					<View style={{ width: "70%", height: 40, justifyContent: 'center', alignItems: 'center'}}>
+				<TouchableOpacity style={{ flexDirection: direction, marginTop : 1, borderColor: "#a9d5d1", borderWidth: StyleSheet.hairlineWidth}} key={rowID} data={rowData} onPress={this.moveToDetail.bind(this,data)}>
+					<View style={{
+						width:'100%',
+						borderWidth:1,
+						borderColor:'gray',
+						marginTop:5,
+					}}>
+						<View style={{
+							flexDirection:direction,
+							margin:5,
+						}}>
+							<Text style={{
+								fontWeight  : 'bold'
+							}}>Service Name</Text>
+							<Text style={{
+								fontWeight  : 'bold'
+							}}> : </Text>
+							<Text>{data.service_name}</Text>
+						</View>
+						<View style={{
+							flexDirection:direction,
+							margin:5,
+						}}>
+							<Text style={{
+								fontWeight  : 'bold'
+							}}>Date</Text>
+							<Text style={{
+								fontWeight  : 'bold'
+							}}> : </Text>
+							<Text>{data.service_datetime}</Text>
+						</View>
+						<View style={{
+							flexDirection:direction,
+							margin:5,
+						}}>
+							<Text style={{
+								fontWeight  : 'bold'
+							}}>Name</Text>
+							<Text> : </Text>
+							<Text>{data.addressArray[0].full_name}</Text>
+						</View>
+					</View>
+					
+					{/* <View style={{ width: "70%", height: 40, justifyContent: 'center', alignItems: 'center'}}>
 						<Text style={[styles.textQue, { textAlign: align}]}>{data.addressArray[0].full_name}</Text>
 					</View>
 					<View style={{ flexDirection: 'column', width: "30%", height: 40, borderLeftWidth: StyleSheet.hairlineWidth, borderColor: "#a9d5d1" , justifyContent: 'center', alignItems: 'center'}}>
 						<Text style={[styles.textQue, { textAlign: align}]}>{data.service_name}</Text>
 						<Text style={[styles.textQue, { textAlign: align}]}>{data.service_datetime}</Text>
-					</View>
+					</View> */}
 				</TouchableOpacity>
 			</View>
 		)
 	}
+
+	moveToDetail (data) {
+		console.log("data:=",data)
+		routes.scheduleDetail({
+			scheduleDtl:data
+		})
+	}
 }
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1

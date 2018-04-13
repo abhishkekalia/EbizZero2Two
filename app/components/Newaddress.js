@@ -213,6 +213,7 @@ class Newaddress extends Component{
                 },
                 body: formData,
             }
+            console.log("addAddress:=",config)
             fetch(Utils.gurl('addAddress'), config)
             .then((response) => response.json())
             .then((responseData) => {
@@ -342,6 +343,16 @@ class Newaddress extends Component{
             })
             return false
         }
+        if(mobile_number.length !== 8 ){
+			MessageBarManager.showAlert({
+				message: I18n.t('userregister.mobileValidatetionText', {locale: lang}),
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
+			return false
+		}
         if (!city.length)
         {
             MessageBarManager.showAlert({
