@@ -22,7 +22,7 @@ import * as ebiztrait from "../auth/auth.actions";
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
 const countryTitle = 'Select Country'
-const deliveryTitle = 'Select Deliveryarea'
+const deliveryTitle = 'Select Delivery Area'
 const { width, height } = Dimensions.get('window');
 class WelcomeScreen extends Component {
     constructor(props) {

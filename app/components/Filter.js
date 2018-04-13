@@ -285,7 +285,7 @@ class Filter extends Component {
                         size={24}
                         thickness={1}
                         color='#a9d5d1'
-                        selectedIndex={0}
+                        // selectedIndex={0}
                         onSelect = {(index, value) =>this.onSelect(index, value)}>
                         {this.renderTypeView()}
                     </RadioGroup>
