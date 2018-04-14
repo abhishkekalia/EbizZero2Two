@@ -296,8 +296,7 @@ class AddressBook extends Component {
 
         return (
         <View
-            style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff',flexDirection:'row' }}
-        >
+            style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff',flexDirection:'row' }}>
             <RadioGroup
             style={{justifyContent: 'flex-end'}}
             onSelect = {(sectionID, value) => this.onSelect(sectionID, data.address_id)}
@@ -306,8 +305,8 @@ class AddressBook extends Component {
                     <View style={{ flexDirection: 'column' }}>
                         <View style={{ width: width-125, flexDirection: direction , justifyContent: 'space-between'}}>
                             <View style={{ flexDirection: direction}}>
-                            <Text style={{ fontSize : 15, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.name', { locale: lang })} </Text>
-                            <Text style={{ fontSize: 15, color: '#000',  textAlign: textline}}>{data.full_name}</Text>
+                              <Text style={{ fontSize : 15, color : '#a9d5d1',  textAlign: textline}}>{I18n.t('addressbook.name', { locale: lang })} </Text>
+                              <Text style={{ fontSize: 15, color: '#000',  textAlign: textline}}>{data.full_name}</Text>
                             </View>
                         </View>
                         <View style={{ flexDirection: direction}}>
