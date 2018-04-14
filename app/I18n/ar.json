@@ -153,8 +153,8 @@
         "paymentfailure":"تم رفض عملية الدفع",
         "selectDate":"يرجى تحديد التاريخ",
         "selectTime":"يرجى اختيار الوقت",
+        "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان",
         "anotherTimeslot" : "Please Select another time Slot",
-        "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان"
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -520,7 +520,10 @@
     },
     "scheduleService":{
         "serviceTitle":"جدول",
-        "addressvalidation":"يرجى اختيار العنوان"
+        "addressvalidation":"يرجى اختيار العنوان",
+        "name":"Service Name",
+        "date":"Date",
+        "username":"Name"
     },
     "notification":{
         "orderId":"رقم الطلب",
@@ -535,6 +538,12 @@
         "buyitnowbtn":"اشتر الان"
     },
     "scheduleDetail":{
-        "title":"Schedule Detail"
+        "title":"Schedule Detail",
+        "name":"Name",
+        "address":"APPOINTMENT ADDRESS",
+        "order":"Appointment Order",
+        "date":"Appointment Date",
+        "serviceName":"Service Name",
+        "serviceType":"Type of Service"
     }
 }

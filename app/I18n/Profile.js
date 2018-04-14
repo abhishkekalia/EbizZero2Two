@@ -58,11 +58,11 @@ class Profile extends Component {
     handleConnectionChange = (isConnected) => {
         this.setState({ netStatus: isConnected });
         {this.state.netStatus ?  MessageBarManager.showAlert({
-                message: `Internet connection is available`,
+                message: I18n.t('venderprofile.online', { locale: lang }),
                 alertType: 'alert',
                 title:''
             }) : MessageBarManager.showAlert({
-                message: `Internet connection not available`,
+                message: I18n.t('venderprofile.offline', { locale: lang }),
                 alertType: 'error',
                 title:''
             })

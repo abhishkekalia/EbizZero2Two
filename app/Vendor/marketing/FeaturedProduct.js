@@ -28,7 +28,7 @@ export default class FeaturedProduct extends Component {
             country : null,
             status : false
         }
-        
+
     }
     GetItem (flower_name) {
         alert(flower_name);
@@ -190,9 +190,9 @@ class Header extends Component{
 
     return (
       <View style={[
-          styles.row, { 
-                borderBottomWidth: 0.5, 
-                borderColor:'#ccc', 
+          styles.row, {
+                borderBottomWidth: 0.5,
+                borderColor:'#ccc',
                 flexDirection: direction,
                 paddingVertical:10,
               }]}>
@@ -260,7 +260,7 @@ class Footer extends Component{
             .then((responseData) => {
                 if(responseData.status){
                     MessageBarManager.showAlert({
-                        message: `Product removed from featured list`,
+                        message: I18n.t('venderprofile.productremovefeature', { locale: lang }),
                         alertType: 'alert',
                         title:''
                     })

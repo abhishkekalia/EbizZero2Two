@@ -155,8 +155,8 @@
         "paymentfailure":"Payment Not Success",
         "selectDate":"Please Select Date",
         "selectTime":"Please Select Time Slot",
+        "logintoaddaddr":"Please login / register to add address",
         "anotherTimeslot" : "Please Select another time Slot",
-        "logintoaddaddr":"Please login / register to add address"
     },
     "bottomTabs":{
         "home":"Home",
@@ -524,7 +524,11 @@
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
-        "addressvalidation":"Please Select Address First"
+        "addressvalidation":"Please Select Address First",
+        "name":"Service Name",
+        "date":"Date",
+        "username":"Name"
+
     },
     "notification":{
         "orderId":"Order Id",
@@ -539,6 +543,12 @@
         "buyitnowbtn":"Buy It Now"
     },
     "scheduleDetail":{
-        "title":"Schedule Detail"
+        "title":"Schedule Detail",
+        "name":"Name",
+        "address":"APPOINTMENT ADDRESS",
+        "order":"Appointment Order",
+        "date":"Appointment Date",
+        "serviceName":"Service Name",
+        "serviceType":"Type of Service"
     }
 }

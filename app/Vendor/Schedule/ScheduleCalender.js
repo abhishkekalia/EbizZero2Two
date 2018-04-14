@@ -205,7 +205,7 @@ class ScheduleCalender extends Component {
 						}}>
 							<Text style={{
 								fontWeight  : 'bold'
-							}}>Service Name</Text>
+							}}>{I18n.t('scheduleService.name', { locale: lang })}</Text>
 							<Text style={{
 								fontWeight  : 'bold'
 							}}> : </Text>
@@ -217,7 +217,7 @@ class ScheduleCalender extends Component {
 						}}>
 							<Text style={{
 								fontWeight  : 'bold'
-							}}>Date</Text>
+							}}>{I18n.t('scheduleService.date', { locale: lang })}</Text>
 							<Text style={{
 								fontWeight  : 'bold'
 							}}> : </Text>
@@ -229,7 +229,7 @@ class ScheduleCalender extends Component {
 						}}>
 							<Text style={{
 								fontWeight  : 'bold'
-							}}>Name</Text>
+							}}>{I18n.t('scheduleService.name', { locale: lang })}</Text>
 							<Text> : </Text>
 							<Text>{data.addressArray[0].full_name}</Text>
 						</View>

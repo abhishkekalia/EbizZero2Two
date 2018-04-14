@@ -172,6 +172,9 @@ class ProductVendor extends Component {
         const {u_id, country } = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         // formData.append('country', String(country));
         formData.append('service_id', String(this.props.service_id));
         const config = {
@@ -220,7 +223,10 @@ class ProductVendor extends Component {
     fetchAddress(){
         const {u_id, country } = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         const config = {
             method: 'POST',
@@ -341,13 +347,15 @@ class ProductVendor extends Component {
         }
     }
     async addToOrder(value){
-        const { u_id, country, date_in, service_provider_id, service_date, validTime} = this.state;
-        // currentdate = service_date + ' '+ new Date().toLocaleTimeString();
-        currentdate = service_date +" "+ validTime;
-        console.log("currentdate: = ", currentdate);
+        const { country, date_in, service_provider_id, service_date, scheduleTime} = this.state;
+        const { u_id} = this.props
+        currentdate = service_date + ' '+ new Date().toLocaleTimeString();
         try {
             let formData = new FormData();
-            formData.append('u_id', String(u_id));
+            // formData.append('u_id', String(u_id));
+            if (u_id) {
+                formData.append('u_id', String(u_id));
+            }
             formData.append('country', String(country));
             formData.append('service_id', String(this.props.service_id));
             formData.append('service_datetime', String(currentdate));
