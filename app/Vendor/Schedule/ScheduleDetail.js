@@ -27,9 +27,8 @@ class ScheduleDetail extends Component {
 	}
 
     componentDidMount(){
-		
 	}
-	
+
 	render(){
 		const { lang} = this.props;
 		let direction = (lang === 'ar') ? 'row-reverse' :'row';
@@ -87,7 +86,7 @@ class ScheduleDetail extends Component {
 		}
 
 		return (
-			<View style={styles.container}>				
+			<View style={styles.container}>
 				<View style={{
 						flex: 1,
 						margin:10,
@@ -95,20 +94,22 @@ class ScheduleDetail extends Component {
 
 					<View style={{
 						flexDirection:direction
-					}}>	
+					}}>
 						<Text style={{
 							fontWeight:'bold',
-						}}>Name</Text>
+						}}>{I18n.t('scheduleDetail.name', { locale: lang })}</Text>
+
 						<Text> : </Text>
 						<Text>{this.state.scheduleDtl.addressArray[0].full_name}</Text>
 					</View>
-					
+
 					<Text style={{
 						fontWeight:'bold',
 						textAlign:align,
 						marginTop:5,
-					}}>APPOINTMENT ADDRESS:</Text>
-					
+					}}>{I18n.t('scheduleDetail.address', { locale: lang })}</Text>
+					<Text> : </Text>
+
 					<Text style={{
 						marginTop:5,
 						textAlign:align
@@ -127,18 +128,18 @@ class ScheduleDetail extends Component {
 					}}>
 						<Text style={{
 							fontWeight:'bold'
-						}} >Appointment Order</Text>
+						}} >{I18n.t('scheduleDetail.order', { locale: lang })}</Text>
 						<Text> : </Text>
 						<Text>{this.state.scheduleDtl.bookservice_id}</Text>
 					</View>
-						
+
 					<View style={{
 						flexDirection:direction,
 						marginTop:5
 					}}>
 						<Text style={{
 							fontWeight:'bold'
-						}} >Appointment Date</Text>
+						}} >{I18n.t('scheduleDetail.date', { locale: lang })}</Text>
 						<Text> : </Text>
 						<Text>{this.state.scheduleDtl.service_datetime}</Text>
 					</View>
@@ -156,10 +157,10 @@ class ScheduleDetail extends Component {
 					}}>
 						<Text style={{
 							fontWeight:'bold'
-						}} >Service Name</Text>
+						}} >{I18n.t('scheduleDetail.serviceName', { locale: lang })}</Text>
 						<Text> : </Text>
 						<Text>{ lang == 'ar' ? this.state.scheduleDtl.service_name_in_arabic : this.state.scheduleDtl.service_name}</Text>
-					</View>		
+					</View>
 
 					<View style={{
 						marginTop:5,
@@ -167,7 +168,7 @@ class ScheduleDetail extends Component {
 					}}>
 						<Text style={{
 							fontWeight:'bold'
-						}} >Type of Service</Text>
+						}} >{I18n.t('scheduleDetail.serviceType', { locale: lang })}</Text>
 						<Text> : </Text>
 						<Text>{this.state.scheduleDtl.service_type}</Text>
 					</View>
@@ -182,7 +183,7 @@ class ScheduleDetail extends Component {
 			</View>
 		)
 	}
-	
+
 }
 const styles = StyleSheet.create({
 	container: {

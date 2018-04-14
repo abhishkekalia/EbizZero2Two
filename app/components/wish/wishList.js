@@ -542,16 +542,16 @@ class SelectItem extends Component{
         })
     }
     validate(){
-        const { color} = this.state;
-        if (!color.length)
-        {
-            MessageBarManager.showAlert({
-                message: "Please Select Color",
-                alertType: 'alert',
-                title:''
-            })
-            return false
-        }
+        // const { color} = this.state;
+        // if (!color.length)
+        // {
+            // MessageBarManager.showAlert({
+            //     message: "Please Select Color",
+            //     alertType: 'alert',
+            //     title:''
+            // })
+        //     return false
+        // }
         return true;
     }
     editWishlist(size){

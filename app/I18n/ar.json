@@ -534,6 +534,12 @@
         "buyitnowbtn":"اشتر الان"
     },
     "scheduleDetail":{
-        "title":"Schedule Detail"
+        "title":"Schedule Detail",
+        "name":"Name",
+        "address":"APPOINTMENT ADDRESS",
+        "order":"Appointment Order",
+        "date":"Appointment Date",
+        "serviceName":"Service Name",
+        "serviceType":"Type of Service"
     }
 }

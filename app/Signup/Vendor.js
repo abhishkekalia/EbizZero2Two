@@ -504,15 +504,15 @@ class Vendorreg extends Component {
 			transparent={false}
 			visible={this.state.ShowMapLocation}
 			onRequestClose={() => this.setState({ ShowMapLocation :false})}>
-			<View style={{ 
-				flexDirection: direction, 
-				position: 'absolute',  
+			<View style={{
+				flexDirection: direction,
+				position: 'absolute',
 				zIndex: 1,
-				backgroundColor: "transparent", 
-				justifyContent: 'space-around', 
-				height: 40, 
-				width: "90%", 
-				alignSelf: 'center', 
+				backgroundColor: "transparent",
+				justifyContent: 'space-around',
+				height: 40,
+				width: "90%",
+				alignSelf: 'center',
 				marginTop: Platform.OS === 'ios' ? 20 : 10,
 				borderRadius:5,
 				// backgroundColor:'red'
@@ -520,12 +520,12 @@ class Vendorreg extends Component {
 				// alignItems:'center'
 			}}>
 				<TextInput
-					style={{ 
-						width: "85%", 
-						height: Platform.OS === 'ios' ? 40 : 40, 
-						backgroundColor: "#fff", 
-						alignSelf: 'center', 
-						textAlign: 'center', //textline,  
+					style={{
+						width: "85%",
+						height: Platform.OS === 'ios' ? 40 : 40,
+						backgroundColor: "#fff",
+						alignSelf: 'center',
+						textAlign: 'center', //textline,
 						marginLeft : lang == 'ar'? 0 : 5,
 						// backgroundColor:'yellow'
 						borderRadius:5,
@@ -543,7 +543,7 @@ class Vendorreg extends Component {
 				}
 			</View>
 			<View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
-			{Platform.OS === 'ios' ? 
+			{Platform.OS === 'ios' ?
 				<MapView
 				initialRegion={{
 					latitude: this.state.LATITUDE,
@@ -616,7 +616,7 @@ class Vendorreg extends Component {
 					</MapView.Marker>
 				</MapView>
 			}
-			
+
 			</View>
 		</Modal>
 		</View>
@@ -817,7 +817,7 @@ class Vendorreg extends Component {
 				// console.warn(JSON.stringify(responseData));
 				routes.loginPage()
 				MessageBarManager.showAlert({
-					message: "Congratulations You Are Successfully Registered ",
+					message: I18n.t('userregister.greetingsmsg', { locale: lang }),
 					alertType: 'alert',
 					title:''
 				})
