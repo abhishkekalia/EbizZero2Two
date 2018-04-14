@@ -181,7 +181,13 @@ class ScheduleCalender extends Component {
 					}}
 					/>
 				<View style={{flex: 1}}>
-					{listView}
+					{this.state.dataSource.getRowCount() > 0 ? listView : <Text style={{
+						// backgroundColor:'red',
+						textAlign:'center',
+						margin:10,
+						fontSize:17,
+					}}>There is no any servcie or Please select date.</Text>}
+					
 				</View>
 			</View>
 		)

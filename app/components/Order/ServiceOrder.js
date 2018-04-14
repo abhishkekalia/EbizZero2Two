@@ -10,7 +10,8 @@ import {
     ActivityIndicator,
     ScrollView,
     Button,
-    RefreshControl
+    RefreshControl,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { Actions} from "react-native-router-flux";
 import I18n from 'react-native-i18n';
@@ -130,10 +131,10 @@ export default class ServiceOrder extends Component {
         let color = data.serviceDetail.special_price ? '#000' : '#000';
         let textDecorationLine = data.serviceDetail.special_price ? 'line-through' : 'none';
         return (
-            <TouchableOpacity
+            <TouchableWithoutFeedback
                 style={{ flexDirection : 'column'}}
                 key={rowID}
-                data={rowData}
+                // data={rowData}
                 // onPress={()=>Actions.serviceusr({
                 //     title :data.addressDetail.fullname,
                 //     addressDetail : data.addressDetail,
@@ -171,7 +172,7 @@ export default class ServiceOrder extends Component {
                         <Text style={styles.label}> KWD </Text>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
         );
     }
     _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
