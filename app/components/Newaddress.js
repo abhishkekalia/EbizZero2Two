@@ -38,7 +38,7 @@ const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
 class Newaddress extends Component{
     constructor(props) {
         super(props);
-        // this.getKey = this.getKey.bind(this);
+        this.getKey = this.getKey.bind(this);
         this.state={
             countryList: [],
             full_name : props.isFromEdit ? props.full_name : '',
@@ -85,10 +85,10 @@ class Newaddress extends Component{
         this.inputs = {};
     }
     componentDidMount (){
-     // this.getKey()
-     // .then(()=>this.fetchData())
-     // .done();
-         this.fetchData()
+     this.getKey()
+     .then(()=>this.fetchData())
+     .done();
+        //  this.fetchData()
              this.watchID = navigator.geolocation.watchPosition((position) => {
                  let region = {
                      latitude:       position.coords.latitude,
@@ -270,7 +270,7 @@ class Newaddress extends Component{
         formData.append('country', String(country));
         formData.append('address_type', String(address_type));
 
-        console.log("formData:=",formData)
+        console.log("editAddress formData:=",formData)
 
         if (this.validate()) {
             const config = {
@@ -281,10 +281,11 @@ class Newaddress extends Component{
                 },
                 body: formData,
             }
+
             fetch(Utils.gurl('editAddress'), config)
             .then((response) => response.json())
             .then((responseData) => {
-                console.log("responseData:=",responseData)
+                console.log("editAddress responseData:=",responseData)
                 if(responseData.status){
                     EventEmitter.emit("reloadAddressList")
                     routes.pop();
@@ -297,7 +298,7 @@ class Newaddress extends Component{
                 }
             })
             .catch((error) => {
-                console.log(error);
+                console.log("editAddress error:=",error);
             })
             .done();
         }

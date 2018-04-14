@@ -118,9 +118,9 @@ export default class Countmanager extends Component {
             );
     }
 	render(){
-        if (!this.state.loaded) {
-            return this.renderLoadingView();
-        }
+        // if (!this.state.loaded) {
+        //     return this.renderLoadingView();
+        // }
 		return(
 			<View style={{ flexDirection: 'row', marginLeft:10, marginTop:5}}>
 			<TouchableOpacity
@@ -135,6 +135,11 @@ export default class Countmanager extends Component {
             onPress= {()=> this.increment()}>
             <Text style={{color: '#a9d5d1',  fontSize: 20, fontWeight: 'bold'}}> + </Text>
             </TouchableOpacity>
+            {!this.state.loaded ? <ActivityIndicator
+            color="#a9d5d1"
+            size="small"
+            style={{marginLeft:5}}
+            /> : undefined}
             </View>
 		)
 	}

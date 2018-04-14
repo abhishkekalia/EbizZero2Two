@@ -403,12 +403,19 @@ class Shopingcart extends Component {
                     borderColor : "#ccc",
                     borderRadius : 5,
                     marginTop:5,
+                    // backgroundColor:'red'
                 }}>
                 <View style={{
                         flexDirection: direction,
-                        backgroundColor : "transparent"}
-                    }>
-                    <View style={{flexDirection: 'column', justifyContent : 'space-between'}}>
+                        backgroundColor : "transparent",
+                    }}>
+                    <View style={{
+                        flexDirection: 'column', 
+                        justifyContent : 'space-between', 
+                        backgroundColor:'#fff',
+                        width:'100%',
+                        paddingRight:5,
+                        }}>
                         <View style={{ flexDirection:direction , backgroundColor : "#fff", justifyContent : 'space-between', alignItems : 'center'}}>
                             <Image style={[styles.thumb, {margin: 10}]}
                                 source={{ uri : data.productImages[0] ? data.productImages[0].image : null}}/>
@@ -478,6 +485,7 @@ class Footer extends Component {
         })
     }
     changeSize(result){
+        console.log("result:=",result)
         this.setState({
             selectSize: false,
             size: result.selectedItem.label
@@ -494,6 +502,7 @@ class Footer extends Component {
             sizeof = order.size;
             sizeList.push(sizeof);
         }
+        console.log("sizeList:=",sizeList)
         // console.warn(sizeList);
         this.setState({
             SHORT_LIST: sizeList,
@@ -579,6 +588,7 @@ class Footer extends Component {
         fetch(Utils.gurl('editCart'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("editCart responseData:=",responseData)
             if(responseData.status) {
                 MessageBarManager.showAlert({
                     message: I18n.t('cart.cartUpdate', { locale: lang }),

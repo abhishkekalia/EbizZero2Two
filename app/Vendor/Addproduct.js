@@ -259,6 +259,9 @@ class AddProduct extends Component {
         //     })
         //     return false
         // }
+
+        console.log("Price:=",price)
+        console.log("special:=",special)
         if ( special > price){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.sppriceerr', { locale: lang }),
