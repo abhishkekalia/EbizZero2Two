@@ -148,6 +148,9 @@ class WishList extends Component {
         align = (lang === 'ar') ?  'right': 'left';
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('size', String(size));
@@ -195,6 +198,9 @@ class WishList extends Component {
         let {country, u_id, deviceId, lang} = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('device_uid', String(deviceId));
@@ -562,6 +568,9 @@ class SelectItem extends Component{
 
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         // formData.append('country', String(country));
         // formData.append('device_uid', String(deviceId));
         // formData.append('product_id', String(product_id));
@@ -599,7 +608,10 @@ class SelectItem extends Component{
     removeWishlist(){
         const {u_id, country, product_id, deviceId } = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('device_uid', String(deviceId));

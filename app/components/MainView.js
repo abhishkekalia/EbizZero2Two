@@ -370,7 +370,10 @@ class MainView extends Component {
     fetchData(){
         const {u_id, country, deviceId } = this.props;
         let formData = new FormData();
-        // formData.append('u_id', String(u_id));
+        console.log("u_id:=",u_id)
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         formData.append('device_uid', String(deviceId));
         const config = {
@@ -381,6 +384,7 @@ class MainView extends Component {
             },
             body: formData,
         }
+        console.log("config:=",config)
         fetch(Utils.gurl('allProductItemList'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -436,9 +440,13 @@ class MainView extends Component {
         .done();
     }
     fetchService(){
-        const {country} = this.props;
+        const {u_id, country} = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         const config = {
             method: 'POST',
@@ -1154,6 +1162,9 @@ class MainView extends Component {
     loadServiceData (){
         const {u_id, country} = this.props;
         let formData = new FormData();
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         // formData.append('u_id', String(user_type));
@@ -1490,7 +1501,10 @@ class Header extends Component{
     fetchData(){
         const {u_id, country } = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         const config = {
             method: 'POST',

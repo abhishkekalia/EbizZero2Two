@@ -51,6 +51,9 @@ export default class Moreproduct extends Component {
         const { product_category, vendor_id, lang, country, u_id, deviceId } = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         // formData.append('country', String(country));
         formData.append('category_id', String(product_category));
         formData.append('vendor_id', String(vendor_id));

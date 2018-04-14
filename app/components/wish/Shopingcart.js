@@ -136,6 +136,9 @@ class Shopingcart extends Component {
         // console.warn("country", country);
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         formData.append('device_uid', String(deviceId));
         console.log(formData);
@@ -539,6 +542,9 @@ class Footer extends Component {
         align = (lang === 'ar') ?  'right': 'left';
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('cart_id', String(cart_id));
@@ -574,6 +580,9 @@ class Footer extends Component {
         align = (lang === 'ar') ?  'right': 'left';
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('size', String(size));
         formData.append('color', String(color));
         formData.append('cart_id', String(cart_id));
