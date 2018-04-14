@@ -153,7 +153,8 @@
         "paymentfailure":"تم رفض عملية الدفع",
         "selectDate":"يرجى تحديد التاريخ",
         "selectTime":"يرجى اختيار الوقت",
-        "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان"
+        "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان",
+        "anotherTimeslot" : "Please Select another time Slot",
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -519,7 +520,10 @@
     },
     "scheduleService":{
         "serviceTitle":"جدول",
-        "addressvalidation":"يرجى اختيار العنوان"
+        "addressvalidation":"يرجى اختيار العنوان",
+        "name":"Service Name",
+        "date":"Date",
+        "username":"Name"
     },
     "notification":{
         "orderId":"رقم الطلب",

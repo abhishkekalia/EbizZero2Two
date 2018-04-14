@@ -155,7 +155,8 @@
         "paymentfailure":"Payment Not Success",
         "selectDate":"Please Select Date",
         "selectTime":"Please Select Time Slot",
-        "logintoaddaddr":"Please login / register to add address"
+        "logintoaddaddr":"Please login / register to add address",
+        "anotherTimeslot" : "Please Select another time Slot",
     },
     "bottomTabs":{
         "home":"Home",
@@ -523,7 +524,11 @@
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
-        "addressvalidation":"Please Select Address First"
+        "addressvalidation":"Please Select Address First",
+        "name":"Service Name",
+        "date":"Date",
+        "username":"Name"
+
     },
     "notification":{
         "orderId":"Order Id",

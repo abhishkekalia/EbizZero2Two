@@ -217,10 +217,10 @@ class MainView extends Component {
                 //     merge = arrTmp.concat(this.state.arrServiceList)
                 // }
                 console.log("arrTmp:=",arrTmp)
-            
+
             console.log("merge:=",merge)
             this.state.arrProductList = responseData.data
-            this.setState({                
+            this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(merge),
                 arrProductList: responseData.data,
                 status : responseData.status,
@@ -971,8 +971,8 @@ class MainView extends Component {
     }
 
     checkShopStatusSelected() {
-        var isTrue = true        
-        for (j = 0; j < this.state.dataArray.length; j++) {        
+        var isTrue = true
+        for (j = 0; j < this.state.dataArray.length; j++) {
             var isInnerTrue = false
             for (i = 0; i < this.state.rows.length; i++) {
                 if (this.state.dataArray[j].u_id == this.state.rows[i]) {
@@ -1090,8 +1090,8 @@ class MainView extends Component {
     }
 
     checkServiceStatusSelected() {
-        var isTrue = true        
-        for (j = 0; j < this.state.serviceArray.length; j++) {        
+        var isTrue = true
+        for (j = 0; j < this.state.serviceArray.length; j++) {
             var isInnerTrue = false
             for (i = 0; i < this.state.servicerows.length; i++) {
                 if (this.state.serviceArray[j].service_id == this.state.servicerows[i]) {
@@ -1239,10 +1239,10 @@ class MainView extends Component {
                     else {
                         if (arrTmp.length > 0) {
                             merge = arrTmp
-                        }   
+                        }
                     }
                 }
-                
+
                 console.log("arrTmp:=",arrTmp)
                 console.log("merge:=",merge)
                 this.setState({
@@ -1477,7 +1477,7 @@ class MainView extends Component {
             );
         }
 
-        
+
     }
 }
 class Header extends Component{
@@ -1673,7 +1673,7 @@ class LoadImage extends Component {
     }
     render(){
         var imgUrl =  this.props.productImages[0] ? this.props.productImages[0].image : "null"
-        
+
         return (
             imgUrl == "null" ?
             <IconBadge

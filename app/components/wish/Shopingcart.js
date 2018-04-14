@@ -83,6 +83,7 @@ class Shopingcart extends Component {
      _renderRightButton = () => {
         return(
             // <Text style={{color : '#fff'}}></Text>
+
             <View style={{ width: 40}}/>
         );
     };
@@ -414,8 +415,8 @@ class Shopingcart extends Component {
                         backgroundColor : "transparent",
                     }}>
                     <View style={{
-                        flexDirection: 'column', 
-                        justifyContent : 'space-between', 
+                        flexDirection: 'column',
+                        justifyContent : 'space-between',
                         backgroundColor:'#fff',
                         width:'100%',
                         paddingRight:5,
