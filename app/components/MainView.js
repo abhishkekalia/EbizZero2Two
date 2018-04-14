@@ -370,7 +370,10 @@ class MainView extends Component {
     fetchData(){
         const {u_id, country, deviceId } = this.props;
         let formData = new FormData();
-        // formData.append('u_id', String(u_id));
+        console.log("u_id:=",u_id)
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         formData.append('device_uid', String(deviceId));
         const config = {
@@ -381,6 +384,7 @@ class MainView extends Component {
             },
             body: formData,
         }
+        console.log("config:=",config)
         fetch(Utils.gurl('allProductItemList'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -436,9 +440,13 @@ class MainView extends Component {
         .done();
     }
     fetchService(){
-        const {country} = this.props;
+        const {u_id, country} = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
+
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         const config = {
             method: 'POST',
@@ -919,15 +927,43 @@ class MainView extends Component {
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity onPress={this.onClickAllShop.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}>
-                        <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text>
+                    {/* <TouchableOpacity onPress={this.onClickAllShop.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}> */}
+                        {/* <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text> */}
                         {!this.checkShopStatusSelected() ?
-                            undefined
+                            // undefined
+                            <CheckBox
+                                style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
+                                leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
+                                onClick={()=>this.onClickAllShop()}
+                                isChecked={false}
+                                leftText={I18n.t('home.allshop', { locale: lang })}
+                                lang={lang}
+                            />
                             // <Ionicons name="ios-uncheckmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10,}}/>
                             :
-                            <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10,}}/>
+                            // <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10,}}/>
+                            <CheckBox
+                                style={{borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc', width : width-50}}
+                                leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
+                                onClick={()=>this.onClickAllShop()}
+                                isChecked={true}
+                                leftText={I18n.t('home.allshop', { locale: lang })}
+                                lang={lang}
+                            />
+
+            //                 <CheckBox
+            //   label={rowdata.CategoryName}
+            //   checked={rowdata.checkStatus}
+            //   // onChange={(checked) => this.onValueChangeCheckBox(rowdata,checked)}
+            //   onChange={(checked) => this.onValueChangeCheckBox(rowdata,checked,sectionID,rowID)}
+            //   containerStyle={{
+            //     width:DEVICE_WIDTH-20,
+            //     height:40,
+            //     // backgroundColor:'red'
+            //   }}
+            // />
                         }
-                    </TouchableOpacity>
+                    {/* </TouchableOpacity> */}
                     {this.renderView()}
                 </ScrollView>
             </ModalWrapper>
@@ -1022,14 +1058,30 @@ class MainView extends Component {
                     </TouchableOpacity>
                 </View>
                 <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity onPress={this.onClickAllService.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}>
-                        <Text style={{ padding : 10, textAlign: align}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                    {/* <TouchableOpacity onPress={this.onClickAllService.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}> */}
+                        {/* <Text style={{ padding : 10, textAlign: align}}>{I18n.t('home.allservice', { locale: lang })}</Text> */}
                             {!this.checkServiceStatusSelected() ?
-                                undefined
+                                // undefined
+                                <CheckBox
+                                    style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
+                                    leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
+                                    onClick={()=>this.onClickAllService()}
+                                    isChecked={false}
+                                    leftText={I18n.t('home.allservice', { locale: lang })}
+                                    lang={lang}
+                                />
                                 :
-                                <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
+                                // <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
+                                <CheckBox
+                                    style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
+                                    leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
+                                    onClick={()=>this.onClickAllService()}
+                                    isChecked={true}
+                                    leftText={I18n.t('home.allservice', { locale: lang })}
+                                    lang={lang}
+                                />
                             }
-                    </TouchableOpacity>
+                    {/* </TouchableOpacity> */}
                     {console.log("countinue")}
                     {this.renderServiceView()}
                 </ScrollView>
@@ -1110,6 +1162,9 @@ class MainView extends Component {
     loadServiceData (){
         const {u_id, country} = this.props;
         let formData = new FormData();
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         // formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         // formData.append('u_id', String(user_type));
@@ -1446,7 +1501,10 @@ class Header extends Component{
     fetchData(){
         const {u_id, country } = this.props;
         let formData = new FormData();
-        formData.append('u_id', String(u_id));
+        // formData.append('u_id', String(u_id));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('country', String(country));
         const config = {
             method: 'POST',
