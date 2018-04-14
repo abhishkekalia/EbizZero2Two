@@ -12,7 +12,8 @@ import {
 	Dimensions,
 	StyleSheet,
 	Image,
-	Modal
+	Modal,
+	ActivityIndicator
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -81,6 +82,7 @@ class Register extends Component {
 			countries: ["0"],
 			otpVarification: false,
 			ShowMapLocation: false,
+			isLoading: true,
 			LATITUDE : 22.966425,
 			LONGITUDE : 72.615933,
 			LATITUDE_DELTA : 0.0922,
@@ -104,6 +106,8 @@ class Register extends Component {
 				latitudeDelta:  0.00922*1.5,
 				longitudeDelta: 0.00421*1.5
 			}
+			console.warn(region);
+
 			this.onRegionChange(region, region.latitude, region.longitude);
 		});
         this.fetchData();
@@ -113,7 +117,8 @@ class Register extends Component {
 		this.setState({
 			mapRegion: region,
 			lastLat: lastLat || this.state.lastLat,
-			lastLong: lastLong || this.state.lastLong
+			lastLong: lastLong || this.state.lastLong,
+			isLoading : false
 		});
 	}
 	componentWillUnmount() {
@@ -249,6 +254,23 @@ class Register extends Component {
 			})
 		}
 	}
+	vendorRegister(){
+		navigator.geolocation.clearWatch(this.watchID);
+		routes.registerVendor()
+	}
+	renderLoadingView() {
+		const {lang} = this.props;
+		let side = lang === "ar" ? "right" : "left";
+		return (
+			<View style={{flex: 1}}>
+				<ActivityIndicator
+					style={[styles.centering]}
+					color="#a9d5d1"
+					size="large"/>
+			</View>
+		);
+	}
+
 	render() {
 		const { lang , errorStatus, loading} = this.props,
 		direction = lang == 'ar'? 'row-reverse': 'row',
@@ -267,6 +289,16 @@ class Register extends Component {
 				selCountryObj = element
 			}
 		}
+		// if (this.state.isLoading) {
+		// 	return (
+		// 		<View style={{flex: 1, zIndex: 1, position: 'absolute'}}>
+		// 			<ActivityIndicator
+		// 				style={[styles.centering]}
+		// 				color="#a9d5d1"
+		// 				size="large"/>
+		// 		</View>
+		// 	);
+		// }
 		return (
 			<View style={{flex: 1}}>
 				<ScrollView style={[ commonStyles.content,{marginTop:0,marginBottom:0,paddingTop:20,paddingBottom:20}]}
@@ -450,7 +482,7 @@ class Register extends Component {
 					</TouchableOpacity>
 					<View style={{flexDirection : 'column', alignItems : 'center', flex: 1}}>
 						<TouchableOpacity style={{padding :20}}
-							onPress={()=> routes.registerVendor()}>
+							onPress={()=> this.vendorRegister()}>
 							<Text style={{textAlign: textline}} >{I18n.t('userregister.venderregister', { locale: lang })}</Text>
 						</TouchableOpacity>
 						<View style={{
@@ -474,7 +506,7 @@ class Register extends Component {
 					</View>
 					<KeyboardSpacer/>
 				</ScrollView>
-				
+
 				<Modal
 					animationType="slide"
 					transparent={false}
@@ -521,28 +553,28 @@ class Register extends Component {
 					transparent={false}
 					visible={this.state.ShowMapLocation}
 					onRequestClose={() => this.setState({ ShowMapLocation :false})}>
-					<View style={{ 
-						flexDirection: direction, 
-						position: 'absolute',  
+					<View style={{
+						flexDirection: direction,
+						position: 'absolute',
 						zIndex: 1,
-						backgroundColor: "transparent", 
-						justifyContent: 'space-around', 
-						height: 40, 
-						width: "90%", 
-						alignSelf: 'center', 
-						marginTop: Platform.OS === 'ios' ? 20 : 10 , 
+						backgroundColor: "transparent",
+						justifyContent: 'space-around',
+						height: 40,
+						width: "90%",
+						alignSelf: 'center',
+						marginTop: Platform.OS === 'ios' ? 20 : 10 ,
 						borderRadius:5,
 						// backgroundColor:'red'
 						paddingVertical:10,
 						// alignItems:'center'
 					}}>
 						<TextInput
-							style={{ 
-								width: "85%", 
-								height: Platform.OS === 'ios' ? 40 : 40, 
-								backgroundColor: "#fff", 
-								alignSelf: 'center', 
-								textAlign: 'center' ,//textline,  
+							style={{
+								width: "85%",
+								height: Platform.OS === 'ios' ? 40 : 40,
+								backgroundColor: "#fff",
+								alignSelf: 'center',
+								textAlign: 'center' ,//textline,
 								marginLeft : lang == 'ar'? 0 : 5,
 								// backgroundColor:'yellow'
 								borderRadius:5,
@@ -635,6 +667,14 @@ class Register extends Component {
 						</MapView>
 						}
 					</View>
+					{
+						this.state.isLoading ?
+							<ActivityIndicator
+								style={{alignSelf: 'center', position: 'absolute', marginTop: height/2-40 }}
+								color="#a9d5d1"
+								size="large"/>
+						: undefined
+					}
 				</Modal>
 			</View>
 		);
