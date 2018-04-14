@@ -53,7 +53,8 @@ class Profile extends Component {
 	 };
    _renderRightButton = () => {
         return(
-            <Text style={{color : '#fff'}}></Text>
+			// <Text style={{color : '#fff'}}></Text>
+			<View style={{ width: 40}}/>
         );
     };
     async getKey() {
@@ -159,7 +160,7 @@ class Profile extends Component {
 					<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
 						<View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
 							{this._renderLeftButton()}
-							<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
+							<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
 							{this._renderRightButton()}
 						</View>
 						<ActivityIndicator
@@ -205,7 +206,7 @@ class Profile extends Component {
 				<View style={{flex: 1, flexDirection: 'column', backgroundColor:'rgba(240,241,243,1)'}} testID="Profile">
 					<View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
 						{this._renderLeftButton()}
-						<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
+						<Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('profile.profiletitle', { locale: lang })}</Text>
 						{this._renderRightButton()}
 					</View>
 					<View style={[styles.content, {flexDirection :direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'#fff'}]}>

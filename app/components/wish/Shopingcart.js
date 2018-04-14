@@ -82,7 +82,8 @@ class Shopingcart extends Component {
      };
      _renderRightButton = () => {
         return(
-            <Text style={{color : '#fff'}}></Text>
+            // <Text style={{color : '#fff'}}></Text>
+            <View style={{ width: 40}}/>
         );
     };
     // async getKey() {
@@ -310,7 +311,7 @@ class Shopingcart extends Component {
                 <View style={{flex: 1}}>
                     <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                         {this._renderLeftButton()}
-                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
                     <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
@@ -363,7 +364,7 @@ class Shopingcart extends Component {
                         >
                         <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                             {this._renderLeftButton()}
-                            <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                            <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
                             {this._renderRightButton()}
                         </View>
                         {listView}
