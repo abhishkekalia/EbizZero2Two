@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from "react";
 import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage ,NetInfo} from "react-native";
-import { Actions} from "react-native-router-flux";
+import { Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import PercentageCircle from 'react-native-percentage-circle';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -124,7 +124,7 @@ class Profile extends Component {
     }
 	render() {
 		const {identity, logout, lang} = this.props,
-		{data, u_id, address, dataSource, chart} = this.state,
+		{data, u_id, address, dataSource, chart,  country } = this.state,
 		direction = lang == 'ar'? 'row-reverse': 'row',
 		align = lang == 'ar'? 'flex-end': 'flex-start',
 		textline = lang == 'ar'? 'right': 'left';
@@ -231,7 +231,8 @@ class Profile extends Component {
 						marginTop:10,
 						marginBottom:10,
 					}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
-				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}/>
+				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}
+					u_id={u_id} country={country}/>
 				<TouchableOpacity
                 onPress={()=>{ Utils.logout()
 					.then(logout)

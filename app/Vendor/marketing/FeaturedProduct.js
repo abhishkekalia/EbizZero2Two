@@ -102,10 +102,9 @@ export default class FeaturedProduct extends Component {
         );
     }
     renderData(data: string, sectionID: number, rowID: number, index) {
-        const {u_id,country} = this.state;
         let color = data.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
-        const { lang} = this.props,
+        const { lang, u_id, country} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left',
@@ -208,13 +207,16 @@ class Footer extends Component{
     constructor(props){
         super(props);
         this.state = {
-            toggled : false
+            toggled : false,
+            is_feature : this.props.is_feature
         }
     }
     manageFeature(){
-        const {u_id,country,is_feature} = this.props;
-        const {product_id} = this.props;
-        if(is_feature == "2"){
+        const {u_id, country, product_id} = this.props;
+        const {is_feature} = this.state;
+        if(is_feature === "2"){
+            this.setState({ is_feature : "1" })
+
             let form = new FormData();
         	form.append('u_id', String(u_id));
         	form.append('country', String(country));
@@ -234,7 +236,7 @@ class Footer extends Component{
                 if(responseData.status){
                     let feature_id = responseData.data.feature_id;
                     let url = responseData.data.url;
-                    routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id,amout:10})
+                    routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id, amout:10})
                 }else{
                 }
             })
@@ -243,6 +245,7 @@ class Footer extends Component{
             })
             .done();
         }else if(is_feature == "1"){
+            this.setState({ is_feature : "2" })
             let form = new FormData();
         	form.append('u_id', String(u_id));
         	form.append('country', String(country));
@@ -274,9 +277,11 @@ class Footer extends Component{
         }
     }
     render(){
-        const { lang,is_feature} = this.props,
+        const { is_feature } = this.state;
+        const { lang, u_id, country, product_id } = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
+         let data = is_feature === "2" ? false : true
         return(
             <View style={[styles.bottom, {flexDirection: direction}]}>
                 <Switch
@@ -285,7 +290,7 @@ class Footer extends Component{
                     tintColor="#000"
                     onValueChange={ ()=> this.manageFeature()}
                     // onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
-                    value={is_feature == "2" ? false : true } />
+                    value={data} />
                 <View style={{flexDirection: direction}}>
                     <Text style={{ color :'#fbcdc5', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
                     <Text style={{ color :'#fbcdc5', fontSize : 12, alignSelf: 'center'}}> : </Text>
