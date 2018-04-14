@@ -72,7 +72,7 @@ class WishList extends Component {
      };
    _renderRightButton = () => {
         return(
-            <Text style={{color : '#fff'}}></Text>
+            <View style={{ width: 40}}/>
         );
     };
     refreshfromCount(){

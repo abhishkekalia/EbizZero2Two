@@ -4,12 +4,12 @@ import {
     Text,
     View
 } from 'react-native';
-
 import SegmentedControlTab from 'react-native-segmented-control-tab'
 import ProductOrder from "./Order/ProductOrder";
 import ServiceOrder from "./Order/ServiceOrder";
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
+import {Actions as routes} from "react-native-router-flux";
 
 class Order extends Component {
     constructor(props) {
@@ -27,7 +27,6 @@ class Order extends Component {
             selectedIndex: index,
         });
     }
-
     handleMultipleIndexSelect = (index) => {
         if (this.state.selectedIndices.includes(index)) {
             this.setState({
@@ -51,6 +50,9 @@ class Order extends Component {
             ...this.state,
             customStyleIndex: index,
         });
+    }
+    componentWillMount() {
+        routes.refresh({  hideNavBar : false});
     }
 
     render() {

@@ -153,6 +153,7 @@
         "paymentfailure":"تم رفض عملية الدفع",
         "selectDate":"يرجى تحديد التاريخ",
         "selectTime":"يرجى اختيار الوقت",
+        "anotherTimeslot" : "Please Select another time Slot",
         "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان"
     },
     "bottomTabs":{

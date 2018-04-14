@@ -155,6 +155,7 @@
         "paymentfailure":"Payment Not Success",
         "selectDate":"Please Select Date",
         "selectTime":"Please Select Time Slot",
+        "anotherTimeslot" : "Please Select another time Slot",
         "logintoaddaddr":"Please login / register to add address"
     },
     "bottomTabs":{

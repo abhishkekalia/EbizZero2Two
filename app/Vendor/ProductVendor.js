@@ -102,6 +102,7 @@ class ProductVendor extends Component {
             dateSelected: "",
             service_date: "",
             scheduleTime: "",
+            validTime : '',
             BookingTime : ["5.30 AM",],
             calanderShow : false
         }
@@ -281,7 +282,7 @@ class ProductVendor extends Component {
                 let strTime = timeString[i]
                 if(timeString[i] === time){
                     MessageBarManager.showAlert({
-                        message: " Please Select another time Slot",
+                        message: I18n.t('servicedetail.anotherTimeslot', { locale: lang }),
                         alertType: 'extra',
                         title:'',
                         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -297,20 +298,53 @@ class ProductVendor extends Component {
     buyNow(){
         routes.AddressLists();
     }
+    ValidateBookservice(){
+        const {service_date, validTime} = this.state;
+        const { lang } = this.props,
+        align = lang == 'ar'? 'right': 'left';
+
+        if (!service_date.length){
+            MessageBarManager.showAlert({
+                message: I18n.t('servicedetail.selectDate', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!validTime.length){
+            MessageBarManager.showAlert({
+                message: I18n.t('servicedetail.selectTime', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+
+        return true
+
+    }
     order (){
         const{ data , size, color, count , address_id } = this.state;
         var Select =[];
         var today = new Date();
         currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        if(this.ValidateBookservice()){
             this.addToOrder(address_id)
             .then(()=>this.setState({
                 // visibleModal: true,
             }))
             .done()
+        }
     }
     async addToOrder(value){
-        const { u_id, country, date_in, service_provider_id, service_date, scheduleTime} = this.state;
-        currentdate = service_date + ' '+ new Date().toLocaleTimeString();
+        const { u_id, country, date_in, service_provider_id, service_date, validTime} = this.state;
+        // currentdate = service_date + ' '+ new Date().toLocaleTimeString();
+        currentdate = service_date +" "+ validTime;
+        console.log("currentdate: = ", currentdate);
         try {
             let formData = new FormData();
             formData.append('u_id', String(u_id));
@@ -395,6 +429,9 @@ class ProductVendor extends Component {
     validateScheduleTimings(b){
         var availabletime =  this.validateSlot(b);
         if(this.validateSlot(b)){
+            this.setState({
+                validTime : b
+            })
           MessageBarManager.showAlert({
               message: " Available to book time Slot",
               alertType: 'extra',

@@ -37,6 +37,10 @@ class ScheduleCalender extends Component {
 		this.getCalenderData()
 		.done();
     }
+	componentWillMount() {
+		routes.refresh({  hideNavBar : false});
+	}
+
 	async getCalenderData(){
 		try {
 			const {u_id} = this.props;
@@ -230,7 +234,7 @@ class ScheduleCalender extends Component {
 							<Text>{data.addressArray[0].full_name}</Text>
 						</View>
 					</View>
-					
+
 					{/* <View style={{ width: "70%", height: 40, justifyContent: 'center', alignItems: 'center'}}>
 						<Text style={[styles.textQue, { textAlign: align}]}>{data.addressArray[0].full_name}</Text>
 					</View>

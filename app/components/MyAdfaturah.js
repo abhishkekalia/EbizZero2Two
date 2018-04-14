@@ -11,6 +11,7 @@ import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import I18n from 'react-native-i18n';
+import Ionicons from 'react-native-vector-icons/Feather';
 
 var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
 
@@ -123,6 +124,16 @@ export default class MyAdfaturah extends Component {
         // console.warn(this.props.uri);
         return (
             <View style={styles.container}>
+                <Ionicons name= "x-circle" color="#000" size={40}
+                    onPress={routes.pop}
+                    style={{
+                        position : "absolute",
+                        zIndex : 1,
+                        left : 10,
+                        marginTop : 10,
+                        paddingHorizontal : 10,
+                    }
+                }/>
                 <WebView
                 ref="webview"
                 source={{uri:this.props.uri}}

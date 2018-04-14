@@ -26,7 +26,9 @@ class Profile extends Component {
 			chart : []
         };
     }
+
     componentwillMount(){
+		routes.refresh({  hideNavBar : false});
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
         NetInfo.isConnected.fetch().done(
             (isConnected) => { this.setState({ netStatus: isConnected }); }
@@ -129,8 +131,8 @@ class Profile extends Component {
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
 				<View style={{
-					flexDirection: 'column', 
-					justifyContent: 'space-around', 
+					flexDirection: 'column',
+					justifyContent: 'space-around',
 					marginTop: 5,
 					marginBottom: 5,
 					marginHorizontal:10,
@@ -143,7 +145,7 @@ class Profile extends Component {
 					// paddingBottom:0,
 				}}>
 					<View style={{
-							flexDirection: direction, 
+							flexDirection: direction,
 							justifyContent: 'space-around'
 						}}>
 						<PercentageCircle radius={35} percent={chart.total_sales} color={"#fbcdc5"} borderWidth={10}></PercentageCircle>
@@ -151,8 +153,8 @@ class Profile extends Component {
 						<PercentageCircle radius={35} percent={chart.feature_product_sales} color={"#FFCC7D"}  borderWidth={10}></PercentageCircle>
 					</View>
 					<View style={{
-							flexDirection: direction, 
-							justifyContent: 'space-around', 
+							flexDirection: direction,
+							justifyContent: 'space-around',
 							backgroundColor:'white',
 							marginTop:5,
 							paddingBottom:10,
@@ -166,8 +168,8 @@ class Profile extends Component {
 				</View>
 
 				{/* <View style={{
-					flexDirection: direction, 
-					justifyContent: 'space-around', 
+					flexDirection: direction,
+					justifyContent: 'space-around',
 					marginTop: 5,
 					marginBottom: 5,
 					marginHorizontal:10,
@@ -190,7 +192,7 @@ class Profile extends Component {
 						<Text style={styles.chart}>{I18n.t('venderprofile.fearuresales', { locale: lang })}</Text>
 					</View>
 				</View> */}
-				
+
 				<View style={[styles.content, {flexDirection : direction, justifyContent: 'space-between' ,padding : 0, backgroundColor:'white'}]}>
 					<View style={{ flexDirection : direction, }}>
 						<View style={{ width :60, height:60, justifyContent: 'center', alignItems : 'center'}}>
