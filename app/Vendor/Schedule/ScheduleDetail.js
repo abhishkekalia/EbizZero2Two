@@ -107,8 +107,8 @@ class ScheduleDetail extends Component {
 						fontWeight:'bold',
 						textAlign:align,
 						marginTop:5,
-					}}>{I18n.t('scheduleDetail.address', { locale: lang })}</Text>
-					<Text> : </Text>
+					}}>{I18n.t('scheduleDetail.address', { locale: lang })} :</Text>
+					{/* <Text> : </Text> */}
 
 					<Text style={{
 						marginTop:5,

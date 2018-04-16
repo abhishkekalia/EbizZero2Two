@@ -594,6 +594,7 @@ class Footer extends Component {
             },
             body: formData,
         }
+        console.log("editCart Request:=",config)
         fetch(Utils.gurl('editCart'), config)
         .then((response) => response.json())
         .then((responseData) => {

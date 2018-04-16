@@ -110,6 +110,12 @@ class MainView extends Component {
         EventEmitter.on("reloadProducts", (value)=>{
             // this.fetchData()
         });
+
+        EventEmitter.removeAllListeners("reloadProductsFromWhishlist");
+        EventEmitter.on("reloadProductsFromWhishlist", (value)=>{
+            this._onRefresh()
+            this.fetchData()
+        });
     }
     componentWillMount() {
         Actions.refresh({ right: this._renderRightButton, left: this._renderLeftButton});

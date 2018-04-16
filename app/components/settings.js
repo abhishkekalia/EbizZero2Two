@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ActivityIndicator,
 //   Picker
 } from 'react-native';
 import {connect} from "react-redux";
@@ -35,7 +36,7 @@ class Settings extends Component {
             is_notification : this.props.is_notification,
             u_id: null,
             country : null,
-
+            isCallingAPI: false,
         }
     }
     componentDidMount(){
@@ -58,131 +59,178 @@ class Settings extends Component {
     }
 
     getprivacypolicy(){
-        fetch(Utils.gurl('getprivacypolicy'),{
-             method: "GET", headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json())
-        .then((responseData) => {
-            if (responseData.status) {
-                routes.terms({
-                title: "Privacy Policy",
-                description: responseData.data.privacypolicy_description
+        if (!this.state.isCallingAPI) {
+            this.setState({
+                isCallingAPI: true
             })
-            }
-        })
-       .catch((error) => {
-          console.log(error);
-        })
-        .done();
-
+            fetch(Utils.gurl('getprivacypolicy'),{
+                 method: "GET", headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.setState({
+                    isCallingAPI: false
+                })
+                if (responseData.status) {
+                    routes.terms({
+                        title: "Privacy Policy",
+                        description: responseData.data.privacypolicy_description
+                    })
+                }
+            })
+           .catch((error) => {
+              console.log(error);
+            })
+            .done();
+        }
     }
     getlegalnotice(){
-        fetch(Utils.gurl('getlegalnotice'),{
-             method: "GET", headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json())
-        .then((responseData) => {
-            if (responseData.status) {
-                routes.terms({
-                title: "Legal Notice",
-                description: responseData.data.legalnotice_description
+        if (!this.state.isCallingAPI) {
+            this.setState({
+                isCallingAPI: true
             })
-            }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .done();
+            fetch(Utils.gurl('getlegalnotice'),{
+                method: "GET", headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.setState({
+                    isCallingAPI: false
+                })
+                if (responseData.status) {
+                    routes.terms({
+                        title: "Legal Notice",
+                        description: responseData.data.legalnotice_description
+                    })
+                }
+            })
+            .catch((error) => {
+            console.log(error);
+            })
+            .done();
+        }
     }
     gettermandcondition(){
-        fetch(Utils.gurl('gettermandcondition'),{
-             method: "GET", headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json())
-        .then((responseData) => {
-            if (responseData.status) {
-                routes.terms({
-                title: "Terms & Condition",
-                description: responseData.data.termsandcondition_description
+        if (!this.state.isCallingAPI) {
+            this.setState({
+                isCallingAPI: true
             })
-            }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .done();
+            fetch(Utils.gurl('gettermandcondition'),{
+                method: "GET", headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.setState({
+                    isCallingAPI: false
+                })
+                if (responseData.status) {
+                    routes.terms({
+                        title: "Terms & Condition",
+                        description: responseData.data.termsandcondition_description
+                    })
+                }
+            })
+            .catch((error) => {
+            console.log(error);
+            })
+            .done();
+        }
     }
     getreturnpolicy(){
-        fetch(Utils.gurl('getreturnpolicy'),{
-             method: "GET", headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json())
-        .then((responseData) => {
-            if (responseData.status) {
-                routes.terms({
-                title: "Return Policy",
-                description: responseData.data.returnpolicy_description
+        if (!this.state.isCallingAPI) {
+            this.setState({
+                isCallingAPI: true
             })
-            }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .done();
+            fetch(Utils.gurl('getreturnpolicy'),{
+                method: "GET", headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.setState({
+                    isCallingAPI: false
+                })
+                if (responseData.status) {
+                    routes.terms({
+                    title: "Return Policy",
+                    description: responseData.data.returnpolicy_description
+                })
+                }
+            })
+            .catch((error) => {
+            console.log(error);
+            })
+            .done();
+        }
     }
     getshipmentpolicy(){
-        fetch(Utils.gurl('getshipmentpolicy'),{
-             method: "GET", headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json())
-        .then((responseData) => {
-            if (responseData.status) {
-                routes.terms({
-                title: "Shipment Policy",
-                description: responseData.data.shipmentpolicy_description
+        if (!this.state.isCallingAPI) {
+            this.setState({
+                isCallingAPI: true
             })
-            }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .done();
+            fetch(Utils.gurl('getshipmentpolicy'),{
+                method: "GET", headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.setState({
+                    isCallingAPI: false
+                })
+                if (responseData.status) {
+                    routes.terms({
+                    title: "Shipment Policy",
+                    description: responseData.data.shipmentpolicy_description
+                })
+                }
+            })
+            .catch((error) => {
+            console.log(error);
+            })
+            .done();
+        }
     }
     getaboutus(){
-        fetch(Utils.gurl('getaboutus'),{
-             method: "GET", headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((response) => response.json())
-        .then((responseData) => {
-            if (responseData.status) {
-                routes.terms({
-                title: "About Us",
-                description: responseData.data.aboutus_description
+        if (!this.state.isCallingAPI) {
+            this.setState({
+                isCallingAPI: true
             })
-            }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .done();
+            fetch(Utils.gurl('getaboutus'),{
+                method: "GET", headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.setState({
+                    isCallingAPI: false
+                })
+                if (responseData.status) {
+                    routes.terms({
+                    title: "About Us",
+                    description: responseData.data.aboutus_description
+                })
+                }
+            })
+            .catch((error) => {
+            console.log(error);
+            })
+            .done();
+        }
     }
 
     fetchData(itemValue){
@@ -382,6 +430,19 @@ class Settings extends Component {
                         <Text style={{ textAlign: textline}}>{I18n.t('settings.version', { locale: lang })}</Text>
                         <Text>{version}</Text>
                     </View>
+                    
+                    {this.state.isCallingAPI ? <ActivityIndicator
+                        style={{
+							flex:1,
+							alignItems: 'center',
+							justifyContent: 'center',
+                            padding: 20,
+                            position:'absolute',
+                            marginLeft:width/2-40,
+                            marginTop:110,
+						}}
+                        color="#a9d5d1"
+                        size="large"/> : undefined}                    
                 </View>
             </View>
         );
