@@ -187,16 +187,16 @@ class AddService extends Component {
             })
             return false
         }
-        if (!special_price){
-            MessageBarManager.showAlert({
-                message: I18n.t('vendoraddservice.specialpriceerr', { locale: lang }),
-                alertType: 'extra',
-                title:'',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-            return false
-        }
+        // if (!special_price){
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('vendoraddservice.specialpriceerr', { locale: lang }),
+        //         alertType: 'extra',
+        //         title:'',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        // }
         if ( parseInt(special_price) > parseInt(price)){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.specialpriceerr1', { locale: lang }),

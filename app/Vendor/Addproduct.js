@@ -262,7 +262,7 @@ class AddProduct extends Component {
 
         console.log("Price:=",price)
         console.log("special:=",special)
-        if ( special > price){
+        if ( parseInt(special) > parseInt(price)){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.sppriceerr', { locale: lang }),
                 alertType: 'extra',

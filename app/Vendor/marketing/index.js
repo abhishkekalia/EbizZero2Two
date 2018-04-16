@@ -55,8 +55,8 @@ class Marketing extends Component {
         });
     }
     render() {
-        const {lang} = this.props;
-    
+        const {lang , u_id, country} = this.props;
+
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
@@ -70,7 +70,7 @@ class Marketing extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <FeaturedProduct data={this.props.data} status={this.props.status} lang={lang}/>}
+                    <FeaturedProduct data={this.props.data} status={this.props.status} lang={lang} 	u_id={u_id} country={country}/>}
                 {this.state.customStyleIndex === 1 &&
                     <UploadAdd marketing_campaign={this.props.marketing_campaign} lang={lang}/>}
 

@@ -12,7 +12,8 @@ import {
 	Keyboard,
 	StyleSheet,
 	Image,
-	Modal
+	Modal,
+	ActivityIndicator
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -90,6 +91,7 @@ class Vendorreg extends Component {
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			countries: ["0"],
 			ShowMapLocation: false,
+			isLoading: true,
 			LATITUDE : 22.966425,
 			LONGITUDE : 72.615933,
 			LATITUDE_DELTA : 0.0922,
@@ -121,7 +123,8 @@ class Vendorreg extends Component {
 		this.setState({
 			mapRegion: region,
 			lastLat: lastLat || this.state.lastLat,
-			lastLong: lastLong || this.state.lastLong
+			lastLong: lastLong || this.state.lastLong,
+			isLoading : false
 		});
 	}
 	componentWillUnmount() {
@@ -618,6 +621,14 @@ class Vendorreg extends Component {
 			}
 
 			</View>
+			{
+				this.state.isLoading ?
+					<ActivityIndicator
+						style={{alignSelf: 'center', position: 'absolute', marginTop: height/2-40 }}
+						color="#a9d5d1"
+						size="large"/>
+				: undefined
+			}
 		</Modal>
 		</View>
 		);

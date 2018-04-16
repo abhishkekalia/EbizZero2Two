@@ -170,6 +170,7 @@ class WishList extends Component {
             .then((response) => response.json())
             .then((responseData) => {
                 if(responseData.status){
+                    EventEmitter.emit('reloadProductsFromWhishlist')
                     MessageBarManager.showAlert({
                         message: I18n.t('wishlist.productadded', { locale: lang }),
                         alertType: 'extra',

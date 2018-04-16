@@ -134,6 +134,7 @@ class ProductVendor extends Component {
         Select =[],
         user,
         i;
+        console.log("Items:=",Items)
         for (i = 0; i < length; i++) {
             organization = Items[i];
             Select.push ({
@@ -347,9 +348,11 @@ class ProductVendor extends Component {
         }
     }
     async addToOrder(value){
-        const { country, date_in, service_provider_id, service_date, scheduleTime} = this.state;
+        const { country, date_in, service_provider_id, service_date, scheduleTim, validTime} = this.state;
         const { u_id} = this.props
-        currentdate = service_date + ' '+ new Date().toLocaleTimeString();
+        console.log("validTime:=",validTime)
+        // currentdate = service_date + ' '+ new Date().toLocaleTimeString();
+        currentdate = service_date + ' '+ validTime;
         try {
             let formData = new FormData();
             // formData.append('u_id', String(u_id));
