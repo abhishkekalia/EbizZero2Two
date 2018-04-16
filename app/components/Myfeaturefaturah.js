@@ -5,13 +5,15 @@ import {
   Text,
   View,
   AsyncStorage,
-  WebView
+  WebView,
+  Platform,
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Feather';
+import { transaction } from 'mobx';
 
 var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
 
@@ -131,8 +133,9 @@ export default class Myfeaturefaturah extends Component {
                         position : "absolute",
                         zIndex : 1,
                         left : 10,
-                        marginTop : 10,
+                        marginTop : Platform.OS === 'ios' ? 20 : 10,
                         paddingHorizontal : 10,
+                        backgroundColor: 'transparent'
                     }
                 }/>
                 <WebView
