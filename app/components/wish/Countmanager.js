@@ -51,10 +51,11 @@ export default class Countmanager extends Component {
             },
             body: formData,
         }
-
+        console.log("updateQuantity Request:=",config)
         fetch(Utils.gurl('updateQuantity'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("updateQuantity Response:=",responseData)
             if(responseData.status){
                 // MessageBarManager.showAlert({
                 //     message: responseData.data.message,

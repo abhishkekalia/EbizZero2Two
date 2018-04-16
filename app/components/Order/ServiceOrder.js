@@ -10,7 +10,8 @@ import {
     ActivityIndicator,
     ScrollView,
     Button,
-    RefreshControl
+    RefreshControl,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { Actions} from "react-native-router-flux";
 import I18n from 'react-native-i18n';
@@ -130,48 +131,50 @@ export default class ServiceOrder extends Component {
         let color = data.serviceDetail.special_price ? '#000' : '#000';
         let textDecorationLine = data.serviceDetail.special_price ? 'line-through' : 'none';
         return (
-            <TouchableOpacity
+            <TouchableWithoutFeedback
                 style={{ flexDirection : 'column'}}
                 key={rowID}
-                data={rowData}
+                // data={rowData}
                 // onPress={()=>Actions.serviceusr({
                 //     title :data.addressDetail.fullname,
                 //     addressDetail : data.addressDetail,
                 //     lang:lang
                 // })}
                 >
-                <View style={[styles.header,{ flexDirection: direction}]}>
-                    <View style={{ flexDirection: direction, }}>
-                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{I18n.t('userorderhistory.bookingdt', { locale: lang })}</Text>
-                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}> : </Text>
-                        <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{data.service_datetime}</Text>
+                <View>
+                    <View style={[styles.header,{ flexDirection: direction}]}>
+                        <View style={{ flexDirection: direction, }}>
+                            <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{I18n.t('userorderhistory.bookingdt', { locale: lang })}</Text>
+                            <Text style={[styles.headerText, {color: '#fbcdc5'}]}> : </Text>
+                            <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{data.service_datetime}</Text>
+                        </View>
+                        <View style={{ flexDirection: direction}}>
+                            <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{I18n.t('userorderhistory.amount', { locale: lang })}</Text>
+                            <Text style={[styles.headerText, {color: '#a9d5d1'}]}>:</Text>
+                            <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{data.amount}</Text>
+                        </View>
                     </View>
-                    <View style={{ flexDirection: direction}}>
-                        <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{I18n.t('userorderhistory.amount', { locale: lang })}</Text>
-                        <Text style={[styles.headerText, {color: '#a9d5d1'}]}>:</Text>
-                        <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{data.amount}</Text>
+                    <View style={{ flexDirection : 'column', paddingLeft:10, paddingTop:5, paddingBottom:5, backgroundColor: '#F6F6F6'}} >
+                        <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
+                            <Text style={styles.label}>{I18n.t('userorderhistory.servicename', { locale: lang })}</Text>
+                                <Text style={styles.label}>: </Text>
+                            <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
+                        </View>
+                        <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
+                            <Text style={styles.label}>{I18n.t('userorderhistory.customeremail', { locale: lang })}</Text>
+                                <Text style={styles.label}>: </Text>
+                            <Text style={styles.bodyText}>{data.serviceDetail.short_description}</Text>
+                        </View>
+                        <View style={{flexDirection: direction, paddingTop:1, marginTop:5, marginBottom:5}}>
+                            <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
+                            <Text style={styles.label}>: </Text>
+                            <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
+                            <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
+                            <Text style={styles.label}> KWD </Text>
+                        </View>
                     </View>
                 </View>
-                <View style={{ flexDirection : 'column', paddingLeft:10, paddingTop:5, paddingBottom:5, backgroundColor: '#F6F6F6'}} >
-                    <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
-                        <Text style={styles.label}>{I18n.t('userorderhistory.servicename', { locale: lang })}</Text>
-                            <Text style={styles.label}>: </Text>
-                        <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
-                    </View>
-                    <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
-                        <Text style={styles.label}>{I18n.t('userorderhistory.customeremail', { locale: lang })}</Text>
-                            <Text style={styles.label}>: </Text>
-                        <Text style={styles.bodyText}>{data.serviceDetail.short_description}</Text>
-                    </View>
-                    <View style={{flexDirection: direction, paddingTop:1, marginTop:5, marginBottom:5}}>
-                        <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
-                        <Text style={styles.label}>: </Text>
-                        <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
-                        <Text style={[styles.bodyText , {color: color, textDecorationLine: textDecorationLine}]}>{data.serviceDetail.price}</Text>
-                        <Text style={styles.label}> KWD </Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
         );
     }
     _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {

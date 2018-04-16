@@ -51,7 +51,7 @@ class Login extends Component {
 			visibleModal: false,
 			isForgotPassword: false,
 			forgotemail: '',
-			arrLanguageType:['Cancel','Arabic','English'],
+			arrLanguageType:['Cancel','عربي','English'],
 		};
 		this.inputs = {};
 	}

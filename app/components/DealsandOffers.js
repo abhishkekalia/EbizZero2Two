@@ -202,8 +202,8 @@ class DealsandOffers extends Component {
                             <TouchableOpacity onPress={()=>this.openControlPanel()}>
                                 <Feather name="menu" size={20} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
                             </TouchableOpacity>
-                            <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
-                            <View/>
+                            <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
+                            <View style={{width:40}}/>
                         </View>
                         {this.state.loaded ? listView : <View style={{
                 flex: 1,

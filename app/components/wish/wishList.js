@@ -170,6 +170,7 @@ class WishList extends Component {
             .then((response) => response.json())
             .then((responseData) => {
                 if(responseData.status){
+                    EventEmitter.emit('reloadProductsFromWhishlist')
                     MessageBarManager.showAlert({
                         message: I18n.t('wishlist.productadded', { locale: lang }),
                         alertType: 'extra',
@@ -251,7 +252,7 @@ class WishList extends Component {
                 <View style={{flex: 1}}>
                     <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                         {this._renderLeftButton()}
-                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
                     <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
@@ -289,7 +290,7 @@ class WishList extends Component {
                 <View style={{flex: 1}}>
                     <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                         {this._renderLeftButton()}
-                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
                     <ActivityIndicator
@@ -351,7 +352,7 @@ class WishList extends Component {
                 <View style={{flex :1}}>
                     <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
                         {this._renderLeftButton()}
-                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? -35 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
                     <ScrollView>
