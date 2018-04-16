@@ -1,12 +1,19 @@
-import React from "react";
+import React, {Component} from "react";
 import {View, Text, StyleSheet} from "react-native";
 import { LinesLoader } from 'react-native-indicator';
-const Loader = () => (
-	<View style={styles.container}>
- <LinesLoader color= {'#6a5acd'} barWidth={5} barHeight={40} barNumber={7} betweenSpace={5}/>
-	</View>
-);
+import SplashScreen from 'react-native-splash-screen';
 
+	class Loader extends Component{
+		componentWillMount() {
+			SplashScreen.hide();
+		}
+		render(){
+			return(
+				<View style={styles.container}>
+				</View>
+			);
+		}
+	}
 const styles = StyleSheet.create({
 	container: {
 		position: 'absolute',

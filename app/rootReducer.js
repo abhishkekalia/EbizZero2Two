@@ -6,7 +6,7 @@ import storage from "./storage/storage.reducer";
 
 const rootReducer = combineReducers({
 	auth,
-	dashboard,
+	// dashboard,
 	identity,
 	storage
 });

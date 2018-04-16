@@ -1,5 +1,5 @@
 import * as types from "./auth.actions";
-export const INITIAL_STATE = {token: null, errorStatus: ''};
+export const INITIAL_STATE = { token: null, errorStatus: ''};
 
 export default function auth(state = INITIAL_STATE, action) {
 	switch (action.type) {
@@ -13,7 +13,11 @@ export default function auth(state = INITIAL_STATE, action) {
 			return {
 				...state,
 				loading: false,
-				token: action.payload.token
+				token: action.payload.token,
+				user_type: action.payload.user_type,
+				u_id: action.payload.u_id,
+				deviceId: action.payload.deviceId,
+				country: action.payload.country,
 			};
 		case types.AUTH_LOGIN_FAIL:
 			return {
@@ -25,8 +29,27 @@ export default function auth(state = INITIAL_STATE, action) {
 		case types.AUTH_LOGOUT:
 			return {
 				...state,
-				token: null
+				token: null,
+				user_type : null,
+				deviceId : null
 			};
+		case types.CHANGE_LANGUAGE:
+				return {
+					...state,
+					errorStatus: '',
+					lang: action.payload,
+				};
+		case types.SKIP_SIGNIN:
+				return {
+					...state,
+					errorStatus: '',
+					deviceId: action.payload,
+				};
+		case types.SET_COUNTRY:
+				return {
+					country: action.payload,
+					lang:"en"
+				};
 		default:
 			return state;
 	}

@@ -5,7 +5,11 @@ import * as authActions from "app/auth/auth.actions";
 
 function mapStateToProps(state) {
 	return {
-		identity: state.identity
+		identity: state.identity,
+		lang: state.auth.lang,
+        country: state.auth.country,
+        u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
 	}
 }
 
@@ -14,4 +18,3 @@ function dispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, dispatchToProps)(Profile);
-

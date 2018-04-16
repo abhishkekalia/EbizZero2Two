@@ -4,12 +4,16 @@
     android:versionName="1.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
-
+        android:targetSdkVersion="28" />
     <application
       android:name=".MainApplication"
       android:allowBackup="true"
@@ -20,13 +24,19 @@
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-        android:windowSoftInputMode="adjustResize">
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+        android:fitsSystemWindows="true"
+        android:supportsRtl="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
+      <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8"/>
     </application>
 
 </manifest>
