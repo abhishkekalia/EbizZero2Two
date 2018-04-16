@@ -5,6 +5,7 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Dimensions,
     Button,
     Keyboard,
@@ -68,13 +69,14 @@ class AddService extends Component {
             special_price : '',
             rows : [] ,
             Imagepath : [],
-            languageChoose: '',
+            languageChoose: 'en',
             is_feature: ''
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
     }
     onSelect(index, value){
+      console.warn("radio val",value);
         this.setState({
             languageChoose: value
         })
@@ -387,6 +389,7 @@ class AddService extends Component {
                     color='#a9d5d1'
                     highlightColor='transparent'
                     // selectedIndex={langIndex}
+                    selectedIndex={0}
                     onSelect = {(index, value) => this.onSelect(index, value)}
                     style={{flexDirection: 'row', justifyContent: 'space-around'}}
                     >
@@ -671,15 +674,15 @@ class AddService extends Component {
                         circleInActiveColor={'#000000'}
                         />
                 </View>
-                <TouchableOpacity style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]} onPress={()=> this.setState({
+                <TouchableWithoutFeedback style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]} onPress={()=> this.setState({
                         is_weekend : !this.state.is_weekend
                     })}>
                     <View style={{ flexDirection: direction}}>
-                        <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })}</Text>
-                        <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
+                        <Text style={[commonStyles.label, { textAlign: textline, width:width-60}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })} *</Text>
+                        <Icon name={is_weekend_work} size={20} style={{marginTop:8}}/>
                     </View>
-                    <Icon name={is_weekend_work} size={20} style={{marginTop:8}}/>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
+
                 {Platform.OS === 'ios'? <KeyboardSpacer/> : undefined}
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>

@@ -6,6 +6,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     TouchableNativeFeedback,
+    TouchableWithoutFeedback,
     Dimensions,
     Button,
     Keyboard,
@@ -692,16 +693,15 @@ class EditService extends Component {
                             circleActiveColor={'#30a566'}
                             circleInActiveColor={'#000000'}/>
                     </View>
-                    <TouchableOpacity style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]}
+                    <TouchableWithoutFeedback style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]}
                         onPress={()=> this.setState({
                             is_weekend : weekend_work_value,
                         })}>
                         <View style={{ flexDirection: direction}}>
-                            <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
+                            <Text style={[commonStyles.label, { textAlign: textline, width:width-90}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })} *</Text>
+                            <Icon name={is_weekend_work} size={20} style={{marginTop:8}}/>
                         </View>
-                        <Icon name={is_weekend_work} size={20} style={{marginTop:8}}/>
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
 
                     <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
                         {

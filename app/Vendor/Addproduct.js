@@ -76,7 +76,7 @@ class AddProduct extends Component {
             Imagepath : [],
             is_feature : 0,
             gender : '',
-            languageChoose: ''
+            languageChoose: 'en'
         }
         this.inputs = {};
         this.chips = {};
@@ -457,6 +457,7 @@ class AddProduct extends Component {
         });
     }
     onSelect(index, value){
+      console.warn("radio val",value);
         this.setState({
             languageChoose: value
         })
@@ -543,7 +544,7 @@ class AddProduct extends Component {
                         thickness={1}
                         color='#a9d5d1'
                         highlightColor='transparent'
-                        // selectedIndex={langIndex}
+                        selectedIndex={0}
                         onSelect = {(index, value) => this.onSelect(index, value)}
                         style={{flexDirection: 'row', justifyContent: 'space-around'}}
                         >
