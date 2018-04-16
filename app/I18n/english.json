@@ -513,8 +513,8 @@
         "adcategory3":"Services",
         "adcategory4":"External",
         "addesc":"Raise your awareness about your brand by promoting video and images that show behind the scene footage, product lounches or customer Stories",
-        "suggestion":"Help And Suggestion",
-        "want_to_upload_videos_longer":"want to upload videos longer than 15 Secounds",
+        "suggestion":"Help and Suggestion",
+        "want_to_upload_videos_longer":"Want to upload videos longer than 15 Secounds",
         "costperad":"Cost Per Advertisement",
         "imagevideoselection":"Plese Select Image Or Video To Upload Advertisement",
         "categoryerr":"Plese Select Advertisement Category",
@@ -528,7 +528,6 @@
         "name":"Service Name",
         "date":"Date",
         "username":"Name"
-
     },
     "notification":{
         "orderId":"Order Id",

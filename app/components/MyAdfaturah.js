@@ -130,7 +130,7 @@ export default class MyAdfaturah extends Component {
                         position : "absolute",
                         zIndex : 1,
                         left : 10,
-                        marginTop : 10,
+                        marginTop : Platform.OS === 'ios' ? 20 : 10,
                         paddingHorizontal : 10,
                     }
                 }/>

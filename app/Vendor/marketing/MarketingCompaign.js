@@ -10,7 +10,8 @@ import {
     Button,
     AsyncStorage,
     Image,
-    Alert
+    Alert,
+    TouchableWithoutFeedback,
 } from 'react-native';
 const { width, height } = Dimensions.get('window')
 import {Actions as routes} from "react-native-router-flux";
@@ -24,6 +25,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const videoIcon = '../../images/videoIcon.png';
 // const INITIAL_STATE = {avatarSource: '', ad_category: ''};
@@ -309,6 +311,11 @@ class MarketingCompaign extends Component {
             thumblinename : "videoIcon.png",
         });
     }
+
+    onClickBackAction() {
+        routes.pop()
+    }
+
     render() {
         const { imageSelect , videoSelect} = this.state;
         borderColorImage= imageSelect ? "#a9d5d1" : '#fbcdc5'
@@ -318,19 +325,105 @@ class MarketingCompaign extends Component {
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
         return (
-            <View style={[styles.container, { padding : 10}]}>
-                <TouchableOpacity style={{ alignItems : align}} onPress={()=>this.uploadTocloud()}>
+            <View style={[styles.container, { padding : 0}]}>
+
+                {/* <View style={{
+                    height:64,
+                    backgroundColor:'#a9d5d1',
+                }}></View> */}
+
+                <View style={{
+                    // flex:240,
+                    backgroundColor:'#a9d5d1',
+                    flexDirection:'row',
+                    justifyContent:'center',
+                    alignItems:'center',
+                    width:'100%',
+                    height:64,
+                    flexDirection:direction,
+                    }}>
+                    <TouchableWithoutFeedback style={{ backgroundColor:'red'
+                            }} onPress={this.onClickBackAction.bind(this)}>
+                        {/* <Image style={{
+                            position:'relative',
+                            // backgroundColor:'white',
+                            width:40,
+                            height:40,
+                            marginTop:Platform.OS === 'ios' ? 20 : 0,
+                            marginLeft:10
+                        }}
+                        source={require('Domingo/Src/images/menu.png')}
+                        resizeMethod='resize'
+                        resizeMode='center'
+                        /> */}
+                        <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25} style={ lang == 'ar' ? 
+                        { 
+                            alignSelf: 'center', 
+                            marginTop: Platform.OS === 'ios' ? 14 : 14,
+                            transform: [{ rotate: '180deg'}],
+                            padding:10,
+                        } : 
+                        { 
+                            alignSelf: 'center',
+                            marginTop: Platform.OS === 'ios' ? 14 : 14,
+                            padding:10,
+                        }}/>
+                    </TouchableWithoutFeedback>
+                        <Text style={{
+                        fontSize:17,
+                        color:'white',
+                        width:width - 50 - 50,
+                        marginTop:Platform.OS === 'ios' ? 20 : 0,
+                        justifyContent:'center',
+                        textAlign:'center',
+                        alignItems:'center',
+                        paddingLeft: lang === 'ar' ? 0 : 25,
+                        }}>{I18n.t("venderprofile.marketing", { locale: lang })}</Text>
+                    <TouchableWithoutFeedback style={{
+                            }} onPress={this.uploadTocloud.bind(this)}>
+                            
+                        {/* <Image style={{
+                            position:'relative',
+                            // backgroundColor:'white',
+                            width:40,
+                            height:40,
+                            marginTop:Platform.OS === 'ios' ? 20 : 0,
+                            marginRight:10
+                        }}
+                        source={require('Domingo/Src/images/filter.png')}
+                        resizeMethod='resize'
+                        resizeMode='center'
+                        /> */}
+                        <Text style={{
+                            backgroundColor : 'transparent', 
+                            padding : 5, 
+                            borderRadius : 5, 
+                            marginBottom: 5,
+                            color: '#fff', 
+                            borderColor:'#fff', 
+                            borderWidth:1,
+                            marginTop:Platform.OS === 'ios' ? 20 : 20,
+                        }}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
+                    </TouchableWithoutFeedback>
+                    </View>
+
+                <View style={{
+                    padding:10, 
+                    flex: 1,
+                }}>
+                {/* <TouchableOpacity style={{ alignItems : align}} onPress={()=>this.uploadTocloud()}>
                     <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5, marginBottom: 5,color: '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+                
                 <View style={{ flex:1,
                         borderColor : '#ccc',
                         borderWidth : 1,
                         flexDirection: 'column',
                         justifyContent: 'space-around',
-                        padding : 10
+                        padding : 0
                     }}>
                     <Text style={{ textAlign: 'center'}}>{I18n.t('venderprofile.selectfiletoupload', { locale: lang })}</Text>
-                    <View style={{justifyContent : "space-around",flexDirection: direction,}}>
+                    <View style={{justifyContent : "space-around",flexDirection: direction}}>
                         { this.state.avatarSource === null ?
                             <Feather name="upload-cloud" size= {30} style={{padding :20 }} />
                             :
@@ -362,22 +455,23 @@ class MarketingCompaign extends Component {
                             <Picker.Item label={I18n.t('venderprofile.adcategory4', { locale: lang })} value="4" />
                         </Picker>
                     </View>
-                    <Text style={{ width: width-50 ,alignSelf: 'center', fontSize: 14, textAlign: textline}}>{I18n.t('venderprofile.addesc', { locale: lang })}
+                    <Text style={{ width: width-50 ,alignSelf: 'center', fontSize: 14, textAlign: 'center'}}>{I18n.t('venderprofile.addesc', { locale: lang })}
                     </Text>
                 </View>
                 <Text style={{ fontSize : 20, textAlign : 'center', color : '#a9d5d1', padding : 10}}>{I18n.t('venderprofile.suggestion', { locale: lang })}</Text>
-                <Text style={{ fontSize : 10, textAlign : 'center'}}>
+                <Text style={{ fontSize : 12, textAlign : 'center', marginBottom:20}}>
                     {I18n.t('venderprofile.want_to_upload_videos_longer', { locale: lang })}
                 </Text>
                 <View style={styles.cost}>
-                    <Text>{I18n.t('venderprofile.costperad', { locale: lang })}</Text>
-                    <Text style={{color : '#a9d5d1',}}>{this.state.amount} KWD</Text>
+                    <Text style={{marginBottom:5}} >{I18n.t('venderprofile.costperad', { locale: lang })}</Text>
+                    <Text style={{color : '#a9d5d1', fontSize:18}}>{this.state.amount} KWD</Text>
                 </View>
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
                         <CirclesLoader />
                     </View>
                 </Modal>
+                </View>
             </View>
         )
     }
@@ -396,7 +490,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     avatar: {
-        borderRadius: 50,
+        borderRadius: 35,
         width: 70,
         height: 70
     },

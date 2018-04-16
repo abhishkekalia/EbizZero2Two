@@ -175,7 +175,7 @@ class ScheduleCalender extends Component {
 						selectedDayTextColor: 'white',
 						monthTextColor: 'white',
 						selectedDayBackgroundColor: 'green',
-						arrowColor: 'white',
+						arrowColor: 'black',
 						monthTextColor: 'green',
 						textDisabledColor: 'red',
 					}}
