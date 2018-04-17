@@ -11,7 +11,7 @@ import {
     Button,
     AsyncStorage,
     Image,
-    Alert
+    Alert,
 } from 'react-native';
 const { width, height } = Dimensions.get('window')
 import {Actions as routes} from "react-native-router-flux";

@@ -5,7 +5,8 @@ import {
   Text,
   View,
   AsyncStorage,
-  WebView
+  WebView,
+  Platform
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import Utils from 'app/common/Utils';
@@ -132,6 +133,7 @@ export default class MyAdfaturah extends Component {
                         left : 10,
                         marginTop : Platform.OS === 'ios' ? 20 : 10,
                         paddingHorizontal : 10,
+                        backgroundColor : 'transparent',
                     }
                 }/>
                 <WebView

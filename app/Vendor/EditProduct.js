@@ -13,7 +13,8 @@ import {
     TextInput,
     Image,
     Alert,
-    Switch
+    Switch,
+    AsyncStorage,
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -32,8 +33,12 @@ import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import { SegmentedControls } from 'react-native-radio-buttons';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
+import ActionSheet from 'react-native-actionsheet';
 
+const CANCEL_INDEX = 0
+const DESTRUCTIVE_INDEX = 4
 const { width, height } = Dimensions.get('window');
+const title = 'Select Category'
 
 class EditProduct extends Component {
     constructor(props) {
@@ -67,11 +72,17 @@ class EditProduct extends Component {
             size_id :[],
             Quantity:[],
             Size_ar :[],
-            languageChoose: ''
+            languageChoose: '',
+            options : ['0','1'],
+            optionsAvailable: [],
         }
         this.inputs = {};
         this.handlePress = this.handlePress.bind(this)
         this.onSelect = this.onSelect.bind(this)
+        this.showActionSheet = this.showActionSheet.bind(this)
+    }
+    showActionSheet() {
+        this.ActionSheet.show()
     }
     onSelect(index, value){
         this.setState({
@@ -82,11 +93,13 @@ class EditProduct extends Component {
         this.inputs[id].focus();
     }
     handlePress(i) {
+        console.log("handlePress:=",i)
         this.setState({
             product_category: i
         })
     }
     setSelectedOption(option){
+        console.log("gender:=",option)
         this.setState({
             gender: option,
         });
@@ -95,6 +108,9 @@ class EditProduct extends Component {
         this.setState({sizeRows}, ()=> this.productCont());
     }
     componentDidMount(){
+        this.getKey()
+        .then(()=>this.getCategory())
+        .done();
         var Items = this.props.productImages,
         length = Items.length,
         organization,
@@ -110,10 +126,60 @@ class EditProduct extends Component {
         })
         this.productCont();
     }
+
+    async getKey() {
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
+            this.setState({
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country ,
+            });
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+    }
+    getCategory(){
+        const { u_id, country,} = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        fetch(Utils.gurl('categoryList'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            if(responseData.response.status){
+                var data = responseData.response.data,
+                length = data.length,
+                optionsList= []
+                optionsList.push('Cancel');
+                for(var i=0; i < length; i++) {
+                    order = data[i];
+                    category_name = order.category_name;
+                    optionsList.push(category_name);
+                }
+                this.setState({
+                    options : optionsList,
+                    optionsAvailable : responseData.response.data
+                })
+            }
+        })
+        .catch((errorMessage, statusCode) => {
+            console.log(errorMessage);
+        })
+        .done();
+    }
     validate(){
         const {
             productname, shortdescription, detaildescription, price, discount,final_price, quantityRows, product_name_in_arabic,
-            short_description_in_arabic, detail_description_in_arabic, Size, quantity, is_feature, Imagepath , special, rows ,sizeRows,gender
+            short_description_in_arabic, detail_description_in_arabic, Size, quantity, is_feature, Imagepath , special, rows ,sizeRows,gender, product_category
         } = this.state;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
@@ -181,6 +247,17 @@ class EditProduct extends Component {
         if ( parseInt(special) > parseInt(price)){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddproduct.sppriceerr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+
+        if (product_category == 0) {
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddproduct.productCategoryValidate', { locale: lang }),
                 alertType: 'extra',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -655,6 +732,40 @@ class EditProduct extends Component {
                         onChangeText={(special) => this.setState({special})}
                         />
                 </View>
+
+                {/* ------------Category-----------*/}
+                <View style={commonStyles.textField}>
+                    <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                        <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.category', { locale: languageChoose })}</Text>
+                        <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                    </View>
+                    <TouchableOpacity style={{
+                            borderRadius : 5,
+                            padding : 5,
+                            // margin : 5,
+                            borderWidth : 1,
+                            borderColor : '#ccc',
+                            width : '100%', //width-50,
+                            // marginTop:10, 
+                            // backgroundColor:'red'
+                        }} onPress={this.showActionSheet}>
+                            <Text style={{
+                                    textAlign: textline, 
+                                    paddingVertical:5, 
+                                    paddingHorizontal:5
+                                    // backgroundColor:'yellow'
+                                }}>{ this.state.product_category ? this.state.options[this.state.product_category] : I18n.t('vendoraddproduct.addproductcategory', { locale: lang })}</Text>
+                            <ActionSheet
+                                ref={o => this.ActionSheet = o}
+                                title={title}
+                                options={this.state.options}
+                                cancelButtonIndex={CANCEL_INDEX}
+                                // destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                                onPress={this.handlePress}/>
+                    </TouchableOpacity>
+                </View>
+                {/* ------------Categrry End----------*/}
+
                 <View style={{borderBottomWidth: 0.5, borderColor: '#fbcdc5'}}>
                     <Text/>
                     <SegmentedControls

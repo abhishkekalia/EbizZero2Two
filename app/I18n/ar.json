@@ -221,7 +221,8 @@
         "removeitem":"تم الحذف من سلة المشتريات",
         "somethingwentswrong":"حصل خطأ ما",
         "cartUpdate":"Cart update successfully",
-        "shipingchage": "Shipping Charges"
+        "shipingchage": "Shipping Charges",
+        "moveToWishlist" : "Move to Whishlist"
     },
     "profile":{
         "profiletitle":"الملف الشخصي",
@@ -409,7 +410,9 @@
         "detaildesc_ar_err":"يرجى إدخال التفاصيل باللغه العربية",
         "errorwhileUpload":"حدث خطا خلال التحميل",
         "english":"English",
-        "arabic": "عربي"
+        "arabic": "عربي",
+        "category":"الفئة",
+        "productCategoryValidate":"يرجى تحديد فئة المنتج"
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",

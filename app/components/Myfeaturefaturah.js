@@ -135,7 +135,8 @@ export default class Myfeaturefaturah extends Component {
                         left : 10,
                         marginTop : Platform.OS === 'ios' ? 20 : 10,
                         paddingHorizontal : 10,
-                        backgroundColor: 'transparent'
+                        backgroundColor: 'transparent',
+                        backgroundColor : 'transparent',
                     }
                 }/>
                 <WebView

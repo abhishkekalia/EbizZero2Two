@@ -58,19 +58,27 @@ class GetMarketing extends Component {
             fetch(Utils.gurl('getMarketingAd'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("getMarketingAd Response:=",responseData)
                 if(responseData.status){
+                    var arrAds = responseData.data
+                    arrAds = this.appendDummyData(arrAds)
                     this.setState({
-                        dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                        // dataSource: this.state.dataSource.cloneWithRows(responseData.data),
+                        dataSource: this.state.dataSource.cloneWithRows(arrAds),
                         refreshing : false,
                         status : responseData.status
                     });
                 }else {
+                    var arrAds = []
+                    arrAds = this.appendDummyData(arrAds)
                     this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(arrAds),
                         status : responseData.status
                     });
                 }
             })
             .catch((error) => {
+                console.log("error:=",error)
                 this.setState({
                     status : responseData.status
                 });
@@ -81,6 +89,33 @@ class GetMarketing extends Component {
             console.log(error);
         }
     }
+
+    appendDummyData(arrData) {
+        var arrDataTmp = arrData
+        if (arrDataTmp.length < 4) {
+            console.log("Below 4")
+            if (arrDataTmp.length == 3) {
+                arrDataTmp.push({'dummy':1})
+            }
+            else if (arrDataTmp.length == 2) {
+                arrDataTmp.push({'dummy':1})
+                arrDataTmp.push({'dummy':2})
+            }
+            else if (arrDataTmp.length == 1) {
+                arrDataTmp.push({'dummy':1})
+                arrDataTmp.push({'dummy':2})
+                arrDataTmp.push({'dummy':3})
+            }
+            else if (arrDataTmp.length == 0) {
+                arrDataTmp.push({'dummy':1})
+                arrDataTmp.push({'dummy':2})
+                arrDataTmp.push({'dummy':3})
+                arrDataTmp.push({'dummy':4})
+            }
+        }   
+        return arrDataTmp
+    }
+
     render() {
         let {country, u_id, deviceId, lang} = this.props,
         align = (lang === 'ar') ?  'flex-end': 'flex-start',
@@ -116,10 +151,21 @@ class GetMarketing extends Component {
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         let {lang} = this.props,
         direction = (lang === 'ar') ?  'row-reverse': 'row';
+        console.log("GetMarketing:=data:=",data,"rowData:=",rowData)
         return (
+            "ad_id" in data ? 
             <TouchableOpacity style={[styles.row, { flexDirection: direction}]} onPress={()=> Actions.timeLine({ ad_type:data.ad_type, uri : data.path })}>
                 <Image style={styles.thumb} source={{ uri : data.thumbnail_image}}/>
             </TouchableOpacity>
+            : <View style={{
+                height:40,
+                width:40, 
+                backgroundColor: data.dummy % 2 == 0 ? 'black' : 'white', 
+                borderRadius:20, 
+                margin:5,
+                borderColor:'gray',
+                borderWidth:0.5,
+            }}></View>
         );
     }
 }
@@ -139,7 +185,10 @@ var styles =StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius : 20,
-        zIndex: 1
+        zIndex: 1,
+        margin: 5,
+        borderColor:'gray',
+        borderWidth:0.5,
     },
     OvalShapeView: {
         // marginTop: -10,

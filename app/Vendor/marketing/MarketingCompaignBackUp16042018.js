@@ -408,73 +408,73 @@ class MarketingCompaign extends Component {
                     </TouchableWithoutFeedback>
                     </View>
                 
-                <KeyboardAwareScrollView>
-                    <View style={{
-                        padding:10, 
-                        flex: 1,
+                    {/* <KeyboardAwareScrollView>/ */}
+                <View style={{
+                    padding:10, 
+                    flex: 1,
+                }}>
+                {/* <TouchableOpacity style={{ alignItems : align}} onPress={()=>this.uploadTocloud()}>
+                    <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5, marginBottom: 5,color: '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
+                </TouchableOpacity> */}
+                
+                <View style={{ flex:1,
+                        borderColor : '#ccc',
+                        borderWidth : 1,
+                        flexDirection: 'column',
+                        justifyContent: 'space-around',
+                        padding : 0
                     }}>
-                    {/* <TouchableOpacity style={{ alignItems : align}} onPress={()=>this.uploadTocloud()}>
-                        <Text style={{backgroundColor : '#ccc', padding : 10, borderRadius : 5, marginBottom: 5,color: '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
-                    </TouchableOpacity> */}
-                    
-                    <View style={{ flex:1,
-                            borderColor : '#ccc',
-                            borderWidth : 1,
-                            flexDirection: 'column',
-                            justifyContent: 'space-around',
-                            padding : 0
-                        }}>
-                        <Text style={{ textAlign: 'center', marginTop:20}}>{I18n.t('venderprofile.selectfiletoupload', { locale: lang })}</Text>
-                        <View style={{justifyContent : "space-around",flexDirection: direction}}>
-                            { this.state.avatarSource === null ?
-                                <Feather name="upload-cloud" size= {30} style={{padding :20 }} />
-                                :
-                                <Image style={styles.avatar} source={this.state.avatarSource} />
-                            }
-                        </View>
-                        <View style={{justifyContent : "space-around",flexDirection: direction, margin:20}}>
-                            <Entypo
-                                name="image"
-                                size= {30}
-                                color={borderColorImage}
-                                onPress={this.selectPhotoTapped.bind(this)}
-                                style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35,}} />
-                            <Feather
-                                name="play-circle" onPress={this.selectVideoTapped.bind(this)}
-                                color={borderColorVideo}
-                                size= {30}
-                                style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
-                        </View>
-                        <View style={{ borderWidth : 1, borderColor : '#ccc', margin : 20, borderRadius : 5, height:40, justifyContent:'center'}}>
-                            <Picker
-                                mode={"dropdown"}
-                                selectedValue={this.state.ad_category}
-                                onValueChange={(itemValue, itemIndex) => this.setState({ad_category: itemValue})}>
-                                <Picker.Item label={I18n.t('venderprofile.selectcategory', { locale: lang })} value="" />
-                                <Picker.Item label={I18n.t('venderprofile.adcategory1', { locale: lang })} value="1" />
-                                <Picker.Item label={I18n.t('venderprofile.adcategory2', { locale: lang })} value="2" />
-                                <Picker.Item label={I18n.t('venderprofile.adcategory3', { locale: lang })} value="3" />
-                                <Picker.Item label={I18n.t('venderprofile.adcategory4', { locale: lang })} value="4" />
-                            </Picker>
-                        </View>
-                        <Text style={{ width: width-50 ,alignSelf: 'center', fontSize: 14, textAlign: 'center', margin:20}}>{I18n.t('venderprofile.addesc', { locale: lang })}
-                        </Text>
+                    <Text style={{ textAlign: 'center'}}>{I18n.t('venderprofile.selectfiletoupload', { locale: lang })}</Text>
+                    <View style={{justifyContent : "space-around",flexDirection: direction}}>
+                        { this.state.avatarSource === null ?
+                            <Feather name="upload-cloud" size= {30} style={{padding :20 }} />
+                            :
+                            <Image style={styles.avatar} source={this.state.avatarSource} />
+                        }
                     </View>
-                    <Text style={{ fontSize : 20, textAlign : 'center', color : '#a9d5d1', padding : 10, marginTop:20}}>{I18n.t('venderprofile.suggestion', { locale: lang })}</Text>
-                    <Text style={{ fontSize : 12, textAlign : 'center', marginBottom:20}}>
-                        {I18n.t('venderprofile.want_to_upload_videos_longer', { locale: lang })}
+                    <View style={{justifyContent : "space-around",flexDirection: direction,}}>
+                        <Entypo
+                            name="image"
+                            size= {30}
+                            color={borderColorImage}
+                            onPress={this.selectPhotoTapped.bind(this)}
+                            style={{padding :20 , borderColor : "#bbb", borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
+                        <Feather
+                            name="play-circle" onPress={this.selectVideoTapped.bind(this)}
+                            color={borderColorVideo}
+                            size= {30}
+                            style={{padding :20 , borderColor : '#bbb', borderWidth : StyleSheet.hairlineWidth, borderRadius : 35}} />
+                    </View>
+                    <View style={{ borderWidth : 1, borderColor : '#ccc', margin : 10, borderRadius : 5, height:40, justifyContent:'center'}}>
+                        <Picker
+                            mode={"dropdown"}
+                            selectedValue={this.state.ad_category}
+                            onValueChange={(itemValue, itemIndex) => this.setState({ad_category: itemValue})}>
+                            <Picker.Item label={I18n.t('venderprofile.selectcategory', { locale: lang })} value="" />
+                            <Picker.Item label={I18n.t('venderprofile.adcategory1', { locale: lang })} value="1" />
+                            <Picker.Item label={I18n.t('venderprofile.adcategory2', { locale: lang })} value="2" />
+                            <Picker.Item label={I18n.t('venderprofile.adcategory3', { locale: lang })} value="3" />
+                            <Picker.Item label={I18n.t('venderprofile.adcategory4', { locale: lang })} value="4" />
+                        </Picker>
+                    </View>
+                    <Text style={{ width: width-50 ,alignSelf: 'center', fontSize: 14, textAlign: 'center'}}>{I18n.t('venderprofile.addesc', { locale: lang })}
                     </Text>
-                    <View style={styles.cost}>
-                        <Text style={{marginBottom:5}} >{I18n.t('venderprofile.costperad', { locale: lang })}</Text>
-                        <Text style={{color : '#a9d5d1', fontSize:18}}>{this.state.amount} KWD</Text>
+                </View>
+                <Text style={{ fontSize : 20, textAlign : 'center', color : '#a9d5d1', padding : 10}}>{I18n.t('venderprofile.suggestion', { locale: lang })}</Text>
+                <Text style={{ fontSize : 12, textAlign : 'center', marginBottom:20}}>
+                    {I18n.t('venderprofile.want_to_upload_videos_longer', { locale: lang })}
+                </Text>
+                <View style={styles.cost}>
+                    <Text style={{marginBottom:5}} >{I18n.t('venderprofile.costperad', { locale: lang })}</Text>
+                    <Text style={{color : '#a9d5d1', fontSize:18}}>{this.state.amount} KWD</Text>
+                </View>
+                <Modal isVisible={this.state.visibleModal}>
+                    <View style={{alignItems : 'center', padding:10}}>
+                        <CirclesLoader />
                     </View>
-                    <Modal isVisible={this.state.visibleModal}>
-                        <View style={{alignItems : 'center', padding:10}}>
-                            <CirclesLoader />
-                        </View>
-                    </Modal>
-                    </View>
-                </KeyboardAwareScrollView>
+                </Modal>
+                </View>
+                {/* </KeyboardAwareScrollView> */}
             </View>
         )
     }
@@ -495,16 +495,14 @@ const styles = StyleSheet.create({
     avatar: {
         borderRadius: 35,
         width: 70,
-        height: 70,
-        margin:20
+        height: 70
     },
     cost : {
         alignItems : 'center',
         borderColor : '#ccc',
         borderTopWidth : 1,
         borderBottomWidth : 1,
-        paddingVertical : 15,
-        marginHorizontal : -10,
+        paddingVertical : 10,
         backgroundColor:'white',
     }
 

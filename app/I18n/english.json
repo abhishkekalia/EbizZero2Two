@@ -223,7 +223,8 @@
         "removeitem":"product remove from cart",
         "somethingwentswrong":"something wents wrong",
         "cartUpdate":"Cart update successfully",
-        "shipingchage": "Shipping Charges"
+        "shipingchage": "Shipping Charges",
+        "moveToWishlist" : "Move to Whishlist"
     },
     "profile":{
         "profiletitle":"Profile",
@@ -411,7 +412,9 @@
         "detaildesc_ar_err":"Plese Insert arabic Detail description",
         "errorwhileUpload":"error While Upload",
         "english":"English",
-        "arabic":"Arabic"
+        "arabic":"Arabic",
+        "category":"Category",
+        "productCategoryValidate":"Please select product category"
     },
     "vendorservice":{
         "serviceTitle":"Service",
@@ -506,7 +509,7 @@
         "uploadad":"UploadAdd",
         "marketingtitle":"Marketing",
         "uploadad":"Upload",
-        "selectfiletoupload":"Select files To upload ",
+        "selectfiletoupload":"Select files to upload ",
         "selectcategory":"Select Ad Category",
         "adcategory1":"Products",
         "adcategory2":"accessories",

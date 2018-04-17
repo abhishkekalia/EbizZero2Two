@@ -129,6 +129,7 @@ export default class Myuserfaturah extends Component {
                         left : 10,
                         marginTop : 10,
                         paddingHorizontal : 10,
+                        backgroundColor : 'transparent',
                     }
                 }/>
                 <WebView
