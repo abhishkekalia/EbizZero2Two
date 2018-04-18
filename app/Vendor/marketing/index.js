@@ -60,7 +60,7 @@ class Marketing extends Component {
         return (
             <View style={styles.container}>
                 <SegmentedControlTab
-                    values={[I18n.t('venderprofile.featuredproducttab', { locale: lang }), I18n.t('venderprofile.marketingtab', { locale: lang })]}
+                    values={[I18n.t('venderprofile.featuredTab', { locale: lang }), I18n.t('venderprofile.marketingtab', { locale: lang })]}
                     selectedIndex={this.state.customStyleIndex}
                     onTabPress={this.handleCustomIndexSelect}
                     borderRadius={0}
@@ -70,7 +70,7 @@ class Marketing extends Component {
                     tabTextStyle={{ color: '#696969', fontWeight: 'bold' }}
                     activeTabTextStyle={{ color: '#fff' }} />
                 {this.state.customStyleIndex === 0 &&
-                    <FeaturedProduct data={this.props.data} status={this.props.status} lang={lang} 	u_id={u_id} country={country}/>}
+                    <FeaturedProduct data={this.props.data} status={this.props.status} lang={lang} 	u_id={u_id} country={country} featureService={this.props.featureService}/>}
                 {this.state.customStyleIndex === 1 &&
                     <UploadAdd marketing_campaign={this.props.marketing_campaign} lang={lang}/>}
 
@@ -87,7 +87,8 @@ class UploadAdd extends Component {
             status : false
         }
     }
-     componentDidMount(){
+     
+    componentDidMount(){
         this.setState({
             dataSource: this.state.dataSource.cloneWithRows(this.props.marketing_campaign),
         })
@@ -150,6 +151,7 @@ class UploadAdd extends Component {
             backgroundColor: 'white',
             // backgroundColor:'red',
             alignContent:'center',
+            width:'100%',
         }}>
             <TouchableOpacity style={styles.upload} onPress={()=> Actions.marketingcompaign()}>
             <Feather name="upload-cloud" size= {20} color="#fff" />
@@ -180,13 +182,32 @@ class UploadAdd extends Component {
                 // justifyContent: 'center',
                 padding: 10,
                 // backgroundColor: '#fff'
+                // backgroundColor:'red',
+                width:'100%',
+                width:width,
+                height:300,
+                marginTop:5,
             }}>
-            <View style={{flex: 1, flexDirection: direction, justifyContent:'space-around' }}>
-            <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >Ad Price : { (data.ad_type === '1' ) ? "1KWD" : "1.5KWD"} </Text>
-            <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >User Id:  {data.u_id} </Text>
-            </View>
-            <Image source={{uri :data.path }} style={{ height:100, width : width/2}}/>
-            <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > {data.expire_date} </Text>
+            
+                <Image source={{uri :data.path }} style={{ 
+                    height:200, 
+                    width : '100%' //width/2
+                    }}/>
+                <View style={{flex: 1, flexDirection: direction, marginTop:5}}>
+                    <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >Ad Price</Text> 
+                    <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > : </Text>          
+                    <Text style={[styles.row, { color:'#000',}]}>{ (data.ad_type === '1' ) ? "1KWD" : "1.5KWD"} </Text>
+                </View>
+                <View style={{flex: 1, flexDirection: direction, }}>
+                    <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >User Id</Text>
+                    <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > : </Text>
+                    <Text style={[styles.row, { color:'#000',}]} >{data.u_id} </Text>
+                </View>
+                <View style={{flex: 1, flexDirection: direction, }}>
+                    <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} >Expire Date</Text>
+                    <Text style={[styles.row, { color:'#000',fontWeight :'bold'}]} > : </Text>
+                    <Text style={[styles.row, { color:'#000',}]} >{data.expire_date}</Text>
+                </View>
             </View>
         );
     }

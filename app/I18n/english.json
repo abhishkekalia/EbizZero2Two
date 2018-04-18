@@ -48,6 +48,7 @@
         "male":"Male",
         "female":"Female",
         "other":"Other",
+        "both":"Both",
         "mobilenumber":"Mobile Number For (Order Update)",
         "selectcountry":"Select Country",
         "address":"Address",
@@ -523,14 +524,19 @@
         "categoryerr":"Plese Select Advertisement Category",
         "online":"Internet connection is available",
         "offline":"Internet connection not available",
-        "productremovefeature":"Product removed from featured list"
+        "productremovefeature":"Product removed from featured list",
+        "serviceId":"Service Id",
+        "featuredTab":"Featured",
+        "featuredProductTabCaption":"Featured Product",
+        "featuredServiceTabCaption":"Featured Service"
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
         "addressvalidation":"Please Select Address First",
         "name":"Service Name",
         "date":"Date",
-        "username":"Name"
+        "username":"Name",
+        "noServiceBooked":"There is no any service or Please select date."
     },
     "notification":{
         "orderId":"Order Id",

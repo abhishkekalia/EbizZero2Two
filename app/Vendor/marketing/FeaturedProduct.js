@@ -24,6 +24,7 @@ export default class FeaturedProduct extends Component {
         this.state = {
             isLoading: true,
             dataSource : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2 }),
+            dataSourceService : new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2}),
             u_id : null,
             country : null,
             status : false
@@ -38,6 +39,7 @@ export default class FeaturedProduct extends Component {
         status : nextProps.status,
         isLoading : !nextProps.status,
         dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
+        dataSourceService: this.state.dataSourceService.cloneWithRows(nextProps.featureService)
     })
   }
 
@@ -95,9 +97,29 @@ export default class FeaturedProduct extends Component {
                 renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderData.bind(this)}/>
             );
+
+        let listViewService = (<View></View>);
+        listViewService = (
+               <ListView
+                enableEmptySections={true}
+                automaticallyAdjustContentInsets={false}
+                showsVerticalScrollIndicator={false}
+                dataSource={this.state.dataSourceService}
+                renderSeparator= {this.ListViewItemSeparator}
+                renderRow={this.renderDataService.bind(this)}/>
+            );
         return (
             <View style={{paddingBottom : 53}}>
+                <Text style={{
+                    fontWeight:'bold',
+                    marginVertical: 5
+                }}> {I18n.t('venderprofile.featuredProductTabCaption', { locale: lang })} :</Text>
                 {listView}
+                <Text style={{
+                    fontWeight:'bold',
+                    marginVertical: 5
+                }}> {I18n.t('venderprofile.featuredServiceTabCaption', { locale: lang })} :</Text>
+                {listViewService}
             </View>
         );
     }
@@ -179,6 +201,87 @@ export default class FeaturedProduct extends Component {
             </View>
         );
     }
+
+    renderDataService(data: string, sectionID: number, rowID: number, index) {
+        console.log("renderDataService:=",data)
+        let color = data.special_price ? '#a9d5d1' : '#000';
+        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        const { lang, u_id, country} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left',
+        product_name = (lang == 'ar')? data.service_name_in_arabic : data.service_name,
+        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
+        detail_description = (lang == 'ar')? data.detail_description_in_arabic : ("detail_description" in data ? data.detail_description : "") ,
+        price = (lang == 'ar')? data.price_in_arabic : data.price,
+        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
+        return (
+            <View style={{
+                    width : width-30,
+                    flexDirection: 'column' ,
+                    marginTop : 2,
+                    borderWidth : 1,
+                    borderColor : "#ccc",
+                    borderRadius : 5,
+                    overflow:'hidden',
+                    marginTop:5,
+                }}>
+                <HeaderService service_id= {data.service_id} lang={lang}/>
+                <TouchableOpacity style={{
+                        flexDirection: direction,
+                        backgroundColor : "#fff",
+                        borderBottomWidth : 1,
+                        borderColor : "#ccc",
+                    }}
+                    onPress={()=>routes.editproduct({
+                        u_id : this.state.u_id,
+                        country : this.state.country
+                        // product_id: data.product_id,
+                        // product_category:data.product_category,
+                        // product_name: data.product_name,
+                        // detail_description: data.detail_description,
+                        // short_description: data.short_description,
+                        // product_name_in_arabic: data.product_name_in_arabic,
+                        // short_description_in_arabic: data.short_description_in_arabic,
+                        // detail_description_in_arabic: data.detail_description_in_arabic,
+                        // price: data.price,
+                        // special_price: data.special_price,
+                        // quantity: data.quantity,
+                        // size: data.size,
+                        // discount: data.discount,
+                        // final_price: data.final_price,
+                        // is_feature: data.is_feature,
+                        // productImages: data.productImages
+                    })}>
+                    <Image style={[styles.thumb, {margin: 10}]}
+                        resizeMode={"stretch"}
+                        source={{ uri : data.serviceImage.length > 0 ? data.serviceImage[0].image : ""}}
+                        />
+                    <View style={{flexDirection: 'column',}}>
+                        <Text style={[styles.row, { color:'#000',fontWeight :'bold', textAlign: textline, marginTop:5}]} >{product_name}</Text>
+                        <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline, marginTop:5}} >{short_description} </Text>
+                        <Text style={{ fontSize : 12, color : '#ccc', textAlign: textline, marginTop:5}} >{detail_description} </Text>
+                        {/* <View style={{ flexDirection:direction, marginTop:5}}>
+                            <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} >{I18n.t('venderprofile.quantity', { locale: lang })}</Text>
+                            <Text style={[styles.row, { color:'#fbcdc5',fontWeight :'bold'}]} > : </Text>
+                            <Text style={[styles.row, { color:'#bbb',fontWeight :'bold'}]} >{data.quantity}</Text>
+                        </View> */}
+                        <View style={{ flexDirection : direction, justifyContent : 'space-between', marginBottom:10}}>
+                            <View style={{ flexDirection : direction, marginTop:5}}>
+                                <Text style={{color : '#fbcdc5', textAlign: textline}} >{I18n.t('venderprofile.price', { locale: lang })}</Text>
+                                <Text style={{color : '#fbcdc5',textAlign: textline}} > : </Text>
+                                <Text>{data.special_price}</Text>
+                                <Text style={{ color: color, textDecorationLine: textDecorationLine, textAlign: textline}}> {data.price}</Text>
+                            </View>
+                            <Text style={{color : '#ccc', marginTop:5}} > KWD</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+                <FooterService
+                    inserted_date = {data.inserted_date} service_id = {data.service_id} u_id={u_id} country={country} lang={lang} is_feature = {data.is_feature}/>
+            </View>
+        );
+    }
 }
 
 class Header extends Component{
@@ -196,12 +299,34 @@ class Header extends Component{
                 paddingVertical:10,
               }]}>
           <Text style={{ color : '#fbcdc5', paddingLeft: 10, textAlign: textline}}>{I18n.t('venderprofile.productid', { locale: lang })}</Text>
-          <Text style={{ color : '#fbcdc5', paddingLeft: 10,  textAlign: textline}}>:</Text>
+          <Text style={{ color : '#fbcdc5', paddingLeft: 10,  textAlign: textline}}>: </Text>
           <Text style={[styles.welcome]}>{this.props.product_id }</Text>
       </View>
     );
   }
 }
+
+class HeaderService extends Component{
+    render() {
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+  
+      return (
+        <View style={[
+            styles.row, {
+                  borderBottomWidth: 0.5,
+                  borderColor:'#ccc',
+                  flexDirection: direction,
+                  paddingVertical:10,
+                }]}>
+            <Text style={{ color : '#fbcdc5', paddingLeft: 10, textAlign: textline}}>{I18n.t('venderprofile.serviceId', { locale: lang })}</Text>
+            <Text style={{ color : '#fbcdc5', paddingLeft: 10,  textAlign: textline}}>: </Text>
+            <Text style={[styles.welcome]}>{this.props.service_id }</Text>
+        </View>
+      );
+    }
+  }
 
 class Footer extends Component{
     constructor(props){
@@ -274,6 +399,104 @@ class Footer extends Component{
                 console.log(error);
             })
             .done();
+        }
+    }
+    render(){
+        const { is_feature } = this.state;
+        const { lang, u_id, country, product_id } = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        textline = lang == 'ar'? 'right': 'left';
+         let data = is_feature === "2" ? false : true
+        return(
+            <View style={[styles.bottom, {flexDirection: direction}]}>
+                <Switch
+                    // onTintColor="#00ff00"
+                    thumbTintColor="#fff"
+                    tintColor="#000"
+                    onValueChange={ ()=> this.manageFeature()}
+                    // onValueChange={ () => this.setState({ toggled: !this.state.toggled })}
+                    value={data} />
+                <View style={{flexDirection: direction}}>
+                    <Text style={{ color :'#fbcdc5', fontSize : 12, alignSelf: 'center'}}>{I18n.t('venderprofile.displaydt', { locale: lang })}</Text>
+                    <Text style={{ color :'#fbcdc5', fontSize : 12, alignSelf: 'center'}}> : </Text>
+                    <Text style={{ color :'#000', fontSize : 12, alignSelf: 'center'}}>{this.props.inserted_date}</Text>
+                </View>
+            </View>
+        )
+    }
+}
+
+class FooterService extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            toggled : false,
+            is_feature : this.props.is_feature
+        }
+    }
+    manageFeature(){
+        const {u_id, country, product_id} = this.props;
+        const {is_feature} = this.state;
+        if(is_feature === "2"){
+            this.setState({ is_feature : "1" })
+
+            // let form = new FormData();
+        	// form.append('u_id', String(u_id));
+        	// form.append('country', String(country));
+            // form.append('product_id',String(product_id));
+            // form.append('amount',"10");
+            // const config = {
+           	//     method: 'POST',
+           	//     headers: {
+           	//         'Accept': 'application/json',
+            //         'Content-Type': 'multipart/form-data;'
+            //     },
+            //     body: form,
+            // }
+            // fetch(Utils.gurl('addToFeature'), config)
+            // .then((response) => response.json())
+            // .then((responseData) => {
+            //     if(responseData.status){
+            //         let feature_id = responseData.data.feature_id;
+            //         let url = responseData.data.url;
+            //         routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id, amout:10})
+            //     }else{
+            //     }
+            // })
+            // .catch((error) => {
+            //     console.log(error);
+            // })
+            // .done();
+        }else if(is_feature == "1"){
+            this.setState({ is_feature : "2" })
+            // let form = new FormData();
+        	// form.append('u_id', String(u_id));
+        	// form.append('country', String(country));
+            // form.append('product_id',String(product_id));
+            // const config = {
+            //     method: 'POST',
+            //     headers: {
+            //         'Accept': 'application/json',
+            //         'Content-Type': 'multipart/form-data;'
+            //     },
+            //     body: form,
+            // }
+            // fetch(Utils.gurl('removeFromFeature'), config)
+            // .then((response) => response.json())
+            // .then((responseData) => {
+            //     if(responseData.status){
+            //         MessageBarManager.showAlert({
+            //             message: I18n.t('venderprofile.productremovefeature', { locale: lang }),
+            //             alertType: 'alert',
+            //             title:''
+            //         })
+            //     }else{
+            //     }
+            // })
+            // .catch((error) => {
+            //     console.log(error);
+            // })
+            // .done();
         }
     }
     render(){

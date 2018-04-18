@@ -167,7 +167,7 @@ class MarketingCompaign extends Component {
                 this.setState({
                     visibleModal : false,
                 })
-                console.log(errorMessage);
+                console.log("errorMessage:=",errorMessage);
             })
             .done();
         }
@@ -345,28 +345,16 @@ class MarketingCompaign extends Component {
                     }}>
                     <TouchableWithoutFeedback style={{ backgroundColor:'red'
                             }} onPress={this.onClickBackAction.bind(this)}>
-                        {/* <Image style={{
-                            position:'relative',
-                            // backgroundColor:'white',
-                            width:40,
-                            height:40,
-                            marginTop:Platform.OS === 'ios' ? 20 : 0,
-                            marginLeft:10
-                        }}
-                        source={require('Domingo/Src/images/menu.png')}
-                        resizeMethod='resize'
-                        resizeMode='center'
-                        /> */}
                         <Ionicons name= "ios-arrow-back-outline" color="#fff" size={25} style={ lang == 'ar' ? 
                         { 
                             alignSelf: 'center', 
-                            marginTop: Platform.OS === 'ios' ? 14 : 14,
+                            marginTop: Platform.OS === 'ios' ? 14 : 6,
                             transform: [{ rotate: '180deg'}],
                             padding:10,
                         } : 
                         { 
                             alignSelf: 'center',
-                            marginTop: Platform.OS === 'ios' ? 14 : 14,
+                            marginTop: Platform.OS === 'ios' ? 14 : 6,
                             padding:10,
                         }}/>
                     </TouchableWithoutFeedback>
@@ -383,18 +371,6 @@ class MarketingCompaign extends Component {
                     <TouchableWithoutFeedback style={{
                             }} onPress={this.uploadTocloud.bind(this)}>
                             
-                        {/* <Image style={{
-                            position:'relative',
-                            // backgroundColor:'white',
-                            width:40,
-                            height:40,
-                            marginTop:Platform.OS === 'ios' ? 20 : 0,
-                            marginRight:10
-                        }}
-                        source={require('Domingo/Src/images/filter.png')}
-                        resizeMethod='resize'
-                        resizeMode='center'
-                        /> */}
                         <Text style={{
                             backgroundColor : 'transparent', 
                             padding : 5, 
@@ -403,10 +379,10 @@ class MarketingCompaign extends Component {
                             color: '#fff', 
                             borderColor:'#fff', 
                             borderWidth:1,
-                            marginTop:Platform.OS === 'ios' ? 20 : 20,
+                            marginTop:Platform.OS === 'ios' ? 20 : 10,
                         }}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
                     </TouchableWithoutFeedback>
-                    </View>
+                </View>
                 
                 <KeyboardAwareScrollView>
                     <View style={{

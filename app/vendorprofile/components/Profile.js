@@ -9,6 +9,7 @@ import Utils from 'app/common/Utils';
 import I18n from 'react-native-i18n';
 
 import Marketing from '../../Vendor/marketing'
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 class Profile extends Component {
 	constructor(props) {
         super(props);
@@ -23,7 +24,8 @@ class Profile extends Component {
             phone_no : null,
             data : [],
             marketing_campaign : [],
-			chart : []
+			chart : [],
+			featureService : [],
         };
     }
 
@@ -43,7 +45,7 @@ class Profile extends Component {
     }
     componentDidMount(){
     	this.getKey()
-	    .then(()=>this.getAddress())
+	    .then(()=>this.getProfileData())
 	    .done()
 
         NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
@@ -85,7 +87,7 @@ class Profile extends Component {
             console.log("Error retrieving data" + error);
         }
     }
-    getAddress(){
+    getProfileData(){
     	const { u_id, country } = this.state;
     	let formData = new FormData();
     	formData.append('u_id', String(u_id));
@@ -97,19 +99,29 @@ class Profile extends Component {
                     'Content-Type': 'multipart/form-data;'
                 },
             	body: formData,
-            }
+			}
+		console.log("MyProfile Request:=",config)
         fetch(Utils.gurl('MyProfile'), config)
         .then((response) => response.json())
         .then((responseData) => {
-			console.log("responseData:=",responseData);
+			console.log("MyProfile responseData:=",responseData);
         	if(responseData.response.status){
+				var arrFService = []
+				if (responseData.response.service_detail === false) {
+
+				}
+				else {
+					arrFService = responseData.response.service_detail
+				}
+				console.log("arrFService:=",arrFService)
         	    this.setState({
         	       	status : responseData.response.status,
         	       	dataSource : responseData.response.data,
         	       	address : responseData.response.address,
                     data : responseData.response.feature_product,
                     marketing_campaign : responseData.response.marketing_campaign,
-					chart : responseData.response.chart
+					chart : responseData.response.chart,
+					featureService : arrFService
         	        });
         	}else{
         	    this.setState({
@@ -130,6 +142,7 @@ class Profile extends Component {
 		textline = lang == 'ar'? 'right': 'left';
 		return (
 			<View style={{flex: 1, flexDirection: 'column'}} testID="Profile">
+				<KeyboardAwareScrollView>
 				<View style={{
 					flexDirection: 'column',
 					justifyContent: 'space-around',
@@ -232,7 +245,8 @@ class Profile extends Component {
 						marginBottom:10,
 					}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
 				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}
-					u_id={u_id} country={country}/>
+					u_id={u_id} country={country} featureService={this.state.featureService}/>
+				</KeyboardAwareScrollView>
 				<TouchableOpacity
                 onPress={()=>{ Utils.logout()
 					.then(logout)
@@ -241,6 +255,7 @@ class Profile extends Component {
                 style={styles.logout}>
 					<Text style={{ color: "#fbcdc5"}}>{I18n.t('venderprofile.logout', { locale: lang })}</Text>
 				</TouchableOpacity>
+				
 			</View>
 		)
 	}

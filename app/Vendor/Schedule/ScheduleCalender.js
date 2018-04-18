@@ -140,6 +140,7 @@ class ScheduleCalender extends Component {
 	}
 	render(){
 		const { ScheduleDate, status, selected} = this.state;
+		const { lang} = this.props;
 		if(!status) {
 			return (
 				<ActivityIndicator
@@ -186,7 +187,7 @@ class ScheduleCalender extends Component {
 						textAlign:'center',
 						margin:10,
 						fontSize:17,
-					}}>There is no any servcie or Please select date.</Text>}
+					}}>{I18n.t('scheduleService.noServiceBooked', { locale: lang })}</Text>}
 					
 				</View>
 			</View>

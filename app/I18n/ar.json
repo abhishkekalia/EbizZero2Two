@@ -47,6 +47,7 @@
         "male":"ذكر",
         "female":"انتثى",
         "other":"Other",
+        "both":"Both",
         "mobilenumber":"رقم الهاتف (لتحديث الطلب)",
         "selectcountry":"اختر الدولة",
         "address":"العنوان",
@@ -519,14 +520,19 @@
         "categoryerr":"الرجاء أختيار صنف الأعلان",
         "online":"يوجد أتصال بالأنترنت",
         "offline":"ليس هناك شبكة أنترنت متاحة",
-        "productremovefeature":"تم الحذف من قائمة المنتجات المسوقه"
+        "productremovefeature":"تم الحذف من قائمة المنتجات المسوقه",
+        "serviceId":"Service Id",
+        "featuredTab":"Featured",
+        "featuredProductTabCaption":"Featured Product",
+        "featuredServiceTabCaption":"Featured Service"
     },
     "scheduleService":{
         "serviceTitle":"جدول",
         "addressvalidation":"يرجى اختيار العنوان",
         "name":"Service Name",
         "date":"Date",
-        "username":"Name"
+        "username":"Name",
+        "noServiceBooked":"There is no any service or Please select date."
     },
     "notification":{
         "orderId":"رقم الطلب",

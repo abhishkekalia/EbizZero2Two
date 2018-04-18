@@ -495,6 +495,7 @@ class AddProduct extends Component {
         options = [
 			{ label:I18n.t('userregister.male', { locale: lang }), value: I18n.t('userregister.male', { locale: lang })},
 			{ label:I18n.t('userregister.female', { locale: lang }), value: I18n.t('userregister.female', { locale: lang })},
+			{ label:I18n.t('userregister.both', { locale: lang }), value: I18n.t('userregister.both', { locale: lang })},
 			// { label:I18n.t('userregister.other', { locale: lang }), value: I18n.t('userregister.other', { locale: lang })},
 		];
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
