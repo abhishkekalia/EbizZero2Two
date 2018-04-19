@@ -29,8 +29,7 @@
         "pleaseenter_validemail":"Please Enter Valid Email Address",
         "pleaseenterpwd":"Please Enter Your Password",
         "passwordvalidation":"Password Must have Six Character",
-        "skip":"Skip Signing",
-        "invaliduser": "invalid username and password"
+        "skip":"Skip Signing"
     },
     "forgotpassword":{
         "emailaddress":"Email Address",

@@ -115,10 +115,11 @@ export default class FeaturedProduct extends Component {
                     marginVertical: 5
                 }}> {I18n.t('venderprofile.featuredProductTabCaption', { locale: lang })} :</Text>
                 {listView}
-                <Text style={{
+                {/* Uncomment After Uploading on Appstore */}
+                {/* <Text style={{
                     fontWeight:'bold',
                     marginVertical: 5
-                }}> {I18n.t('venderprofile.featuredServiceTabCaption', { locale: lang })} :</Text>
+                }}> {I18n.t('venderprofile.featuredServiceTabCaption', { locale: lang })} :</Text> */}
                 {listViewService}
             </View>
         );

@@ -94,6 +94,9 @@ class WishList extends Component {
         let formData = new FormData();
         formData.append('device_uid', String(deviceId));
         formData.append('country', String(country));
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         console.log(formData);
         const config = {
             method: 'POST',

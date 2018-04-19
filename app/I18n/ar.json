@@ -27,7 +27,7 @@
         "passwordvalidation":"كلمة السر يجب أن تتكون من 6 أحرف أو أرقام",
         "cancel":"الغاء",
         "submit":"موافق",
-        "close" : "Close",
+        "close" : "التالي",
         "invaliduser": "اسم المستخدم وكلمة المرور غير صالحة",
         "passsnotmatch" : "اسم المستخدم وكلمة المرور غير متطابقين",
     },
@@ -69,8 +69,8 @@
         "pleaseenterusertype":"الرجاء أختيار نوع المستخدم",
         "greetings":"شكرا لأنضمامكم الى قائمة",
         "passwordvalidation":"يرجى إدخال كلمة مرور مؤلفة من 6 أحرف او ارقام على الأقل",
-        "pickfromMap": "Pick Address From Map",
-        "mobileValidatetionText":"Please enter 8 digit Mobile number"
+        "pickfromMap": "اختر العنوان من الخريطه",
+        "mobileValidatetionText":"يرجى ادخال رقم الهاتف المكون من ٨ ارقام"
     },
     "venderregister":{
         "company":"اسم الشركة",
@@ -103,7 +103,7 @@
         "twitterpage":"الرجاء ادخال رابط صفحة تويتر",
         "instapage":"الرجاء ادخال رابط صفحة أنستاغرام",
         "snapchatpage":"الرجاء ادخال رابط صفحة سناب شات",
-        "mobileValidatetionText":"Please enter 8 digit Mobile number"
+        "mobileValidatetionText":"يرجى ادخال رقم الهاتف المكون من ٨ ارقام"
     },
     "home":{
         "sidemenu": "right",
@@ -123,8 +123,8 @@
         "wishlistmsg1":"تم أضافة المنتج الى المفضلة",
         "wishlistmsg2":"تم حذف المنتج من المفضلة",
         "wishlistmsg3":"حصل خطأ ما",
-        "shop":"Shop",
-        "service":"Service"
+        "shop":"المحلات",
+        "service":"الخدمات"
     },
     "productdetail":{
         "wishlistmsg1":"تم إضافة المنتج في قائمة الأمنيات",
@@ -146,7 +146,7 @@
     },
     "servicedetail":{
         "booknow":"احجز الان",
-        "schedule":"Schedule",
+        "schedule":"الجدول",
         "selectaddress":"اختر العنوان",
         "noaddress":"لم يتم العثور على عنوان",
         "productinfo":"تفاصيل الخدمة",
@@ -155,7 +155,7 @@
         "selectDate":"يرجى تحديد التاريخ",
         "selectTime":"يرجى اختيار الوقت",
         "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان",
-        "anotherTimeslot" : "Please Select another time Slot",
+        "anotherTimeslot" : "يرجى تغيير الوقت"
     },
     "bottomTabs":{
         "home":"الرئيسية",
@@ -201,7 +201,7 @@
         "somedatamissing":"بعض البيانات مفقودة",
         "pleaseselectcolor":"يرجى اختيار اللون",
         "wishlistupdate":"تحديث قائمة الامنيات بنجاح",
-        "shareItem":"Share Item"
+        "shareItem":"ارسل"
     },
     "cart":{
         "carttitle":"السلة",
@@ -221,8 +221,8 @@
         "pleaseselectitems":"الرجاء أختيار منتج",
         "removeitem":"تم الحذف من سلة المشتريات",
         "somethingwentswrong":"حصل خطأ ما",
-        "cartUpdate":"Cart update successfully",
-        "shipingchage": "Shipping Charges",
+        "cartUpdate":"تم تحديث سلة التسوق بنجاح",
+        "shipingchage": "رسوم التوصيل",
         "moveToWishlist" : "Move to Whishlist"
     },
     "profile":{
@@ -241,7 +241,7 @@
         "edit":"تعديل",
         "delete":"حذف",
         "addrdeleted":"تم مسح العنوان",
-        "noaddress":"No Address found"
+        "noaddress":"لا يوجد عنوان"
     },
     "newAddress":{
         "newaddrtitle":"إضافة عنوان جديد",
@@ -308,8 +308,8 @@
         "imagepicker":"اختر صوره",
         "takeVideo":"Take Video...",
         "choose_video":"اختر من الالبوم",
-        "SelectThumbline_lbl": "Select Thumbline Image",
-        "SelectThumbline": "Please Select Thumbline Image",
+        "SelectThumbline_lbl": "اختر صورة",
+        "SelectThumbline": "يرجى اختيار صورة",
         "uploadfiles":"اختر ملفات للتحميل",
         "costperad":"التكلفة لكل إعلان",
         "aduploaderr":"حصل خطأ ما أثناء التحميل",
@@ -354,7 +354,7 @@
     },
     "vendorproducts":{
         "productTitle":"المنتج",
-        "producteditTitle":"Edit Product",
+        "producteditTitle":"تعديل المنتج",
         "myproduct":"منتجاتي",
         "categories":"الأقسام",
         "quantity":"الكمية متاحة",
@@ -368,8 +368,8 @@
         "pending":"بانتظار التأكيد",
         "deliverd":"تم التوصيل",
         "searchHere" : "ابحث",
-        "active" : "Active",
-        "inActive" : "InActive"
+        "active" : "فعال",
+        "inActive" : "غير فعال"
     },
     "vendoraddproduct":{
         "addproduct":"اضف منتج",
@@ -404,20 +404,20 @@
         "quantityerr":"الرجاء تحديد الكمية",
         "sizeerr":"الرجاء تحديد المقاس",
         "productadded":"تم اضافة المنتج",
-        "productupdadded":"Product Update Successfully",
-        "updatefail":"Product Upload Failed",
-        "productname_ar_err":"Plese Insert Product Name in arabic",
+        "productupdadded":"تم تحديث المنتج بنجاح",
+        "updatefail":"لم يتم تحميل المنتج",
+        "productname_ar_err":"الرجاء ادخال اسم المنتج بالعربي",
         "shortdesc_ar_err":"يرجى إدخال الوصف المختصر باللغه العربية",
         "detaildesc_ar_err":"يرجى إدخال التفاصيل باللغه العربية",
         "errorwhileUpload":"حدث خطا خلال التحميل",
-        "english":"English",
+        "english":"انجليزي",
         "arabic": "عربي",
         "category":"الفئة",
         "productCategoryValidate":"يرجى تحديد فئة المنتج"
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",
-        "serviceeditTitle":"Edit service",
+        "serviceeditTitle":"تعديل الخدمه",
         "myservice":"خدماتي",
         "categories":"الأقسام",
         "price":"القيمة",
@@ -442,7 +442,7 @@
         "detaildesc":"وصف كامل",
         "pricelbl":"القيمة",
         "price":"القيمة",
-        "isfeature":"Service Is Feature",
+        "isfeature":"اعلان الخدمة",
         "sppricelbl":"القيمة بعد الخصم",
         "spprice":"القيمة بعد الخصم",
         "imageuploaderr":"الرجاء أختيار صورة على الأقل",
@@ -539,20 +539,20 @@
         "orderType":"نوع الطلب",
         "deliveryStatus": "حالة الطلب",
         "product_id": "Product Id",
-        "nonotification" : "NO NOTIFICATIONS",
-        "notifyonce": "We Will Notify You Once We Have \n"+" Something For You"
+        "nonotification" : "لا يوجد تنبيهات",
+        "notifyonce": "سنقوم باعلامك عندما نحصل علي شي لك"
     },
     "deals":{
         "dealTitle":"عروض",
         "buyitnowbtn":"اشتر الان"
     },
     "scheduleDetail":{
-        "title":"Schedule Detail",
-        "name":"Name",
-        "address":"APPOINTMENT ADDRESS",
-        "order":"Appointment Order",
-        "date":"Appointment Date",
-        "serviceName":"Service Name",
-        "serviceType":"Type of Service"
+        "title":"تفاصيل الجدول",
+        "name":"الاسم",
+        "address":"عنوان الموعد",
+        "order":"عنوان الموعد",
+        "date":"تاريخ الموعد",
+        "serviceName":"اسم الخدمة",
+        "serviceType":"نوع الخدمة"
     }
 }

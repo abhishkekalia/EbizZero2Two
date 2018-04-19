@@ -174,6 +174,7 @@ class MainView extends Component {
         },this.fetchDataByShop())
     }
     fetchDataByShop(){
+        console.log("fetchDataByShop: called")
         const { rows } = this.state;
         const {u_id, country, deviceId } = this.props;
         let un_id= (u_id === undefined) ? '' : u_id;
@@ -374,6 +375,7 @@ class MainView extends Component {
         );
     }
     fetchData(){
+        console.log("fetchData: called")
         const {u_id, country, deviceId } = this.props;
         let formData = new FormData();
         console.log("u_id:=",u_id)
@@ -1431,7 +1433,7 @@ class MainView extends Component {
                             country={country}
                             is_wishlist={data.is_wishlist}
                             product_id={data.product_id}
-                            fetchData={()=>this.fetchData()}
+                            fetchData={()=> this.state.data.length() > 0 ? this.fetchDataByShop() : this.fetchData()}
                             deviceId={deviceId}
                             lang={lang}/>
                     </View>
