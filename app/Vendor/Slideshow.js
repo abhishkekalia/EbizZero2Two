@@ -91,6 +91,7 @@ export default class Slideshow extends Component {
   }
 
   _move(index) {
+    console.log("index:=",index)
     const isUpdating = index !== this._getPosition();
     const x = this.state.width * index;
     if (majorVersion === 0 && minorVersion <= 19) {
@@ -105,6 +106,7 @@ export default class Slideshow extends Component {
   }
 
   _getPosition() {
+    console.log("this.props.position:=",this.props.position)
     if (typeof this.props.position === 'number') {
       return this.props.position;
     }

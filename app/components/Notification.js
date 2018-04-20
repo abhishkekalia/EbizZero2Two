@@ -83,9 +83,11 @@ class Notification extends Component {
                 },
                 body: formData,
             }
+            console.log("notificationList:= Request",config)
             fetch(Utils.gurl('notificationList'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("notificationList:= Response",responseData)
                 if(responseData.status){
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(responseData.data),

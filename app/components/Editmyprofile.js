@@ -37,6 +37,7 @@ class Editmyprofile extends Component<{}> {
             phone_no: this.props.mobile,
             country: '',
             address: '',
+            isCalling: false,
         };
         this.inputs = {};
     }
@@ -73,7 +74,7 @@ class Editmyprofile extends Component<{}> {
     }
 
     submit(){
-            Keyboard.dismiss();
+        Keyboard.dismiss();
         const {
             u_id,
             fullname,
@@ -100,26 +101,30 @@ class Editmyprofile extends Component<{}> {
         formData.append('address', String(address));
 
         if (this.validate()) {
-        const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data;',
-                },
-                body: formData,
+            if (!this.state.isCalling) {
+                this.state.isCalling = true
+                const config = {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'multipart/form-data;',
+                        },
+                        body: formData,
+                    }
+                fetch(Utils.gurl('editProfile'), config)
+                .then((response) => response.json())
+                .then((responseData) => {
+                    EventEmitter.emit("reloadAddressProfile")
+                    this.state.isCalling = false
+                    routes.pop();
+                })
+                .catch((error) => {
+                    this.state.isCalling = false
+                    console.log(error);
+                })
+                .done();
             }
-        fetch(Utils.gurl('editProfile'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            EventEmitter.emit("reloadAddressProfile")
-            routes.pop();
-        })
-       .catch((error) => {
-            console.log(error);
-        })
-        .done();
-
-    }
+        }
     }
 
     validate(){
@@ -173,6 +178,17 @@ class Editmyprofile extends Component<{}> {
             })
             return false
         }
+
+        if(phone_no.length !== 8 ){
+			MessageBarManager.showAlert({
+				message: I18n.t('userregister.mobileValidatetionText', {locale: language}),
+				title:'',
+				alertType: 'extra',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
+			return false
+		}
 
         if (!country.length)
         {

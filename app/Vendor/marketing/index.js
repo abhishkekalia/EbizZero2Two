@@ -239,9 +239,10 @@ const styles = StyleSheet.create({
         padding : 10,
         backgroundColor : '#fbcdc5',
         marginLeft : 0,
-        top : 10,
+        marginTop : 10,
         flexDirection : 'row',
-        borderRadius : 5
+        borderRadius : 5,
+        marginBottom:10
     },
     headerText: {
         padding: 8,

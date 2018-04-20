@@ -93,18 +93,6 @@ class Register extends Component {
 				latitudeDelta: 0.0922,
 				longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO,
 			  },
-			  initialRegion: {
-                latitude: 22.966425,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            },
-            coordinate:{
-                latitude: 22.966425,
-                longitude: 72.615933,
-                latitudeDelta:  0.0922,
-                longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO
-            }
 		};
 		this.inputs = {};
 		this.showCountrysheet = this.showCountrysheet.bind(this)
@@ -118,7 +106,7 @@ class Register extends Component {
 				latitudeDelta:  0.00922*1.5,
 				longitudeDelta: 0.00421*1.5
 			}
-			// console.warn(region);
+			console.warn(region);
 
 			this.onRegionChange(region, region.latitude, region.longitude);
 		});
@@ -127,7 +115,7 @@ class Register extends Component {
 	}
 	onRegionChange(region, lastLat, lastLong) {
 		this.setState({
-			region: region,
+			mapRegion: region,
 			lastLat: lastLat || this.state.lastLat,
 			lastLong: lastLong || this.state.lastLong,
 			isLoading : false,
@@ -621,7 +609,6 @@ class Register extends Component {
 							style={StyleSheet.absoluteFill}
 							ref={c => this.mapView = c}
 							// onPress={this.onMapPress}
-							// onRegionChange={this.onRegionChange.bind(this)}
 							>
 
 							<MapView.Marker draggable
@@ -656,8 +643,7 @@ class Register extends Component {
 							region={this.state.region}
 							style={StyleSheet.absoluteFill}
 							ref={c => this.mapView = c}
-							onPress={this.onMapPress}
-							// onRegionChange={this.onRegionChange.bind(this)}
+							// onPress={this.onMapPress}
 							>
 
 							<MapView.Marker draggable
@@ -667,7 +653,7 @@ class Register extends Component {
 									longitude: (this.state.lastLong + 0.00050) || -73.03569,
 								}}
 								// loadAddressFromMap
-								onDragEnd={(e) => this.onDragPinCallback(e) } //this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+								onDragEnd={(e) =>  this.onDragPinCallback(e) }//this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
 
 								// onDragEnd={(e) => this.setState({
 								// 	coordinate: e.nativeEvent.coordinate,

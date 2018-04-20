@@ -356,9 +356,11 @@ class Footer extends Component{
                 },
                 body: form,
             }
+            console.log("addToFeature Request:=",config)
             fetch(Utils.gurl('addToFeature'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("addToFeature Response:=",responseData)
                 if(responseData.status){
                     let feature_id = responseData.data.feature_id;
                     let url = responseData.data.url;
@@ -384,9 +386,11 @@ class Footer extends Component{
                 },
                 body: form,
             }
+            console.log("removeFromFeature Request:=",config)
             fetch(Utils.gurl('removeFromFeature'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("removeFromFeature Request:=",responseData)
                 if(responseData.status){
                     MessageBarManager.showAlert({
                         message: I18n.t('venderprofile.productremovefeature', { locale: lang }),

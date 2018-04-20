@@ -126,11 +126,12 @@ class ProductOrder extends Component{
                 },
                 body: formData,
             }
+        console.log("orderList:=",config)
         fetch(Utils.gurl('orderList'), config)
             .then((response) => response.json())
             .then((responseData) => {
             
-                console.log("responseData:=",responseData)
+                console.log("orderList responseData:=",responseData)
             var orders = responseData.data,
                 length = orders.length,
                 dataBlob = {},

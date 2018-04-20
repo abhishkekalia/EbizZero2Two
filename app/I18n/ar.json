@@ -540,7 +540,8 @@
         "deliveryStatus": "حالة الطلب",
         "product_id": "Product Id",
         "nonotification" : "لا يوجد تنبيهات",
-        "notifyonce": "سنقوم باعلامك عندما نحصل علي شي لك"
+        "notifyonce": "سنقوم باعلامك عندما نحصل علي شي لك",
+        "notiTitle":"إخطارات"
     },
     "deals":{
         "dealTitle":"عروض",

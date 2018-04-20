@@ -388,7 +388,13 @@ class ProductVendor extends Component {
                         callback: this.removeLoader
                     })
                 }else{
-                    this.removeLoader
+                    // this.removeLoader
+                    MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        alertType: 'alert',
+                        stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                        title:'alert'
+                    });
                 }
             })
             .catch((error) => {
@@ -530,7 +536,7 @@ class ProductVendor extends Component {
                             }
                             <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingLeft : 20, paddingRight:20, backgroundColor:'#fff'}}>
                                 <Text style={{ height : 30 , color:'#FFCC7D', paddingTop:10, textAlign: (lang === 'ar') ? 'right': 'left' ,textDecorationLine : 'underline'}}>{I18n.t('productdetail.productinfo', { locale: lang })}</Text>
-                                <Text style={{ color:'#696969', marginTop:5,textAlign: (lang === 'ar') ? 'right': 'left'}}> {this.props.short_description}
+                                <Text style={{ color:'#696969', marginTop:5,textAlign: (lang === 'ar') ? 'right': 'left'}}>{this.props.short_description}
                                 </Text>
                                 <Text style={{ color:'#696969', marginBottom:10, textAlign: (lang === 'ar') ? 'right': 'left'}}>{this.props.detail_description}
                                 </Text>
@@ -651,7 +657,7 @@ class SlideshowTest extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            position: 1,
+            position: 0,
             interval: null,
         };
     }
@@ -659,7 +665,7 @@ class SlideshowTest extends Component {
         this.setState({
           interval: setInterval(() => {
             this.setState({
-              position: this.state.position ===this.props.imgList.length ? 0 : this.state.position + 1
+              position: this.state.position === (this.props.imgList.length-1) ? 0 : this.state.position + 1
             });
           }, 2000)
         });
@@ -669,6 +675,8 @@ class SlideshowTest extends Component {
     }
 
     render() {
+        console.log("this.props.imgList:=",this.props.imgList)
+        console.log("this.state.position:=",this.state.position)
         return (
         <Slideshow
         height ={height - 230}

@@ -387,7 +387,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="notification"
                     component={Notification}
-                    title="Notifications"
+                    title={I18n.t("notification.notiTitle", { locale: lang })}
                     navBar={CustomGenNavBar}
                     />
                 </Stack>

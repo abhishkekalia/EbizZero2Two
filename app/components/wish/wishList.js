@@ -97,7 +97,7 @@ class WishList extends Component {
         if (u_id) {
             formData.append('u_id', String(u_id));
         }
-        console.log(formData);
+        
         const config = {
             method: 'POST',
             headers: {
@@ -106,9 +106,11 @@ class WishList extends Component {
             },
             body: formData,
         }
+        console.log("Request wishlist:=",config);
         fetch(Utils.gurl('wishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("Response wishlist:=",responseData);
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
@@ -145,7 +147,7 @@ class WishList extends Component {
         }
         return true;
     }
-    addtoCart(count, product_id, size){
+    addtoCart(count, product_id, size, wishlist_id){
         const { color} = this.state,
         {u_id, country, deviceId, lang} = this.props;
         align = (lang === 'ar') ?  'right': 'left';
@@ -191,14 +193,14 @@ class WishList extends Component {
                     })
                 }
             })
-            .then(()=>this.removeWishlist(product_id))
+            .then(()=>this.removeWishlist(product_id,wishlist_id))
             .catch((error) => {
               console.log(error);
             })
             .done();
         }
     }
-    removeWishlist(product_id){
+    removeWishlist(product_id,wishlist_id){
         let {country, u_id, deviceId, lang} = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
@@ -207,6 +209,7 @@ class WishList extends Component {
         }
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
+        formData.append('wishlist_id', String(wishlist_id));
         formData.append('device_uid', String(deviceId));
         const config = {
             method: 'POST',
@@ -512,7 +515,7 @@ class WishList extends Component {
                             <Text style={{ left : 5}}>{I18n.t('wishlist.shareItem', { locale: lang })}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]}
-                            onPress={()=>this.addtoCart(data.quantity, data.product_id, data.size)}>
+                            onPress={()=>this.addtoCart(data.quantity, data.product_id, data.size, data.wishlist_id)}>
                             <Image source={require('../../images/cart_icon.png')} style={{ width:"10%", height : "100%"}}/>
                             <Text style={{ left :5}}>{I18n.t('wishlist.movetocart', { locale: lang })}</Text>
                         </TouchableOpacity>
@@ -610,7 +613,7 @@ class SelectItem extends Component{
         }
     }
     removeWishlist(){
-        const {u_id, country, product_id, deviceId } = this.props;
+        const {u_id, country, product_id, deviceId, wishlist_id } = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
         if (u_id) {
@@ -619,6 +622,7 @@ class SelectItem extends Component{
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('device_uid', String(deviceId));
+        formData.append('wishlist_id', String(wishlist_id))
         const config = {
             method: 'POST',
             headers: {
@@ -627,11 +631,22 @@ class SelectItem extends Component{
             },
             body: formData,
         }
+        console.log("request removeFromWishlist:=",config)
         fetch(Utils.gurl('removeFromWishlist'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("request removeFromWishlist:=",responseData)
             if (responseData.status) {
                 this.props.callback()
+            }
+            else {
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    title:'error',
+                    alertType: 'extra',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
             }
         })
         .then(()=>this.props.callback())

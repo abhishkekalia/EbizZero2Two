@@ -102,6 +102,18 @@ class Vendorreg extends Component {
 				latitudeDelta: 0.0922,
 				longitudeDelta: 0.0421,
 			  },
+			  initialRegion: {
+                latitude: 22.966425,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            },
+            coordinate:{
+                latitude: 22.966425,
+                longitude: 72.615933,
+                latitudeDelta:  0.0922,
+                longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO
+            }
 		};
 	    this.inputs = {};
 		this.showCountrysheet = this.showCountrysheet.bind(this)
@@ -121,10 +133,14 @@ class Vendorreg extends Component {
     }
 	onRegionChange(region, lastLat, lastLong) {
 		this.setState({
-			mapRegion: region,
+			region: region,
 			lastLat: lastLat || this.state.lastLat,
 			lastLong: lastLong || this.state.lastLong,
-			isLoading : false
+			isLoading : false,
+			coordinate: {
+				latitude: region.latitude,
+				longitude: region.longitude
+			}
 		});
 	}
 	componentWillUnmount() {
@@ -554,10 +570,12 @@ class Vendorreg extends Component {
 					latitudeDelta: this.state.LATITUDE_DELTA,
 					longitudeDelta: this.state.LONGITUDE_DELTA
 				}}
-				region={this.state.mapRegion}
+				region={this.state.region}
 				style={StyleSheet.absoluteFill}
 				ref={c => this.mapView = c}
-				onPress={this.onMapPress}>
+				// onPress={this.onMapPress}
+				// onRegionChange={this.onRegionChange.bind(this)}
+				>
 
 				<MapView.Marker draggable
 					// annotations={markers}
@@ -566,7 +584,7 @@ class Vendorreg extends Component {
 						longitude: (this.state.lastLong + 0.00050) || -73.03569,
 					}}
 					// loadAddressFromMap
-					onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+					onDragEnd={(e) => this.onDragPinCallback(e) } //this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
 
 					// onDragEnd={(e) => this.setState({
 					// 	coordinate: e.nativeEvent.coordinate,
@@ -590,10 +608,12 @@ class Vendorreg extends Component {
 						latitudeDelta: this.state.LATITUDE_DELTA,
 						longitudeDelta: this.state.LONGITUDE_DELTA
 					}}
-					region={this.state.mapRegion}
+					region={this.state.region}
 					style={StyleSheet.absoluteFill}
 					ref={c => this.mapView = c}
-					onPress={this.onMapPress}>
+					// onPress={this.onMapPress}
+					// onRegionChange={this.onRegionChange.bind(this)}
+					>
 
 					<MapView.Marker draggable
 						// annotations={markers}
@@ -602,7 +622,7 @@ class Vendorreg extends Component {
 							longitude: (this.state.lastLong + 0.00050) || -73.03569,
 						}}
 						// loadAddressFromMap
-						onDragEnd={(e) => this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
+						onDragEnd={(e) => this.onDragPinCallback(e) }  // this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)}
 
 						// onDragEnd={(e) => this.setState({
 						// 	coordinate: e.nativeEvent.coordinate,
@@ -633,6 +653,26 @@ class Vendorreg extends Component {
 		</View>
 		);
 	}
+
+	onDragPinCallback(e) {
+		console.log("onDragPinCallback")
+		this.setState({
+			coordinate:  {
+				latitude: e.nativeEvent.coordinate.latitude,
+				longitude: e.nativeEvent.coordinate.longitude,
+				latitudeDelta:  e.nativeEvent.coordinate.longitudeDelta,
+				longitudeDelta:  e.nativeEvent.coordinate.latitudeDelta
+			},
+			region: {
+				latitude:e.nativeEvent.coordinate.latitude,
+				longitude:e.nativeEvent.coordinate.longitude,
+				latitudeDelta: this.state.region.latitudeDelta,
+				longitudeDelta: this.state.region.longitudeDelta
+			}},this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude))
+
+		// this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+	}
+
 	validate(){
 		const {company, representative_name, contact, email,
 			address, password, gender,  selectCountry,

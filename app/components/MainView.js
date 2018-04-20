@@ -1198,6 +1198,7 @@ class MainView extends Component {
         .done();
     }
     filterbyService () {
+        console.log("filterbyService filterbyService filterbyService", this.state.servicerows.length )
         if (this.state.servicerows.length == 0) {
             this.state.isService = !this.state.isService
             this.state.isFilterProduct = false
@@ -1208,7 +1209,7 @@ class MainView extends Component {
             isService: !this.state.isService,
             loaded : false,
             isFilterProduct : false
-        },this.fetchDataByService() )
+        },this.fetchDataByService())
     }
     fetchDataByService (){
         const {
@@ -1225,6 +1226,7 @@ class MainView extends Component {
             },
             body: formData,
             }
+            console.log("request filterByService:=",config)
         fetch(Utils.gurl('filterByService'), config)
         .then((response) => response.json())
         .then((responseData) => {

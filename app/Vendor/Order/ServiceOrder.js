@@ -46,10 +46,10 @@ export default class ServiceOrder extends Component {
         }
     }
 
-     _onRefresh () {
-    this.setState({refreshing: true}, ()=> {this.fetchData()});
+    _onRefresh () {
+        this.setState({refreshing: true}, ()=> {this.fetchData()});
 
-  }
+    }
 
     fetchData (){
         const { u_id,country, } = this.state;
@@ -65,11 +65,11 @@ export default class ServiceOrder extends Component {
                 },
                 body: formData,
             }
-
+        console.log("Request getbookedServiceForVendor:=",config)
         fetch(Utils.gurl('getbookedServiceForVendor'), config)
         .then((response) => response.json())
         .then((responseData) => {
-            console.log("responseData:=",responseData)
+            console.log("getbookedServiceForVendor responseData:=",responseData)
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),

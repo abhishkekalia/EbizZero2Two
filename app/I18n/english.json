@@ -133,7 +133,7 @@
         "wishlistmsh3":"something wents wrong",
         "selctsize":"Select Size",
         "selctcolor":"Select Color",
-        "productinfo":" Product Information",
+        "productinfo":"Product Information",
         "moreProducts":"more Product by ZeroToTwo",
         "sizeerr":"Please Select Size",
         "colorerr":"Please Select Color",
@@ -543,7 +543,8 @@
         "deliveryStatus": "Delivery Status",
         "product_id": "Product Id",
         "nonotification" : "NO NOTIFICATIONS",
-        "notifyonce": "We Will Notify You Once We Have \n"+" Something For You"
+        "notifyonce": "We Will Notify You Once We Have \n"+" Something For You",
+        "notiTitle":"Notifications"
     },
     "deals":{
         "dealTitle":"Deals & Offres",

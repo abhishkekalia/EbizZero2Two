@@ -108,8 +108,8 @@ class EditService extends Component {
         //     })
         //     return false
         //     }
-
-        if (!service_type.length){
+        console.log("service_type.length",service_type.length)
+        if (service_type.trim().length <= 0){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
                 alertType: 'extra',
@@ -119,7 +119,7 @@ class EditService extends Component {
             })
             return false
         }
-        if (!service_name.length){
+        if (service_name.trim().length <= 0){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.servicenameerr', { locale: lang }),
                 alertType: 'extra',
@@ -129,7 +129,7 @@ class EditService extends Component {
             })
             return false
         }
-        if (!short_description.length){
+        if (short_description.trim().length <= 0){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.shortdescerr', { locale: lang }),
                 alertType: 'extra',
@@ -139,7 +139,7 @@ class EditService extends Component {
             })
             return false
         }
-        if (!detail_description.length){
+        if (detail_description.trim().length <= 0){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.detaildescerr', { locale: lang }),
                 alertType: 'extra',
