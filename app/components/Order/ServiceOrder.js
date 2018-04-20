@@ -104,6 +104,9 @@ export default class ServiceOrder extends Component {
         let listView = (<View></View>);
         listView = (
             <ListView
+                contentContainerStyle={{
+                    paddingBottom:55
+                }}
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
@@ -141,31 +144,46 @@ export default class ServiceOrder extends Component {
                 //     lang:lang
                 // })}
                 >
-                <View>
-                    <View style={[styles.header,{ flexDirection: direction}]}>
-                        <View style={{ flexDirection: direction, }}>
-                            <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{I18n.t('userorderhistory.bookingdt', { locale: lang })}</Text>
+                <View style={{
+                    margin:5, 
+                    marginBottom:0,
+                    borderWidth:1, 
+                    borderColor:'#ccc',
+                    borderRadius:5,
+                    overflow:'hidden',
+                }}>
+                    <View style={{ 
+                            padding:5,
+                            // justifyContent: 'space-around',
+                            backgroundColor: '#fff',
+                            borderWidth: StyleSheet.hairlineWidth,
+                            borderColor: '#ccc',
+                            flexDirection: direction,
+                        
+                        }}>
+                        <View style={{ flexDirection: direction, padding:5}}>
+                            <Text style={[styles.headerText, {color: '#fbcdc5', fontWeight:'bold'}]}>{I18n.t('userorderhistory.bookingdt', { locale: lang })}</Text>
                             <Text style={[styles.headerText, {color: '#fbcdc5'}]}> : </Text>
                             <Text style={[styles.headerText, {color: '#fbcdc5'}]}>{data.service_datetime}</Text>
                         </View>
-                        <View style={{ flexDirection: direction}}>
+                        {/* <View style={{ flexDirection: direction}}>
                             <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{I18n.t('userorderhistory.amount', { locale: lang })}</Text>
                             <Text style={[styles.headerText, {color: '#a9d5d1'}]}>:</Text>
                             <Text style={[styles.headerText, {color: '#a9d5d1'}]}>{data.amount}</Text>
-                        </View>
+                        </View> */}
                     </View>
                     <View style={{ flexDirection : 'column', paddingLeft:10, paddingTop:5, paddingBottom:5, backgroundColor: '#F6F6F6'}} >
                         <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
-                            <Text style={styles.label}>{I18n.t('userorderhistory.servicename', { locale: lang })}</Text>
-                                <Text style={styles.label}>: </Text>
-                            <Text style={styles.bodyText}>{data.serviceDetail.service_name}</Text>
+                            {/* <Text style={styles.label}>{I18n.t('userorderhistory.servicename', { locale: lang })}</Text>
+                                <Text style={styles.label}>: </Text> */}
+                            <Text style={[styles.bodyText,{fontSize:17,fontWeight:'bold'}]}>{data.serviceDetail.service_name}</Text>
                         </View>
-                        <View style={{flexDirection: direction, paddingTop:1, marginTop:5}}>
-                            <Text style={styles.label}>{I18n.t('userorderhistory.customeremail', { locale: lang })}</Text>
-                                <Text style={styles.label}>: </Text>
-                            <Text style={styles.bodyText}>{data.serviceDetail.short_description}</Text>
+                        <View style={{flexDirection: direction, paddingTop:1, marginTop:10}}>
+                            {/* <Text style={styles.label}>{I18n.t('userorderhistory.customeremail', { locale: lang })}</Text>
+                                <Text style={styles.label}>: </Text> */}
+                            <Text style={[styles.bodyText,{fontSize:13}]}>{data.serviceDetail.short_description}</Text>
                         </View>
-                        <View style={{flexDirection: direction, paddingTop:1, marginTop:5, marginBottom:5}}>
+                        <View style={{flexDirection: direction, paddingTop:1, marginTop:10, marginBottom:5}}>
                             <Text style={styles.label}>{I18n.t('userorderhistory.price', { locale: lang })}</Text>
                             <Text style={styles.label}>: </Text>
                             <Text style={styles.bodyText}> {data.serviceDetail.special_price} </Text>
@@ -210,13 +228,14 @@ var styles = StyleSheet.create({
     },
     label : {
         color : "#a9d5d1",
-        fontSize : 12
+        fontSize : 14,
+        fontWeight:'bold',
     },
     headerText :{
-        fontSize: 12,
+        fontSize: 14,
     },
     bodyText :{
-        fontSize: 11,
+        fontSize: 14,
     },
     centering: {
         flex:1,

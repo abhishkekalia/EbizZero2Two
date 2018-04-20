@@ -269,17 +269,30 @@ class ProductOrder extends Component{
     renderSectionHeader(sectionData, sectionID) {
         let { lang } = this.props;
         let direction = lang == 'ar'? 'row-reverse': 'row';
+        console.log("Product Order renderSectionHeader:=sectionData",sectionData,"sectionID:=",sectionID)
         return (
-            <View style={[styles.section, { flexDirection: direction}]}>
+            <View style={{
+                // justifyContent: 'space-between',
+                // alignItems: 'flex-start',
+                padding: 5,
+                backgroundColor: '#fff',
+                borderWidth: StyleSheet.hairlineWidth,
+                borderColor: '#fbcdc5',
+                borderColor: '#ccc',
+                borderTopLeftRadius: 5,
+                borderTopRightRadius: 5,
+                marginTop: 5,
+                flexDirection: direction
+            }}>
                 <View style={{flexDirection: direction}}>
-                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>{I18n.t('userorderhistory.orderdt', { locale: lang })}</Text>
+                    <Text style={[styles.text,{ color: '#fbcdc5', fontWeight:'bold'}]}>{I18n.t('userorderhistory.orderdt', { locale: lang })}</Text>
                     <Text style={[styles.text,{ color: '#fbcdc5'}]}> : </Text>
-                    <Text style={[styles.text,{ color: '#fbcdc5'}]}>{sectionData}</Text>
+                    <Text style={[styles.text,{ color: '#696969'}]}>{sectionData}</Text>
                 </View>
-                <View style={{flexDirection: direction}}>
-                    <Text style={[styles.text,{ color: '#a9d5d1'}]}>{I18n.t('userorderhistory.orderid', { locale: lang })}</Text>
+                <View style={{flexDirection: direction, marginTop:5}}>
+                    <Text style={[styles.text,{ color: '#a9d5d1', fontWeight:'bold'}]}>{I18n.t('userorderhistory.orderid', { locale: lang })}</Text>
                     <Text style={[styles.text,{ color: '#a9d5d1'}]}> : </Text>
-                    <Text style={[styles.text,{ color: '#a9d5d1'}]}>{sectionID}</Text>
+                    <Text style={[styles.text,{ color: '#696969'}]}>{sectionID}</Text>
                 </View>
             </View>
         );
@@ -287,23 +300,40 @@ class ProductOrder extends Component{
     renderRow(rowData, sectionID, rowID) {
         let { lang } = this.props;
         let direction = lang == 'ar'? 'row-reverse': 'row';
+        console.log("Product Order renderRow:=",rowID)
         return (
             <TouchableOpacity
-                style={{ padding : 10, paddingTop:5}}
+                style={{ padding : 10, paddingTop:5, borderWidth:1, borderColor:'#ccc', borderTopWidth:0}}
                 onPress ={()=>this.setState({
                     visibleMap :true
                 })}
                 >
                 <View style={[styles.rowStyle, {flexDirection: 'column'}]}>
-                    <View style={{ flexDirection : direction,  alignItems: 'center'}}>
+                    <View style={{ flexDirection : direction,  alignItems: 'center', marginTop:0}}>
+                        {/* <Text style={styles.label}>{I18n.t('userorderhistory.productnm', { locale: lang })}</Text>
+                            <Text style={styles.rowText}> : </Text> */}
+                        <Text style={{
+                            fontSize: 17,
+                            color: '#696969',
+                            fontWeight: 'bold',
+
+                        }}>{ lang === 'ar' ? rowID.product_name_in_arabic : rowID.product_name} </Text>
+                    </View>
+
+                    <View style={{ flexDirection : direction,  alignItems: 'center', marginTop:5}}>
+                        {/* <Text style={styles.label}>{I18n.t('userorderhistory.productnm', { locale: lang })}</Text>
+                            <Text style={styles.rowText}> : </Text> */}
+                        <Text style={{
+                            fontSize: 13,
+                            color: '#696969',
+
+                        }}>{ lang === 'ar' ? rowID.short_description_in_arabic : rowID.short_description} </Text>
+                    </View>
+                    
+                    <View style={{ flexDirection : direction,  alignItems: 'center',marginTop: 5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.productid', { locale: lang })}</Text>
                             <Text style={styles.rowText}> : </Text>
                             <Text style={styles.rowText}>{rowID.product_id} </Text>
-                    </View>
-                    <View style={{ flexDirection : direction,  alignItems: 'center', marginTop:5}}>
-                        <Text style={styles.label}>{I18n.t('userorderhistory.productnm', { locale: lang })}</Text>
-                            <Text style={styles.rowText}> : </Text>
-                        <Text style={styles.rowText}>{rowID.product_name} </Text>
                     </View>
                     <View style={{ flexDirection : direction,  alignItems: 'center', marginTop:5}}>
                         <Text style={styles.label}>{I18n.t('userorderhistory.quantity', { locale: lang })}</Text>
@@ -351,12 +381,13 @@ var styles = StyleSheet.create({
         fontSize: 14
     },
     rowStyle: {
-        paddingVertical: 5,
-        borderTopColor: 'white',
-        borderLeftColor: 'white',
-        borderRightColor: 'white',
-        borderBottomColor: '#E0E0E0',
-        borderWidth: StyleSheet.hairlineWidth,
+        // paddingVertical: 5,
+        paddingTop:5,
+        // borderTopColor: 'white',
+        // borderLeftColor: 'white',
+        // borderRightColor: 'white',
+        // borderBottomColor: '#E0E0E0',
+        // borderWidth: StyleSheet.hairlineWidth,
         justifyContent: 'space-between',
     },
     rowText: {
@@ -368,8 +399,9 @@ var styles = StyleSheet.create({
         color: '#757575'
     },
     label : {
-      color : "#a9d5d1",
-      fontSize : 12
+      color : "#fbcdc5",
+      fontSize : 13,
+      fontWeight : 'bold',
     },
     section: {
         justifyContent: 'space-between',
@@ -377,7 +409,11 @@ var styles = StyleSheet.create({
         padding: 5,
         backgroundColor: '#fff',
         borderWidth: StyleSheet.hairlineWidth,
-        borderColor: '#fbcdc5'
+        borderColor: '#fbcdc5',
+        borderColor: '#ccc',
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        marginTop: 5,
     }
 });
 function mapStateToProps(state) {
