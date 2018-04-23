@@ -8,12 +8,18 @@ import {
     ActivityIndicator,
     AsyncStorage,
     Alert,
+    Dimensions,
+    TouchableWithoutFeedback,
+    Platform,
 } from 'react-native';
 import Utils from 'app/common/Utils';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import I18n from 'react-native-i18n';
 import {connect} from "react-redux";
+import Modal from 'react-native-modal';
+const { width, height } = Dimensions.get('window');
+import Ionicons from 'react-native-vector-icons/Feather';
 
 class ProductOrder extends Component{
      constructor(props) {
@@ -40,6 +46,9 @@ class ProductOrder extends Component{
             return dataBlob[sectionID + ':' + rowID];
         }
         return {
+            showAddress: true,
+            addressDetail: {},
+            orderDetail:{},
             loaded : false,
             status : false,
             dataSource : new ListView.DataSource({
@@ -216,8 +225,52 @@ class ProductOrder extends Component{
         return (
             <View style={[styles.container, {padding : 5}]}>
                 {listView}
+                <Modal isVisible={this.state.showAddress}>
+                    <View style={{
+                        backgroundColor:'white',
+                        // marginVertical:40,
+                        width:width-40,
+                        height:height-60,
+                        borderRadius:5,
+                        overflow:'hidden'
+                    }}>
+                        <View style={{
+                            width:'100%',
+                            height: 64,
+                            backgroundColor: '#a9d5d1',
+                            // alignItems:'center',
+                            alignContent:'center',
+                            flexDirection: 'row',
+                        }}>
+                            <Text style={{
+                                backgroundColor:'red',
+                                textAlign:'center',
+                                marginTop: 20,
+                                fontSize:17,
+                            }} >Delivery Address</Text>
+
+                            <Ionicons name= "x-circle" color="white" size={40}
+                                onPress={this.hideAddress()}
+                                style={{
+                                    position:'absolute',
+                                    // marginTop : Platform.OS === 'ios' ? 20 : 10,
+                                    paddingHorizontal : 10,
+                                    backgroundColor : 'transparent',
+                                    backgroundColor:'red',
+                                }
+                            }/>
+                                
+                        </View>
+                    </View>
+                </Modal>
             </View>
         );
+    }
+
+    hideAddress() {
+        this.setState({
+            showAddress:false,
+        })
     }
 
     renderLoadingView() {
@@ -281,6 +334,7 @@ class ProductOrder extends Component{
             ord_status = 1;
         }
         return (
+            <TouchableWithoutFeedback onPress={this.showAddress(rowData)}>
             <View style={styles.row}>
                 
                 <View style={{ flexDirection : direction}}>
@@ -336,7 +390,15 @@ class ProductOrder extends Component{
                     </View>
                 </View>
             </View>
+            </TouchableWithoutFeedback>
         );
+    }
+
+    showAddress(data) {
+        this.setState({
+            showAddress:true,
+            orderDetail:data
+        })
     }
 };
 var styles = StyleSheet.create({

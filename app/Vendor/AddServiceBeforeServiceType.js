@@ -5,42 +5,46 @@ import {
     Platform,
     StyleSheet,
     TouchableOpacity,
-    TouchableNativeFeedback,
     TouchableWithoutFeedback,
     Dimensions,
     Button,
     Keyboard,
     ScrollView,
+    AsyncStorage,
     TextInput,
     Image,
     Alert,
     Switch
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
-import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-picker'
 import Utils from 'app/common/Utils';
 import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
 import commonStyles from "./styles";
+import ActionSheet from 'react-native-actionsheet';
 import GetImage from './imageSlider';
+import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-import RNFetchBlob from 'react-native-fetch-blob';
-import Editimage from './Editimage';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
+import RNFetchBlob from 'react-native-fetch-blob';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import EventEmitter from "react-native-eventemitter";
-import ActionSheet from 'react-native-actionsheet';
 
 const CANCEL_INDEX = 0
 const DESTRUCTIVE_INDEX = 4
-const title = 'Select Type'
+const title = 'Select Category'
+
+import SelectedImage from './SelectedImage';
 
 const { width, height } = Dimensions.get('window');
-class EditService extends Component {
+
+const INITIAL_STATE = { quantity: '',  Size: ''}
+
+class AddService extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -48,39 +52,31 @@ class EditService extends Component {
             avatarSource: null,
             user_type : null,
             visibleModal: false,
-            u_id: this.props.u_id,
-            country : this.props.country,
+            u_id: null,
+            country : null,
             height : '',
-            service_type: this.props.service_type,
-            service_name : this.props.service_name,
-            service_name_in_arabic : this.props.service_name_in_arabic,
-            short_description_in_arabic : this.props.short_description_in_arabic,
-            detail_description_in_arabic : this.props.detail_description_in_arabic,
-            detail_description : this.props.detail_description,
-            short_description : this.props.short_description,
-            price : this.props.price,
-            special_price : this.props.special_price,
+            service_type: '',
+            service_name : '',
+            detail_description : '',
+            short_description : '',
+            service_name_in_arabic: '',
+            short_description_in_arabic: '',
+            detail_description_in_arabic: '',
+            price_in_arabic: '',
+            is_weekend:false,
+            special_price_in_arabic: '',
+            price : '',
+            special_price : '',
             rows : [] ,
             Imagepath : [],
-            removed_images : [],
-            languageChoose: '',
-            is_feature:0,
-            is_weekend:this.props.is_weekend,
-            is_weekend_work :this.props.is_weekend,
-            is_from_featureList: this.props.is_from_featureList,
-            options : ['0','1'],
-            optionsAvailable: [],
-            product_category: '',
-            product_category_id:this.props.service_type_id,
-            service_type_name:this.props.service_type,
-            service_id:this.props.service_id,
+            languageChoose: 'en',
+            is_feature: ''
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
-        this.handlePress = this.handlePress.bind(this)
-        this.showActionSheet = this.showActionSheet.bind(this)
     }
     onSelect(index, value){
+      console.warn("radio val",value);
         this.setState({
             languageChoose: value
         })
@@ -89,121 +85,61 @@ class EditService extends Component {
         this.inputs[id].focus();
     }
     componentDidMount(){
-        this.getServiceType()
-        var Items = this.props.serviceImages
-        console.log("Items:=",Items)
-        if (Items) {
-            var length = Items.length,
-            organization,
-            Select =[],
-            user,
-            i;
-            for (i = 0; i < length; i++) {
-                organization = Items[i];
-                Select.push ({uri:organization.image});
-            }
-            this.setState({
-                rows : Select
-            })
-        }
-    }
-
-    getServiceType(){
-        const { u_id, country,} = this.state;
-        let formData = new FormData();
-        formData.append('u_id', String(u_id));
-        formData.append('country', String(country));
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        console.log("Request ServiceTypeList:=",config)
-        fetch(Utils.gurl('ServiceTypeList'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            console.log("Response ServiceTypeList:=",responseData.data)
-            if(responseData.status){
-                var data = responseData.data,
-                length = data.length,
-                optionsList= []
-                optionsList.push('Cancel');
-                for(var i=0; i < length; i++) {
-                    order = data[i];
-                    category_name = order.name;
-                    optionsList.push(category_name);
-                    if (this.state.product_category_id === order.id) {
-                        console.log("category_name:=",category_name)
-                        this.state.product_category = i+1
-                        this.state.product_category_id = order.id
-                        this.state.service_type_name = order.name
-                    }
-                }
-                this.setState({
-                    options : optionsList,
-                    optionsAvailable : responseData.data
-                })
-            }
-        })
-        .catch((errorMessage, statusCode) => {
-            console.log(errorMessage);
-        })
+        this.getKey()
         .done();
     }
-
-    handlePress(i) {
-        if (i > 0) {
-            console.log("Selected Type:=",i)
-            var data = this.state.optionsAvailable[i-1]
-            console.log("Selected Type:=",data.id)
+    componentWillMount() {
+        routes.refresh({ right: this._renderRightButton, left :  this._renderLeftButton, hideNavBar : false });
+    }
+    _renderLeftButton = () => {
+        const { lang} = this.props;
+        return(
+            lang === 'ar' ?
+            <TouchableOpacity onPress={() => this.uploadTocloud() } style={[commonStyles.submit, { margin: 5}]} >
+                <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
+            </TouchableOpacity>
+            :
+            <Text style={{color : '#fff'}}></Text>
+        );
+    };
+    _renderRightButton = () => {
+        const { lang} = this.props;
+        return(
+            lang === 'ar' ? <Text style={{color : '#fff'}}></Text> :
+            <TouchableOpacity onPress={() => this.uploadTocloud() } style={[commonStyles.submit, { margin: 5}]} >
+                <Text style={{color : '#fff'}}>{I18n.t('venderprofile.uploadad', { locale: lang })}</Text>
+            </TouchableOpacity>
+        );
+    };
+    async getKey() {
+        try {
+            const value = await AsyncStorage.getItem('data');
+            var response = JSON.parse(value);
             this.setState({
-                product_category: i,
-                product_category_id: data.id,
-                service_type_name: data.name,
-            })
+                u_id: response.userdetail.u_id ,
+                country: response.userdetail.country ,
+            });
+        } catch (error) {
+            console.log("Error retrieving data" + error);
         }
     }
-
-    showActionSheet() {
-        this.ActionSheet.show()
-    }
-
     validate(){
-        const {
-            service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic,
-            short_description, detail_description, price, special_price,Imagepaths, Imagepath, product_category_id, service_type_name
-        } = this.state;
+        const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic, price_in_arabic, special_price_in_arabic, short_description, detail_description, price, special_price,Imagepaths, Imagepath} = this.state;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
 
         let path = Imagepath.length
-        // if(path < 1){
-        //     MessageBarManager.showAlert({
-        //         message: I18n.t('vendoraddservice.imageuploaderr', { locale: lang }),
-        //         alertType: 'extra',
-        //         title:'',
-        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-        //     })
-        //     return false
-        //     }
-        console.log("service_type.length",service_type.length)
-        // if (service_type.trim().length <= 0){
-        //     MessageBarManager.showAlert({
-        //         message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
-        //         alertType: 'extra',
-        //         title:'',
-        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-        //     })
-        //     return false
-        // }
-        console.log("product_category_id:=",product_category_id)
-        console.log("service_type_name:=",service_type_name)
-        if (service_type_name.trim().length < 1) {
+        if(path < 1){
+            MessageBarManager.showAlert({
+                message: I18n.t('vendoraddservice.imageuploaderr', { locale: lang }),
+                alertType: 'extra',
+                title:'',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+        if (!service_type.length){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
                 alertType: 'extra',
@@ -213,8 +149,7 @@ class EditService extends Component {
             })
             return false
         }
-        console.log("After")
-        if (service_name.trim().length <= 0){
+        if (!service_name.length){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.servicenameerr', { locale: lang }),
                 alertType: 'extra',
@@ -224,7 +159,7 @@ class EditService extends Component {
             })
             return false
         }
-        if (short_description.trim().length <= 0){
+        if (!short_description.length){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.shortdescerr', { locale: lang }),
                 alertType: 'extra',
@@ -234,7 +169,7 @@ class EditService extends Component {
             })
             return false
         }
-        if (detail_description.trim().length <= 0){
+        if (!detail_description.length){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.detaildescerr', { locale: lang }),
                 alertType: 'extra',
@@ -246,36 +181,32 @@ class EditService extends Component {
         }
         if (!price){
             MessageBarManager.showAlert({
-                message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
+                message: I18n.t('vendoraddservice.priceerr', { locale: lang }),
                 alertType: 'extra',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
                 messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
-            console.log("price error")
             return false
         }
-        if (!special_price){
+        // if (!special_price){
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('vendoraddservice.specialpriceerr', { locale: lang }),
+        //         alertType: 'extra',
+        //         title:'',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        // }
+        if ( parseInt(special_price) > parseInt(price)){
             MessageBarManager.showAlert({
-                message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
+                message: I18n.t('vendoraddservice.specialpriceerr1', { locale: lang }),
                 alertType: 'extra',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
                 messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
             })
-            console.log("special_price error")
-            return false
-
-        }
-        if (parseInt(special_price) > parseInt(price)){
-            MessageBarManager.showAlert({
-                message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
-                alertType: 'extra',
-                title:'',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-            console.log("special_price > price:= ", special_price, " ", price)
             return false
         }
         if (!service_name_in_arabic.length){
@@ -310,43 +241,25 @@ class EditService extends Component {
         }
         return true;
     }
-    uploadTocloud(){
-        const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic,
-            short_description, detail_description, price,
-            special_price, Imagepath, removed_images,is_feature,is_weekend, is_weekend_work, service_type_name, product_category_id
-        } = this.state;
-        const { u_id, country, lang, service_id } = this.state,
-        align = (lang === 'ar') ?  'right': 'left';
 
-        console.log("u_id", u_id);
-        console.log("country", country);
-        // console.log("service_type", service_type);
-        console.log("service_type", service_type_name);
-        console.log("service_type_id", product_category_id);        
-        console.log("service_name", service_name);
-        console.log("service_name_in_arabic", service_name_in_arabic);
-        console.log("short_description", short_description);
-        console.log("short_description_in_arabic", short_description_in_arabic);
-        console.log("detail_description", detail_description);
-        console.log("detail_description_in_arabic", detail_description_in_arabic);
-        console.log("price", price);
-        console.log("special_price", special_price);
-        console.log("service_id", service_id);
-        console.log("removed_images", removed_images);
-        console.log("is_feature", is_feature);
-        console.warn("is_weekend_work", is_weekend);
+    uploadTocloud(){
+    const { service_type , service_name, service_name_in_arabic,
+        short_description_in_arabic, detail_description_in_arabic,
+        price_in_arabic, special_price_in_arabic, short_description,
+        detail_description, price, special_price,Imagepath,  u_id, country} = this.state;
         if(this.validate()) {
             this.setState({
                 visibleModal : true
             });
-            console.log("Imagepath:=",Imagepath);
-
-            var paramBlock = [...Imagepath,
+            RNFetchBlob.fetch('POST', Utils.gurl('addService'),{
+                Authorization : "Bearer access-token",
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            [...Imagepath,
                 { name : 'u_id', data: String(u_id)},
                 { name : 'country', data: String(country)},
-                // { name : 'service_type', data: String(service_type)},
-                { name : 'service_type', data: String(service_type_name)},
-                { name : 'service_type_id', data: String(product_category_id)},
+                { name : 'service_type', data: String(service_type)},
                 { name : 'service_name', data: String(service_name)},
                 { name : 'service_name_in_arabic', data: String(service_name_in_arabic)},
                 { name : 'short_description', data: String(short_description)},
@@ -355,93 +268,21 @@ class EditService extends Component {
                 { name : 'detail_description_in_arabic', data: String(detail_description_in_arabic)},
                 { name : 'price', data: String(price)},
                 { name : 'price_in_arabic', data: String(price)},
-                { name : 'special_price_in_arabic', data: String(special_price)},
                 { name : 'special_price', data: String(special_price)},
-                { name : 'service_id', data: String(service_id)},
-                { name : 'removed_images', data: removed_images.toString()},
-                { name : 'is_feature', data: String(is_feature)},
-                { name : 'is_weekend', data: String(is_weekend)},
-            ]
-            console.log("paramBlock:=",paramBlock)
-            RNFetchBlob.fetch('POST', Utils.gurl('editService'),{
-                Authorization : "Bearer access-token",
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            // [...Imagepath,
-            //     { name : 'u_id', data: String(u_id)},
-            //     { name : 'country', data: String(country)},
-            //     // { name : 'service_type', data: String(service_type)},
-            //     { name : 'service_type', data: String(service_type_name)},
-            //     { name : 'service_type_id', data: String(product_category_id)},
-            //     { name : 'service_name', data: String(service_name)},
-            //     { name : 'service_name_in_arabic', data: String(service_name_in_arabic)},
-            //     { name : 'short_description', data: String(short_description)},
-            //     { name : 'short_description_in_arabic', data: String(short_description_in_arabic)},
-            //     { name : 'detail_description', data: String(detail_description)},
-            //     { name : 'detail_description_in_arabic', data: String(detail_description_in_arabic)},
-            //     { name : 'price', data: String(price)},
-            //     { name : 'price_in_arabic', data: String(price)},
-            //     { name : 'special_price_in_arabic', data: String(special_price)},
-            //     { name : 'special_price', data: String(special_price)},
-            //     { name : 'service_id', data: String(service_id)},
-            //     { name : 'removed_images', data: removed_images.toString()},
-            //     { name : 'is_feature', data: String(is_feature)},
-            //     { name : 'is_weekend', data: String(is_weekend)},
-            // ]
-            paramBlock
-            )
+                { name : 'special_price_in_arabic', data: String(special_price)},
+            ])
             .uploadProgress((written, total) => {
-                console.log('uploaded', Math.floor(written/total*100) + '%')
+                console.warn('uploaded', Math.floor(written/total*100) + '%')
             })
-            .then((res)=>{
-                console.log(res);
-                var getdata = JSON.parse(res.data);
-                if(getdata.status){
-                    MessageBarManager.showAlert({
-                        message: I18n.t('vendoraddservice.updateSuccess', { locale: lang }),
-                        alertType: 'extra',
-                        title:'',
-                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-                    })
-                    this.setState({
-                        visibleModal : false
-                    })
-                    EventEmitter.emit("serviceList")
-                    if (this.state.is_from_featureList === true) {
-                        routes.pop()
-                    }
-                    else {
-                        routes.service();
-                    }
-                }else{
-                    MessageBarManager.showAlert({
-                        message: I18n.t('vendoraddservice.updateSuccess', { locale: lang }),
-                        alertType: 'extra',
-                        title:'',
-                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                        messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-                    })
-                    this.setState({
-                        visibleModal : false
-                    })
-                }
-            })
+            .then((res)=> this.setState({
+                visibleModal : false
+            }))
             .catch((errorMessage, statusCode) => {
-                // console.warn(errorMessage);
-                // routes.service();
                 MessageBarManager.showAlert({
-                    message: I18n.t('vendoraddservice.updatefail', { locale: lang }),
-                    alertType: 'extra',
-                    title:'',
-                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                    message: errorMessage,
+                    alertType: 'warning',
+                    title:''
                 })
-                this.setState({
-                    visibleModal : false
-                })
-                console.log(errorMessage);
             })
             .done();
         }
@@ -452,33 +293,34 @@ class EditService extends Component {
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-            skipBackup: true
+                skipBackup: true
             }
         };
         ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
             if (response.didCancel) {
-            console.log('User cancelled photo picker');
+                console.log('User cancelled photo picker');
             }
             else if (response.error) {
-              console.log('ImagePicker Error: ', response.error);
+                console.log('ImagePicker Error: ', response.error);
             }
             else if (response.customButton) {
-              console.log('User tapped custom button: ', response.customButton);
+                console.log('User tapped custom button: ', response.customButton);
             }
-           else {
-             let url = response.uri
-             let path =
-               (Platform.OS === 'ios')?
-                   url.replace(/^file:\/\//, '') : response.uri
-
-       let source = {
-        name : 'service_images[]',
-        filename : response.fileName,
-        data: RNFetchBlob.wrap(path),
-        uri: response.uri ,
-        // name: response.fileName,
-        type: 'image/jpg'};
+            else {
+                let name = response.fileName
+                let url = response.uri
+                let path =
+                (Platform.OS === 'ios')?
+                url.replace(/^file:\/\//, '') : response.uri
+                let source = {
+                    name : 'service_images[]',
+                    filename : response.fileName,
+                    data: RNFetchBlob.wrap(path),
+                    uri: response.uri ,
+                    // name: response.fileName,
+                    type: 'image/jpg'
+                };
 
                 let uri = response.uri;
                 this.setState({
@@ -491,69 +333,75 @@ class EditService extends Component {
                 var newPathArray = this.state.Imagepath.slice();
                 newStateArray.push(source);
                 newPathArray.push(source);
-                    this.setState({
-                        rows: newStateArray,
-                        Imagepath: newPathArray
-                    });
+                this.setState({
+                    rows: newStateArray,
+                    Imagepath: newPathArray
+                });
             }
         });
     }
-    getResponse(rows){
-        this.setState({rows});
-    }
-    getRemoveresponse(result){
-        var arrayvar = this.state.removed_images.slice()
-        arrayvar.push(result)
-        this.setState({ removed_images: arrayvar })
-    }
     render() {
-        const { lang } =this.props,
-        { imageSelect, quantityRows, sizeRows, languageChoose, is_weekend} = this.state,
-        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d',
+        const { imageSelect, quantityRows, sizeRows, Imagepath, languageChoose} = this.state,
+        { lang } =this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
-
+        borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
         let is_feature;
-        if(this.state.is_feature === '0' ){
-            is_feature = false
-        } else {
-            is_feature = true
-        }
-        let is_weekend_work,
-            weekend_work_value;
-        if(is_weekend === '0'){
-            is_weekend_work = "checkbox-blank-outline";
-            weekend_work_value = '1';
-        } else {
-            is_weekend_work = "checkbox-marked";
-            weekend_work_value = '0';
-        }
-
+        if(this.state.is_feature === '0' ){ is_feature = false} else { is_feature = true}
+        let is_weekend_work;
+        if(this.state.is_weekend === true){ is_weekend_work = "checkbox-marked"} else {is_weekend_work = "checkbox-blank-outline"}
         return (
             <ScrollView
-            contentContainerStyle={commonStyles.container}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'handled'}>
-            <RadioGroup
-                size={15}
-                thickness={1}
-                color='#a9d5d1'
-                highlightColor='transparent'
-                // selectedIndex={langIndex}
-                onSelect = {(index, value) => this.onSelect(index, value)}
-                style={{flexDirection: 'row', justifyContent: 'space-around'}}
+                contentContainerStyle={{
+                    backgroundColor: 'transparent',
+                    paddingBottom:30,
+                    width: width,
+                    padding: 10
+                }}//commonStyles.container}
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps={'handled'}
+                automaticallyAdjustContentInsets={false}
+                directionalLockEnabled = {true}
+                horizontal = {false}
+                ref={'scrView'}
                 >
+                <View style={commonStyles.ImageAdd}>
+                    <Text style={{color: borderColorImage, marginBottom : 10, marginTop:20}}>{I18n.t('vendoraddservice.selectserviceimg', { locale: lang })}</Text>
+                    <Text style={[commonStyles.label,{ textAlign: textline, marginBottom : 10}]}>{I18n.t('vendoraddservice.uploadpicture', { locale: lang })}</Text>
 
-                <RadioButton value='en' >
-                    <Text>English</Text>
-                </RadioButton>
-                <RadioButton value='ar'>
-                    <Text>Arabic</Text>
-                </RadioButton>
-            </RadioGroup>
+                    <View style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: '#a9d5d1'}}>
+                        <Feather onPress={this.selectPhotoTapped.bind(this)}
+                            name="upload-cloud" size= {30} style={{padding :30, marginBottom:20 }} />
 
-                <View style={[commonStyles.formItems, { paddingRight : 25}]}>
+                        </View>
+                    <View style={{  top: 10, flexDirection:'row', marginBottom :20}}>
+                        { this.state.avatarSource === null ? undefined :
+                            <SelectedImage
+                            productImages={this.state.rows}
+                            />
+                        }
+                    </View>
+                </View>
+                <RadioGroup
+                    size={15}
+                    thickness={1}
+                    color='#a9d5d1'
+                    highlightColor='transparent'
+                    // selectedIndex={langIndex}
+                    selectedIndex={0}
+                    onSelect = {(index, value) => this.onSelect(index, value)}
+                    style={{flexDirection: 'row', justifyContent: 'space-around'}}
+                    >
+
+                    <RadioButton value='en' >
+                        <Text>English</Text>
+                    </RadioButton>
+                    <RadioButton value='ar'>
+                        <Text>Arabic</Text>
+                    </RadioButton>
+                </RadioGroup>
+                <View style={commonStyles.formItems}>
                     {/* --------------------------service Type start-----------*/}
                     {(languageChoose === 'ar') ?
                         <View style={commonStyles.textField}>
@@ -581,15 +429,15 @@ class EditService extends Component {
                         :
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: languageChoose })}</Text>
+                                <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: lang })}</Text>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
-                            {/* <TextInput
+                            <TextInput
                                 style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                                 value={this.state.service_type}
                                 underlineColorAndroid = 'transparent'
                                 autoCorrect={false}
-                                placeholder={I18n.t('vendoraddservice.servicetype', { locale: languageChoose })}
+                                placeholder={I18n.t('vendoraddservice.servicetype', { locale: lang })}
                                 maxLength={140}
                                 onSubmitEditing={() => {
                                     this.focusNextField('two');
@@ -599,33 +447,7 @@ class EditService extends Component {
                                     this.inputs['one'] = input;
                                 }}
                                 onChangeText={(service_type) => this.setState({service_type})}
-                                /> */}
-
-                            <TouchableOpacity style={{
-                                        borderRadius : 5,
-                                        padding : 5,
-                                        // margin : 15,
-                                        borderWidth : 1,
-                                        borderColor : '#ccc',
-                                        width : width-56,
-                                        // marginTop:5
-                                    }} onPress={this.showActionSheet}>
-                                    <Text style={{
-                                            textAlign: textline, 
-                                            paddingVertical:5, 
-                                            textAlign: languageChoose == 'ar'? 'right': 'left',
-                                            // backgroundColor:'red'
-                                        }}>
-                                        { this.state.product_category ? this.state.options[this.state.product_category] : I18n.t('vendoraddservice.selectServiceType', { locale: lang })}
-                                    </Text>
-                                    <ActionSheet
-                                        ref={o => this.ActionSheet = o}
-                                        title={title}
-                                        options={this.state.options}
-                                        cancelButtonIndex={CANCEL_INDEX}
-                                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
-                                        onPress={this.handlePress}/>
-                            </TouchableOpacity>
+                                />
                         </View>
                     }
                     {/* --------------------------service Type end-----------*/}
@@ -786,30 +608,29 @@ class EditService extends Component {
                         </View>
                     }
                     {/* --------------------------service price start-----------*/}
-
-                        <View style={commonStyles.textField}>
-                            <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
-                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.pricelbl', { locale: languageChoose })}</Text>
-                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
-                            </View>
-                            <TextInput
-                            style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10, paddingRight:10}]}
-                            value={this.state.price}
-                            keyboardType={'numeric'}
-                            underlineColorAndroid = 'transparent'
-                            autoCorrect={false}
-                            placeholder={I18n.t('vendoraddservice.price', { locale: languageChoose })}
-                            maxLength={7}
-                            onSubmitEditing={() => {
-                                this.focusNextField('six');
-                            }}
-                            returnKeyType={ "next" }
-                            ref={ input => {
-                                this.inputs['five'] = input;
-                            }}
-                            onChangeText={(price) => this.setState({price})}
-                            />
+                    <View style={commonStyles.textField}>
+                        <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
+                            <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.pricelbl', { locale: languageChoose })}</Text>
+                            <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                         </View>
+                        <TextInput
+                        style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10, paddingRight:10}]}
+                        value={this.state.price}
+                        keyboardType={'numeric'}
+                        underlineColorAndroid = 'transparent'
+                        autoCorrect={false}
+                        placeholder={I18n.t('vendoraddservice.price', { locale: languageChoose })}
+                        maxLength={7}
+                        onSubmitEditing={() => {
+                            this.focusNextField('six');
+                        }}
+                        returnKeyType={ "next" }
+                        ref={ input => {
+                            this.inputs['five'] = input;
+                        }}
+                        onChangeText={(price) => this.setState({price})}
+                        />
+                    </View>
                     {/* --------------------------service price end-----------*/}
                     {/* --------------------------service special start-----------*/}
                         <View style={commonStyles.textField}>
@@ -833,79 +654,41 @@ class EditService extends Component {
                             />
                         </View>
                     {/* --------------------------service special price end-----------*/}
-                    <View style={[commonStyles.feature, { flexDirection: direction,marginTop:10}]}>
-                        <View style={{ width: '80%', flexDirection: direction}}>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>{I18n.t('vendoraddservice.isfeature', { locale: lang })}</Text>
-                            <Text style={[commonStyles.label,{ textAlign: textline}]}>*</Text>
-                        </View>
-                        <Switch
-                            value={is_feature}
-                            onValueChange={(val) =>
-                                this.setState({ is_feature : val ? "2" : "0"})
-                            }
-                            disabled={false}
-                            activeText={'On'}
-                            inActiveText={'Off'}
-                            backgroundActive={'green'}
-                            backgroundInactive={'gray'}
-                            circleActiveColor={'#30a566'}
-                            circleInActiveColor={'#000000'}/>
-                    </View>
-                    <TouchableWithoutFeedback style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]}
-                        onPress={()=> this.setState({
-                            is_weekend : weekend_work_value,
-                        })}>
-                        <View style={{ flexDirection: direction}}>
-                            <Text style={[commonStyles.label, { textAlign: textline, width:width-90}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })} *</Text>
-                            <Icon name={is_weekend_work} size={20} style={{marginTop:8}}/>
-                        </View>
-                    </TouchableWithoutFeedback>
-
-                    <View style={{  top: 10, marginBottom : 10 ,flexDirection:direction}}>
-                        {
-                            Platform.OS === 'ios' ?
-                            <TouchableOpacity
-                            onPress={this.selectPhotoTapped.bind(this)}>
-                            <View style={{ }}>
-                                <Feather
-                                    name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                                    <Text>Click here</Text>
-                            </View>
-                            </TouchableOpacity>
-                            :
-                            <TouchableNativeFeedback
-                                onPress={this.selectPhotoTapped.bind(this)}
-                                background={TouchableNativeFeedback.SelectableBackground()}>
-                                <View style={{ }}>
-                                <Feather
-                                    name="upload-cloud" size= {30} style={{ padding:20 }}/>
-                                    <Text>Click here</Text>
-                            </View>
-                            </TouchableNativeFeedback>
-                        }
-                        <Editimage
-                            productImages={this.state.rows}
-                            callback={this.getResponse.bind(this)}
-                            getremovedata= {this.getRemoveresponse.bind(this)}
-                            />
-                    </View>
                 </View>
-            <TouchableOpacity onPress={() => this.uploadTocloud() } style={{
-                height:54,
-                marginTop : 20,
-                justifyContent :'center',
-                alignItems :'center',
-                backgroundColor:'#a9d5d1'
-            }} >
-            <Text style={{color : '#fff', fontWeight:'bold'}}>{I18n.t('vendoraddservice.editButton', { locale: lang })}</Text>
-            </TouchableOpacity>
+                <View style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]}>
+                    <View style={{ flexDirection: direction}}>
+                        <Text style={[commonStyles.label, { textAlign: textline}]}>{I18n.t('vendoraddservice.isfeature', { locale: lang })}</Text>
+                        <Text style={[commonStyles.label, { textAlign: textline}]}>*</Text>
+                    </View>
+                    <Switch
+                        value={is_feature}
+                        onValueChange={(val) =>
+                            this.setState({ is_feature : val ? "2" : "0"})
+                        }
+                        disabled={false}
+                        activeText={'On'}
+                        inActiveText={'Off'}
+                        backgroundActive={'green'}
+                        backgroundInactive={'gray'}
+                        circleActiveColor={'#30a566'}
+                        circleInActiveColor={'#000000'}
+                        />
+                </View>
+                <TouchableWithoutFeedback style={[commonStyles.feature,{paddingTop:10,paddingRight:10, flexDirection: direction}]} onPress={()=> this.setState({
+                        is_weekend : !this.state.is_weekend
+                    })}>
+                    <View style={{ flexDirection: direction}}>
+                        <Text style={[commonStyles.label, { textAlign: textline, width:width-60}]}>{I18n.t('vendoraddservice.weekendlabel', { locale: lang })} *</Text>
+                        <Icon name={is_weekend_work} size={20} style={{marginTop:8}}/>
+                    </View>
+                </TouchableWithoutFeedback>
+
+                {Platform.OS === 'ios'? <KeyboardSpacer/> : undefined}
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
-                    <CirclesLoader />
-
-                </View>
-            </Modal>
-
+                        <CirclesLoader />
+                    </View>
+                </Modal>
             </ScrollView>
         )
     }
@@ -913,8 +696,6 @@ class EditService extends Component {
 function mapStateToProps(state) {
     return {
         lang: state.auth.lang,
-        country: state.auth.country,
-        u_id: state.identity.u_id,
     }
 }
-export default connect(mapStateToProps)(EditService);
+export default connect(mapStateToProps)(AddService);

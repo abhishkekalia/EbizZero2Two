@@ -36,7 +36,7 @@ import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button';
 
 const CANCEL_INDEX = 0
 const DESTRUCTIVE_INDEX = 4
-const title = 'Select Category'
+const title = 'Select Type'
 
 import SelectedImage from './SelectedImage';
 
@@ -70,10 +70,17 @@ class AddService extends Component {
             rows : [] ,
             Imagepath : [],
             languageChoose: 'en',
-            is_feature: ''
+            is_feature: '',
+            options : ['0','1'],
+            optionsAvailable: [],
+            product_category: '',
+            product_category_id:'',
+            service_type_name:'',
         }
         this.inputs = {};
         this.onSelect = this.onSelect.bind(this)
+        this.handlePress = this.handlePress.bind(this)
+        this.showActionSheet = this.showActionSheet.bind(this)
     }
     onSelect(index, value){
       console.warn("radio val",value);
@@ -86,6 +93,7 @@ class AddService extends Component {
     }
     componentDidMount(){
         this.getKey()
+        .then(()=>this.getServiceType())
         .done();
     }
     componentWillMount() {
@@ -123,8 +131,66 @@ class AddService extends Component {
             console.log("Error retrieving data" + error);
         }
     }
+
+    getServiceType(){
+        const { u_id, country,} = this.state;
+        let formData = new FormData();
+        formData.append('u_id', String(u_id));
+        formData.append('country', String(country));
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data;',
+            },
+            body: formData,
+        }
+        console.log("Request ServiceTypeList:=",config)
+        fetch(Utils.gurl('ServiceTypeList'), config)
+        .then((response) => response.json())
+        .then((responseData) => {
+            console.log("Response ServiceTypeList:=",responseData.data)
+            if(responseData.status){
+                var data = responseData.data,
+                length = data.length,
+                optionsList= []
+                optionsList.push('Cancel');
+                for(var i=0; i < length; i++) {
+                    order = data[i];
+                    category_name = order.name;
+                    optionsList.push(category_name);
+                }
+                this.setState({
+                    options : optionsList,
+                    optionsAvailable : responseData.data
+                })
+            }
+        })
+        .catch((errorMessage, statusCode) => {
+            console.log(errorMessage);
+        })
+        .done();
+    }
+
+    handlePress(i) {
+        if (i > 0) {
+            console.log("Selected Type:=",i)
+            var data = this.state.optionsAvailable[i-1]
+            console.log("Selected Type:=",data.id)
+            this.setState({
+                product_category: i,
+                product_category_id: data.id,
+                service_type_name: data.name,
+            })
+        }
+    }
+
+    showActionSheet() {
+        this.ActionSheet.show()
+    }
+
     validate(){
-        const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic, price_in_arabic, special_price_in_arabic, short_description, detail_description, price, special_price,Imagepaths, Imagepath} = this.state;
+        const { service_type , service_name, service_name_in_arabic, short_description_in_arabic, detail_description_in_arabic, price_in_arabic, special_price_in_arabic, short_description, detail_description, price, special_price,Imagepaths, Imagepath, product_category_id} = this.state;
         const { lang } = this.props,
         align = (lang === 'ar') ?  'right': 'left';
 
@@ -139,7 +205,18 @@ class AddService extends Component {
             })
             return false
         }
-        if (!service_type.length){
+        // if (!service_type.length){
+        //     MessageBarManager.showAlert({
+        //         message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
+        //         alertType: 'extra',
+        //         title:'',
+        //         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //         messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+        //     })
+        //     return false
+        // }
+
+        if (!product_category_id.length){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.servicetypeerr', { locale: lang }),
                 alertType: 'extra',
@@ -149,6 +226,7 @@ class AddService extends Component {
             })
             return false
         }
+        
         if (!service_name.length){
             MessageBarManager.showAlert({
                 message: I18n.t('vendoraddservice.servicenameerr', { locale: lang }),
@@ -246,7 +324,7 @@ class AddService extends Component {
     const { service_type , service_name, service_name_in_arabic,
         short_description_in_arabic, detail_description_in_arabic,
         price_in_arabic, special_price_in_arabic, short_description,
-        detail_description, price, special_price,Imagepath,  u_id, country} = this.state;
+        detail_description, price, special_price,Imagepath,  u_id, country, product_category_id, service_type_name} = this.state;
         if(this.validate()) {
             this.setState({
                 visibleModal : true
@@ -259,7 +337,9 @@ class AddService extends Component {
             [...Imagepath,
                 { name : 'u_id', data: String(u_id)},
                 { name : 'country', data: String(country)},
-                { name : 'service_type', data: String(service_type)},
+                // { name : 'service_type', data: String(service_type)},
+                { name : 'service_type', data: String(service_type_name)},
+                { name : 'service_type_id', data: String(product_category_id)},                
                 { name : 'service_name', data: String(service_name)},
                 { name : 'service_name_in_arabic', data: String(service_name_in_arabic)},
                 { name : 'short_description', data: String(short_description)},
@@ -274,9 +354,30 @@ class AddService extends Component {
             .uploadProgress((written, total) => {
                 console.warn('uploaded', Math.floor(written/total*100) + '%')
             })
-            .then((res)=> this.setState({
-                visibleModal : false
-            }))
+            .then((res)=>{ 
+                    this.setState({
+                        visibleModal : false
+                    })
+                    console.log("Response addService:=",res)
+                    var responseData = JSON.parse(res.data)
+                    console.log("responseData:=",responseData)
+                    if (responseData.response.status == true) {
+                        MessageBarManager.showAlert({
+                            message: responseData.response.data.message,
+                            alertType: 'warning',
+                            title:''
+                        })
+                        routes.service()
+                    }
+                    else {
+                        MessageBarManager.showAlert({
+                            message: responseData.response.data.message,
+                            alertType: 'warning',
+                            title:''
+                        })
+                    }
+                }
+            )
             .catch((errorMessage, statusCode) => {
                 MessageBarManager.showAlert({
                     message: errorMessage,
@@ -409,7 +510,7 @@ class AddService extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: languageChoose })}</Text>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
-                            <TextInput
+                            {/* <TextInput
                                 style={[commonStyles.inputusername, { borderRadius : 5,textAlign: languageChoose == 'ar'? 'right': 'left', paddingRight:10}]}
                                 value={this.state.service_type}
                                 underlineColorAndroid = 'transparent'
@@ -424,7 +525,32 @@ class AddService extends Component {
                                     this.inputs['one'] = input;
                                 }}
                                 onChangeText={(service_type) => this.setState({service_type})}
-                                />
+                                /> */}
+                            <TouchableOpacity style={{
+                                        borderRadius : 5,
+                                        padding : 5,
+                                        // margin : 15,
+                                        borderWidth : 1,
+                                        borderColor : '#ccc',
+                                        width : width-40,
+                                        // marginTop:5
+                                    }} onPress={this.showActionSheet}>
+                                    <Text style={{
+                                            textAlign: textline, 
+                                            paddingVertical:5, 
+                                            textAlign: languageChoose == 'ar'? 'right': 'left',
+                                            // backgroundColor:'red'
+                                        }}>
+                                        { this.state.product_category ? this.state.options[this.state.product_category] : I18n.t('vendoraddservice.selectServiceType', { locale: lang })}
+                                    </Text>
+                                    <ActionSheet
+                                        ref={o => this.ActionSheet = o}
+                                        title={title}
+                                        options={this.state.options}
+                                        cancelButtonIndex={CANCEL_INDEX}
+                                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                                        onPress={this.handlePress}/>
+                                </TouchableOpacity>
                         </View>
                         :
                         <View style={commonStyles.textField}>
@@ -432,7 +558,7 @@ class AddService extends Component {
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.servicetypelbl', { locale: lang })}</Text>
                                 <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
                             </View>
-                            <TextInput
+                            {/* <TextInput
                                 style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10}]}
                                 value={this.state.service_type}
                                 underlineColorAndroid = 'transparent'
@@ -447,7 +573,31 @@ class AddService extends Component {
                                     this.inputs['one'] = input;
                                 }}
                                 onChangeText={(service_type) => this.setState({service_type})}
-                                />
+                                /> */}
+                                <TouchableOpacity style={{
+                                        borderRadius : 5,
+                                        padding : 5,
+                                        // margin : 15,
+                                        borderWidth : 1,
+                                        borderColor : '#ccc',
+                                        width : width-40,
+                                        // marginTop:5
+                                    }} onPress={this.showActionSheet}>
+                                    <Text style={{
+                                            textAlign: textline, 
+                                            paddingVertical:5, 
+                                            // backgroundColor:'red'
+                                        }}>
+                                        { this.state.product_category ? this.state.options[this.state.product_category] : I18n.t('vendoraddservice.selectServiceType', { locale: lang })}
+                                    </Text>
+                                    <ActionSheet
+                                        ref={o => this.ActionSheet = o}
+                                        title={title}
+                                        options={this.state.options}
+                                        cancelButtonIndex={CANCEL_INDEX}
+                                        // destructiveButtonIndex={DESTRUCTIVE_INDEX}
+                                        onPress={this.handlePress}/>
+                                </TouchableOpacity>
                         </View>
                     }
                     {/* --------------------------service Type end-----------*/}

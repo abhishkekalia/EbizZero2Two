@@ -208,7 +208,8 @@ class MyProduct extends Component {
                             discount: data.discount,
                             final_price: data.final_price,
                             is_feature: data.is_feature,
-                            productImages: data.productImages
+                            productImages: data.productImages,
+                            is_from_featureList: false,
                         })}>
                         <Image style={[styles.thumb, {margin: 10}]}
                             resizeMode={"stretch"}

@@ -459,7 +459,8 @@
         "updateSuccess":"تم تحديث المنتج بنجاح",
         "updatefail":"فشل في تحميل المنتج",
         "editButton" : "تحديث",
-        "weekendlabel" : "هل تعمل في عطلة نهاية الأسبوع"
+        "weekendlabel" : "هل تعمل في عطلة نهاية الأسبوع",
+        "selectServiceType" : "Select Service Type"
     },
     "productorder":{
         "orderTitle":"طلباتي",
@@ -524,7 +525,8 @@
         "serviceId":"Service Id",
         "featuredTab":"Featured",
         "featuredProductTabCaption":"Featured Product",
-        "featuredServiceTabCaption":"Featured Service"
+        "featuredServiceTabCaption":"Featured Service",
+        "serviceRemoceFeature":"Service Removed from featured list"
     },
     "scheduleService":{
         "serviceTitle":"جدول",

@@ -97,9 +97,11 @@ export default class Myfeaturefaturah extends Component {
             },
             body: formData,
         }
+        console.log("Request featurePayment:=",config)
         fetch(Utils.gurl('featurePayment'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("Response featurePayment:=",responseData)
             if(responseData.status){
                 MessageBarManager.showAlert({
                     message: I18n.t('marketing.myAdFaturah.productaddtofeature', { locale: language }),
@@ -108,7 +110,7 @@ export default class Myfeaturefaturah extends Component {
                     titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
                     messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                 })
-
+                // routes.pop();
             }
         })
         .catch((error) => {

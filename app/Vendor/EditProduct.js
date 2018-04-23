@@ -75,6 +75,7 @@ class EditProduct extends Component {
             languageChoose: '',
             options : ['0','1'],
             optionsAvailable: [],
+            is_from_featureList: this.props.is_from_featureList,
         }
         this.inputs = {};
         this.handlePress = this.handlePress.bind(this)
@@ -378,7 +379,13 @@ class EditProduct extends Component {
                     this.setState({
                         visibleModal : false
                     })
-                    routes.product()
+                    if (this.state.is_from_featureList === true) {
+                        routes.pop()
+                    }
+                    else {
+                        routes.product()
+                    }
+                    
                 }else{
                     MessageBarManager.showAlert({
                         message: I18n.t('vendoraddproduct.updatefail', { locale: lang }),

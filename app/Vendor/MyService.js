@@ -165,7 +165,10 @@ class MyService extends Component {
                         special_price: special_price,
                         is_active: data.is_active,
                         is_weekend:data.is_weekend,
-                        serviceImages: data.serviceImages
+                        serviceImages: data.serviceImages,
+                        is_from_featureList: false,
+                        service_type_id: data.service_type_id,
+                        
                     })}>
 
                     <Image style={[styles.thumb, {margin: 10}]}

@@ -116,11 +116,15 @@ export default class FeaturedProduct extends Component {
                 }}> {I18n.t('venderprofile.featuredProductTabCaption', { locale: lang })} :</Text>
                 {listView}
                 {/* Uncomment After Uploading on Appstore */}
-                {/* <Text style={{
-                    fontWeight:'bold',
-                    marginVertical: 5
-                }}> {I18n.t('venderprofile.featuredServiceTabCaption', { locale: lang })} :</Text> */}
+                
+                {this.props.featureService.length > 0 ?
+                    <Text style={{
+                        fontWeight:'bold',
+                        marginVertical: 5
+                    }}> {I18n.t('venderprofile.featuredServiceTabCaption', { locale: lang })} :</Text>
+                    : undefined}
                 {listViewService}
+                
             </View>
         );
     }
@@ -172,7 +176,8 @@ export default class FeaturedProduct extends Component {
                         discount: data.discount,
                         final_price: data.final_price,
                         is_feature: data.is_feature,
-                        productImages: data.productImages
+                        productImages: data.productImages,
+                        is_from_featureList: true,
                     })}>
                     <Image style={[styles.thumb, {margin: 10}]}
                         resizeMode={"stretch"}
@@ -234,9 +239,9 @@ export default class FeaturedProduct extends Component {
                         borderBottomWidth : 1,
                         borderColor : "#ccc",
                     }}
-                    onPress={()=>routes.editproduct({
+                    onPress={()=>routes.editservice({
                         u_id : this.state.u_id,
-                        country : this.state.country
+                        country : this.state.country,
                         // product_id: data.product_id,
                         // product_category:data.product_category,
                         // product_name: data.product_name,
@@ -253,6 +258,20 @@ export default class FeaturedProduct extends Component {
                         // final_price: data.final_price,
                         // is_feature: data.is_feature,
                         // productImages: data.productImages
+                        service_id: data.service_id,
+                        service_type:data.service_type,
+                        service_name: data.service_name,
+                        service_name_in_arabic: data.service_name_in_arabic,
+                        detail_description: data.detail_description,
+                        short_description_in_arabic: data.short_description_in_arabic,
+                        short_description: data.short_description,
+                        detail_description_in_arabic: data.detail_description_in_arabic,
+                        price: price,
+                        special_price: special_price,
+                        is_active: data.is_active,
+                        is_weekend:data.is_weekend,
+                        serviceImages: data.serviceImages,
+                        is_from_featureList: true,
                     })}>
                     <Image style={[styles.thumb, {margin: 10}]}
                         resizeMode={"stretch"}
@@ -440,68 +459,73 @@ class FooterService extends Component{
         }
     }
     manageFeature(){
-        const {u_id, country, product_id} = this.props;
+        const {u_id, country, service_id} = this.props;
         const {is_feature} = this.state;
+        console.log("manageFeature from service",is_feature)
         if(is_feature === "2"){
             this.setState({ is_feature : "1" })
 
-            // let form = new FormData();
-        	// form.append('u_id', String(u_id));
-        	// form.append('country', String(country));
-            // form.append('product_id',String(product_id));
-            // form.append('amount',"10");
-            // const config = {
-           	//     method: 'POST',
-           	//     headers: {
-           	//         'Accept': 'application/json',
-            //         'Content-Type': 'multipart/form-data;'
-            //     },
-            //     body: form,
-            // }
-            // fetch(Utils.gurl('addToFeature'), config)
-            // .then((response) => response.json())
-            // .then((responseData) => {
-            //     if(responseData.status){
-            //         let feature_id = responseData.data.feature_id;
-            //         let url = responseData.data.url;
-            //         routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id, amout:10})
-            //     }else{
-            //     }
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            // })
-            // .done();
+            let form = new FormData();
+        	form.append('u_id', String(u_id));
+        	form.append('country', String(country));
+            form.append('service_id',String(service_id));
+            form.append('amount',"10");
+            const config = {
+           	    method: 'POST',
+           	    headers: {
+           	        'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;'
+                },
+                body: form,
+            }
+            console.log("Request addToFeatureService:=",config)
+            fetch(Utils.gurl('addToFeatureService'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+                console.log("Response addToFeatureService:=",responseData)
+                if(responseData.status){
+                    let feature_id = responseData.data.feature_id;
+                    let url = responseData.data.url;
+                    routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id, amout:10})
+                }else{
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
         }else if(is_feature == "1"){
             this.setState({ is_feature : "2" })
-            // let form = new FormData();
-        	// form.append('u_id', String(u_id));
-        	// form.append('country', String(country));
-            // form.append('product_id',String(product_id));
-            // const config = {
-            //     method: 'POST',
-            //     headers: {
-            //         'Accept': 'application/json',
-            //         'Content-Type': 'multipart/form-data;'
-            //     },
-            //     body: form,
-            // }
-            // fetch(Utils.gurl('removeFromFeature'), config)
-            // .then((response) => response.json())
-            // .then((responseData) => {
-            //     if(responseData.status){
-            //         MessageBarManager.showAlert({
-            //             message: I18n.t('venderprofile.productremovefeature', { locale: lang }),
-            //             alertType: 'alert',
-            //             title:''
-            //         })
-            //     }else{
-            //     }
-            // })
-            // .catch((error) => {
-            //     console.log(error);
-            // })
-            // .done();
+            let form = new FormData();
+        	form.append('u_id', String(u_id));
+        	form.append('country', String(country));
+            form.append('service_id',String(service_id));
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;'
+                },
+                body: form,
+            }
+            console.log("Request removeFromFeatureService:=",config)
+            fetch(Utils.gurl('removeFromFeatureService'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+                console.log("Response removeFromFeatureService:=",responseData)
+                if(responseData.status){
+                    MessageBarManager.showAlert({
+                        message: I18n.t('venderprofile.productremovefeature', { locale: lang }),
+                        alertType: 'alert',
+                        title:''
+                    })
+                }else{
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
         }
     }
     render(){

@@ -227,10 +227,10 @@ class Product extends Component {
                         </View>
                     </Animated.View> :
                     <View style={{ shadowColor: "#000",shadowOffset:{height: 0.5}, shadowRadius: 0.5, height: Platform.OS === 'ios' ? 64 : 54, backgroundColor: "#a9d5d1", flexDirection: direction, justifyContent: 'space-between', alignItems: 'center'}}>
-                        <View style={{ width:"20%",  }}/>
-                            <View style={{ width:"60%",justifyContent: 'center',alignItems: 'center', paddingTop: Platform.OS === 'ios' ? 5 : 0}}>
-                            <Text style={{ color: "#fff", fontSize: 20, fontWeight: 'bold'}}>{I18n.t("vendorproducts.productTitle", { locale: lang })}</Text>
-                        </View>
+                        <View style={{ width:"20%",}}/>
+                            <View style={{ width:"60%",justifyContent: 'center',alignItems: 'center', paddingTop: Platform.OS === 'ios' ? 5 : 0, marginTop:10}}>
+                            <Text style={{ color: "#fff", fontSize: 17, fontWeight: 'bold'}}>{I18n.t("vendorproducts.productTitle", { locale: lang })}</Text>
+                            </View>
                         <View style={{ flexDirection:direction, width: "20%", paddingTop: Platform.OS === 'ios' ? 7 : 0}}>
                             <TouchableOpacity style={{
                                     justifyContent: 'center',

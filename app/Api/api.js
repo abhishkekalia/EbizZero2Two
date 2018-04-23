@@ -72,6 +72,7 @@ var api = {
             },
             body: formData,
         }
+        console.log("Request serviceList:=",config)
         return fetch(Utils.gurl('serviceList'), config).then((res) => res.json())
     },
     productList(u_id, country){

@@ -462,7 +462,8 @@
         "updateSuccess":"Product Update Successfully",
         "updatefail":"Product Upload Failed",
         "editButton" : "Update",
-        "weekendlabel" : "Are You Working on Weekends"
+        "weekendlabel" : "Are You Working on Weekends",
+        "selectServiceType" : "Select Service Type"
     },
     "productorder":{
         "orderTitle":"Order",
@@ -527,7 +528,8 @@
         "serviceId":"Service Id",
         "featuredTab":"Featured",
         "featuredProductTabCaption":"Featured Product",
-        "featuredServiceTabCaption":"Featured Service"
+        "featuredServiceTabCaption":"Featured Service",
+        "serviceRemoceFeature":"Service Removed from featured list"
     },
     "scheduleService":{
         "serviceTitle":"Schedule",
