@@ -6,6 +6,7 @@ import SettingsActions from 'app/Redux/SettingsRedux'
 
 function mapStateToProps(state) {
 	return {
+		country: state.auth.country,
 		language: state.auth.lang,
 		loading: state.auth.loading,
 		errorStatus: state.auth.errorStatus

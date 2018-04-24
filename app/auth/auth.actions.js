@@ -50,6 +50,7 @@ export const login = (username, password, os) => {
 						"user_type" : responseData.response.data.user_type
 					}
 				}));
+				AsyncStorage.setItem('isGuest','0');
 				let usr_type = responseData.response.data.user_type,
 				country = responseData.response.data.country,
 				u_id = responseData.response.data.u_id;
@@ -70,6 +71,7 @@ export const login = (username, password, os) => {
 	};
 };
 const successHome = (username, password ,usr_type, u_id, country) => {
+	console.log("usr_type:=",usr_type)
 	if(usr_type === "3"){
 		routes.vendortab()
 	}else{
@@ -83,6 +85,7 @@ const successHome = (username, password ,usr_type, u_id, country) => {
 			u_id : u_id,
 			deviceId:deviceId,
 			country:country,
+			isGuest:'0',
 			username,
 			password
 		}
@@ -117,10 +120,79 @@ const changeTo = (newLang) => {
 	}
 };
 
-export const skipSignIN = (deviceId) => {
+export const skipSignIN = (deviceId, country) => {
 	return dispatch => {
-		dispatch(skip(deviceId));
+		// dispatch(skip(deviceId));
+		dispatch(loginStart());
+		let formData = new FormData();
+		formData.append('country', String(country));
+		formData.append('deviceId', String(deviceId));
+		const config = {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'multipart/form-data;',
+			},
+			body: formData,
+		}
+		fetch(Utils.gurl('GuestUser'), config)
+		.then((response) => response.json())
+		.then((responseData) => {
+			console.log("Response GuestUser:=",responseData)
+			if (responseData.response.status) {
+				AsyncStorage.setItem('data', JSON.stringify({
+					"userdetail" : {
+						"u_id" : responseData.response.lastid ,
+						"fullname" : '' ,
+						"email" : '' ,
+						"phone_no" : '' ,
+						"country" : String(country) ,
+						"address" : '' ,
+						"u_name" : '' ,
+						"user_type" : String(2)
+					}
+				}));
+				AsyncStorage.setItem('isGuest','1');
+				let usr_type = 2,
+				countryNew = responseData.response.country_id,
+				u_id = responseData.response.lastid;
+				dispatch(successHomeGuest('', '', usr_type, u_id, countryNew));
+			} else {
+				// MessageBarManager.showAlert({
+				// 	message: "invalid username and password",
+				// 	alertType: 'error',
+				// 	title:''
+				// })
+				dispatch(loginFail(new Error('invalid user')));
+			}
+		})
+		.catch(err => {
+			console.log(err);
+		})
+		.done();
 	};
+};
+
+const successHomeGuest = (username, password ,usr_type, u_id, country) => {
+	console.log("usr_type:=",usr_type)
+	if(usr_type === "3"){
+		routes.vendortab()
+	}else{
+		routes.homePage();
+	}
+	return {
+		type: AUTH_LOGIN_SUCCESS,
+		payload: {
+			token: Math.random().toString(),
+			user_type : usr_type,
+			u_id : u_id,
+			deviceId:deviceId,
+			country:country,
+			isGuest:'1',
+			username,
+			password,
+		}
+	}
 };
 
 const skip = (deviceId) => {

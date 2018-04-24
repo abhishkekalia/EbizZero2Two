@@ -18,6 +18,7 @@ export default function auth(state = INITIAL_STATE, action) {
 				u_id: action.payload.u_id,
 				deviceId: action.payload.deviceId,
 				country: action.payload.country,
+				isGuest: action.payload.isGuest,
 			};
 		case types.AUTH_LOGIN_FAIL:
 			return {

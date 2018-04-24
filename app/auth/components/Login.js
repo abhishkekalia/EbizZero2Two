@@ -190,7 +190,8 @@ class Login extends Component {
 		this.props.languageChange(newLang)
 	}
 	onSkip(){
-		this.props.skipSignIN(deviceId)
+		console.log("country:=",this.props.country)
+		this.props.skipSignIN(deviceId,String(this.props.country))
 	}
 	render() {
 		const {errorStatus, loading, language, changeLanguage} = this.props;

@@ -264,9 +264,11 @@ class ProductDescription extends Component {
             },
             body: formData,
         }
+        console.log("Request productDetail:=",config)
         fetch(Utils.gurl('productDetail'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("Response productDetail",responseData)
             var Items = responseData.data.productImages,
             length = Items.length,
             organization,

@@ -78,6 +78,9 @@ class WelcomeScreen extends Component {
                 selectCountry: i.toString(),
                 SelectedcountryId: countryId
             })
+            console.log("i.toString()",i.toString())
+            console.log("countryId",countryId)
+
             // data = dataSource.filter((item)=>{
             //     return item.country_name == countries[i];
             // }).map((item)=>{

@@ -376,9 +376,10 @@ class MainView extends Component {
     }
     fetchData(){
         console.log("fetchData: called")
-        const {u_id, country, deviceId } = this.props;
+        const {u_id, country, deviceId, isGuest } = this.props;
         let formData = new FormData();
         console.log("u_id:=",u_id)
+        console.log("isGuest:=",isGuest)
         if (u_id) {
             formData.append('u_id', String(u_id));
         }
@@ -615,6 +616,8 @@ class MainView extends Component {
     }
     render() {
         const {u_id, country, deviceId ,lang} = this.props;
+        console.log("isGuest:=",this.props.isGuest)
+        console.log("country:=",this.props.country)
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
@@ -1744,6 +1747,7 @@ function mapStateToProps(state) {
         country: state.auth.country,
         u_id: state.identity.u_id,
         deviceId: state.auth.deviceId,
+        isGuest: state.auth.isGuest,
     }
 }
 export default connect(mapStateToProps)(MainView);
