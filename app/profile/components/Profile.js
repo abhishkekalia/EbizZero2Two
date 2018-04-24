@@ -83,11 +83,13 @@ class Profile extends Component {
                     'Content-Type': 'multipart/form-data;'
                 },
             	body: formData,
-            }
+			}
+		console.log("Request MyProfile:=",config)
         fetch(Utils.gurl('MyProfile'), config)
         .then((response) => response.json())
         .then((responseData) => {
-        this.setState({
+			console.log("Response MyProfile:=",responseData)
+        	this.setState({
 				isLoading : false,
             	status : responseData.response.status,
             	dataSource : responseData.response.data,

@@ -110,7 +110,8 @@
         "homeTitle":"انشاء حساب",
         "allshop":"كل المحلات",
         "services":"خدمات",
-        "noadvertise":"No Advertise For You","_comment":"not existing, it should be circles with zero2two logo",
+        "noadvertise":"No Advertise For You",
+        "_comment":"not existing, it should be circles with zero2two logo",
         "allitem":"كل المنتجات",
         "allservice":"كل الخدمات",
         "wishlistmsg1":"تم إضافة المنتج في قائمة الأمنيات",
@@ -180,7 +181,10 @@
         "share":"شارك للاصدقاء",
         "rateus":"قيم تجربتك معنا على متجر أبل",
         "marketing":" التسويق",
-        "logout":"تسجيل الخروج"
+        "logout":"تسجيل الخروج",
+        "logoutConfirm":"Are you sure to logout?",
+        "cancel":"الغاء",
+        "ok":"تم"
     },
     "wishlist":{
         "wishlistTitle":"المفضلة",
@@ -476,7 +480,9 @@
         "deliveryAddress":"Delivery Address",
         "landmark":"Landmark",
         "town":"Town",
-        "state":"State"
+        "state":"State",
+        "mobileno":"اتصل",
+        "name":"الاسم"
     },
     "serviceorder":{
         "servicetitle":"الخدمة",
@@ -530,14 +536,15 @@
         "featuredTab":"Featured",
         "featuredProductTabCaption":"Featured Product",
         "featuredServiceTabCaption":"Featured Service",
-        "serviceRemoceFeature":"Service Removed from featured list"
+        "serviceRemoceFeature":"Service Removed from featured list",
+        "logoutConfirm":"Are you sure to logout?"
     },
     "scheduleService":{
         "serviceTitle":"جدول",
         "addressvalidation":"يرجى اختيار العنوان",
-        "name":"Service Name",
+        "name":"اسم الخدمة",
         "date":"Date",
-        "username":"Name",
+        "username":"الاسم",
         "noServiceBooked":"There is no any service or Please select date."
     },
     "notification":{

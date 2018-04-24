@@ -56,6 +56,7 @@ import TrackOrder from './components/Order/TrackOrder'
 import DealsandOffers from './components/DealsandOffers'
 import Filter from './components/Filter';
 import MenuIcon from './images/imgpsh.png';
+import CityContainer from './components/CityContainer';
 
 // -------------vendor ----------
 import Product from './Vendor/Product';
@@ -108,6 +109,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                 <Lightbox key="lightbox">
                     <Stack key="root">
                         <Scene key='landingpage' component={WelcomeScreen} hideNavBar={true} initial={needSignIn}/>
+                        <Scene key='cityLogin' component={CityContainer} hideNavBar={true}/>
                         <Scene key='loginPage'
                         component={LoginPage}
                         title='Login into ZeroToTwo'

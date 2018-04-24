@@ -211,16 +211,16 @@ class ProductOrder extends Component{
         let listView = (<View></View>);
             listView = (
                 <ListView
-                dataSource = {this.state.dataSource}
-                style      = {styles.listview}
-                renderRow  = {this.renderRow.bind(this)}
-                renderSectionHeader = {this.renderSectionHeader.bind(this)}
-                enableEmptySections = {true}
-                automaticallyAdjustContentInsets={false}
-                renderSeparator={this._renderSeparator}
-                showsVerticalScrollIndicator={false}
-            />
-    );
+                    dataSource = {this.state.dataSource}
+                    style      = {styles.listview}
+                    renderRow  = {this.renderRow.bind(this)}
+                    renderSectionHeader = {this.renderSectionHeader.bind(this)}
+                    enableEmptySections = {true}
+                    automaticallyAdjustContentInsets={false}
+                    renderSeparator={this._renderSeparator}
+                    showsVerticalScrollIndicator={false}
+                />
+            );
 
         if (!this.state.loaded) {
             return this.renderLoadingView();
@@ -236,7 +236,7 @@ class ProductOrder extends Component{
                         backgroundColor:'white',
                         // marginVertical:40,
                         width:width-40,
-                        height:height-60,
+                        // height:height-60,
                         borderRadius:5,
                         overflow:'hidden'
                     }}>
@@ -265,22 +265,38 @@ class ProductOrder extends Component{
                                     marginTop : Platform.OS === 'ios' ? 12 : 10,
                                     paddingHorizontal : 10,
                                     backgroundColor : 'transparent',
-                                }
-                            }/>
+                                }}
+                            />
                                 
                         </View>
 
                         <View style={{
                             // flexDirection:direction,
                         }}>
-                            <Text style={{margin:5, textAlign:textline}}>{this.state.orderDetail.address_line1}</Text>
+                            <View style={{
+                                flexDirection:direction,
+                                margin:5,
+                            }}>
+                                <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.name', { locale: lang })}</Text>
+                                <Text style={{fontWeight:'bold'}}> : </Text>
+                                <Text style={{}}> {this.state.orderDetail.full_name}</Text>
+                            </View>
+                            <View style={{
+                                flexDirection:direction,
+                                margin:5,
+                            }}>
+                                <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.mobileno', { locale: lang })}</Text>
+                                <Text style={{fontWeight:'bold'}}> : </Text>
+                                <Text style={{}}> {this.state.orderDetail.mobile_number}</Text>
+                            </View>
+                            <Text style={{margin:5, marginTop:10, textAlign:textline}}>{this.state.orderDetail.address_line1}</Text>
                             <Text style={{margin:5, textAlign:textline}}>{this.state.orderDetail.address_line2}</Text>
                             <View style={{
                                 flexDirection:direction,
                                 margin:5,
                             }}>
                                 <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.landmark', { locale: lang })}</Text>
-                                <Text style={{fontWeight:'bold'}}>:</Text>
+                                <Text style={{fontWeight:'bold'}}> : </Text>
                                 <Text style={{}}> {this.state.orderDetail.landmark}</Text>
                             </View>
                             <View style={{
@@ -288,15 +304,16 @@ class ProductOrder extends Component{
                                 margin:5,
                             }}>
                                 <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.town', { locale: lang })}</Text>
-                                <Text style={{fontWeight:'bold'}}>:</Text>
+                                <Text style={{fontWeight:'bold'}}> : </Text>
                                 <Text style={{}}> {this.state.orderDetail.town}</Text>
                             </View>
                             <View style={{
                                 flexDirection:direction,
                                 margin:5,
+                                marginBottom:20,
                             }}>
                                 <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.state', { locale: lang })}</Text>
-                                <Text style={{fontWeight:'bold'}}>:</Text>
+                                <Text style={{fontWeight:'bold'}}> : </Text>
                                 <Text style={{}}> {this.state.orderDetail.state}</Text>
                             </View>
                         </View>

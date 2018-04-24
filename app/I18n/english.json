@@ -181,7 +181,10 @@
         "share":"Share with Friends",
         "rateus":"Rate us on App Store",
         "marketing":" Marketing",
-        "logout":"Logout"
+        "logout":"Logout",
+        "logoutConfirm":"Are you sure to logout?",
+        "cancel":"Cancel",
+        "ok":"OK",
     },
     "wishlist":{
         "wishlistTitle":"Wishlist",
@@ -479,7 +482,9 @@
         "deliveryAddress":"Delivery Address",
         "landmark":"Landmark",
         "town":"Town",
-        "state":"State"
+        "state":"State",
+        "mobileno":"Contact",
+        "name":"Name"
     },
     "serviceorder":{
         "servicetitle":"Service",
@@ -488,7 +493,7 @@
         "servicenm":"Service Name",
         "customername":"Customer Name",
         "customeremail":"Customer Email",
-        "price":"Price "
+        "price":"Price ",
     },
     "servicecustomer":{
         "fullname":"Full Name",
@@ -533,7 +538,8 @@
         "featuredTab":"Featured",
         "featuredProductTabCaption":"Featured Product",
         "featuredServiceTabCaption":"Featured Service",
-        "serviceRemoceFeature":"Service Removed from featured list"
+        "serviceRemoceFeature":"Service Removed from featured list",
+        "logoutConfirm":"Are you sure to logout?"
     },
     "scheduleService":{
         "serviceTitle":"Schedule",

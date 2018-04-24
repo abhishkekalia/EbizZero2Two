@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from "react";
-import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage ,NetInfo} from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage ,NetInfo, Alert} from "react-native";
 import { Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import PercentageCircle from 'react-native-percentage-circle';
@@ -258,6 +258,7 @@ class Profile extends Component {
 						marginLeft:10,
 						marginTop:10,
 						marginBottom:10,
+						marginRight:10,
 					}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
 				</View>
 				</TouchableOpacity>
@@ -267,14 +268,31 @@ class Profile extends Component {
 						marginLeft:10,
 						marginTop:10,
 						marginBottom:10,
+						marginRight:10,
 					}}>{I18n.t('venderprofile.marketing', { locale: lang })}</Text>
 				<Marketing data={this.state.data} status={this.state.status} marketing_campaign={this.state.marketing_campaign} lang={lang}
 					u_id={u_id} country={country} featureService={this.state.featureService}/>
 				</KeyboardAwareScrollView>
 				<TouchableOpacity
-                onPress={()=>{ Utils.logout()
-					.then(logout)
-					.done()
+                onPress={()=>{ 
+					
+					Alert.alert(
+						I18n.t('sidemenu.logout', { locale: lang }),
+						I18n.t('sidemenu.logoutConfirm', { locale: lang }),
+						[
+						  {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+						  {text: I18n.t('sidemenu.ok', { locale: lang }), onPress: () => 
+								Utils.logout()
+								.then(logout)
+								.done()    
+							},
+						],
+						{ cancelable: false }
+					  )
+
+					// Utils.logout()
+					// .then(logout)
+					// .done()
 				}}
                 style={styles.logout}>
 					<Text style={{ color: "#fbcdc5"}}>{I18n.t('venderprofile.logout', { locale: lang })}</Text>

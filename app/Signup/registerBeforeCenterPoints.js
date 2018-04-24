@@ -137,18 +137,6 @@ class Register extends Component {
 			}
 		});
 	}
-
-	onRegionChangeComplete(region) {
-        console.log("region.latitude:=",region.latitude)
-        console.log("region.longitude:=",region.longitude)
-        this.setState({
-            region: region,
-            coordinate: {
-                latitude: region.latitude,
-                longitude: region.longitude
-            }
-        },this.loadAddressFromMap(region.latitude, region.longitude));
-    }
 	componentWillUnmount() {
 		navigator.geolocation.clearWatch(this.watchID);
 	}
@@ -634,10 +622,9 @@ class Register extends Component {
 							ref={c => this.mapView = c}
 							// onPress={this.onMapPress}
 							// onRegionChange={this.onRegionChange.bind(this)}
-							onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
 							>
 
-							{/* <MapView.Marker draggable
+							<MapView.Marker draggable
 								// annotations={markers}
 								coordinate={{
 									latitude: (this.state.lastLat + 0.00050) || -36.82339,
@@ -655,7 +642,7 @@ class Register extends Component {
 								// 		longitudeDelta: this.state.region.longitudeDelta
 								// 	}})}
 									>
-					</MapView.Marker> */}
+					</MapView.Marker>
 						</MapView>
 							:
 							<MapView
@@ -671,10 +658,9 @@ class Register extends Component {
 							ref={c => this.mapView = c}
 							onPress={this.onMapPress}
 							// onRegionChange={this.onRegionChange.bind(this)}
-							onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
 							>
 
-							{/* <MapView.Marker draggable
+							<MapView.Marker draggable
 								// annotations={markers}
 								coordinate={{
 									latitude: (this.state.lastLat + 0.00050) || -36.82339,
@@ -697,11 +683,10 @@ class Register extends Component {
 								<FontAwesome name="map-pin" size={35} color="green"/>
 								</View>
 
-							</MapView.Marker> */}
+							</MapView.Marker>
 						</MapView>
 						}
 					</View>
-					
 					{
 						this.state.isLoading ?
 							<ActivityIndicator
@@ -710,17 +695,6 @@ class Register extends Component {
 								size="large"/>
 						: undefined
 					}
-					<Image style={{
-							position:'absolute',
-							zIndex:5,
-							marginLeft:(width/2)-25,
-							marginTop:(height/2)-25,
-							width:50,
-							height:50,
-							overflow:'hidden',
-						}}
-						source={require('EbizZero2Two/app/images/mapPinAnnotation.png')}
-                	/>
 				</Modal>
 			</View>
 		);

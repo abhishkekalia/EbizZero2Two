@@ -9,7 +9,8 @@ import {
     // Button,
     AsyncStorage,
     TouchableHighlight,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert,
 } from 'react-native';
 import * as authActions from '../../auth/auth.actions';
 import { Actions } from 'react-native-router-flux';
@@ -227,9 +228,20 @@ class Menu extends React.Component {
                         u_id == undefined ? <Text/>
                         :
                         <Text onPress={
-                                ()=>{ Utils.logout()
-                                    .then(logout)
-                                    .done()
+                                ()=>{ 
+                                    Alert.alert(
+                                        I18n.t('sidemenu.logout', { locale: lang }),
+                                        I18n.t('sidemenu.logoutConfirm', { locale: lang }),
+                                        [
+                                          {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                                          {text: I18n.t('sidemenu.ok', { locale: lang }), onPress: () => 
+                                                Utils.logout()
+                                                .then(logout)
+                                                .done()    
+                                            },
+                                        ],
+                                        { cancelable: false }
+                                      )
                                 }
                             }
                             style={styles.item}> {I18n.t('sidemenu.logout', { locale: lang })}</Text>

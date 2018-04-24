@@ -103,8 +103,6 @@ class Newaddress extends Component{
              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
          }
          onRegionChange(region, lastLat, lastLong) {
-            //  console.log("region.latitude:=",region.latitude)
-            //  console.log("region.longitude:=",region.longitude)
              this.setState({
                  region: region,
                  lastLat: lastLat || this.state.lastLat,
@@ -115,18 +113,6 @@ class Newaddress extends Component{
                  }
              });
          }
-
-    onRegionChangeComplete(region) {
-        console.log("region.latitude:=",region.latitude)
-        console.log("region.longitude:=",region.longitude)
-        this.setState({
-            region: region,
-            coordinate: {
-                latitude: region.latitude,
-                longitude: region.longitude
-            }
-        });
-    }
     async getKey() {
         try {
             const value = await AsyncStorage.getItem('data');
@@ -767,14 +753,12 @@ class Newaddress extends Component{
                     <MapView
                         // provider={PROVIDER_GOOGLE}
                         initialRegion={this.state.region}
-                        // region={this.state.region}
+                        region={this.state.region}
                         style={StyleSheet.absoluteFill}
                         ref={c => this.mapView = c}
-                        onPress={this.onMapPress}
-                        onRegionChange={this.onRegionChange.bind(this)}
-                        onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
-                        >
-                        {/* <MapView.Marker draggable
+                        onPress={this.onMapPress}>
+
+                        <MapView.Marker draggable
                             // annotations={markers}
                             coordinate={this.state.coordinate}
                             onDragEnd={(e) =>{
@@ -793,20 +777,18 @@ class Newaddress extends Component{
                                     }
                                 })
                             }}
-                        /> */}
+                        />
                     </MapView>
                 :
                     <MapView
                         provider={PROVIDER_GOOGLE}
                         initialRegion={this.state.region}
-                        // region={this.state.region}
+                        region={this.state.region}
                         style={StyleSheet.absoluteFill}
                         ref={c => this.mapView = c}
-                        onPress={this.onMapPress}
-                        onRegionChange={this.onRegionChange.bind(this)}
-                        onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
-                        >
-                        {/* <MapView.Marker draggable
+                        onPress={this.onMapPress}>
+
+                        <MapView.Marker draggable
                             // annotations={markers}
                             coordinate={this.state.coordinate}
                             onDragEnd={(e) =>{
@@ -825,22 +807,11 @@ class Newaddress extends Component{
                                     }
                                 })
                             }}
-                            /> */}
+                                />
 
                     </MapView>
                 }
 
-                <Image style={{
-                        position:'absolute',
-                        zIndex:5,
-                        marginLeft:(width/2)-25,
-                        marginTop:(height/2)-25,
-                        width:50,
-                        height:50,
-                        overflow:'hidden',
-                    }}
-                    source={require('EbizZero2Two/app/images/mapPinAnnotation.png')}
-                />
                 </Modal>
             </View>
         );

@@ -55,6 +55,7 @@ class GetMarketing extends Component {
                 },
                 body: formData,
             }
+            // MarketinAdsByCat
             fetch(Utils.gurl('getMarketingAd'), config)
             .then((response) => response.json())
             .then((responseData) => {

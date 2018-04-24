@@ -207,6 +207,8 @@ class DealsandOffers extends Component {
                                     {/* <Feather name="menu" size={20} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/> */}
                                     <Ionicons name= "ios-arrow-back-outline" color="#fff" size={30} style={ 
                                         lang == 'ar' ? { alignSelf: 'center', 
+                                                        marginRight:20,
+                                                        marginTop:10,
                                                             transform: [{ rotate: '180deg'}]}
                                                             :
                                                     {
