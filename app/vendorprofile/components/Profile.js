@@ -238,6 +238,30 @@ class Profile extends Component {
 						</View>
 					</View>
 				</View>
+
+				<TouchableOpacity
+                onPress={()=>{ 
+					routes.deals({
+						isVendor:true
+					})
+				}}>
+				<View style={[styles.content,{
+						flexDirection : direction, 
+						justifyContent: 'space-between' ,
+						padding : 0, 
+						backgroundColor:'white',
+						marginTop:5,
+					}]}>
+				
+				<Text style={{
+						textAlign: textline,
+						marginLeft:10,
+						marginTop:10,
+						marginBottom:10,
+					}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
+				</View>
+				</TouchableOpacity>
+
 				<Text style={{
 						textAlign: textline,
 						marginLeft:10,

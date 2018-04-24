@@ -472,7 +472,11 @@
         "price":"القيمة",
         "specialprice":"القيمة بعد الخصم",
         "orderstatus":"حالة الطلب",
-        "orderdate":"تاريخ الطلب"
+        "orderdate":"تاريخ الطلب",
+        "deliveryAddress":"Delivery Address",
+        "landmark":"Landmark",
+        "town":"Town",
+        "state":"State"
     },
     "serviceorder":{
         "servicetitle":"الخدمة",

@@ -46,7 +46,7 @@ class ProductOrder extends Component{
             return dataBlob[sectionID + ':' + rowID];
         }
         return {
-            showAddress: true,
+            showAddress: false,
             addressDetail: {},
             orderDetail:{},
             loaded : false,
@@ -202,6 +202,12 @@ class ProductOrder extends Component{
     }
 
     render() {
+
+        const { lang} = this.props,
+        direction = lang == 'ar'? 'row-reverse': 'row',
+        align = lang == 'ar'? 'flex-end': 'flex-start',
+        textline = lang == 'ar'? 'right': 'left';
+
         let listView = (<View></View>);
             listView = (
                 <ListView
@@ -240,26 +246,59 @@ class ProductOrder extends Component{
                             backgroundColor: '#a9d5d1',
                             // alignItems:'center',
                             alignContent:'center',
-                            flexDirection: 'row',
+                            // flexDirection: 'row',
                         }}>
                             <Text style={{
-                                backgroundColor:'red',
+                                // backgroundColor:'red',
                                 textAlign:'center',
-                                marginTop: 20,
-                                fontSize:17,
-                            }} >Delivery Address</Text>
+                                marginTop: 23,
+                                fontSize:19,
+                                color:'white',
+                                fontWeight:'bold'
+                            }} >{I18n.t('productorder.deliveryAddress', { locale: lang })}</Text>
 
                             <Ionicons name= "x-circle" color="white" size={40}
-                                onPress={this.hideAddress()}
+                                onPress={this.hideAddress.bind(this)}
                                 style={{
                                     position:'absolute',
-                                    // marginTop : Platform.OS === 'ios' ? 20 : 10,
+                                    marginLeft : width-100,
+                                    marginTop : Platform.OS === 'ios' ? 12 : 10,
                                     paddingHorizontal : 10,
                                     backgroundColor : 'transparent',
-                                    backgroundColor:'red',
                                 }
                             }/>
                                 
+                        </View>
+
+                        <View style={{
+                            // flexDirection:direction,
+                        }}>
+                            <Text style={{margin:5, textAlign:textline}}>{this.state.orderDetail.address_line1}</Text>
+                            <Text style={{margin:5, textAlign:textline}}>{this.state.orderDetail.address_line2}</Text>
+                            <View style={{
+                                flexDirection:direction,
+                                margin:5,
+                            }}>
+                                <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.landmark', { locale: lang })}</Text>
+                                <Text style={{fontWeight:'bold'}}>:</Text>
+                                <Text style={{}}> {this.state.orderDetail.landmark}</Text>
+                            </View>
+                            <View style={{
+                                flexDirection:direction,
+                                margin:5,
+                            }}>
+                                <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.town', { locale: lang })}</Text>
+                                <Text style={{fontWeight:'bold'}}>:</Text>
+                                <Text style={{}}> {this.state.orderDetail.town}</Text>
+                            </View>
+                            <View style={{
+                                flexDirection:direction,
+                                margin:5,
+                            }}>
+                                <Text style={{fontWeight:'bold'}}>{I18n.t('productorder.state', { locale: lang })}</Text>
+                                <Text style={{fontWeight:'bold'}}>:</Text>
+                                <Text style={{}}> {this.state.orderDetail.state}</Text>
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -284,6 +323,7 @@ class ProductOrder extends Component{
             </View>
         );
     }
+
     _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
         return (
         <View
@@ -334,7 +374,7 @@ class ProductOrder extends Component{
             ord_status = 1;
         }
         return (
-            <TouchableWithoutFeedback onPress={this.showAddress(rowData)}>
+            <TouchableWithoutFeedback onPress={this.showAddress.bind(this,rowData)}>
             <View style={styles.row}>
                 
                 <View style={{ flexDirection : direction}}>
@@ -395,6 +435,7 @@ class ProductOrder extends Component{
     }
 
     showAddress(data) {
+        console.log("selected Data",data)
         this.setState({
             showAddress:true,
             orderDetail:data

@@ -1,8 +1,8 @@
 import Utils from 'app/common/Utils';
 var api = {
-    dealsAndOffer(){
+    dealsAndOffer(is_user_app){
         let formData = new FormData();
-        formData.append('is_user_app', String(1));
+        formData.append('is_user_app', String(is_user_app));
         const config = {
             method: 'POST',
             headers: {

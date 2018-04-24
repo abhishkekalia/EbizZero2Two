@@ -31,6 +31,8 @@ import I18n from 'react-native-i18n'
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Drawer from 'react-native-drawer';
 import Menu from './menu/MenuContainer';
+import { Actions as routes} from "react-native-router-flux";
+
 const { width, height } = Dimensions.get('window')
 class DealsandOffers extends Component {
     constructor(props) {
@@ -43,6 +45,7 @@ class DealsandOffers extends Component {
             dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             dataSource2: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             visibleaddress: false,
+            isVendor:this.props.isVendor,
         }
     }
     _onRefresh() {
@@ -57,7 +60,7 @@ class DealsandOffers extends Component {
         this.fetchAddress();
     }
     fetchData(){
-        api.dealsAndOffer()
+        api.dealsAndOffer(this.state.isVendor ? 2 : 1 )
         .then((responseData)=> {
             if(responseData.response.status){
                 this.setState({
@@ -199,9 +202,24 @@ class DealsandOffers extends Component {
                 >
                     <View style={{flex: 1}}>
                         <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
-                            <TouchableOpacity onPress={()=>this.openControlPanel()}>
-                                <Feather name="menu" size={20} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
-                            </TouchableOpacity>
+                            {this.state.isVendor ? 
+                                <TouchableOpacity onPress={()=>routes.pop()}>
+                                    {/* <Feather name="menu" size={20} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/> */}
+                                    <Ionicons name= "ios-arrow-back-outline" color="#fff" size={30} style={ 
+                                        lang == 'ar' ? { alignSelf: 'center', 
+                                                            transform: [{ rotate: '180deg'}]}
+                                                            :
+                                                    {
+                                                        alignSelf: 'center',
+                                                        marginLeft:15,
+                                                        marginTop:15,
+                                                    }}/>
+                                </TouchableOpacity>
+                            : 
+                                <TouchableOpacity onPress={()=>this.openControlPanel()}>
+                                    <Feather name="menu" size={20} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
+                                </TouchableOpacity>
+                            }
                             <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('deals.dealTitle', { locale: lang })}</Text>
                             <View style={{width:40}}/>
                         </View>

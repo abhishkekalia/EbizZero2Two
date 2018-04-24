@@ -475,7 +475,11 @@
         "price":"Price",
         "specialprice":"Special Price",
         "orderstatus":"Order Status",
-        "orderdate":"Order Date"
+        "orderdate":"Order Date",
+        "deliveryAddress":"Delivery Address",
+        "landmark":"Landmark",
+        "town":"Town",
+        "state":"State"
     },
     "serviceorder":{
         "servicetitle":"Service",
