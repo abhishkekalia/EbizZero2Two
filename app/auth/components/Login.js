@@ -386,6 +386,7 @@ class Login extends Component {
 										onChangeText={(password) => this.setState({password})}/>
 								</View>
 							</View>
+
 							{errorStatus ? <Text style={commonStyles.errorText}>{errorStatus}</Text> : undefined}
 						<TouchableOpacity style ={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.onSubmit()}>
 							<Text style = {{color:"#FFFFFF"}}>{I18n.t('login.login_btn', { locale: language })}</Text>
