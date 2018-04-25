@@ -41,6 +41,7 @@ var api = {
             },
             body: formData,
         }
+        console.log("Request addToOrder:=",config)
         return fetch(Utils.gurl('addToOrder'), config).then((res) => res.json())
     },
     UpdateServiceStatus( service_id, is_active){

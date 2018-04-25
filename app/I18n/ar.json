@@ -29,7 +29,7 @@
         "submit":"موافق",
         "close" : "التالي",
         "invaliduser": "اسم المستخدم وكلمة المرور غير صالحة",
-        "passsnotmatch" : "اسم المستخدم وكلمة المرور غير متطابقين",
+        "passsnotmatch" : "اسم المستخدم وكلمة المرور غير متطابقين"
     },
     "forgotpassword":{
         "emailaddress":"البريد الالكتروني",
@@ -47,7 +47,7 @@
         "male":"ذكر",
         "female":"انتثى",
         "other":"Other",
-        "both":"Both",
+        "both":"الأثنين معاً",
         "mobilenumber":"رقم الهاتف (لتحديث الطلب)",
         "selectcountry":"اختر الدولة",
         "address":"العنوان",
@@ -60,7 +60,7 @@
         "privacypolicy":"بالضغط على زر التسجيل يوافق المستخدم على شروط و الاحكام",
         "pleaseenterfullname":"الرجاء تعبئة الأسم الكامل",
         "pleaseentervalidmail":"الرجاء تعبئة البريد الألكتروني",
-        "maildomain":"mail domain name must be .com",
+        "maildomain":"البريد الألكتروني يجب ان ينتهي ب .Com",
         "pleaseenterpwd":"الرجاء ادخال كلمة السر",
         "pleaseselectgender":"الرجاء أختيار الجنس",
         "pleaseentercontact":"الرجاء ادخال رقم الهاتف",
@@ -94,7 +94,7 @@
         "pleaseenterrepresentative":"الرجاء ادخال أسم ممثل الشركة",
         "pleaseentercontact":"الرجاء ادخال رقم الهاتف",
         "pleaseenteremail":"الرجاء تعبئة البريد الألكتروني",
-        "maildomain":"mail domain name must be .com",
+        "maildomain":"البريد الألكتروني يجب ان ينتهي ب .Com",
         "pleaseenteraddr":"الرجاء تعبئة العنوان",
         "pleaseenterpwd":"الرجاء ادخال كلمة السر",
         "pleaseselectgender":"الرجاء أختيار الجنس",
@@ -182,7 +182,7 @@
         "rateus":"قيم تجربتك معنا على متجر أبل",
         "marketing":" التسويق",
         "logout":"تسجيل الخروج",
-        "logoutConfirm":"Are you sure to logout?",
+        "logoutConfirm":"هل أنت متأكد من رغبتك بتسجيل الخروج",
         "cancel":"الغاء",
         "ok":"تم"
     },
@@ -227,7 +227,7 @@
         "somethingwentswrong":"حصل خطأ ما",
         "cartUpdate":"تم تحديث سلة التسوق بنجاح",
         "shipingchage": "رسوم التوصيل",
-        "moveToWishlist" : "Move to Whishlist"
+        "moveToWishlist" : "نقل الى المفضلة "
     },
     "profile":{
         "profiletitle":"الملف الشخصي",
@@ -317,9 +317,9 @@
         "uploadfiles":"اختر ملفات للتحميل",
         "costperad":"التكلفة لكل إعلان",
         "aduploaderr":"حصل خطأ ما أثناء التحميل",
-        "textstring":"Upload your image into the External Circle \n" +
-                            "Upload your 10 sec video into the External Circle \n" +
-                            "Price: 1 KD per picture  / 1.5 KD per video",
+        "textstring":"حمل الصورة للإعلانات الخارجية \n" +
+                            "حمل فيديو ال١٠ ثواني للإعلانات الخارجية \n" +
+                            "السعر دينار للصورة ودينار ونصف للفيديو لكل ٢٤ ساعة",
         "myAdFaturah":{
             "paymentsuccess":"تم الدفع بنجاح",
             "paymenterr":"حصل خطأ أثناء الدفع",
@@ -464,7 +464,7 @@
         "updatefail":"فشل في تحميل المنتج",
         "editButton" : "تحديث",
         "weekendlabel" : "هل تعمل في عطلة نهاية الأسبوع",
-        "selectServiceType" : "Select Service Type"
+        "selectServiceType" : "أختر نوع الخدمة"
     },
     "productorder":{
         "orderTitle":"طلباتي",
@@ -477,10 +477,10 @@
         "specialprice":"القيمة بعد الخصم",
         "orderstatus":"حالة الطلب",
         "orderdate":"تاريخ الطلب",
-        "deliveryAddress":"Delivery Address",
-        "landmark":"Landmark",
-        "town":"Town",
-        "state":"State",
+        "deliveryAddress":"عنوان التوصيل",
+        "landmark":"معلم معروف",
+        "town":"مدينة",
+        "state":"حالة",
         "mobileno":"اتصل",
         "name":"الاسم"
     },
@@ -532,20 +532,20 @@
         "online":"يوجد أتصال بالأنترنت",
         "offline":"ليس هناك شبكة أنترنت متاحة",
         "productremovefeature":"تم الحذف من قائمة المنتجات المسوقه",
-        "serviceId":"Service Id",
-        "featuredTab":"Featured",
-        "featuredProductTabCaption":"Featured Product",
-        "featuredServiceTabCaption":"Featured Service",
-        "serviceRemoceFeature":"Service Removed from featured list",
-        "logoutConfirm":"Are you sure to logout?"
+        "serviceId":"كود الخدمة",
+        "featuredTab":"للإعلان",
+        "featuredProductTabCaption":"منتج لإأعلان",
+        "featuredServiceTabCaption":"خدمة للإعلان",
+        "serviceRemoceFeature":"تم حذف الخدمة من قائمة الاعلان",
+        "logoutConfirm":"هل أنت متأكد من رغبتك بتسجيل الخروج"
     },
     "scheduleService":{
         "serviceTitle":"جدول",
         "addressvalidation":"يرجى اختيار العنوان",
         "name":"اسم الخدمة",
-        "date":"Date",
+        "date":"التاريخ",
         "username":"الاسم",
-        "noServiceBooked":"There is no any service or Please select date."
+        "noServiceBooked":"الرجاء تحديد التاريخ"
     },
     "notification":{
         "orderId":"رقم الطلب",

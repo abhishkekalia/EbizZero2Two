@@ -72,13 +72,14 @@ class Menu extends React.Component {
         Actions.postad();
     }
     render() {
-        const {identity, logout, lang,u_id, closeDrawer} = this.props;
+        const {identity, logout, lang,u_id, closeDrawer, isGuest} = this.props;
         return (
             <View style={{ flex: 1}}>
             <ScrollView scrollsToTop={false} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'handled'} showsVerticalScrollIndicator={false} bounces={false}>
                 <View style={[styles.avatarContainer,{ alignSelf: 'center', justifyContent: 'space-around'}]}>
                     {
-                        u_id == undefined ?
+                        // u_id == undefined ?
+                        isGuest == '1' ?
                         <View style={{ height: "85%", width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
                             <TouchableOpacity onPress={Actions.registerPage} style={{alignSelf: 'center', borderRadius: 10, borderWidth :1, backgroundColor: '#a9d5d1', borderColor:"#fff"}} >
                                 <Text style={styles.signinbtn}>{I18n.t('sidemenu.signup', { locale: lang })}</Text>
@@ -176,27 +177,31 @@ class Menu extends React.Component {
                     onPress={Actions.homePage}
                     style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.home', { locale: lang })}</Text>
                 {
-                    u_id == undefined ?
-                    undefined
-                    :
+                    // u_id == undefined ?
+                    // isGuest == '1' ?
+                    // undefined
+                    // :
                     <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 }
                 {
-                    u_id == undefined ?
-                    undefined
-                    :
+                    // u_id == undefined ?
+                    // isGuest == '1' ?
+                    // undefined
+                    // :
                     <Text
                         onPress={Actions.contactUs}
                         style={[styles.item, styles.seprator]}>{I18n.t('sidemenu.contact', { locale: lang })}</Text>
                 }
                 {
-                    u_id == undefined ?
+                    // u_id == undefined ?
+                    isGuest == '1' ?
                     undefined
                     :
                     <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 }
                 {
-                    u_id == undefined ?
+                    // u_id == undefined ?
+                    isGuest == '1' ?
                     undefined
                     :
                     <Text
@@ -220,12 +225,16 @@ class Menu extends React.Component {
                             onPress={()=>this.postad()}
                             style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.marketing', { locale: lang })}</Text>
                 {
-                    u_id == undefined ? <Text/>
+                    // u_id == undefined ? 
+                    isGuest == '1' ?
+                    <Text/>
                     :
                     <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
                 }
                     {
-                        u_id == undefined ? <Text/>
+                        // u_id == undefined ? 
+                        isGuest == '1' ? 
+                        <Text/>
                         :
                         <Text onPress={
                                 ()=>{ 

@@ -29,6 +29,7 @@ import {CirclesLoader} from 'react-native-indicator';
 import Modal from 'react-native-modal';
 import Utils from 'app/common/Utils';
 import ActionSheet from 'react-native-actionsheet';
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window')
 
@@ -64,6 +65,14 @@ class Login extends Component {
             }else{
                 console.log(`is connected: ${this.state.netStatus}`);
             }
+		});
+		
+		EventEmitter.removeAllListeners("hideLoader");
+        EventEmitter.on("hideLoader", (value)=>{
+            console.log("hideLoader", value);
+            this.setState({
+				visibleModal:false,
+			})
         });
     }
 	componentDidMount(){
@@ -302,7 +311,7 @@ class Login extends Component {
 		else if (selected === 2) {
 			this.props.languageChange('en')
 		}
-	  }
+	}
 
 	getIOSView () {
 		const {errorStatus, loading, language} = this.props;
@@ -653,7 +662,7 @@ class Login extends Component {
 		return true;
 	}
 	onSubmit() {
-	Keyboard.dismiss();
+		Keyboard.dismiss();
 		const {email, password, os} = this.state;
 		if (this.validate()) {
 			this.setState({...INITIAL_STATE, visibleModal: true});

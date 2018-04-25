@@ -9,6 +9,8 @@ function mapStateToProps(state) {
         identity: state.identity,
         lang: state.auth.lang,
         u_id: state.identity.u_id,
+        deviceId: state.auth.deviceId,
+        isGuest: state.auth.isGuest,
     }
 }
 

@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   AsyncStorage,
   Image,
-  Modal
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import {connect} from "react-redux";
 import I18n from 'react-native-i18n'
@@ -81,7 +82,8 @@ class Newaddress extends Component{
                 longitude: 72.615933,
                 latitudeDelta:  0.0922,
                 longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO
-            }
+            },
+            isProcessing:false,
         };
         this.inputs = {};
     }
@@ -220,6 +222,9 @@ class Newaddress extends Component{
         formData.append('address_type', String(address_type));
 
         if (this.validate()) {
+            this.setState({
+                isProcessing:true
+            })
             const config = {
                 method: 'POST',
                 headers: {
@@ -233,10 +238,17 @@ class Newaddress extends Component{
             .then((response) => response.json())
             .then((responseData) => {
                 console.log("Response addAddress:=",responseData)
+                this.setState({
+                    isProcessing:true
+                })
                 if(responseData.response.status){
 
                     if (this.props.isGuest == '1') {
-                        EventEmitter.emit("proceedToGuestCheckout","address_id")
+                        var addressId = responseData.response.data.address_id
+                        EventEmitter.emit("proceedToGuestCheckout",addressId)
+                        EventEmitter.emit("proceedToGuestCheckoutService",addressId)
+                        EventEmitter.emit("proceedToGuestCheckoutCart",addressId)
+                        EventEmitter.emit("proceedToGuestCheckoutDealsOffers",addressId)
                     }
 
                     EventEmitter.emit("reloadAddressList")
@@ -849,6 +861,18 @@ class Newaddress extends Component{
                     source={require('EbizZero2Two/app/images/mapPinAnnotation.png')}
                 />
                 </Modal>
+
+                {this.state.isProcessing ? <ActivityIndicator
+                        style={{
+                            position:'absolute',
+                            zIndex:5,
+                            flex:1,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 20}}
+                        color="#a9d5d1"
+                        size="large"/> :undefined}
+                
             </View>
         );
     }

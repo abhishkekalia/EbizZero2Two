@@ -32,6 +32,7 @@ import Share, {ShareSheet, Button} from 'react-native-share';
 import Drawer from 'react-native-drawer';
 import Menu from './menu/MenuContainer';
 import { Actions as routes} from "react-native-router-flux";
+import EventEmitter from "react-native-eventemitter";
 
 const { width, height } = Dimensions.get('window')
 class DealsandOffers extends Component {
@@ -58,10 +59,23 @@ class DealsandOffers extends Component {
     componentDidMount(){
         this.fetchData();
         this.fetchAddress();
+
+        EventEmitter.removeAllListeners("proceedToGuestCheckoutDealsOffers");
+        EventEmitter.on("proceedToGuestCheckoutDealsOffers", (value)=>{
+            console.log("proceedToGuestCheckoutDealsOffers", value);
+            this.order(value)
+        });
+
+        EventEmitter.removeAllListeners("reloadAddress");
+        EventEmitter.on("reloadAddress", (value)=>{
+            console.log("reloadAddress", value);
+            this.fetchAddress()
+        });
     }
     fetchData(){
         api.dealsAndOffer(this.state.isVendor ? 2 : 1 )
         .then((responseData)=> {
+            console.log("Response dealsAndOffer:=",responseData)
             if(responseData.response.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.response.data),
@@ -291,10 +305,7 @@ class DealsandOffers extends Component {
                         <Text style={{color: "#fff"}}/>
                     </View>
                 </View>
-                <TouchableOpacity onPress={()=> this.setState({
-                        data: data,
-                        visibleaddress: true
-                    })}
+                <TouchableOpacity onPress={this.buyItNow.bind(this,data)}
                     style={{justifyContent: 'center', alignItems: 'center', flexDirection: direction}}>
                     <Icon name="handbag" size={25} color="#000"/>
                     <Text style={{ margin: 10}}>{I18n.t('deals.buyitnowbtn', { locale: lang })}</Text>
@@ -302,6 +313,23 @@ class DealsandOffers extends Component {
             </View>
        );
    }
+
+    buyItNow(data) {
+        if (this.props.isGuest == '1') {
+            this.setState({
+                data:data
+            })
+
+            routes.newaddress({isFromEdit:false})
+        }
+        else {
+            this.setState({
+                data: data,
+                visibleaddress: true
+            })
+        }
+    }
+
    addrssData(data, rowData, sectionID, rowID, index) {
        const { navigate } = this.props.navigation,
        {lang}= this.props,
@@ -530,6 +558,7 @@ function mapStateToProps(state) {
         country: state.auth.country,
         u_id: state.identity.u_id,
         deviceId: state.auth.deviceId,
+        isGuest: state.auth.isGuest,
     }
 }
 

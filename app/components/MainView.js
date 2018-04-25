@@ -116,9 +116,11 @@ class MainView extends Component {
             this._onRefresh()
             this.fetchData()
         });
+        EventEmitter.emit("hideLoader",'1')
     }
     componentWillMount() {
         Actions.refresh({ right: this._renderRightButton, left: this._renderLeftButton});
+        EventEmitter.emit("hideLoader",'1')
     }
     _renderLeftButton = () => {
         return(

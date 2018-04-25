@@ -37,6 +37,8 @@ import Swipeout from 'react-native-swipeout';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Modal from 'react-native-modal';
+import {CirclesLoader} from 'react-native-indicator';
 
 const { width, height } = Dimensions.get('window');
 // const SHORT_LIST = ['Small', 'Medium', 'Large'];
@@ -75,6 +77,16 @@ class Shopingcart extends Component {
         EventEmitter.on("redirectToFaturah", (value)=>{
             routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
         });
+
+        EventEmitter.removeAllListeners("proceedToGuestCheckoutCart");
+        EventEmitter.on("proceedToGuestCheckoutCart", (value)=>{
+            console.log("proceedToGuestCheckoutCart", value);
+            // this.order(value)
+            this.getItems(value)
+            // this.setState({
+            //     visibleModal:true,
+            // })
+        });
     }
     callBackFitura() {
         console.log("Callback from faturah")
@@ -92,6 +104,88 @@ class Shopingcart extends Component {
             <View style={{ width: 40}}/>
         );
     };
+
+    getItems (delivery_address_id){
+        var Items = this.state.SetToList,
+            length = Items.length,
+            organization,
+            Select =[],
+            user,
+            i;
+
+        var today = new Date();
+        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+
+        currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
+
+        for (i = 0; i < length; i++) {
+            organization = Items[i];
+            Select.push ({
+                        "product_id": organization.product_id,
+                        "size": organization.size,
+                        "quantity": organization.quantity,
+                        "delivery_address_id": delivery_address_id,
+                        "vendor_id":organization.vendor_id,
+                        "price":organization.price,
+                        "delivery_datetime": currentdate,
+                        "order_date": nextdate
+                    })
+        }
+        this.addToOrder(Select)
+        .done()
+    }
+
+    async addToOrder(value){
+        try {
+            const { u_id, country } = this.props;
+            let formData = new FormData();
+            formData.append('u_id', String(u_id));
+            formData.append('country', String(country));
+            formData.append('order_detail', JSON.stringify(value));
+            formData.append('amount', String(this.state.subtotalamount));
+            const config = {
+                   method: 'POST',
+                   headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data;',
+                   },
+                   body: formData,
+              }
+              console.log("Request addToOrder:=",config)
+            fetch(Utils.gurl('addToOrder'), config)
+            .then((response) => response.json())
+            .then((responseData) => {
+                console.log("Response addToOrder:=",responseData)
+            if(responseData.status){
+                this.removeLoader
+            // console.log("calling my Fatureh")
+                var data = ({
+                    uri : responseData.data.url,
+                    order_id : responseData.data.order_id,
+                })
+                // routes.pop()
+                // EventEmitter.emit("redirectToFaturah",data)
+                routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
+            //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+              }else{
+                this.removeLoader
+            }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .done();
+        } catch (error) {
+            console.log("Error retrieving data" + error);
+        }
+
+    }
+
+    removeLoader = () => this.setState({
+        visibleModal : false
+    })
+
     // async getKey() {
     //     try {
     //         const value = await AsyncStorage.getItem('data');
@@ -247,12 +341,17 @@ class Shopingcart extends Component {
             })
         }else{
             if (this.validate()) {
-                routes.AddressLists({
-                    order_detail : this.state.ShopingItems,
-                    SetToList :this.state.SetToList,
-                    totalAmount : this.state.subtotalamount,
-                    cartIdList:this.state.cartIdList
-                })
+                if (this.props.isGuest == '1') {
+                    routes.newaddress({isFromEdit:false})
+                }
+                else {
+                    routes.AddressLists({
+                        order_detail : this.state.ShopingItems,
+                        SetToList :this.state.SetToList,
+                        totalAmount : this.state.subtotalamount,
+                        cartIdList:this.state.cartIdList
+                    })
+                }
             }
         }
     }
@@ -475,6 +574,11 @@ class Shopingcart extends Component {
                             }}>More
                         </Button>
                     </ShareSheet>
+                    <Modal isVisible={this.state.visibleModal}>
+                        <View style={{alignItems : 'center', padding:10}}>
+                            <CirclesLoader />
+                        </View>
+                    </Modal>
         </View>
         );
     }
@@ -1222,6 +1326,7 @@ function mapStateToProps(state) {
         country: state.auth.country,
         u_id: state.identity.u_id,
         deviceId: state.auth.deviceId,
+        isGuest: state.auth.isGuest,
     }
 }
 export default connect(mapStateToProps)(Shopingcart);

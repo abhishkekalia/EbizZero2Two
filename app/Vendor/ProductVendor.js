@@ -152,6 +152,16 @@ class ProductVendor extends Component {
             console.log("reloadAddress", value);
             this.fetchAddress()
         });
+
+        EventEmitter.removeAllListeners("proceedToGuestCheckoutService");
+        EventEmitter.on("proceedToGuestCheckoutService", (value)=>{
+            console.log("proceedToGuestCheckoutService", value);
+            this.addToOrder(value)
+            .then(()=>this.setState({
+                // visibleModal: true,
+            }))
+            .done()
+        });
     }
     async getKey() {
         try {
@@ -340,11 +350,16 @@ class ProductVendor extends Component {
         var today = new Date();
         currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
         if(this.ValidateBookservice()){
-            this.addToOrder(address_id)
-            .then(()=>this.setState({
-                // visibleModal: true,
-            }))
-            .done()
+            if (this.props.isGuest == '1') {
+                routes.newaddress({isFromEdit:false})
+            }
+            else {
+                this.addToOrder(address_id)
+                .then(()=>this.setState({
+                    // visibleModal: true,
+                }))
+                .done()
+            }
         }
     }
     async addToOrder(value){
@@ -427,20 +442,27 @@ class ProductVendor extends Component {
             }
     validateService(){
 
-        if(this.state.selectedAddress == "Select Address"){
-            MessageBarManager.showAlert({
-                message: "Please Select Address First",
-                alertType: 'alert',
-                stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
-                title:''
-            });
-            this.setState({
-                calanderShow: false
-            });
-        }else{
+        if (this.props.isGuest == '1') {
             this.setState({
                 calanderShow: true
             });
+        }
+        else {
+            if(this.state.selectedAddress == "Select Address"){
+                MessageBarManager.showAlert({
+                    message: "Please Select Address First",
+                    alertType: 'alert',
+                    stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
+                    title:''
+                });
+                this.setState({
+                    calanderShow: false
+                });
+            }else{
+                this.setState({
+                    calanderShow: true
+                });
+            }
         }
     }
     validateScheduleTimings(b){
@@ -515,7 +537,7 @@ class ProductVendor extends Component {
                                     <TouchableOpacity onPress={this.validateService.bind(this)}  style={{backgroundColor: "#a9d5d1", justifyContent: 'center',alignItems: 'center', height: 40, marginTop: 10}}>
                                         <Text style={{ fontSize: 15, color: "#fff", fontWeight: 'bold'}}>{I18n.t('servicedetail.schedule', { locale: lang })}</Text>
                                     </TouchableOpacity>
-                                        <TouchableOpacity style= {{ flexDirection :direction, justifyContent: "space-between", padding : 5, alignItems: "center"}} onPress={this.onOpen.bind(this)}>
+                                    {this.props.isGuest == '1' ? undefined : <TouchableOpacity style= {{ flexDirection :direction, justifyContent: "space-between", padding : 5, alignItems: "center"}} onPress={this.onOpen.bind(this)}>
                                             <Ionicons name ="location-on" size={25} style={{ padding :5}} color="#a9d5d1"/>
                                             <View style ={{
                                                     height:40,
@@ -530,7 +552,7 @@ class ProductVendor extends Component {
                                                 {this.state.selectedAddress}
                                                 </Text>
                                                 </View>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> }
                                 </View>
                                 : undefined
                             }
@@ -757,6 +779,7 @@ function mapStateToProps(state) {
         country: state.auth.country,
         u_id: state.identity.u_id,
         deviceId: state.auth.deviceId,
+        isGuest: state.auth.isGuest,
     }
 }
 function dispatchToProps(dispatch) {

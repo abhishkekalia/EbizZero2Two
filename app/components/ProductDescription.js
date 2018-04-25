@@ -99,7 +99,7 @@ class ProductDescription extends Component {
         EventEmitter.removeAllListeners("proceedToGuestCheckout");
         EventEmitter.on("proceedToGuestCheckout", (value)=>{
             console.log("proceedToGuestCheckout", value);
-            
+            this.order(value)
         });
     }
     onCancel() {
@@ -112,7 +112,12 @@ class ProductDescription extends Component {
     onOpen() {
         if (this.validate()) {
             console.log("OPEN")
-            this.setState({visible:true});
+            if (this.props.isGuest == '1') {
+                routes.newaddress({isFromEdit:false})
+            }
+            else {
+                this.setState({visible:true});
+            }
         }
     }
     validate(){
@@ -168,6 +173,7 @@ class ProductDescription extends Component {
         }
     }
     async addToOrder(value){
+        console.log("JSON Value:=",JSON.stringify(value)) 
         try {
             const { u_id, country,data ,count} = this.state;
             let formData = new FormData();
@@ -183,9 +189,11 @@ class ProductDescription extends Component {
                 },
                 body: formData,
             }
+            console.log("Request addToOrder:=",config)
             fetch(Utils.gurl('addToOrder'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("Response addToOrder:=",responseData)
                 if(responseData.status){
                     routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
                 }else{
@@ -333,6 +341,7 @@ class ProductDescription extends Component {
         .done();
     }
     order (delivery_address_id){
+        console.log("order:=delivery_address_id:=",delivery_address_id)
         const{ data , size, color, count  } = this.state;
         var Select =[];
         var today = new Date();
