@@ -126,6 +126,7 @@ class DealsandOffers extends Component {
             const { u_id, country} = this.props;
             api.addToOrder(u_id, country, value, data, 1)
             .then((responseData) => {
+                console.log("Response addToOrder:=",responseData)
                 if(responseData.status){
                     routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
                 }else{

@@ -85,6 +85,7 @@ class ProductDescription extends Component {
         })
     }
     componentDidMount(){
+        console.log("PD this.props.isGuest:=",this.props.isGuest)
         this.getKey()
         .then( ()=>this.fetchData())
         .then( ()=>this.fetchAddress())
@@ -93,6 +94,12 @@ class ProductDescription extends Component {
         EventEmitter.on("reloadAddress", (value)=>{
             console.log("reloadAddress", value);
             this.fetchAddress()
+        });
+
+        EventEmitter.removeAllListeners("proceedToGuestCheckout");
+        EventEmitter.on("proceedToGuestCheckout", (value)=>{
+            console.log("proceedToGuestCheckout", value);
+            
         });
     }
     onCancel() {
@@ -389,6 +396,7 @@ class ProductDescription extends Component {
         );
     }
     render () {
+        console.log("isGuest:=",this.props.isGuest)
         const { date_in, count } = this.state;
         const { lang, country, u_id, deviceId } = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
@@ -876,6 +884,7 @@ function mapStateToProps(state) {
         country: state.auth.country,
         u_id: state.identity.u_id,
         deviceId: state.auth.deviceId,
+        isGuest: state.auth.isGuest,
     }
 }
 function dispatchToProps(dispatch) {

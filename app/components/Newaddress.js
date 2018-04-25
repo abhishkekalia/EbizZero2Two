@@ -27,6 +27,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
 
+
 const { width, height } = Dimensions.get('window')
 const ASPECT_RATIO = width / height;
 // const LATITUDE = 22.966425;
@@ -231,7 +232,13 @@ class Newaddress extends Component{
             fetch(Utils.gurl('addAddress'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("Response addAddress:=",responseData)
                 if(responseData.response.status){
+
+                    if (this.props.isGuest == '1') {
+                        EventEmitter.emit("proceedToGuestCheckout","address_id")
+                    }
+
                     EventEmitter.emit("reloadAddressList")
                     EventEmitter.emit("reloadAddress")
                     routes.pop();
@@ -945,6 +952,7 @@ function mapStateToProps(state) {
         country: state.auth.country,
         u_id: state.identity.u_id,
         deviceId: state.auth.deviceId,
+        isGuest: state.auth.isGuest,
     };
 }
 export default connect(mapStateToProps)(Newaddress);
