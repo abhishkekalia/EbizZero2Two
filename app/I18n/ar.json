@@ -70,7 +70,8 @@
         "greetings":"شكرا لأنضمامكم الى قائمة",
         "passwordvalidation":"يرجى إدخال كلمة مرور مؤلفة من 6 أحرف او ارقام على الأقل",
         "pickfromMap": "اختر العنوان من الخريطه",
-        "mobileValidatetionText":"يرجى ادخال رقم الهاتف المكون من ٨ ارقام"
+        "mobileValidatetionText":"يرجى ادخال رقم الهاتف المكون من ٨ ارقام",
+        "otpValidate":"Please enter OTP"
     },
     "venderregister":{
         "company":"اسم الشركة",

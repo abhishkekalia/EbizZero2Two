@@ -359,7 +359,7 @@ class WelcomeScreen extends Component {
                                 fontSize:19,
                                 color:'white',
                                 fontWeight:'bold'
-                            }} >Selecy City</Text>
+                            }} >Select City</Text>
 
                             <Ionicons123 name= "x-circle" color="white" size={30}
                                 onPress={this.hideCityList.bind(this)}

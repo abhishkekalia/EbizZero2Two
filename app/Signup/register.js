@@ -13,7 +13,8 @@ import {
 	StyleSheet,
 	Image,
 	Modal,
-	ActivityIndicator
+	ActivityIndicator,
+	Alert,
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -545,9 +546,9 @@ class Register extends Component {
 							flexDirection: 'column',
 							justifyContent: 'center',
 							alignItems: 'center',
-							backgroundColor: "transparent"}
-						}>
-						<Text style={{ fontSize: 12, color: "#6969"}}>{I18n.t('userregister.greetings', { locale: lang })}</Text>
+							backgroundColor: "transparent"
+						}}>
+						<Text style={{ fontSize: 14, color: "#6969", margin:20, textAlign:'center'}}>{I18n.t('userregister.greetings', { locale: lang })}</Text>
 
 						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center'}}>
 							<Text style={{ fontSize: 15, color: "#6969"}}>{I18n.t('userregister.otplabel', { locale: lang })}</Text>
@@ -563,14 +564,16 @@ class Register extends Component {
 								underlineColorAndroid = 'transparent'
 								autoCorrect={false}
 								placeholder={I18n.t('userregister.otpplchldr', { locale: lang })}
-								maxLength={140}
+								maxLength={6}
 								returnKeyType={ "done" }
 								onChangeText={ (otp) => this.setState({ otp }) }/>
 						</View>
-						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center', justifyContent: 'space-between'}}>
+						<TouchableOpacity style={{}} onPress={this.resendOTPAPI.bind(this)}>
+						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center', justifyContent: 'space-between', margin:20}}>
 							<Icon name="refresh" size={25} color="#a9d5d1"/>
 							<Text style={{ fontSize: 10, color: "#6969"}}>{I18n.t('userregister.resendOtp', { locale: lang })}</Text>
 						</View>
+						</TouchableOpacity>
 						<TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: "#a9d5d1", width: width/2, borderRadius: 10, marginTop: 10}} onPress={()=>this.varifyOtp()}>
 							<Text style={{ fontSize: 15, fontWeight: 'bold', color: "#fff"}}>{I18n.t('userregister.submitbtn', { locale: lang })}</Text>
 						</TouchableOpacity>
@@ -746,6 +749,34 @@ class Register extends Component {
 	}
 
 	varifyOtp(){
+		console.log("varifyOtp")
+		const { lang } = this.props;
+		console.log(lang)
+		var align = lang === 'ar' ? "right" : "left";
+		console.log(align)
+		if (this.state.otp.length <= 0) {
+			// MessageBarManager.showAlert({
+			// 	message: I18n.t('userregister.otpValidate', { locale: lang }),
+			// 	title:'',
+			// 	alertType: 'extra',
+			// 	titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+			// 	messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+    		// })
+			// return
+			Alert.alert(
+				I18n.t('userregister.otplabel', { locale: lang }),
+				I18n.t('userregister.otpValidate', { locale: lang }),
+				[
+				//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+				  {text: I18n.t('sidemenu.ok', { locale: lang }), onPress: () => 
+				  		console.log('Cancel Pressed')    
+					},
+				],
+				{ cancelable: false }
+			  )
+			  return
+		}
+
 		this.OtpVerification()
 		// .then(()=> this.openOtpVarification())
 		// .then(()=>routes.loginPage())
@@ -754,6 +785,65 @@ class Register extends Component {
 		})
 		// .done();
 	}
+
+	resendOTPAPI() {
+		const { u_id} = this.state;
+			let formData = new FormData();
+			formData.append('u_id', String(100));
+			const config = {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'multipart/form-data;',
+				},
+				body: formData,
+			}
+			console.log("Request RecentOtp:=",config)
+			fetch(Utils.gurl('RecentOtp'), config)
+			.then((response) => response.json())
+			.then((responseData) => {
+				console.log("RecentOtp:=",responseData)
+				if(responseData.status){
+					// MessageBarManager.showAlert({
+					// 	message: responseData.response.message,
+					// 	title:'',
+					// 	alertType: 'extra',
+					// 	titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+					// 	messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+					// })
+					Alert.alert(
+						'OTP',
+						responseData.data.message,
+						[
+						//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+						  {text: 'ok', onPress: () => 
+								  console.log('Cancel Pressed')    
+							},
+						],
+						{ cancelable: false }
+					  )
+
+				}else{
+					Alert.alert(
+						'OTP',
+						responseData.data.message,
+						[
+						//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+						  {text: 'ok', onPress: () => 
+								  console.log('Cancel Pressed')    
+							},
+						],
+						{ cancelable: false }
+					  )
+					// this.openOtpVarification()
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.done();
+	}
+
 	async OtpVerification(){
 		const { lang } = this.props,
 		align = lang === 'ar' ? "right" : "left";
@@ -773,18 +863,32 @@ class Register extends Component {
 			fetch(Utils.gurl('OtpVerification'), config)
 			.then((response) => response.json())
 			.then((responseData) => {
+				console.log("OtpVerification:=",responseData)
 				if(responseData.response.status){
 					this.openOtpVarification()
 					routes.loginPage()
 				}else{
-					MessageBarManager.showAlert({
-						message: "Otp Varification Failed",
-						title:'',
-						alertType: 'extra',
-						titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-						messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-					})
-					this.openOtpVarification()
+
+					Alert.alert(
+						'OTP',
+						'Otp Varification Failed',
+						[
+						//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+						  {text: 'ok', onPress: () => 
+								  console.log('Cancel Pressed')    
+							},
+						],
+						{ cancelable: false }
+					  )
+
+					// MessageBarManager.showAlert({
+					// 	message: "Otp Varification Failed",
+					// 	title:'',
+					// 	alertType: 'extra',
+					// 	titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+					// 	messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+					// })
+					// this.openOtpVarification()
 				}
 			})
 			.catch((error) => {

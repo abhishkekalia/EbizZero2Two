@@ -282,7 +282,7 @@ class ProductOrder extends Component{
                 borderTopLeftRadius: 5,
                 borderTopRightRadius: 5,
                 marginTop: 5,
-                flexDirection: direction
+                // flexDirection: direction
             }}>
                 <View style={{flexDirection: direction}}>
                     <Text style={[styles.text,{ color: '#fbcdc5', fontWeight:'bold'}]}>{I18n.t('userorderhistory.orderdt', { locale: lang })}</Text>

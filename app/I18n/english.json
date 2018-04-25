@@ -71,7 +71,8 @@
         "greetings":"Otp has been sent to registered Eamil kindly check your email",
         "passwordvalidation":"Please enter atleast 6 character password",
         "pickfromMap": "Pick Address From Map",
-        "mobileValidatetionText":"Please enter 8 digit Mobile number"
+        "mobileValidatetionText":"Please enter 8 digit Mobile number",
+        "otpValidate":"Please enter OTP"
     },
     "venderregister":{
         "company":"Company",
