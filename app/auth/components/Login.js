@@ -66,7 +66,7 @@ class Login extends Component {
                 console.log(`is connected: ${this.state.netStatus}`);
             }
 		});
-		
+
 		EventEmitter.removeAllListeners("hideLoader");
         EventEmitter.on("hideLoader", (value)=>{
             console.log("hideLoader", value);
@@ -209,7 +209,7 @@ class Login extends Component {
 			<View style={{flex:1}}>
 				<View style= {{height:64,backgroundColor: '#a9d5d1', zIndex: 0}}>
 
-					{Platform.OS === 'ios' ? 
+					{Platform.OS === 'ios' ?
 					<TouchableWithoutFeedback style={{
 						position:'absolute'
 						}}onPress={this.onClickLanguage.bind(this)}>
@@ -234,7 +234,7 @@ class Login extends Component {
 						</Text>
 						</View>
 					</TouchableWithoutFeedback>
-					:      
+					:
 					// <TouchableHighlight style={{position:'absolute'}}onPress={this.onClickLanguage.bind(this)}>
 						<View style={{
 						height:25,
@@ -252,7 +252,7 @@ class Login extends Component {
 						}}>
 						<TouchableWithoutFeedback style={{
 							position:'absolute',
-							height:'100%',  
+							height:'100%',
 							width:'100%',
 						}}onPress={this.onClickLanguage.bind(this)}>
 						<Text style={{
@@ -263,7 +263,7 @@ class Login extends Component {
 						</Text>
 						</TouchableWithoutFeedback>
 						</View>
-				
+
 					}
 
 					<Text style = {{color : "#FFF", alignSelf: 'center', paddingTop: Platform.OS === 'ios' ? 28 : 22, fontSize:16}}>
@@ -294,7 +294,7 @@ class Login extends Component {
 			</View>
 		);
 	}
-	
+
 	onClickLanguage() {
 		this.refs['laguageSheet'].show()
 		console.log("language Id:=", this.state.languageId)
@@ -303,7 +303,7 @@ class Login extends Component {
 	onLanguageSelection(selected) {
 		console.log("onLanguageSelection clicked:=",selected);
 		if(selected === 0) {
-		  
+
 		}
 		else if (selected === 1) {
 			this.props.languageChange('ar')
@@ -333,7 +333,7 @@ class Login extends Component {
 						</Text>
 					</View>
 					<View style={{ padding : 20, top : 20}}>
-						
+
 							<View style ={[commonStyles.inputcontent,{borderColor:'#fbcdc5',borderWidth:0.5}]}>
 								<View style ={[commonStyles.iconusername,{borderColor:'#fbcdc5', flexDirection: (this.props.language == 'ar') ? 'row-reverse' : 'row'}]}>
 									<Ionicons
@@ -386,7 +386,7 @@ class Login extends Component {
 										onChangeText={(password) => this.setState({password})}/>
 								</View>
 							</View>
-						
+
 						<TouchableOpacity style ={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.onSubmit()}>
 							<Text style = {{color:"#FFFFFF"}}>{I18n.t('login.login_btn', { locale: language })}</Text>
 						</TouchableOpacity>
@@ -404,7 +404,7 @@ class Login extends Component {
 								<Text style = {{color:"#FFFFFF"}}>{I18n.t('login.createaccountbtn', { locale: language })}</Text>
 							</View>
 						</TouchableOpacity>
-						<Modal isVisible={this.state.visibleModal}>
+						<Modal isVisible={loading}>
 							<View style={{alignItems : 'center', padding:10}}>
 								{errorStatus ?  <View style={{ backgroundColor: '#fff', padding : 10, borderRadius :10}}><Text>{errorStatus}</Text></View> : undefined }
 								{errorStatus ? <Text onPress = {()=> this.setState({ visibleModal : false})} style={{ color : '#fff', backgroundColor : 'transparent' ,padding : 20, borderRadius: 20 }}>Close</Text> : <CirclesLoader />}
@@ -471,6 +471,7 @@ class Login extends Component {
 	}
 	getAndroidView () {
 		const {errorStatus, loading, language} = this.props;
+		console.log("loading", loading);
 		return(
 			<ScrollView style={[commonStyles.container, commonStyles.content]} testID="Login" keyboardShouldPersistTaps="handled">
 				<View style={{
@@ -540,7 +541,8 @@ class Login extends Component {
 								onChangeText={(password) => this.setState({password})}/>
 						</View>
 					</View>
-					<TouchableOpacity style ={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.onSubmit()}>
+				{errorStatus ? <Text style={commonStyles.errorText}>{errorStatus}</Text> : undefined}
+									<TouchableOpacity style ={{backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.onSubmit()}>
 						<Text style = {{color:"#FFFFFF"}}>{I18n.t('login.login_btn', { locale: language })}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style ={{marginTop : 10, backgroundColor:"#a9d5d1", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.onSkip()}>
@@ -557,7 +559,7 @@ class Login extends Component {
 							<Text style = {{color:"#FFFFFF"}}>{I18n.t('login.createaccountbtn', { locale: language })}</Text>
 						</View>
 					</TouchableOpacity>
-					<Modal isVisible={this.state.visibleModal}>
+					<Modal isVisible={loading}>
 						<View style={{alignItems : 'center', padding:10}}>
 							{errorStatus ?  <View style={{ backgroundColor: 'transparent', padding : 10, borderRadius :10}}><Text  style={{ color : '#fff', backgroundColor : 'transparent' }}>{I18n.t('login.passsnotmatch', { locale: language })}</Text></View> : undefined }
 							{errorStatus ? <Text onPress = {()=> this.setState({ visibleModal : false})} style={{ color : '#fff', backgroundColor : '#a9d5d1' ,padding : 10, borderRadius: 10 , borderWidth: StyleSheet.hairlineWidth, borderColor: "#fff"}}>{I18n.t('login.close', { locale: language })}</Text> : <CirclesLoader />}
@@ -665,7 +667,7 @@ class Login extends Component {
 		Keyboard.dismiss();
 		const {email, password, os} = this.state;
 		if (this.validate()) {
-			this.setState({...INITIAL_STATE, visibleModal: true});
+			this.setState({visibleModal: true});
 			this.props.login(email, password, os);
 		}
 	}
