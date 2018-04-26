@@ -540,28 +540,30 @@ class Vendorreg extends Component {
 				zIndex: 1,
 				backgroundColor: "transparent",
 				justifyContent: 'space-around',
-				height: 40,
+				// height: 40,
 				width: "90%",
 				alignSelf: 'center',
 				marginTop: Platform.OS === 'ios' ? 20 : 10,
 				borderRadius:5,
 				// backgroundColor:'red'
-				paddingVertical:10,
+				paddingVertical:5,
 				// alignItems:'center'
 			}}>
 				<TextInput
 					style={{
 						width: "85%",
-						height: Platform.OS === 'ios' ? 40 : 40,
+						// height: Platform.OS === 'ios' ? 40 : 40,
 						backgroundColor: "#fff",
 						alignSelf: 'center',
 						textAlign: 'center', //textline,
 						marginLeft : lang == 'ar'? 0 : 5,
 						// backgroundColor:'yellow'
 						borderRadius:5,
+						paddingVertical:5,
+						color:'black',
 					}}
 					editable = {false}
-					multiline = {false}
+					multiline = {true}
 					value={this.state.address}
 					placeholder={I18n.t('userregister.pickfromMap', { locale: lang })}
 					underlineColorAndroid = 'transparent'/>
@@ -654,14 +656,14 @@ class Vendorreg extends Component {
 			}
 
 			</View>
-			{
+			{/* {
 				this.state.isLoading ?
 					<ActivityIndicator
 						style={{alignSelf: 'center', position: 'absolute', marginTop: height/2-40 }}
 						color="#a9d5d1"
 						size="large"/>
 				: undefined
-			}
+			} */}
 			<Image style={{
 							position:'absolute',
 							zIndex:5,

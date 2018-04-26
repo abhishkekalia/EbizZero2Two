@@ -12,6 +12,7 @@ import {
   TextInput,
   ListView,
   Alert,
+  Modal,
 } from 'react-native';
 import {bindActionCreators} from "redux";
 import {Actions} from "react-native-router-flux";
@@ -22,7 +23,6 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import ActionSheet from 'react-native-actionsheet';
 import {connect} from "react-redux";
 import * as ebiztrait from "../auth/auth.actions";
-import Modal from 'react-native-modal';
 import I18n from 'react-native-i18n';
 
 import Ionicons123 from 'react-native-vector-icons/Feather';
@@ -334,7 +334,7 @@ class WelcomeScreen extends Component {
                     />
 
 
-                <Modal isVisible={this.state.isShowCity}>
+                <Modal isVisible={this.state.isShowCity} visible={this.state.isShowCity} animated={true}>
                     <View style={{
                         backgroundColor:'white',
                         // marginVertical:40,
@@ -342,11 +342,11 @@ class WelcomeScreen extends Component {
                         height:height,
                         borderRadius:5,
                         overflow:'hidden',
-                        marginLeft:-20,
+                        marginLeft:0,
                     }}>
                         <View style={{
                             width:'100%',
-                            height: 64,
+                            height: Platform.OS === 'ios' ? 64 : 54,
                             backgroundColor: '#a9d5d1',
                             // alignItems:'center',
                             alignContent:'center',
@@ -355,7 +355,7 @@ class WelcomeScreen extends Component {
                             <Text style={{
                                 // backgroundColor:'red',
                                 textAlign:'center',
-                                marginTop: 25,
+                                marginTop: Platform.OS === 'ios' ? 25 : 15,
                                 fontSize:19,
                                 color:'white',
                                 fontWeight:'bold'
@@ -366,7 +366,7 @@ class WelcomeScreen extends Component {
                                 style={{
                                     position:'absolute',
                                     marginLeft : width-50,
-                                    marginTop : Platform.OS === 'ios' ? 20 : 10,
+                                    marginTop : Platform.OS === 'ios' ? 20 : 13,
                                     paddingHorizontal : 10,
                                     backgroundColor : 'transparent',
                                 }}

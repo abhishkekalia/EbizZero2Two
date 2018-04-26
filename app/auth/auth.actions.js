@@ -62,11 +62,11 @@ export const login = (username, password, os) => {
 				u_id = responseData.response.data.u_id;
 				dispatch(successHome(responseData.response.data.fullname, password, usr_type, u_id, country));
 			} else {
-				MessageBarManager.showAlert({
-					message: "invalid username and password",
-					alertType: 'error',
-					title:''
-				})
+				// MessageBarManager.showAlert({
+				// 	message: "invalid username and password",
+				// 	alertType: 'error',
+				// 	title:''
+				// })
 				dispatch(loginFail(new Error('invalid username and password')));
 			}
 		})

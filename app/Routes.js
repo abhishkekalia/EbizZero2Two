@@ -101,7 +101,8 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
     <Router
     createReducer={reducerCreate}
     getSceneStyle={getSceneStyle}
-    headerMode='screen'>
+    headerMode='screen'
+    >
         <Overlay key="overlay">
             <Modal
             hideNavBar={true}
@@ -133,6 +134,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 inactiveBackgroundColor='#fff'
                                 lazy
                                 // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
+                                panHandlers={null}
                                 >
                                     <Stack
                                     key="Home"
@@ -210,6 +212,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                         hideNavBar
                         initial={vendor}
                         // type={ActionConst.REPLACE}
+                        panHandlers={null}
                         >
                             <Tabs
                             tabs

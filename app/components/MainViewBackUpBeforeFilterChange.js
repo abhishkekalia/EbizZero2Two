@@ -51,7 +51,6 @@ class MainView extends Component {
             dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
             serviceArrayStatus : false,
             status : false,
-            statusService : false,
             textInputValue: '',
             shoperId : '',
             data : [],
@@ -76,8 +75,6 @@ class MainView extends Component {
             isFilterProduct : true,
             arrSelectedGender :[],
             arrSelectedType :[],
-            isRemoveForAllShop: false,
-            isRemoveForAllService: false,
         }
     }
     componentDidMount(){
@@ -200,27 +197,20 @@ class MainView extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             var arrTmp = responseData.data
-            console.log("filterByShop arrTmp:=",arrTmp.length)
+            console.log("arrTmp:=",arrTmp.length)
             var merge = []
 
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    console.log("filterByShop true arrSelectedType:=",this.state.arrSelectedType)
                     if (this.state.arrServiceList.length > 0) {
                         if (arrTmp.length > 0) {
                             merge = arrTmp.concat(this.state.arrServiceList)
                         }
                         else {
-                            merge = this.state.arrServiceList
-                        }
-                    }
-                    else {
-                        if (arrTmp.length > 0) {
-                            merge = arrTmp
+                            merge = []
                         }
                     }
                 }
                 else {
-                    console.log("filterByShop false arrSelectedType:=",this.state.arrSelectedType)
                     if (this.state.arrSelectedType[0] == 1) {
                         if (arrTmp.length > 0) {
                             merge = arrTmp
@@ -235,9 +225,9 @@ class MainView extends Component {
                 // if (this.state.arrServiceList.length > 0) {
                 //     merge = arrTmp.concat(this.state.arrServiceList)
                 // }
-                console.log("filterByShop arrTmp:=",arrTmp)
+                console.log("arrTmp:=",arrTmp)
 
-            console.log("filterByShop merge:=",merge)
+            console.log("merge:=",merge)
             this.state.arrProductList = responseData.data
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(merge),
@@ -418,12 +408,7 @@ class MainView extends Component {
                             merge = arrTmp.concat(this.state.arrServiceList)
                         }
                         else {
-                            merge = this.state.arrServiceList
-                        }
-                    }
-                    else {
-                        if (arrTmp.length > 0) {
-                            merge = arrTmp
+                            merge = []
                         }
                     }
                 }
@@ -494,12 +479,7 @@ class MainView extends Component {
                             merge = arrTmp.concat(this.state.arrProductList)
                         }
                         else {
-                            merge = this.state.arrProductList
-                        }
-                    }
-                    else {
-                        if (arrTmp.length > 0) {
-                            merge = arrTmp
+                            merge = []
                         }
                     }
                 }
@@ -524,14 +504,12 @@ class MainView extends Component {
                     arrServiceList: responseData.data,
                     // dataSource2: this.state.dataSource2.cloneWithRows(arrTmp),
                     dataSource: this.state.dataSource.cloneWithRows(merge),
-                    isLoading : false,
-                    statusService : true,
+                    isLoading : false
                 });
             }
             else{
                 this.setState({
-                    isLoading : false,
-                    statusService : false,
+                    isLoading : false
                 })
             }
         })
@@ -584,9 +562,6 @@ class MainView extends Component {
                     if (this.state.arrServiceList.length > 0) {
                         if (arrTmp.length > 0) {
                             merge = arrTmp.concat(this.state.arrServiceList)
-                        }
-                        else {
-                            merge = this.state.arrServiceList
                         }
                     }
                 }
@@ -648,13 +623,8 @@ class MainView extends Component {
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
-        if (!this.state.status && !this.state.statusService) {
+        if (!this.state.status) {
             return this.noItemFound();
-        }
-        else {
-            console.log("this.state.status:=", this.state.status)
-            console.log("this.state.statusService:=", this.state.statusService)
-            console.log("this.state.dataSource:=",this.state.dataSource)
         }
         let side = lang === "ar" ? "right" : "left";
         return (
@@ -805,85 +775,85 @@ class MainView extends Component {
             </View>
         );
 
-        // if (this.state.arrSelectedType.length == 1) {
-        //     if (this.state.arrSelectedType[0] == 1) {
-        //         return(
-        //             <View style={{ marginBottom: 0}}>
-        //                 {/* {
-        //                     Platform.OS === 'ios' ?
-        //                     <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-        //                     :
-        //                     <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-        //                 } */}
-        //                 <View>
-        //                     {listView}
-        //                 </View>
-        //             </View>
-        //         );
-        //         // console.log("product product product")
-        //     } else {
-        //         // console.log("service service service")
-        //         return(
-        //             <View style={{ marginBottom: 0}}>
-        //                 {/* {
-        //                     Platform.OS === 'ios' ?
-        //                     <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-        //                     :
-        //                     <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-        //                 } */}
-        //                 <View>
-        //                     {serviceListview}
-        //                 </View>
-        //             </View>
-        //         );
-        //     }
-        // }
-        // else if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-        //     return(
-        //         this.state.isFilterProduct ?
-        //         <View style={{ marginBottom: 0}}>
-        //             {/* {
-        //                 Platform.OS === 'ios' ?
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-        //                 :
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-        //             } */}
-        //             <View>
-        //                 {listView}
-        //             </View>
-        //             {/* {
-        //                 Platform.OS === 'ios' ?
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-        //                 :
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-        //             } */}
-        //             <View>
-        //                 {serviceListview}
-        //             </View>
-        //         </View>
-        //         :
-        //         <View style={{ marginBottom: 0}}>
-        //             {/* {
-        //                 Platform.OS === 'ios' ?
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-        //                 :
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
-        //             } */}
-        //             <View>
-        //                 {serviceListview}
-        //             </View>
-        //             {/* {
-        //                 Platform.OS === 'ios' ?
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-        //                 :
-        //                 <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
-        //             } */}
-        //             <View>
-        //                 {listView}
-        //             </View>
-        //         </View>
-        //     );
-        // }
+        if (this.state.arrSelectedType.length == 1) {
+            if (this.state.arrSelectedType[0] == 1) {
+                return(
+                    <View style={{ marginBottom: 0}}>
+                        {/* {
+                            Platform.OS === 'ios' ?
+                            <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                            :
+                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        } */}
+                        <View>
+                            {listView}
+                        </View>
+                    </View>
+                );
+                // console.log("product product product")
+            } else {
+                // console.log("service service service")
+                return(
+                    <View style={{ marginBottom: 0}}>
+                        {/* {
+                            Platform.OS === 'ios' ?
+                            <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                            :
+                            <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        } */}
+                        <View>
+                            {serviceListview}
+                        </View>
+                    </View>
+                );
+            }
+        }
+        else if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
+            return(
+                this.state.isFilterProduct ?
+                <View style={{ marginBottom: 0}}>
+                    {/* {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                    } */}
+                    <View>
+                        {listView}
+                    </View>
+                    {/* {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                    } */}
+                    <View>
+                        {serviceListview}
+                    </View>
+                </View>
+                :
+                <View style={{ marginBottom: 0}}>
+                    {/* {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allservice', { locale: lang })}</Text>
+                    } */}
+                    <View>
+                        {serviceListview}
+                    </View>
+                    {/* {
+                        Platform.OS === 'ios' ?
+                        <Text style={{  textAlign: align, fontWeight : 'bold', margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                        :
+                        <Text style={{  textAlign: align, fontWeight : 'bold', fontFamily :"halvetica", margin : 10}}>{I18n.t('home.allitem', { locale: lang })}</Text>
+                    } */}
+                    <View>
+                        {listView}
+                    </View>
+                </View>
+            );
+        }
     }
     renderService(data, rowData: string, sectionID: number, rowID: number, index) {
         let color = data.special_price ? '#C5C8C9' : '#000';
@@ -1265,28 +1235,17 @@ class MainView extends Component {
         fetch(Utils.gurl('filterByService'), config)
         .then((response) => response.json())
         .then((responseData) => {
-            console.log("Response filterByService:=",responseData)
             if(responseData.status){
                 var arrTmp = responseData.data
                 var merge = []
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    console.log("filterByService true:=")
                     if (this.state.arrProductList.length > 0) {
                         if (arrTmp.length > 0) {
                             merge = arrTmp.concat(this.state.arrProductList)
                         }
-                        else {
-                            merge = this.state.arrProductList
-                        }
-                    }
-                    else {
-                        if (arrTmp.length > 0) {
-                            merge = arrTmp
-                        }
                     }
                 }
                 else {
-                    console.log("filterByService false:=")
                     if (this.state.arrSelectedType[0] == 1) {
                         if (this.state.arrProductList.length > 0) {
                             merge = this.state.arrProductList
@@ -1305,15 +1264,15 @@ class MainView extends Component {
                     arrServiceList: responseData.data,
                     // dataSource2: this.state.dataSource2.cloneWithRows(arrTmp),
                     dataSource: this.state.dataSource.cloneWithRows(merge),
-                    statusService : responseData.status,
+                    status : responseData.status,
                     loaded: true,
                     refreshing: false
                 });
             } else {
-                console.log("filterByService status false")
+                console.log("status false")
                 this.setState({
                     isLoading : false,
-                    statusService : responseData.status,
+                    status : responseData.status,
                     loaded: true,
                     refreshing: false
                 })

@@ -667,6 +667,7 @@ class Newaddress extends Component{
                             <View style={{ flex: 1,backgroundColor: 'white'}} >
                                 {Platform.OS === 'ios' ?
                                     <MapView
+                                        
                                         style = {{height:200, marginRight:0, marginBottom:10,marginTop:0}}
                                         // provider={PROVIDER_GOOGLE}
                                         initialRegion={{
@@ -679,7 +680,7 @@ class Newaddress extends Component{
                                         // style={StyleSheet.absoluteFill}
                                         // ref={c => this.mapView = c}
                                         // onPress={this.onMapPress}
-                                        onRegionChange={this.onRegionChange.bind(this)}
+                                        // onRegionChange={this.onRegionChange.bind(this)}
                                         >
                                     <Marker
                                         coordinate={this.state.coordinate}
@@ -707,7 +708,7 @@ class Newaddress extends Component{
                                         // style={StyleSheet.absoluteFill}
                                         // ref={c => this.mapView = c}
                                         // onPress={this.onMapPress}
-                                        onRegionChange={this.onRegionChange.bind(this)}
+                                        // onRegionChange={this.onRegionChange.bind(this)}
                                         >
                                     <Marker
                                         coordinate={this.state.coordinate}
@@ -775,7 +776,7 @@ class Newaddress extends Component{
                 <Icons onPress ={()=>this.setState({ FullMapVisible :false})} name="close" size={25} color="black" style={{ 
                         alignSelf: 'flex-end',
                         position: 'absolute',    
-                        marginTop:30,         
+                        marginTop:Platform.OS === 'ios' ? 30 : 15,         
                         marginRight:50,
                         paddingRight:20,
                         zIndex:2,       
@@ -790,7 +791,7 @@ class Newaddress extends Component{
                         style={StyleSheet.absoluteFill}
                         ref={c => this.mapView = c}
                         onPress={this.onMapPress}
-                        onRegionChange={this.onRegionChange.bind(this)}
+                        // onRegionChange={this.onRegionChange.bind(this)}
                         onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
                         >
                         {/* <MapView.Marker draggable
@@ -822,7 +823,7 @@ class Newaddress extends Component{
                         style={StyleSheet.absoluteFill}
                         ref={c => this.mapView = c}
                         onPress={this.onMapPress}
-                        onRegionChange={this.onRegionChange.bind(this)}
+                        // onRegionChange={this.onRegionChange.bind(this)}
                         onRegionChangeComplete={this.onRegionChangeComplete.bind(this)}
                         >
                         {/* <MapView.Marker draggable

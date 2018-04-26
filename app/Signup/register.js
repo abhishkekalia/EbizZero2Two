@@ -590,31 +590,34 @@ class Register extends Component {
 						zIndex: 1,
 						backgroundColor: "transparent",
 						justifyContent: 'space-around',
-						height: 40,
+						// height: 40,
 						width: "90%",
 						alignSelf: 'center',
 						marginTop: Platform.OS === 'ios' ? 20 : 10 ,
 						borderRadius:5,
-						// backgroundColor:'red'
-						paddingVertical:10,
+						// backgroundColor:'red',
+						paddingVertical:5,
 						// alignItems:'center'
 					}}>
 						<TextInput
 							style={{
 								width: "85%",
-								height: Platform.OS === 'ios' ? 40 : 40,
+								// height: Platform.OS === 'ios' ? 40 : 40,
 								backgroundColor: "#fff",
 								alignSelf: 'center',
 								textAlign: 'center' ,//textline,
 								marginLeft : lang == 'ar'? 0 : 5,
 								// backgroundColor:'yellow'
 								borderRadius:5,
+								paddingVertical:5,
+								color:'black',
 							}}
 							editable = {false}
-							multiline = {false}
+							multiline = {true}
 							value={this.state.address}
 							placeholder={I18n.t('userregister.pickfromMap', { locale: lang })}
-							underlineColorAndroid = 'transparent'/>
+							underlineColorAndroid = 'transparent'
+							/>
 						{
 							!this.state.address.length ?
 							<Icon onPress ={()=>this.setState({ ShowMapLocation :false})} name="close" size={25} color="#000" style={ { alignSelf: 'center'} } />
@@ -705,14 +708,14 @@ class Register extends Component {
 						}
 					</View>
 					
-					{
+					{/* {
 						this.state.isLoading ?
 							<ActivityIndicator
 								style={{alignSelf: 'center', position: 'absolute', marginTop: height/2-40 }}
 								color="#a9d5d1"
 								size="large"/>
 						: undefined
-					}
+					} */}
 					<Image style={{
 							position:'absolute',
 							zIndex:5,
@@ -804,38 +807,27 @@ class Register extends Component {
 			.then((responseData) => {
 				console.log("RecentOtp:=",responseData)
 				if(responseData.status){
-					// MessageBarManager.showAlert({
-					// 	message: responseData.response.message,
-					// 	title:'',
-					// 	alertType: 'extra',
-					// 	titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-					// 	messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-					// })
 					Alert.alert(
 						'OTP',
 						responseData.data.message,
 						[
-						//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
 						  {text: 'ok', onPress: () => 
 								  console.log('Cancel Pressed')    
 							},
 						],
 						{ cancelable: false }
 					  )
-
 				}else{
 					Alert.alert(
 						'OTP',
 						responseData.data.message,
 						[
-						//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
 						  {text: 'ok', onPress: () => 
 								  console.log('Cancel Pressed')    
 							},
 						],
 						{ cancelable: false }
 					  )
-					// this.openOtpVarification()
 				}
 			})
 			.catch((error) => {

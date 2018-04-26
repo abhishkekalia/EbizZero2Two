@@ -278,10 +278,11 @@ class Settings extends Component {
             },
             body: formData,
         }
-
+        console.log("REquest clearOrderHistory:=",config)
         fetch(Utils.gurl('clearOrderHistory'), config)
         .then((response) => response.json())
         .then((response) => {
+            console.log("Response clearOrderHistory:=",response)
             if(response.status){
                 MessageBarManager.showAlert({
                     message: response.data.message,

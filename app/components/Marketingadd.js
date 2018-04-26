@@ -103,6 +103,7 @@ class Marketingadd extends Component {
             console.log('uploaded', Math.floor(written/total*100) + '%')
         })
         .then((responseData)=>{
+            console.log("Response addMarketingAd:=",responseData)
             var getdata = JSON.parse(responseData.data);
             if(getdata.status){
                 routes.myAdfaturah({ uri : getdata.data.url, ad_id : getdata.data.ad_id , amount: amount })

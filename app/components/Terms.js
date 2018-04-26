@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { WebView } from 'react-native';
+import { WebView,Platform } from 'react-native';
 
 export default class Terms extends Component<{}> {
   render() {
@@ -7,6 +7,7 @@ export default class Terms extends Component<{}> {
       <WebView
         source={{ html: this.props.description}}
         style={{marginTop: 20}}
+        scalesPageToFit={Platform.OS === 'ios' ? false : true}
       />
     );
   }

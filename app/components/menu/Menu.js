@@ -11,6 +11,7 @@ import {
     TouchableHighlight,
     TouchableOpacity,
     Alert,
+    Platform,
 } from 'react-native';
 import * as authActions from '../../auth/auth.actions';
 import { Actions } from 'react-native-router-flux';
@@ -265,7 +266,7 @@ class Menu extends React.Component {
         let shareOptions = {
             title: "ZeroToTwo",
             message: "App Description",
-            url: "https://www.google.com",
+            url: Platform.OS === 'ios' ? "https://itunes.apple.com/us/app/zero-2-two-app/id1374303629?ls=1&mt=8" : "https://itunes.apple.com/us/app/zero-2-two-app/id1374303629?ls=1&mt=8",
             subject: "Share Link" //  for email
         };
         return(
