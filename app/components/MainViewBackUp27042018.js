@@ -327,18 +327,6 @@ class MainView extends Component {
     onClick(data) {
         data.checked = !data.checked;
         data.checked ? this.check(data) : this.unCheck(data)
-
-        var dataBackUp = []
-        console.log("false:=",this.state.dataArray)
-        dataBackUp = this.state.dataArray.slice()
-        this.setState({
-            dataArray:[]
-        })
-
-        var that = this;
-        setTimeout(function() {
-            that.reloadShop(dataBackUp)
-        }, 0);
     }
     check (data){
         console.log("this.state.rows:=",this.state.rows)
@@ -984,14 +972,13 @@ class MainView extends Component {
                     showsVerticalScrollIndicator={false}>
                     {/* <TouchableOpacity onPress={this.onClickAllShop.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}> */}
                         {/* <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text> */}
-                        
-                        { this.state.dataArray.length > 0 ? this.checkShopStatusSelected() ?
+                        {!this.checkShopStatusSelected() ?
                             // undefined
                             <CheckBox
                                 style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
                                 leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
                                 onClick={()=>this.onClickAllShop()}
-                                isChecked={true}
+                                isChecked={false}
                                 leftText={I18n.t('home.allshop', { locale: lang })}
                                 lang={lang}
                             />
@@ -1002,11 +989,10 @@ class MainView extends Component {
                                 style={{borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc', width : width-50}}
                                 leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
                                 onClick={()=>this.onClickAllShop()}
-                                isChecked={false}
+                                isChecked={true}
                                 leftText={I18n.t('home.allshop', { locale: lang })}
                                 lang={lang}
-                            /> 
-                            : undefined
+                            />
 
             //                 <CheckBox
             //   label={rowdata.CategoryName}
@@ -1037,13 +1023,10 @@ class MainView extends Component {
                 }
             }
             if (isInnerTrue == false) {
-                console.log("isInnerTrue == false")
                 isTrue = false
                 break
             }
         }
-        console.log("this.state.rows:=",this.state.rows)
-        console.log("this.state.dataArray:=",this.state.dataArray)
         console.log("isTrue:=",isTrue)
         return isTrue
     }
@@ -1120,13 +1103,13 @@ class MainView extends Component {
                 <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
                     {/* <TouchableOpacity onPress={this.onClickAllService.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}> */}
                         {/* <Text style={{ padding : 10, textAlign: align}}>{I18n.t('home.allservice', { locale: lang })}</Text> */}
-                            { this.state.serviceArray.length > 0 ?  this.checkServiceStatusSelected() ?
+                            {!this.checkServiceStatusSelected() ?
                                 // undefined
                                 <CheckBox
                                     style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
                                     leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
                                     onClick={()=>this.onClickAllService()}
-                                    isChecked={true}
+                                    isChecked={false}
                                     leftText={I18n.t('home.allservice', { locale: lang })}
                                     lang={lang}
                                 />
@@ -1136,11 +1119,10 @@ class MainView extends Component {
                                     style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
                                     leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
                                     onClick={()=>this.onClickAllService()}
-                                    isChecked={false}
+                                    isChecked={true}
                                     leftText={I18n.t('home.allservice', { locale: lang })}
                                     lang={lang}
                                 />
-                                : undefined
                             }
                     {/* </TouchableOpacity> */}
                     {console.log("countinue")}
@@ -1346,18 +1328,6 @@ class MainView extends Component {
         data.checked = !data.checked;
         data.checked ? this.checkService(data) : this.unCheckService(data)
         let msg=data.checked? 'you checked ':'you unchecked '
-
-        var dataBackUp = []
-        console.log("false:=",this.state.serviceArray)
-        dataBackUp = this.state.serviceArray.slice()
-        this.setState({
-            serviceArray:[]
-        })
-
-        var that = this;
-        setTimeout(function() {
-            that.reloadService(dataBackUp)
-        }, 0);
     }
     checkService (data){
         console.log("this.state.rows:=",this.state.servicerows)

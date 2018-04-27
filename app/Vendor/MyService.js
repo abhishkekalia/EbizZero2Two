@@ -72,7 +72,7 @@ class MyService extends Component {
     noItemFound(){
         const { lang} = this.props;
         return (
-            <View style={{ justifyContent:'center', alignItems:'center'}}>
+            <View style={{ justifyContent:'center', alignItems:'center', marginTop:20}}>
                 <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );
@@ -115,7 +115,7 @@ class MyService extends Component {
             );
             let data = (this.state.dataSource.getRowCount() < 1) ? this.noItemFound() :listView
         return (
-        <View style={{paddingBottom : 53, backgroundColor: 'rgba(248,248,248,1)'}}>
+        <View style={{paddingBottom : 53, backgroundColor: 'rgba(248,248,248,1)', backgroundColor:'transparent'}}>
             {data}
         </View>
         );

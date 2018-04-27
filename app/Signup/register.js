@@ -15,6 +15,7 @@ import {
 	Modal,
 	ActivityIndicator,
 	Alert,
+	TouchableWithoutFeedback,
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -441,7 +442,7 @@ class Register extends Component {
 							maxLength={140}
 							keyboardType={'numeric'}
           					onSubmitEditing={(event) => {
-          						this.focusNextField('five');
+          						// this.focusNextField('five');
           					}}
           					returnKeyType={ "next" }
  				        	ref={ input => {
@@ -486,23 +487,37 @@ class Register extends Component {
                     	cancelButtonIndex={CANCEL_INDEX}
                     	// destructiveButtonIndex={DESTRUCTIVE_INDEX}
                     	onPress={this.handlePress}/>
-					<View style={{ flexDirection: direction}}>
-						<TextInput
-							style={[commonStyles.inputpassword,{height:40, width: width-75, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5, zIndex: 1, position: 'relative'}] }
-							value={this.state.address}
-							underlineColorAndroid = 'transparent'
-							autoCorrect={false}
-							placeholder={I18n.t('userregister.address', { locale: lang })}
-							maxLength={140}
-							returnKeyType={ "done" }
-							ref={ input => {
-								this.inputs['five'] = input;
+					<TouchableWithoutFeedback style ={{backgroundColor:'red'}} onPress={this.onAddressClicked.bind(this)}>
+						<View style={{ flexDirection: direction, height:40, paddingVertical:10}}>
+							{/* <TextInput
+								style={[commonStyles.inputpassword,{height:40, width: width-75, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5, position: 'relative'}] }
+								value={this.state.address}
+								underlineColorAndroid = 'transparent'
+								autoCorrect={false}
+								placeholder={I18n.t('userregister.address', { locale: lang })}
+								maxLength={140}
+								returnKeyType={ "done" }
+								editable={false}
+								ref={ input => {
+									this.inputs['five'] = input;
+								}}
+								onChangeText={(address) => this.setState({address})}
+								/> */}
+							<Text style={{
+								height:20, 
+								width: width-75, 
+								textAlign: textline, 
+								marginLeft : lang == 'ar'? 0 : 5,
+								color : this.state.address ? 'black' : 'gray',
+								// backgroundColor : 'red',
 							}}
-							onChangeText={(address) => this.setState({address})}/>
-						<Entypo name="location" size={20} color="#FFCC7D" style={{ alignSelf: 'center'}} onPress={()=>this.setState({
-								ShowMapLocation : true
-							})}/>
+							numberOfLines={1}
+							>{this.state.address ? this.state.address : I18n.t('userregister.address', { locale: lang })}</Text>
+							<Entypo name="location" size={20} color="#FFCC7D" style={{ alignSelf: 'center'}} onPress={()=>this.setState({
+									ShowMapLocation : true
+								})}/>
 						</View>
+					</TouchableWithoutFeedback>
 					</View>
 					<TouchableOpacity style ={{justifyContent: 'center', alignItems: 'center', padding: 10, borderColor: '#ccc', flexDirection: 'row', alignItems: 'center', padding:0}} onPress={this.onSubmit.bind(this)}>
 						<View style={{backgroundColor:"#FFCC7D", width:'100%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}}>
@@ -732,6 +747,13 @@ class Register extends Component {
 		);
 	}
 
+	onAddressClicked() {
+		console.log("onAddressClicked")
+		this.setState({
+			ShowMapLocation : true
+		})
+	}
+
 	onDragPinCallback(e) {
 		console.log("onDragPinCallback")
 		this.setState({
@@ -857,7 +879,7 @@ class Register extends Component {
 			.then((responseData) => {
 				console.log("OtpVerification:=",responseData)
 				if(responseData.response.status){
-					this.openOtpVarification()
+					this.openOtpVarification(u_id)
 					routes.loginPage()
 				}else{
 

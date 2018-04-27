@@ -21,6 +21,8 @@ import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
 import I18n from 'react-native-i18n'
 import Share, {ShareSheet, Button} from 'react-native-share';
+import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
+
 const { width, height } = Dimensions.get('window')
 
 class Menu extends React.Component {
@@ -57,8 +59,17 @@ class Menu extends React.Component {
         })
         .done();
     }
-    SampleFunction=(newLang)=>{
-        this.props.languageChange(newLang)
+    // SampleFunction=(newLang)=>{
+    //     this.props.languageChange(newLang)
+    // }
+    SampleFunctionNew=(index)=>{
+        console.log("index:=",index)
+        if (index == 0) {
+            this.props.languageChange('en')
+        }
+        else {
+            this.props.languageChange('ar')
+        }
     }
     notificationShow = ()=> {
         this.props.closeDrawer()
@@ -104,18 +115,35 @@ class Menu extends React.Component {
                             </TouchableOpacity>
                         </View>
                     }
-                    <View style={{ width: width, height:  "20%", justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 0, position: 'relative'}}>
+                    <View style={{ width: width, height:  "25%", justifyContent: 'space-around',flexDirection: (lang === 'ar') ? 'row' : 'row-reverse', zIndex: 0, position: 'relative',}}>
+                        <RadioGroup
+                            style={{
+                                justifyContent: 'space-around', 
+                                color:'#fff',
+                                width: width, 
+                                flexDirection: (lang === 'ar') ? 'row' : 'row-reverse',
+                                zIndex: 0, 
+                                position: 'relative',
+                            }}
+                            onSelect = {this.SampleFunctionNew.bind(this)}
+                            color = {'#fff'}
+                            selectedIndex = {this.props.lang == 'en' ? 0 : 1}
+                        >
                         {
-                            Object.keys(I18n.translations).map((item, key)=>(
-                                <Text
-                                    style={{ fontSize: 15, color: '#fff', alignSelf: 'flex-end'}}
-                                    key={key}
-                                    // {I18n.translations[item].id }
-                                    onPress={ this.SampleFunction.bind(this, item) }>
-                                    {I18n.translations[item].id }
-                                </Text>
+                            Object.keys(I18n.translations).map((item, key)=>(                                
+                                    <View>
+                                    <Text
+                                        style={{ fontSize: 15, color: '#fff', alignSelf: 'flex-end'}}
+                                        key={key}
+                                        // {I18n.translations[item].id }
+                                        // onPress={ this.SampleFunction.bind(this, item) }
+                                        >
+                                        {I18n.translations[item].id }
+                                    </Text>
+                                    </View>
                             ))
                         }
+                        </RadioGroup>
                     </View>
                     <Text style={{
                             zIndex: 1,

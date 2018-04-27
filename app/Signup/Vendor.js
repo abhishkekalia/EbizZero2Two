@@ -13,7 +13,9 @@ import {
 	StyleSheet,
 	Image,
 	Modal,
-	ActivityIndicator
+	ActivityIndicator,
+	TouchableWithoutFeedback,
+	Alert,
 } from "react-native";
 import {Loader} from "app/common/components";
 import commonStyles from "app/common/styles";
@@ -90,7 +92,10 @@ class Vendorreg extends Component {
 			type : '3',
 			os : (Platform.OS === 'ios') ? 2 : 1,
 			countries: ["0"],
+			otpVarification: false,
 			ShowMapLocation: false,
+			u_id: '',
+			otp : '',
 			isLoading: true,
 			LATITUDE : 22.966425,
 			LONGITUDE : 72.615933,
@@ -351,7 +356,7 @@ class Vendorreg extends Component {
 								maxLength={140}
 								keyboardType={'email-address'}
 								onSubmitEditing={() => {
-									this.focusNextField('five');
+									// this.focusNextField('five');
 								}
 							}
 							returnKeyType={ "next" }
@@ -360,8 +365,9 @@ class Vendorreg extends Component {
 							}}
 							onChangeText={(email) => this.setState({email})}/>
 					</View>
-					<View style ={[commonStyles.iconusername, { flexDirection: direction}]}>
-						<TextInput
+					<TouchableWithoutFeedback style ={{backgroundColor:'red'}} onPress={this.onAddressClicked.bind(this)}>
+					<View style ={[commonStyles.iconusername, { flexDirection: direction, height:40, paddingVertical:10}]}>
+						{/* <TextInput
 							style={[commonStyles.inputpassword,{height:40, width: width-75, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5, zIndex: 1, position: 'relative'}] }
 							value={this.state.address}
 							underlineColorAndroid = 'transparent'
@@ -375,11 +381,22 @@ class Vendorreg extends Component {
 							ref={ input => {
 								this.inputs['five'] = input;
 							}}
-							onChangeText={(address) => this.setState({address})}/>
+							onChangeText={(address) => this.setState({address})}/> */}
+							<Text style={{
+								height:20, 
+								width: width-75, 
+								textAlign: textline, 
+								marginLeft : lang == 'ar'? 0 : 5,
+								color : this.state.address ? 'black' : 'gray',
+								// backgroundColor : 'red',
+							}}
+							numberOfLines={1}
+							>{this.state.address ? this.state.address : I18n.t('userregister.address', { locale: lang })}</Text>
 						<Entypo name="location" size={20} color="#FFCC7D" style={{ alignSelf: 'center'}} onPress={()=>this.setState({
 								ShowMapLocation : true
 							})}/>
 					</View>
+					</TouchableWithoutFeedback>
 					<View style ={[commonStyles.iconusername, { alignItems: 'center'}]}>
 						<TextInput
 							style={[commonStyles.inputusername, {  height:40, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]}
@@ -529,6 +546,49 @@ class Vendorreg extends Component {
 			</TouchableOpacity>
 			<KeyboardSpacer/>
 		</ScrollView>
+		<Modal
+					animationType="slide"
+					transparent={false}
+					visible={this.state.otpVarification}
+					onRequestClose={() => this.setState({ otpVarification :false})}>
+					<View style={{
+							flex: 1,
+							flexDirection: 'column',
+							justifyContent: 'center',
+							alignItems: 'center',
+							backgroundColor: "transparent"
+						}}>
+						<Text style={{ fontSize: 14, color: "#6969", margin:20, textAlign:'center'}}>{I18n.t('userregister.greetings', { locale: lang })}</Text>
+
+						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center'}}>
+							<Text style={{ fontSize: 15, color: "#6969"}}>{I18n.t('userregister.otplabel', { locale: lang })}</Text>
+							<TextInput
+								style={[commonStyles.inputpassword,{
+									borderBottomWidth: 1,
+									textAlign: 'center',
+									height: 40,
+									width: width/3, textAlign: textline, marginLeft : lang == 'ar'? 0 : 5}]
+								}
+								// secureTextEntry={this.state.hidden}
+								value={this.state.otp}
+								underlineColorAndroid = 'transparent'
+								autoCorrect={false}
+								placeholder={I18n.t('userregister.otpplchldr', { locale: lang })}
+								maxLength={6}
+								returnKeyType={ "done" }
+								onChangeText={ (otp) => this.setState({ otp }) }/>
+						</View>
+						<TouchableOpacity style={{}} onPress={this.resendOTPAPI.bind(this)}>
+						<View style={{ flexDirection: 'row', backgroundColor: "#fff", alignItems: 'center', justifyContent: 'space-between', margin:20}}>
+							<Icon name="refresh" size={25} color="#a9d5d1"/>
+							<Text style={{ fontSize: 10, color: "#6969"}}>{I18n.t('userregister.resendOtp', { locale: lang })}</Text>
+						</View>
+						</TouchableOpacity>
+						<TouchableOpacity style={{ height: 40, alignItems: 'center', justifyContent: 'center', backgroundColor: "#a9d5d1", width: width/2, borderRadius: 10, marginTop: 10}} onPress={()=>this.varifyOtp()}>
+							<Text style={{ fontSize: 15, fontWeight: 'bold', color: "#fff"}}>{I18n.t('userregister.submitbtn', { locale: lang })}</Text>
+						</TouchableOpacity>
+					</View>
+			</Modal>
 		<Modal
 			animationType="slide"
 			transparent={false}
@@ -680,6 +740,13 @@ class Vendorreg extends Component {
 		);
 	}
 
+	onAddressClicked() {
+		console.log("onAddressClicked")
+		this.setState({
+			ShowMapLocation : true
+		})
+	}
+
 	onDragPinCallback(e) {
 		console.log("onDragPinCallback")
 		this.setState({
@@ -697,6 +764,147 @@ class Vendorreg extends Component {
 			}},this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude))
 
 		// this.loadAddressFromMap(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+	}
+
+	varifyOtp(){
+		console.log("varifyOtp")
+		const { lang } = this.props;
+		console.log(lang)
+		var align = lang === 'ar' ? "right" : "left";
+		console.log(align)
+		if (this.state.otp.length <= 0) {
+			// MessageBarManager.showAlert({
+			// 	message: I18n.t('userregister.otpValidate', { locale: lang }),
+			// 	title:'',
+			// 	alertType: 'extra',
+			// 	titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+			// 	messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+    		// })
+			// return
+			Alert.alert(
+				I18n.t('userregister.otplabel', { locale: lang }),
+				I18n.t('userregister.otpValidate', { locale: lang }),
+				[
+				//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+				  {text: I18n.t('sidemenu.ok', { locale: lang }), onPress: () => 
+				  		console.log('Cancel Pressed')    
+					},
+				],
+				{ cancelable: false }
+			  )
+			  return
+		}
+
+		this.OtpVerification()
+		// .then(()=> this.openOtpVarification())
+		// .then(()=>routes.loginPage())
+		.catch((error) => {
+			console.log(error);
+		})
+		// .done();
+	}
+
+	resendOTPAPI() {
+		const { u_id} = this.state;
+			let formData = new FormData();
+			formData.append('u_id', String(100));
+			const config = {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'multipart/form-data;',
+				},
+				body: formData,
+			}
+			console.log("Request RecentOtp:=",config)
+			fetch(Utils.gurl('RecentOtp'), config)
+			.then((response) => response.json())
+			.then((responseData) => {
+				console.log("RecentOtp:=",responseData)
+				if(responseData.status){
+					Alert.alert(
+						'OTP',
+						responseData.data.message,
+						[
+						  {text: 'ok', onPress: () => 
+								  console.log('Cancel Pressed')    
+							},
+						],
+						{ cancelable: false }
+					  )
+				}else{
+					Alert.alert(
+						'OTP',
+						responseData.data.message,
+						[
+						  {text: 'ok', onPress: () => 
+								  console.log('Cancel Pressed')    
+							},
+						],
+						{ cancelable: false }
+					  )
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.done();
+	}
+
+	async OtpVerification(){
+		const { lang } = this.props,
+		align = lang === 'ar' ? "right" : "left";
+		try {
+			const { otp, u_id} = this.state;
+			let formData = new FormData();
+			formData.append('u_id', String(u_id));
+			formData.append('otp', String(otp));
+			const config = {
+				method: 'POST',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'multipart/form-data;',
+				},
+				body: formData,
+			}
+			fetch(Utils.gurl('OtpVerification'), config)
+			.then((response) => response.json())
+			.then((responseData) => {
+				console.log("OtpVerification:=",responseData)
+				if(responseData.response.status){
+					this.openOtpVarification(u_id)
+					routes.loginPage()
+				}else{
+
+					Alert.alert(
+						'OTP',
+						'Otp Varification Failed',
+						[
+						//   {text: I18n.t('sidemenu.cancel', { locale: lang }), onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+						  {text: 'ok', onPress: () => 
+								  console.log('Cancel Pressed')    
+							},
+						],
+						{ cancelable: false }
+					  )
+
+					// MessageBarManager.showAlert({
+					// 	message: "Otp Varification Failed",
+					// 	title:'',
+					// 	alertType: 'extra',
+					// 	titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+					// 	messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+					// })
+					// this.openOtpVarification()
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.done();
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	validate(){
@@ -858,6 +1066,8 @@ class Vendorreg extends Component {
 		const {company, representative_name, email, password, gender, contact, selectCountry, os, address, type,
 			facebook_id, twitter_id, instagram_id, snapchat_id
 		} = this.state;
+		const { lang} = this.props,
+		align = lang === 'ar' ? "right" : "left";
 		let formData = new FormData();
 		formData.append('fullname', String(company));
 		formData.append('email', String(email));
@@ -888,22 +1098,45 @@ class Vendorreg extends Component {
 				},
 				body: formData,
 			}
+			console.log("Request register:=",config)
 			fetch(Utils.gurl('register'), config)
 			.then((response) => response.json())
 			.then((responseData) => {
 				// console.warn(JSON.stringify(responseData));
-				routes.loginPage()
-				MessageBarManager.showAlert({
-					message: I18n.t('userregister.greetingsmsg', { locale: lang }),
-					alertType: 'alert',
-					title:''
-				})
+				// routes.loginPage()
+				console.log("Response register:=",responseData)
+				if(responseData.response.status){
+					let u_id = responseData.response.data.u_id
+					MessageBarManager.showAlert({
+						message: I18n.t('userregister.greetingsmsg', { locale: lang }),
+						alertType: 'alert',
+						title:''
+					})
+					this.openOtpVarification(u_id)
+				}
+				else {
+					MessageBarManager.showAlert({
+						// message: I18n.t('userregister.greetings', { locale: lang }),
+						message: responseData.response.data.message,
+						title:'',
+						alertType: 'extra',
+						titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+						messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+					})
+				}
 			})
 			.catch(err => {
 				console.log(err);
 			})
 			.done();
 		}
+	}
+
+	openOtpVarification(u_id){
+		this.setState({
+			u_id: u_id,
+			otpVarification : !this.state.otpVarification
+		})
 	}
 }
 function mapStateToProps(state) {

@@ -117,7 +117,7 @@ class MyProduct extends Component {
     noItemFound(){
         const { lang} = this.props;
         return (
-            <View style={{ justifyContent:'center', alignItems:'center'}}>
+            <View style={{ justifyContent:'center', alignItems:'center', marginTop:20}}>
                 <Text>{I18n.t('home.noitem', { locale: lang })}</Text>
             </View>
         );

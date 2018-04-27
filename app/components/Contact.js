@@ -215,7 +215,7 @@ class Contact extends Component<{}> {
                     </Picker>
                 </View>
                 <TextInput
-                    style={[styles.input,{height:100, textAlign: textline}]}
+                    style={[styles.input,{height:100, textAlign: textline, textAlignVertical:'top'}]}
                     numberOfLines={4}
                     value={this.state.message}
                     underlineColorAndroid = 'transparent'
@@ -230,7 +230,8 @@ class Contact extends Component<{}> {
                     }}
                     onChangeText={(message) => this.setState({message})}/>
                 {/* <Button title="Send Request" onPress={()=> this.contactUS()}/> */}
-                <TouchableOpacity style ={{alignSelf:"center", backgroundColor:"#a9d5d1", width:'95%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} onPress={()=> this.contactUS()}>
+                <TouchableOpacity style={{alignSelf:"center", backgroundColor:"#a9d5d1", width:'95%', height:40, alignItems: 'center', justifyContent:'center', borderRadius:5}} 
+                onPress={()=> this.contactUS()}>
                     <Text style = {{color:"#FFFFFF"}}>{I18n.t('contact.submitbtn', { locale: lang })}</Text>
                 </TouchableOpacity>
                 <Text style={{ padding : 10, fontSize :15, borderBottomWidth:0.5, borderColor : '#ccc', textAlign: textline}}>{I18n.t('contact.customerservice', { locale: lang })}</Text>

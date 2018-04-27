@@ -863,13 +863,25 @@ class Footer extends Component {
         fetch(Utils.gurl('removeFromCart'), config)
         .then((response) => response.json())
         .then((responseData) => {
-            MessageBarManager.showAlert({
-                message: I18n.t('cart.removeitem', { locale: lang }),
-                title:'',
-                alertType: 'extra',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
+            console.log("removeFromCart Response:=",responseData)
+            if (responseData.status) {
+                MessageBarManager.showAlert({
+                    message: I18n.t('cart.removeitem', { locale: lang }),
+                    title:'',
+                    alertType: 'extra',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+            }   
+            else {
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    title:'',
+                    alertType: 'extra',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+            }
         })
         .then(()=>this.props.callback())
         .catch((error) => {
@@ -1108,13 +1120,24 @@ class SelectItem extends Component{
         .then((response) => response.json())
         .then((responseData) => {
             console.log("removeFromCart Response:=",responseData)
-            MessageBarManager.showAlert({
-                message: I18n.t('cart.removeitem', { locale: lang }),
-                title:'',
-                alertType: 'extra',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
+            if (responseData.status) {
+                MessageBarManager.showAlert({
+                    message: I18n.t('cart.removeitem', { locale: lang }),
+                    title:'',
+                    alertType: 'extra',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+            }   
+            else {
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    title:'',
+                    alertType: 'extra',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+            }
         })
         .then(()=>this.props.callback())
         .catch((error) => {
