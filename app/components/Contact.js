@@ -132,7 +132,6 @@ class Contact extends Component<{}> {
             const { lang } =this.props,
             align = lang == 'ar'? 'right': 'left';
 
-
             fetch(Utils.gurl('contactUs'), config)
             .then((response) => response.json())
             .then((responseData) => {

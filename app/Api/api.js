@@ -11,7 +11,8 @@ var api = {
             },
             body: formData,
         }
-        return fetch(Utils.gurl('dealsAndOffer'), config).then((res) => res.json())
+        // return fetch(Utils.gurl('dealsAndOffer'), config).then((res) => res.json())
+        return fetch(Utils.gurl('dealsAndOfferTest'), config).then((res) => res.json())
     },
     addressList(u_id, country){
         let formData = new FormData();

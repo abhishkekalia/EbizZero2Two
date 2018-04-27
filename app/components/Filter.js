@@ -106,6 +106,7 @@ class Filter extends Component {
         fetch(Utils.gurl('getFilterMenu'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("Response getFilterMenu:=",responseData)
             if(responseData.status){
                 var arrData = responseData.data.category
                 console.log("selGender:=",this.state.rows);

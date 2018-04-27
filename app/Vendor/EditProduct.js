@@ -329,6 +329,28 @@ class EditProduct extends Component {
                 genderty= gender.label == "Male" ? 1 : 0
             }
 
+            console.log("editProduct:=size_id",size_id.toString())
+            console.log("editProduct:=Size_ar",Size_ar.toString())
+            console.log("editProduct:=Quantity",Quantity.toString())
+            console.log("editProduct:=product_category",String(product_category))
+            console.log("editProduct:=product_name",String(productname))
+            console.log("editProduct:=product_name_in_arabic",String(product_name_in_arabic))
+            console.log("editProduct:=short_description",String(shortdescription))
+            console.log("editProduct:=short_description_in_arabic",String(short_description_in_arabic))
+            console.log("editProduct:=detail_description",String(detaildescription))
+            console.log("editProduct:=detail_description_in_arabic",String(detail_description_in_arabic))
+            console.log("editProduct:=price",String(price))
+            console.log("editProduct:=price_in_arabic",String(price))
+            console.log("editProduct:=discount",String(10))
+            console.log("editProduct:=product_category",String(product_category))
+            console.log("editProduct:=final_price",String(special))
+            console.log("editProduct:=country",String(country))
+            console.log("editProduct:=product_id",String(this.props.product_id))
+            console.log("editProduct:=quantity_for_product_size",String(quantityRows))
+            console.log("editProduct:=is_feature",String(is_feature))
+            console.log("editProduct:=gender",String(genderty))
+            
+
             this.setState({
                 visibleModal : true
             });
@@ -355,10 +377,10 @@ class EditProduct extends Component {
                 { name : 'country', data: String(country)},
                 { name : 'product_id', data: String(this.props.product_id)},
                 { name : 'removed_images', data: removed_images.toString()},
-                { name : 'quantity_for_product_size', data: quantityRows.toString()},
+                { name : 'quantity_for_product_size', data: Quantity.toString()},
                 { name : 'size_id', data: size_id.toString()},
                 { name : 'size', data: Size_ar.toString()},
-                { name : 'quantity', data: Quantity.toString()},
+                { name : 'quantity', data: quantityRows.toString()},
                 { name : 'is_feature', data: String(is_feature)},
                 { name : 'gender', data: String(genderty)},
             ])
@@ -481,6 +503,9 @@ class EditProduct extends Component {
             Quantity : Quantity,
             Size_ar : Size_ar
         })
+        console.log("productCont:=Size_ID",Size_ID)
+        console.log("productCont:=Quantity",Quantity)
+        console.log("productCont:=Size_ar",Size_ar)
         // console.warn(Size_ID);
         // console.warn(Quantity);
         // console.warn(Size_ar);
@@ -502,7 +527,7 @@ class EditProduct extends Component {
         options = [
             { label:I18n.t('userregister.male', { locale: lang }), value: I18n.t('userregister.male', { locale: lang })},
             { label:I18n.t('userregister.female', { locale: lang }), value: I18n.t('userregister.female', { locale: lang })},
-            // { label:I18n.t('userregister.other', { locale: lang }), value: I18n.t('userregister.other', { locale: lang })},
+            { label:I18n.t('userregister.both', { locale: lang }), value: I18n.t('userregister.both', { locale: lang })},
         ];
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
         let is_feature;
@@ -523,6 +548,7 @@ class EditProduct extends Component {
                     color='#a9d5d1'
                     highlightColor='transparent'
                     // selectedIndex={langIndex}
+                    selectedIndex = {0}
                     onSelect = {(index, value) => this.onSelect(index, value)}
                     style={{flexDirection: 'row', justifyContent: 'space-around'}}
                     >
@@ -888,6 +914,9 @@ class UpdateQuan extends Component {
     }
     concatAndDeDuplicateObjectsDeep = (p, ...arrs) => [ ...new Set( [].concat(...arrs).map(a => JSON.stringify(a)) ) ].map(a => JSON.parse(a))
     editSize(size_id, size, quantity){
+        console.log("editSize:=size_id:=",size_id)
+        console.log("editSize:=size:=",size)
+        console.log("editSize:=quantity:=",quantity)
       this.setState({
           size_id:size_id,
           size:size,
@@ -910,9 +939,15 @@ class UpdateQuan extends Component {
             size: this.state.size,
             quantity: this.state.quantity
         });
+        console.log("updateQuantity:=arr2:=",arr2)
         let arr1 = this.state.sizeRows;
+        console.log("updateQuantity:=arr1:=",arr1)
+        
         let newOne = this.concatAndDeDuplicateObjectsDeep('size_id', arr2, arr1 );
+        console.log("updateQuantity:=newOne:=",newOne)
         let newsome = newOne.reduce((x, y) => x.findIndex(e => e.size_id==y.size_id) < 0 ? [...x, y]: x, [])
+        console.log("updateQuantity:=newsome:=",newsome)
+        
         this.setState({
             editSizeModal : false,
             sizeRows: newsome

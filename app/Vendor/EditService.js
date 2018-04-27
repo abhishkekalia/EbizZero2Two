@@ -541,6 +541,7 @@ class EditService extends Component {
                 color='#a9d5d1'
                 highlightColor='transparent'
                 // selectedIndex={langIndex}
+                selectedIndex={0}
                 onSelect = {(index, value) => this.onSelect(index, value)}
                 style={{flexDirection: 'row', justifyContent: 'space-around'}}
                 >

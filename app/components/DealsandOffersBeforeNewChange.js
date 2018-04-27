@@ -121,7 +121,7 @@ class DealsandOffers extends Component {
                 "size": "not defined",
                 "quantity": "1",
                 "delivery_address_id": delivery_address_id,
-                "vendor_id": data.vendor_id,
+                "vendor_id":"1",
                 "price":(data.Price),
                 "delivery_datetime": currentdate,
                 "order_date": nextdate
@@ -155,11 +155,6 @@ class DealsandOffers extends Component {
             console.log("Error retrieving data" + error);
         }
     }
-
-    removeLoader = () => this.setState({
-        visibleModal : false
-    })
-
     SampleFunction=(newLang)=>{
         this.props.languageChange(newLang)
     }

@@ -40,6 +40,7 @@ import ProductDescription from './components/ProductDescription';
 import Newaddress from './components/Newaddress';
 import Searchproduct from './components/Searchproduct';
 import Timeline from "./components/timeline";
+import TimelineNew from "./components/timelineNew";
 import Settings from "./components/settings";
 import Contact from "./components/Contact";
 import GetMyaddress from "./components/GetMyaddress";
@@ -442,6 +443,18 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     <Scene
                     key="timelineStatus"
                     component={Timeline} />
+                </Stack>
+                <Stack
+                back
+                backTitle="Back"
+                hideNavBar={true}
+                duration={0}
+                key="timeLineNew"
+                titleStyle={{ color: 'black', alignSelf: 'center' }}
+                navigationBarStyle={{ backgroundColor: '#a9d5d1' }}>
+                    <Scene
+                    key="timelineNewStatus"
+                    component={TimelineNew} />
                 </Stack>
                 <Stack key="vendordesc" renderTitle >
                     <Scene

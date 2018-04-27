@@ -38,6 +38,7 @@ import I18n from 'react-native-i18n'
 import Drawer from 'react-native-drawer';
 import Menu from './menu/MenuContainer';
 import EventEmitter from "react-native-eventemitter";
+import GetMarketingadNew from './GetMarketingadNew';
 const { width, height } = Dimensions.get('window')
 let index = 0;
 
@@ -698,6 +699,7 @@ class MainView extends Component {
                         backgroundColor="#a9d5d1"
                         barStyle="light-content"/>
                     <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
+                    {/* <GetMarketingadNew deviceId={deviceId } country={country} u_id={u_id} lang={lang}/> */}
                     <ScrollView
                         contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: Platform.OS === 'ios' ? 0 : 0}}
                         showsVerticalScrollIndicator={false}
@@ -1603,6 +1605,7 @@ class Header extends Component{
         fetch(Utils.gurl('getFilterMenu'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("getFilterMenu:=",responseData)
             if(responseData.status){
                 this.setState({
                     product_category: responseData.data.category,
