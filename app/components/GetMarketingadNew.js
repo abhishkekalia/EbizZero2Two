@@ -6,13 +6,15 @@ import {
     Text,
     View,
     Image,
-    AsyncStorage
+    AsyncStorage,
+    Dimensions,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
 import {connect} from 'react-redux';
-import I18n from 'react-native-i18n'
+import I18n from 'react-native-i18n';
+const { width, height } = Dimensions.get('window')
 
 class GetMarketingadNew extends Component {
     constructor(props) {
@@ -64,10 +66,10 @@ class GetMarketingadNew extends Component {
                     var arrAds = []  //responseData.data
                     // arrAds = this.appendDummyData(arrAds)
 
-                    arrAds[0] = {'index':1, 'data': responseData.data.Products}
-                    arrAds[1] = {'index':2, 'data': responseData.data.Services}
-                    arrAds[2] = {'index':3, 'data': responseData.data.External}
-                    arrAds[3] = {'index':4, 'data': responseData.data.Accessories}
+                    arrAds[0] = {'index':1, 'data': responseData.data.Products, 'title':'Product'}
+                    arrAds[1] = {'index':2, 'data': responseData.data.Services, 'title':'Service'}
+                    arrAds[2] = {'index':3, 'data': responseData.data.External, 'title':'Accessories'}
+                    arrAds[3] = {'index':4, 'data': responseData.data.Accessories, 'title':'External'}
                     
                     this.setState({
                         // dataSource: this.state.dataSource.cloneWithRows(responseData.data),
@@ -77,10 +79,10 @@ class GetMarketingadNew extends Component {
                     });
                 }else {
                     var arrAds = []
-                    arrAds[0] = {'index':1, 'data': []}
-                    arrAds[1] = {'index':2, 'data': []}
-                    arrAds[2] = {'index':3, 'data': []}
-                    arrAds[3] = {'index':4, 'data': []}
+                    arrAds[0] = {'index':1, 'data': [], 'title':'Product'}
+                    arrAds[1] = {'index':2, 'data': [], 'title':'Service'}
+                    arrAds[2] = {'index':3, 'data': [], 'title':'Accessories'}
+                    arrAds[3] = {'index':4, 'data': [], 'title':'External'}
                     // arrAds = this.appendDummyData(arrAds)
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(arrAds),
@@ -165,18 +167,40 @@ class GetMarketingadNew extends Component {
         console.log("GetMarketing:=data:=",data,"rowData:=",rowData)
         return (
             data.data.length > 0 ? 
-            <TouchableOpacity style={[styles.row, { flexDirection: direction}]} onPress={()=> Actions.timeLineNew({ ad_type:data.data[0].ad_type, uri : data.data[0].path })}>
-                <Image style={styles.thumb} source={{ uri : data.thumbnail_image}}/>
+            <TouchableOpacity style={[styles.row, 
+                { 
+                    flexDirection: direction, 
+                    width: width/4, 
+                    // borderWidth:1, 
+                    // borderColor:'gray'
+                }]} 
+            onPress={()=> Actions.timeLineNew({ ad_type:data.data[0].ad_type, uri : data.data[0].path, arrAdvertise:data.data, index:data.index})}>
+                <View style={{
+                    // backgroundColor:'red',
+                    justifyContent:'center',
+                    alignItems:'center',
+                }}>
+                    <Image style={styles.thumb} source={{ uri : data.data[0].thumbnail_image}}/>
+                    <Text>{data.title}</Text>
+                </View>
             </TouchableOpacity>
             : <View style={{
-                height:40,
-                width:40, 
-                backgroundColor: data.index % 2 == 0 ? 'black' : 'white', 
-                borderRadius:20, 
-                margin:5,
-                borderColor:'gray',
-                borderWidth:0.5,
-            }}></View>
+                width: width/4,
+                justifyContent:'center',
+                alignItems: 'center',
+                // backgroundColor:'red',
+            }}>  
+                <View style={{
+                    height:40,
+                    width:40, 
+                    backgroundColor: data.index % 2 == 0 ? 'black' : 'white', 
+                    borderRadius:20, 
+                    margin:5,
+                    borderColor:'gray',
+                    borderWidth:0.5,
+                }}></View> 
+               <Text>{data.title}</Text> 
+            </View>
         );
     }
 }
@@ -190,7 +214,8 @@ var styles =StyleSheet.create({
     row: {
         flexDirection: 'column',
         alignItems: 'center',
-        margin: 3,
+        marginVertical: 3,
+        justifyContent:'center',
     },
     thumb: {
         width: 40,

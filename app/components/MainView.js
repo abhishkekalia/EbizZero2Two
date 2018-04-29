@@ -698,8 +698,8 @@ class MainView extends Component {
                         hidden={false}
                         backgroundColor="#a9d5d1"
                         barStyle="light-content"/>
-                    <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
-                    {/* <GetMarketingadNew deviceId={deviceId } country={country} u_id={u_id} lang={lang}/> */}
+                    {/* <GetMarketing deviceId={deviceId } country={country} u_id={u_id} lang={lang}/> */}
+                    <GetMarketingadNew deviceId={deviceId } country={country} u_id={u_id} lang={lang}/>
                     <ScrollView
                         contentContainerStyle={{backgroundColor : 'transparent', paddingBottom: Platform.OS === 'ios' ? 0 : 0}}
                         showsVerticalScrollIndicator={false}
