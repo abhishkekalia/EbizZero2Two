@@ -66,10 +66,10 @@ class GetMarketingadNew extends Component {
                     var arrAds = []  //responseData.data
                     // arrAds = this.appendDummyData(arrAds)
 
-                    arrAds[0] = {'index':1, 'data': responseData.data.Products, 'title':'Product'}
-                    arrAds[1] = {'index':2, 'data': responseData.data.Services, 'title':'Service'}
-                    arrAds[2] = {'index':3, 'data': responseData.data.External, 'title':'Accessories'}
-                    arrAds[3] = {'index':4, 'data': responseData.data.Accessories, 'title':'External'}
+                    arrAds[0] = {'index':1, 'data': responseData.data.Products, 'title':'Product', 'arabicTitle':'منتجات'}
+                    arrAds[1] = {'index':2, 'data': responseData.data.Services, 'title':'Service', 'arabicTitle':'خدمات'}
+                    arrAds[2] = {'index':3, 'data': responseData.data.External, 'title':'Accessories', 'arabicTitle':'أكسسوارات'}
+                    arrAds[3] = {'index':4, 'data': responseData.data.Accessories, 'title':'External', 'arabicTitle':'اخر'}
                     
                     this.setState({
                         // dataSource: this.state.dataSource.cloneWithRows(responseData.data),
@@ -79,10 +79,10 @@ class GetMarketingadNew extends Component {
                     });
                 }else {
                     var arrAds = []
-                    arrAds[0] = {'index':1, 'data': [], 'title':'Product'}
-                    arrAds[1] = {'index':2, 'data': [], 'title':'Service'}
-                    arrAds[2] = {'index':3, 'data': [], 'title':'Accessories'}
-                    arrAds[3] = {'index':4, 'data': [], 'title':'External'}
+                    arrAds[0] = {'index':1, 'data': [], 'title':'Product', 'arabicTitle':'منتجات'}
+                    arrAds[1] = {'index':2, 'data': [], 'title':'Service', 'arabicTitle':'خدمات'}
+                    arrAds[2] = {'index':3, 'data': [], 'title':'Accessories', 'arabicTitle':'أكسسوارات'}
+                    arrAds[3] = {'index':4, 'data': [], 'title':'External', 'arabicTitle':'اخر'}
                     // arrAds = this.appendDummyData(arrAds)
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(arrAds),
@@ -161,16 +161,22 @@ class GetMarketingadNew extends Component {
             <View style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderColor: '#CCC'}}>{listView}</View>
         );
     }
+
+    
+
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
         let {lang} = this.props,
         direction = (lang === 'ar') ?  'row-reverse': 'row';
         console.log("GetMarketing:=data:=",data,"rowData:=",rowData)
+        var thumUrl = data.data.length > 0 ? (data.data[0].thumbnail_image ? data.data[0].thumbnail_image : "null") : ""
+        console.log("thumUrl:=",thumUrl)
         return (
             data.data.length > 0 ? 
             <TouchableOpacity style={[styles.row, 
                 { 
                     flexDirection: direction, 
                     width: width/4, 
+                    // backgroundColor:'blue',
                     // borderWidth:1, 
                     // borderColor:'gray'
                 }]} 
@@ -179,9 +185,21 @@ class GetMarketingadNew extends Component {
                     // backgroundColor:'red',
                     justifyContent:'center',
                     alignItems:'center',
+                    width: width/4, 
                 }}>
-                    <Image style={styles.thumb} source={{ uri : data.data[0].thumbnail_image}}/>
-                    <Text>{data.title}</Text>
+                    <Image style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius : 20,
+                            zIndex: 1,
+                            margin: 5,
+                            borderColor:'gray',
+                            borderWidth:0.5,
+                            // backgroundColor:'green',
+                        }} 
+                        source= {thumUrl === 'null' ? require('../images/no-image.jpg') : { uri : data.data[0].thumbnail_image}}                      
+                    />
+                    <Text>{lang === 'en' ? data.title : data.arabicTitle}</Text>
                 </View>
             </TouchableOpacity>
             : <View style={{
@@ -199,7 +217,7 @@ class GetMarketingadNew extends Component {
                     borderColor:'gray',
                     borderWidth:0.5,
                 }}></View> 
-               <Text>{data.title}</Text> 
+               <Text>{lang === 'en' ? data.title : data.arabicTitle}</Text> 
             </View>
         );
     }

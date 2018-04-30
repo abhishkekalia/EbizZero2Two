@@ -15,6 +15,7 @@ import {
     Alert,
     Switch,
     AsyncStorage,
+    TouchableWithoutFeedback,
 } from 'react-native'
 import {Actions as routes} from "react-native-router-flux";
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -887,7 +888,7 @@ class EditProduct extends Component {
                     alignItems :'center',
                     backgroundColor:'#a9d5d1'
                 }} >
-                <Text style={{color : '#fff', fontWeight:'bold'}}>Edit Product</Text>
+                <Text style={{color : '#fff', fontWeight:'bold'}}>{I18n.t('vendorproducts.producteditTitle', { locale: lang })} </Text>
             </TouchableOpacity>
             <Modal isVisible={this.state.visibleModal}>
                 <View style={{alignItems : 'center', padding:10}}>
@@ -925,12 +926,12 @@ class UpdateQuan extends Component {
       });
     }
     newSize(){
-      this.setState({
-          size_id:0,
-          size:"",
-          quantity:"",
-          editSizeModal:true
-      });
+    //   this.setState({
+    //       size_id:0,
+    //       size:"",
+    //       quantity:"",
+    //       editSizeModal:true
+    //   });
     }
     updateQuantity(){
         let arr2 = [];
@@ -963,25 +964,25 @@ class UpdateQuan extends Component {
         return(
             <View>
                 <View>
-                    <TouchableOpacity
+                    <TouchableWithoutFeedback
                                 onPress={() => this.newSize()}>
                                 <View style={{flexDirection:'row', alignItems:'center', marginRight:10,marginBottom:10}}>
-                                    <Text style={{color:'#a9d5d1'}}>{I18n.t('vendoraddproduct.sizequantitybtn', { locale: lang })}</Text>
-                                    <Icon style={{padding:5}} name='add' size={25} color="#a9d5d1" />
+                                    <Text style={{color:'#a9d5d1', paddingVertical:5}}>{I18n.t('vendoraddproduct.sizequantitybtn', { locale: lang })}</Text>
+                                    {/* <Icon style={{padding:5}} name='add' size={25} color="#a9d5d1" /> */}
                                 </View>
-                    </TouchableOpacity>
+                    </TouchableWithoutFeedback>
                     <View style={{ flexDirection:'row', justifyContent: 'space-around', alignItems: 'center'}}>
-                        <Text style={{ alignSelf: 'center'}}>#Id</Text>
-                        <Text style={{ alignSelf: 'center'}}>Size</Text>
+                        <Text style={{ alignSelf: 'center'}}>  #Id</Text>
+                        <Text style={{ alignSelf: 'center'}}>   Size</Text>
                         <Text style={{ alignSelf: 'center'}}>Quantity</Text>
                         <Text style={{ alignSelf: 'center'}}>Action</Text>
                     </View>
                     {
                         sizeRows.map((prop, key) => { return (
                             <View style={{flex:1,flexDirection:'row', justifyContent: 'space-around', alignItems: 'center'}}>
-                                  <Text style={{ alignSelf: 'center'}}>{prop.size_id} </Text>
-                                  <Text style={{ alignSelf: 'center'}}> {prop.size} </Text>
-                                  <Text style={{ alignSelf: 'center'}}> {prop.quantity} </Text>
+                                  <Text style={{ alignSelf: 'center'}}>{prop.size_id}</Text>
+                                  <Text style={{ alignSelf: 'center'}}>{prop.size}</Text>
+                                  <Text style={{ alignSelf: 'center'}}>{prop.quantity}</Text>
                               <View>
                                 <TouchableOpacity
                                 onPress={() => this.editSize(prop.size_id, prop.size, prop.quantity)}>

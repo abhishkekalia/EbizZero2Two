@@ -293,7 +293,7 @@ class Menu extends React.Component {
     renderShareSheet() {
         let shareOptions = {
             title: "ZeroToTwo",
-            message: "App Description",
+            message: "A marketplace for 0-2 years old children",
             url: Platform.OS === 'ios' ? "https://itunes.apple.com/us/app/zero-2-two-app/id1374303629?ls=1&mt=8" : "https://itunes.apple.com/us/app/zero-2-two-app/id1374303629?ls=1&mt=8",
             subject: "Share Link" //  for email
         };

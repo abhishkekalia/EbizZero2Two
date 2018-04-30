@@ -16,7 +16,8 @@ import {
     ActivityIndicator,
     AlertIOS,
     Image,
-    Platform
+    Platform,
+    BackHandler
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
@@ -121,11 +122,24 @@ class MainView extends Component {
             this.fetchData()
         });
         EventEmitter.emit("hideLoader",'1')
+
+        // BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
     componentWillMount() {
         Actions.refresh({ right: this._renderRightButton, left: this._renderLeftButton});
         EventEmitter.emit("hideLoader",'1')
     }
+
+    componentWillUnmount() {
+        // BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
+    // handleBackButton() {
+    //     // ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
+    //     console.log("handleBackButton:=")
+    //     return true;
+    // }
+
     _renderLeftButton = () => {
         return(
             <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10, paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
