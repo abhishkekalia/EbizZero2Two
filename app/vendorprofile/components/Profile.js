@@ -1,5 +1,14 @@
 import React, {Component, PropTypes} from "react";
-import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage ,NetInfo, Alert} from "react-native";
+import {
+	View, 
+	Text, 
+	StyleSheet, 
+	TouchableOpacity, 
+	AsyncStorage ,
+	NetInfo, 
+	Alert, 
+	Dimensions
+} from "react-native";
 import { Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import PercentageCircle from 'react-native-percentage-circle';
@@ -7,6 +16,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Utils from 'app/common/Utils';
 import I18n from 'react-native-i18n';
+const { width, height } = Dimensions.get('window')
 
 import Marketing from '../../Vendor/marketing'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -26,6 +36,7 @@ class Profile extends Component {
             marketing_campaign : [],
 			chart : [],
 			featureService : [],
+			chart_details : [],
         };
     }
 
@@ -121,7 +132,8 @@ class Profile extends Component {
                     data : responseData.response.feature_product,
                     marketing_campaign : responseData.response.marketing_campaign,
 					chart : responseData.response.chart,
-					featureService : arrFService
+					featureService : arrFService,
+					chart_details : responseData.response.chart_details
         	        });
         	}else{
         	    this.setState({
@@ -136,7 +148,7 @@ class Profile extends Component {
     }
 	render() {
 		const {identity, logout, lang} = this.props,
-		{data, u_id, address, dataSource, chart,  country } = this.state,
+		{data, u_id, address, dataSource, chart,  country, chart_details } = this.state,
 		direction = lang == 'ar'? 'row-reverse': 'row',
 		align = lang == 'ar'? 'flex-end': 'flex-start',
 		textline = lang == 'ar'? 'right': 'left';
@@ -161,22 +173,73 @@ class Profile extends Component {
 							flexDirection: direction,
 							justifyContent: 'space-around'
 						}}>
-						<PercentageCircle radius={35} percent={chart.total_sales} color={"#fbcdc5"} borderWidth={10}></PercentageCircle>
-						<PercentageCircle radius={35} percent={chart.monthly_total_sales} color={"#a9d5d1"} borderWidth={10}></PercentageCircle>
-						<PercentageCircle radius={35} percent={chart.feature_product_sales} color={"#FFCC7D"}  borderWidth={10}></PercentageCircle>
+						<PercentageCircle radius={35} 
+									percent={chart_details.total_sales_in_percentage} 
+									color={"#fbcdc5"} 
+									borderWidth={10}>
+						</PercentageCircle>
+						<PercentageCircle radius={35} 
+									percent={chart_details.monthly_total_Sales_Percentage} 
+									color={"#a9d5d1"} 
+									borderWidth={10}>
+						</PercentageCircle>
+						<PercentageCircle radius={35} 
+									percent={chart_details.feature_product_sales_percentage} 
+									color={"#FFCC7D"}  
+									borderWidth={10}>
+						</PercentageCircle>
 					</View>
 					<View style={{
 							flexDirection: direction,
 							justifyContent: 'space-around',
 							backgroundColor:'white',
 							marginTop:5,
-							paddingBottom:10,
+							paddingBottom:5,
 							borderColor : 'rgba(228,229,228,1)',
 							borderWidth : 1,
 						}}>
-						<Text style={styles.chart }>{I18n.t('venderprofile.totalsales', { locale: lang })}</Text>
-						<Text style={styles.chart }>{I18n.t('venderprofile.monthlysales', { locale: lang })}</Text>
-						<Text style={styles.chart}>{I18n.t('venderprofile.fearuresales', { locale: lang })}</Text>
+						<View style={{
+							alignItems:'center',
+						}}>
+							<Text style={styles.chart }>   {I18n.t('venderprofile.totalsales', { locale: lang })}   </Text>
+							<Text style={{
+								fontSize:  12,
+								marginTop:5,
+							}}>{chart_details.total_sale}</Text>
+							<Text style={{
+								fontSize:  12,
+								marginTop:5,
+								fontWeight:'bold'
+							}}>KWD</Text>
+						</View>
+						<View style={{
+							alignItems:'center',
+						}}>
+							<Text style={styles.chart }>{I18n.t('venderprofile.monthlysales', { locale: lang })}</Text>
+							<Text style={{
+								fontSize: 12,
+								marginTop: 5,
+							}}>{chart_details.monthly_total_sales_price}</Text>
+							<Text style={{
+								fontSize: 12,
+								marginTop: 5,
+								fontWeight:'bold'
+							}}>KWD</Text>
+						</View>
+						<View style={{
+							alignItems:'center',
+						}}>
+							<Text style={styles.chart}> {I18n.t('venderprofile.fearuresales', { locale: lang })} </Text>
+							<Text style={{
+								fontSize: 12,
+								marginTop: 5,
+							}}>{chart_details.feature_product_sales_price}</Text>
+							<Text style={{
+								fontSize: 12,
+								marginTop: 5,
+								fontWeight:'bold'
+							}}>KWD</Text>
+						</View>
 					</View>
 				</View>
 

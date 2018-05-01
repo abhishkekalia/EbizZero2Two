@@ -66,9 +66,10 @@ export default class FeaturedProduct extends Component {
         );
     }
     noItemFound(){
+        const { lang} = this.props
         return (
-            <View style={{ flex:1,  justifyContent:'center', alignItems:'center'}}>
-                <Text>You Have No Featured Product</Text>
+            <View style={{ flex:1,  justifyContent:'center', alignItems:'center', marginVertical:10}}>
+                <Text>{I18n.t('venderprofile.noFeatureItem', { locale: lang })}</Text>
             </View>
         );
     }
@@ -84,7 +85,7 @@ export default class FeaturedProduct extends Component {
                 </View>
             );
         }
-        if (this.state.dataSource.getRowCount() === 0 ) {
+        if (this.state.dataSource.getRowCount() === 0 && this.state.dataSourceService.getRowCount() === 0) {
             return this.noItemFound();
         }
         let listView = (<View></View>);
@@ -108,11 +109,14 @@ export default class FeaturedProduct extends Component {
                 renderSeparator= {this.ListViewItemSeparator}
                 renderRow={this.renderDataService.bind(this)}/>
             );
+            console.log("direction:= lang",direction, lang)
         return (
+            
             <View style={{paddingBottom : 53}}>
                 <Text style={{
                     fontWeight:'bold',
-                    marginVertical: 5
+                    marginVertical: 5,
+                    textAlign: textline,
                 }}> {I18n.t('venderprofile.featuredProductTabCaption', { locale: lang })} :</Text>
                 {listView}
                 {/* Uncomment After Uploading on Appstore */}
@@ -120,7 +124,8 @@ export default class FeaturedProduct extends Component {
                 {this.props.featureService.length > 0 ?
                     <Text style={{
                         fontWeight:'bold',
-                        marginVertical: 5
+                        marginVertical: 5,
+                        textAlign: textline,
                     }}> {I18n.t('venderprofile.featuredServiceTabCaption', { locale: lang })} :</Text>
                     : undefined}
                 {listViewService}

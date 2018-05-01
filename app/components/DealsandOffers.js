@@ -304,8 +304,8 @@ class DealsandOffers extends Component {
                                     marginLeft:5,
                                     marginBottom:5,
                                 }}>{I18n.t('userorderhistory.quantity', { locale: lang })}</Text>
-                            <Text style={{color: "#fff", marginLeft:3, marginRight: 3}}>:</Text>
-                            <Text style={{color: "#fff", alignSelf: 'center'}}>{data.quantity}</Text>
+                            <Text style={{color: "#fff", marginLeft:3, marginRight: 3, marginTop: 5}}>:</Text>
+                            <Text style={{color: "#fff", alignSelf: 'center', marginTop: 3}}>{data.quantity}</Text>
                         </View>
                         <Text style={{color: "#fff"}}/>
                     </View>

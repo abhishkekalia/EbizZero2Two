@@ -63,11 +63,11 @@ export default class Countmanager extends Component {
                 //     title:''
                 // })
             }else{
-                // MessageBarManager.showAlert({
-                //     message: responseData.data.message,
-                //     alertType: 'success',
-                //     title:''
-                // })
+                MessageBarManager.showAlert({
+                    message: responseData.data.message,
+                    alertType: 'success',
+                    title:''
+                })
             }
         })
         .then(()=>this.props.callback())

@@ -59,6 +59,7 @@ class Settings extends Component {
     }
 
     getprivacypolicy(){
+        const { lang} = this.props
         if (!this.state.isCallingAPI) {
             this.setState({
                 isCallingAPI: true
@@ -76,7 +77,7 @@ class Settings extends Component {
                 })
                 if (responseData.status) {
                     routes.terms({
-                        title: "Privacy Policy",
+                        title: I18n.t('settings.privacy', { locale: lang }),
                         description: responseData.data.privacypolicy_description
                     })
                 }
@@ -88,6 +89,7 @@ class Settings extends Component {
         }
     }
     getlegalnotice(){
+        const { lang} = this.props
         if (!this.state.isCallingAPI) {
             this.setState({
                 isCallingAPI: true
@@ -105,7 +107,7 @@ class Settings extends Component {
                 })
                 if (responseData.status) {
                     routes.terms({
-                        title: "Legal Notice",
+                        title: I18n.t('settings.legal', { locale: lang }),
                         description: responseData.data.legalnotice_description
                     })
                 }
@@ -117,6 +119,7 @@ class Settings extends Component {
         }
     }
     gettermandcondition(){
+        const { lang} = this.props
         if (!this.state.isCallingAPI) {
             this.setState({
                 isCallingAPI: true
@@ -134,7 +137,7 @@ class Settings extends Component {
                 })
                 if (responseData.status) {
                     routes.terms({
-                        title: "Terms & Condition",
+                        title: I18n.t('settings.terms', { locale: lang }),
                         description: responseData.data.termsandcondition_description
                     })
                 }
@@ -146,6 +149,7 @@ class Settings extends Component {
         }
     }
     getreturnpolicy(){
+        const { lang} = this.props
         if (!this.state.isCallingAPI) {
             this.setState({
                 isCallingAPI: true
@@ -163,7 +167,7 @@ class Settings extends Component {
                 })
                 if (responseData.status) {
                     routes.terms({
-                    title: "Return Policy",
+                    title: I18n.t('settings.returnpolicy', { locale: lang }),
                     description: responseData.data.returnpolicy_description
                 })
                 }
@@ -175,6 +179,7 @@ class Settings extends Component {
         }
     }
     getshipmentpolicy(){
+        const { lang} = this.props
         if (!this.state.isCallingAPI) {
             this.setState({
                 isCallingAPI: true
@@ -192,7 +197,7 @@ class Settings extends Component {
                 })
                 if (responseData.status) {
                     routes.terms({
-                    title: "Shipment Policy",
+                    title: I18n.t('settings.shipment', { locale: lang }),
                     description: responseData.data.shipmentpolicy_description
                 })
                 }
@@ -204,6 +209,7 @@ class Settings extends Component {
         }
     }
     getaboutus(){
+        const { lang} = this.props
         if (!this.state.isCallingAPI) {
             this.setState({
                 isCallingAPI: true
@@ -221,7 +227,7 @@ class Settings extends Component {
                 })
                 if (responseData.status) {
                     routes.terms({
-                    title: "About Us",
+                    title: I18n.t('settings.about', { locale: lang }),
                     description: responseData.data.aboutus_description
                 })
                 }

@@ -972,10 +972,10 @@ class UpdateQuan extends Component {
                                 </View>
                     </TouchableWithoutFeedback>
                     <View style={{ flexDirection:'row', justifyContent: 'space-around', alignItems: 'center'}}>
-                        <Text style={{ alignSelf: 'center'}}>  #Id</Text>
-                        <Text style={{ alignSelf: 'center'}}>   Size</Text>
-                        <Text style={{ alignSelf: 'center'}}>Quantity</Text>
-                        <Text style={{ alignSelf: 'center'}}>Action</Text>
+                        <Text style={{ alignSelf: 'center'}}>  {I18n.t('vendoraddproduct.hashId', { locale: lang })}</Text>
+                        <Text style={{ alignSelf: 'center'}}>   {I18n.t('vendoraddproduct.sizelbl', { locale: lang })}</Text>
+                        <Text style={{ alignSelf: 'center'}}>{I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}</Text>
+                        <Text style={{ alignSelf: 'center'}}>{I18n.t('vendoraddproduct.action', { locale: lang })}</Text>
                     </View>
                     {
                         sizeRows.map((prop, key) => { return (
@@ -996,9 +996,9 @@ class UpdateQuan extends Component {
                 </View>
                 <Modal isVisible={this.state.editSizeModal}>
                   <View style={{ padding:10, backgroundColor : '#fff', borderRadius:5}}>
-                      <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center', marginTop:10}}>Edit Quantity & Size</Text>
+                      <Text style={{color :"#a9d5d1", fontWeight : 'bold', bottom : 10, textAlign: 'center', marginTop:10}}>{I18n.t('vendoraddproduct.editQuantityTitle', { locale: lang })}</Text>
                       <View style={{flexDirection: direction, width: '90%', marginTop:10}}>
-                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>Quantity</Text>
+                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>{I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}</Text>
                           <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
                       </View>
                         <TextInput
@@ -1007,7 +1007,7 @@ class UpdateQuan extends Component {
                           underlineColorAndroid = 'transparent'
                           autoCorrect={false}
                           keyboardType={'numeric'}
-                          placeholder="Quantity"
+                          placeholder={I18n.t('vendoraddproduct.quantitylbl', { locale: lang })}
                           maxLength={3}
                           onChangeText={(quantity) => this.setState({quantity})}
                           onSubmitEditing={() => {
@@ -1018,7 +1018,7 @@ class UpdateQuan extends Component {
                               this.inputs['one'] = input;
                             }}/>
                   <View style={{flexDirection: direction, width: '90%'}}>
-                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>Size</Text>
+                          <Text style={{color :"#a9d5d1" ,bottom : 10}}>{I18n.t('vendoraddproduct.sizelbl', { locale: lang })}</Text>
                           <Text style={{color :"#a9d5d1" ,bottom : 10}}>:</Text>
                       </View>
                       <TextInput
@@ -1027,7 +1027,7 @@ class UpdateQuan extends Component {
                           underlineColorAndroid = 'transparent'
                           autoCorrect={false}
                           keyboardType={'default'}
-                          placeholder="Size"
+                          placeholder={I18n.t('vendoraddproduct.sizelbl', { locale: lang })}
                           maxLength={15}
                           returnKeyType={ "done" }
                           ref={ input => {

@@ -111,8 +111,21 @@ class Marketingadd extends Component {
                     visibleModal : false,
                 })
             }
+            else {
+                MessageBarManager.showAlert({
+                    message: getdata.data.message,
+                    alertType: 'extra',
+                    title:'',
+                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+                })
+                this.setState({
+                    visibleModal: false,
+                })
+            }
         })
         .catch((errorMessage, statusCode) => {
+            console.log("errorMessage:=",errorMessage)
             MessageBarManager.showAlert({
                 message: I18n.t('marketing.aduploaderr', { locale: language }),
                 alertType: 'extra',
@@ -129,7 +142,7 @@ class Marketingadd extends Component {
     }
     SelectThumbline() {
         const options = {
-            quality: 1.0,
+            quality: 0.6,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
@@ -167,7 +180,7 @@ class Marketingadd extends Component {
     }
     selectPhotoTapped() {
         const options = {
-            quality: 1.0,
+            quality: 0.6,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
@@ -192,6 +205,8 @@ class Marketingadd extends Component {
                 let path =
                 (Platform.OS === 'ios')?
                 url.replace(/^file:\/\//, '') : response.uri
+
+                console.log("Path:=",path)
 
                 this.setState({
                     avatarSource: source,

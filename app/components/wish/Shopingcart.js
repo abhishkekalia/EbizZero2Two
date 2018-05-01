@@ -64,7 +64,10 @@ class Shopingcart extends Component {
             // country : null,
             status : false,
             cartIdList:[],
-            nologin: false
+            nologin: false,
+            title:'',
+            message:'',
+            url:'',
         };
     }
     componentDidMount(){
@@ -335,11 +338,11 @@ class Shopingcart extends Component {
     }
     procedToCheckout(){
         let {lang, u_id} = this.props
-        if (u_id === undefined ){
-            this.setState({
-                nologin: true
-            })
-        }else{
+        // if (u_id === undefined ){
+        //     this.setState({
+        //         nologin: true
+        //     })
+        // }else{
             if (this.validate()) {
                 if (this.props.isGuest == '1') {
                     routes.newaddress({isFromEdit:false})
@@ -353,7 +356,7 @@ class Shopingcart extends Component {
                     })
                 }
             }
-        }
+        // }
     }
     renderFooter(itemcount, totalamount, subtotalamount){
         let {lang} = this.props,
@@ -382,7 +385,7 @@ class Shopingcart extends Component {
                     <Text style={{ color : "#87cefa", textAlign: align}} >{I18n.t('cart.crtsubtotal', { locale: lang })}</Text>
                     <Text style={{ color : "#87cefa", textAlign: align}}> KWD {subtotalamount}</Text>
                 </View>
-                <MaterialDialog
+                {/* <MaterialDialog
                     title="You are not login Now"
                     visible={this.state.nologin}
                     onOk={() => this.setState({ nologin: false },()=>routes.loginPage())}
@@ -390,7 +393,7 @@ class Shopingcart extends Component {
                     <Text style={styles.dialogText}>
                         To checkout your cart please Login or SignUp
                     </Text>
-                </MaterialDialog>
+                </MaterialDialog> */}
 
             </View>
         )
@@ -438,9 +441,9 @@ class Shopingcart extends Component {
         const { itemcount, totalamount, subtotalamount } = this.state;
         const { lang } = this.props;
         let shareOptions = {
-            title: "React Native",
-            message: "Hola mundo",
-            url: "http://facebook.github.io/react-native/",
+            title: this.state.title,
+            message: this.state.message,
+            url: this.state.url,
             subject: "Share Link" //  for email
         };
 
@@ -671,7 +674,7 @@ class Shopingcart extends Component {
                     cartIdList = {this.state.cartIdList}
                     deviceId={deviceId}/> */}
                 <View style={[styles.bottom, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}]}>
-                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
+                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this,data)}>
                             <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
                             <Text style={{ left : 5, paddingVertical:5}}>{I18n.t('wishlist.shareItem', { locale: lang })}</Text>
                         </TouchableOpacity>
@@ -687,9 +690,18 @@ class Shopingcart extends Component {
             </View>
         )
     }
-    onOpen() {
+    onOpen(data) {
         console.log("OPEN")
-        this.setState({visible:true});
+        // this.setState({visible:true});
+        console.log("share Data:=",data)
+        let {lang} = this.props
+
+        this.setState({
+            visible:true,
+            title: lang === 'ar' ? data.product_name_in_arabic : data.product_name,
+            message: lang === 'ar' ? data.short_description_in_arabic : data.short_description,
+            url: data.productImages[0] ? data.productImages[0].image : ""
+        });
     }
     onCancel() {
         console.log("CANCEL")

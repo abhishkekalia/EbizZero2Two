@@ -29,7 +29,7 @@
         "pleaseenter_validemail":"Please Enter Valid Email Address",
         "pleaseenterpwd":"Please Enter Your Password",
         "passwordvalidation":"Password Must have Six Character",
-        "skip":"Skip Signing"
+        "skip":"Skip Signing",
     },
     "forgotpassword":{
         "emailaddress":"Email Address",
@@ -418,7 +418,10 @@
         "english":"English",
         "arabic":"Arabic",
         "category":"Category",
-        "productCategoryValidate":"Please select product category"
+        "productCategoryValidate":"Please select product category",
+        "editQuantityTitle":"Edit Quantity & Size",
+        "action":"Action",
+        "hashId":"#Id"
     },
     "vendorservice":{
         "serviceTitle":"Service",
@@ -540,7 +543,8 @@
         "featuredProductTabCaption":"Featured Product",
         "featuredServiceTabCaption":"Featured Service",
         "serviceRemoceFeature":"Service Removed from featured list",
-        "logoutConfirm":"Are you sure to logout?"
+        "logoutConfirm":"Are you sure to logout?",
+        "noFeatureItem":"You Have No Featured Items"
     },
     "scheduleService":{
         "serviceTitle":"Schedule",

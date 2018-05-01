@@ -55,6 +55,9 @@ class WishList extends Component {
             refreshing: false,
             color: 'blue',
             visible: false,
+            title:'',
+            message:'',
+            url:'',
         };
     }
     componentDidMount(){
@@ -82,9 +85,17 @@ class WishList extends Component {
         console.log("CANCEL")
         this.setState({visible:false});
     }
-    onOpen() {
+    onOpen(data) {
         console.log("OPEN")
-        this.setState({visible:true});
+        console.log("share Data:=",data)
+        let {lang} = this.props
+
+        this.setState({
+            visible:true,
+            title: lang === 'ar' ? data.product_name_in_arabic : data.product_name,
+            message: lang === 'ar' ? data.short_description_in_arabic : data.short_description,
+            url: data.productImages[0] ? data.productImages[0].image : ""
+        });
     }
     fetchData(){
         const {u_id, country, deviceId } = this.props;
@@ -312,9 +323,9 @@ class WishList extends Component {
         const { lang } = this.props;
         let side = lang === "ar" ? "right" : "left";
         let shareOptions = {
-            title: "React Native",
-            message: "Hola mundo",
-            url: "http://facebook.github.io/react-native/",
+            title: this.state.title,
+            message: this.state.message,
+            url: this.state.url,
             subject: "Share Link" //  for email
         };
 
@@ -510,7 +521,7 @@ class WishList extends Component {
                         </View>
                     </View>
                     <View style={[styles.bottom, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}]}>
-                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this)}>
+                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpen.bind(this,data)}>
                             <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
                             <Text style={{ left : 5}}>{I18n.t('wishlist.shareItem', { locale: lang })}</Text>
                         </TouchableOpacity>

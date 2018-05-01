@@ -68,8 +68,8 @@ class GetMarketingadNew extends Component {
 
                     arrAds[0] = {'index':1, 'data': responseData.data.Products, 'title':'Product', 'arabicTitle':'منتجات'}
                     arrAds[1] = {'index':2, 'data': responseData.data.Services, 'title':'Service', 'arabicTitle':'خدمات'}
-                    arrAds[2] = {'index':3, 'data': responseData.data.External, 'title':'Accessories', 'arabicTitle':'أكسسوارات'}
-                    arrAds[3] = {'index':4, 'data': responseData.data.Accessories, 'title':'External', 'arabicTitle':'اخر'}
+                    arrAds[2] = {'index':3, 'data': responseData.data.Accessories, 'title':'Accessories', 'arabicTitle':'أكسسوارات'}
+                    arrAds[3] = {'index':4, 'data': responseData.data.External, 'title':'External', 'arabicTitle':'اخر'}
                     
                     this.setState({
                         // dataSource: this.state.dataSource.cloneWithRows(responseData.data),

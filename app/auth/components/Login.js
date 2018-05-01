@@ -101,6 +101,7 @@ class Login extends Component {
 		this.inputs[id].focus();
     }
     gettermandcondition(){
+		const { language} = this.props
 		fetch(Utils.gurl('gettermandcondition'),{
 			method: "GET",
 			headers: {
@@ -112,7 +113,7 @@ class Login extends Component {
         .then((responseData) => {
 			if (responseData.status) {
 				this.setState({
-					termsandcondition_title: responseData.data.termsandcondition_title,
+					termsandcondition_title: I18n.t('settings.terms', { locale: language }), //responseData.data.termsandcondition_title,
 					termsandcondition_description: responseData.data.termsandcondition_description,
 					loaded: true
 				});
