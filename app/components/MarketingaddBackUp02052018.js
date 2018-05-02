@@ -48,8 +48,7 @@ class Marketingadd extends Component {
             user_type : null,
             country : null,
             amount : '0',
-            visibleModal: false,
-            imageResource:{},
+            visibleModal: false
         }
     }
     componentDidMount(){
@@ -71,7 +70,7 @@ class Marketingadd extends Component {
     }
 
     uploadTocloud(){
-        const { image, imageSelect , imageURl , avatarSource, videoSelect, u_id, user_type, country, amount, thumbnail_image, thumblinefiletype, fileType, Source, uploadFileName, thumblinename, imageResource} = this.state;
+        const { image, imageSelect , imageURl , avatarSource, videoSelect, u_id, user_type, country, amount, thumbnail_image, thumblinefiletype, fileType, Source, uploadFileName, thumblinename} = this.state;
         var isImage;
 
         const { language} = this.props,
@@ -92,9 +91,7 @@ class Marketingadd extends Component {
         },
         [
             { name: 'path', filename: uploadFileName, type: fileType,  data: RNFetchBlob.wrap(Source) },
-            // { name: 'path', filename: uploadFileName, type: fileType,  data: imageResource.data },
             { name : 'thumbnail_image',  filename : thumblinename,  type : thumblinefiletype, data: RNFetchBlob.wrap(thumbnail_image)},
-            // { name : 'thumbnail_image',  filename : thumblinename,  type : thumblinefiletype, data: imageResource.data},
             { name : 'u_id', data: String(u_id)},
             { name : 'country', data: String(country)},
             { name : 'user_type', data: String(user_type)},
@@ -102,7 +99,7 @@ class Marketingadd extends Component {
             { name : 'ad_category', data: String(4)},
             { name : 'amount', data: String(amount)},
         ])
-        .uploadProgress({ interval : 25 },(written, total) => {
+        .uploadProgress({ interval : 250 },(written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%')
         })
         .then((responseData)=>{
@@ -130,8 +127,7 @@ class Marketingadd extends Component {
         .catch((errorMessage, statusCode) => {
             console.log("errorMessage:=",errorMessage)
             MessageBarManager.showAlert({
-                // message: I18n.t('marketing.aduploaderr', { locale: language }),
-                message: errorMessage.message,
+                message: I18n.t('marketing.aduploaderr', { locale: language }),
                 alertType: 'extra',
                 title:'',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -150,9 +146,7 @@ class Marketingadd extends Component {
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-                // skipBackup: true
-                cameraRoll: true,
-                waitUntilSaved: true,
+                skipBackup: true
             }
         };
         ImagePicker.showImagePicker(options, (response) => {
@@ -173,9 +167,6 @@ class Marketingadd extends Component {
                 let path =
                 (Platform.OS === 'ios')?
                 url.replace(/^file:\/\//, '') : response.uri
-
-                console.log("SelectThumbline Path:=",path)
-
                 this.setState({
                     avatarSource: source,
                     thumbnail_image : path,
@@ -193,9 +184,7 @@ class Marketingadd extends Component {
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-                // skipBackup: true,
-                cameraRoll: true,
-                waitUntilSaved: true,
+                skipBackup: true
             }
         };
         ImagePicker.showImagePicker(options, (response) => {
@@ -217,7 +206,10 @@ class Marketingadd extends Component {
                 (Platform.OS === 'ios')?
                 url.replace(/^file:\/\//, '') : response.uri
 
-                console.log("selectPhotoTapped Path:=",path)
+                path = response.uri ? RNFetchBlob.wrap(response.uri) : response.data
+
+                console.log("PPP:")
+                console.log("Path:=",path)
 
                 this.setState({
                     avatarSource: source,
@@ -230,8 +222,7 @@ class Marketingadd extends Component {
                     Source: path,
                     uploadFileName : name,
                     thumblinename : name,
-                    amount : "1",
-                    imageResource : response
+                    amount : "1"
                 },()=>this.uploadTocloud());
             }
         });
@@ -243,12 +234,7 @@ class Marketingadd extends Component {
             title: I18n.t('marketing.videopicker', { locale: lang }),
             takePhotoButtonTitle: I18n.t('marketing.takeVideo', { locale: lang }),
             mediaType: 'video',
-            videoQuality: 'medium',
-            storageOptions: {
-                // skipBackup: true
-                cameraRoll: true,
-                waitUntilSaved: true,
-            }
+            videoQuality: 'medium'
         };
         ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
@@ -270,14 +256,13 @@ class Marketingadd extends Component {
                 (Platform.OS === 'ios')?
                 url.replace(/^file:\/\//, '') : response.uri
 
-                console.log("selectVideoTapped Path:=",path)
 
                 this.setState({
                     videoSource: path ,
                     videoSelect : true,
                     imageSelect : false,
                     image : 'video',
-                    fileType : Platform.OS === 'ios' ? 'video/MOV' : 'video/mp4',
+                    fileType : 'video/mp4',
                     uploadFileName : name ,
                     Source: path,
                     amount : "1.5",

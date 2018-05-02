@@ -419,9 +419,9 @@
         "arabic": "عربي",
         "category":"الفئة",
         "productCategoryValidate":"يرجى تحديد فئة المنتج",
-        "editQuantityTitle":"Edit Quantity & Size",
-        "action":"Action",
-        "hashId":"#Id"
+        "editQuantityTitle":"عدل على الكمية والمقاس",
+        "action":"تفعيل",
+        "hashId":"الرمز"
     },
     "vendorservice":{
         "serviceTitle":"الخدمة",
@@ -542,7 +542,7 @@
         "featuredServiceTabCaption":"خدمة للإعلان",
         "serviceRemoceFeature":"تم حذف الخدمة من قائمة الاعلان",
         "logoutConfirm":"هل أنت متأكد من رغبتك بتسجيل الخروج",
-        "noFeatureItem":"You Have No Featured Items"
+        "noFeatureItem":"لا توجد منتجات للأعلان"
     },
     "scheduleService":{
         "serviceTitle":"جدول",
@@ -556,7 +556,7 @@
         "orderId":"رقم الطلب",
         "orderType":"نوع الطلب",
         "deliveryStatus": "حالة الطلب",
-        "product_id": "Product Id",
+        "product_id": "رقم المنتج",
         "nonotification" : "لا يوجد تنبيهات",
         "notifyonce": "سنقوم باعلامك عندما نحصل علي شي لك",
         "notiTitle":"إخطارات"
