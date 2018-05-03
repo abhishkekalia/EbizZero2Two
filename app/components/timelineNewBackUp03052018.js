@@ -10,8 +10,7 @@ import {
     TouchableOpacity,
     Platform,
     Slider,
-    TouchableWithoutFeedback,
-    ActivityIndicator,
+    TouchableWithoutFeedback
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import ProgressBar  from './slider/ProgressBar';
@@ -31,8 +30,6 @@ export default class TimelineNew extends Component{
           progress: 0,
           isRunning: false,
           indexOfAdvertise: 0,
-          isLoading: true,
-          isError: false,
         };
     }
 
@@ -41,8 +38,6 @@ export default class TimelineNew extends Component{
     
     startCounter(){
       console.log("start counter called")
-      this.state.isError = false,
-      this.state.isLoading = false
       this.updateCounter()
       // var timerVar;
       clearTimeout(timerVar)
@@ -60,35 +55,6 @@ export default class TimelineNew extends Component{
           this.setState({
             progress:0,
             indexOfAdvertise:nextIndex,
-            isLoading: true,
-            isError: false,
-          })
-      }, 9000);
-    }
-
-    startCounterWithError(error) {
-      console.log("start counter with Error called")
-      console.log("Error:=",error)
-      this.state.isError = true,
-      this.state.isLoading = false
-      this.updateCounter()
-      // var timerVar;
-      clearTimeout(timerVar)
-      timerVar = setTimeout(()=>{
-          // Actions.pop()
-          var nextIndex = this.state.indexOfAdvertise
-          if (this.state.indexOfAdvertise < this.props.arrAdvertise.length-1) {
-            nextIndex = this.state.indexOfAdvertise+1
-            console.log("nextIndex:=",nextIndex)
-          }
-          else {
-            console.log("Actions.pop():=")            
-            Actions.pop()
-          }
-          this.setState({
-            progress:0,
-            indexOfAdvertise:nextIndex,
-            isLoading:true,
           })
       }, 9000);
     }
@@ -143,34 +109,9 @@ export default class TimelineNew extends Component{
                             backgroundColor : 'transparent',
                         }
                     }/>
-              {this.props.arrAdvertise[this.state.indexOfAdvertise].ad_type === '1' ? <ImagePlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()} callbackError={this.startCounterWithError.bind(this)}/> : <VideoPlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()} callbackError={this.startCounterWithError.bind(this)}/>}
+              {this.props.arrAdvertise[this.state.indexOfAdvertise].ad_type === '1' ? <ImagePlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()}/> : <VideoPlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()}/>}
               </View>
               </TouchableWithoutFeedback>
-              {this.state.isLoading === true ? <ActivityIndicator
-                style={{
-                  flex : 1,
-                  justifyContent  :'center',
-                  alignItems : 'center',
-                  alignContent :'center',
-                  alignSelf : 'center',
-                  zIndex: 3,
-                  position: 'absolute',
-                  marginLeft:width-30/2
-                }}
-                color="#a9d5d1"
-                size="large"
-              /> : undefined}
-
-              {this.state.isError === true ? <Text style={{
-                position:'absolute',
-                marginHorizontal: 10,
-                width:width-20,
-                zIndex: 3,
-                textAlign:'center',
-                textAlignVertical: 'center',
-                // backgroundColor: 'red',
-                color:'white',
-              }}>Item not exists!</Text> : undefined}
           </View>          
         )
     }
@@ -185,9 +126,7 @@ export default class TimelineNew extends Component{
         console.log("nextIndex:=",nextIndex)
         this.setState({
           progress:0,
-          indexOfAdvertise:nextIndex,
-          isLoading: true,
-          isError: false,
+          indexOfAdvertise:nextIndex
         })
       }
       else {
@@ -198,8 +137,7 @@ export default class TimelineNew extends Component{
     
     updateCounter() {
       this.setState({
-        progress:this.state.progress+1,
-        // isLoading:false,
+        progress:this.state.progress+1
       })
       var that = this
       clearTimeout(timerVarUpdate)
@@ -228,7 +166,7 @@ class ImagePlayer extends React.Component {
           source={{uri: this.props.uri ,width: width, height: height}}
           // onLoad={()=>console.warn('load')}
           onLoad={this.props.callback}
-          onError={this.props.callbackError}
+          onError={this.props.callback}
           style={{
           alignSelf: 'center',
           flex: 1,
@@ -259,7 +197,7 @@ class VideoPlayer extends React.Component {
           source={{uri: this.props.uri}}
           //  onLoadStart={()=>console.warn('loading')}
           onLoad={this.props.callback}
-          onError={this.props.callbackError}
+          onError={this.props.callback}
          />         
       </View>);
   }

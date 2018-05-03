@@ -65,7 +65,7 @@ export default class Countmanager extends Component {
             }else{
                 MessageBarManager.showAlert({
                     message: responseData.data.message,
-                    alertType: 'success',
+                    alertType: 'extra',
                     title:''
                 })
             }

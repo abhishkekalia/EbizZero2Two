@@ -129,7 +129,9 @@ class MarketingCompaign extends Component {
                 visibleModal : true
             })
             console.log(thumbnail_image);
-            RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{
+            RNFetchBlob.config({
+                timeout: 600000
+            }).fetch('POST', Utils.gurl('addMarketingAd'),{
                 Authorization : "Bearer access-token",
                 'Accept': 'application/json',
                 'Content-Type': 'application/octet-stream',
@@ -144,7 +146,7 @@ class MarketingCompaign extends Component {
                 { name : 'ad_category', data: String(ad_category)},
                 { name : 'amount', data: String(amount)},
             ])
-            .uploadProgress({ interval : 250 },(written, total) => {
+            .uploadProgress({ interval : 2 },(written, total) => {
                 console.log('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((responseData)=>{
@@ -175,11 +177,13 @@ class MarketingCompaign extends Component {
 
     SelectThumbline() {
         const options = {
-            quality: 1.0,
+            quality: 0.6,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-                skipBackup: true
+                // skipBackup: true
+                cameraRoll: true,
+                waitUntilSaved: true,
             }
         };
 
@@ -214,11 +218,13 @@ class MarketingCompaign extends Component {
     }
     selectPhotoTapped() {
         const options = {
-            quality: 1.0,
+            quality: 0.6,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-                skipBackup: true
+                // skipBackup: true
+                cameraRoll: true,
+                waitUntilSaved: true,
             }
         };
         ImagePicker.showImagePicker(options, (response) => {
@@ -262,7 +268,14 @@ class MarketingCompaign extends Component {
             title: 'Video Picker',
             takePhotoButtonTitle: 'Take Video...',
             mediaType: 'video',
-            videoQuality: 'medium'
+            videoQuality: Platform.OS === 'ios' ? 'medium' : 'low',
+            durationLimit: 10,
+            allowsEditing: true,
+            storageOptions: {
+                // skipBackup: true
+                cameraRoll: true,
+                waitUntilSaved: true,
+            }
         };
         ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
@@ -287,7 +300,7 @@ class MarketingCompaign extends Component {
                     videoSelect : true,
                     imageSelect : false,
                     image : 'video',
-                    fileType : 'video/mp4',
+                    fileType : Platform.OS === 'ios' ? 'video/MOV' : 'video/mp4',
                     uploadFileName : name ,
                     Source: path,
                     amount : "1.5",

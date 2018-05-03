@@ -85,10 +85,13 @@ class Marketingadd extends Component {
         this.setState({
             visibleModal : true
         })
-        RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{
+        RNFetchBlob.config({
+            timeout: 600000
+        }).fetch('POST', Utils.gurl('addMarketingAd'),{
             Authorization : "Bearer access-token",
             'Accept': 'application/json',
             'Content-Type': 'application/octet-stream',
+            'Transfer-Encoding' : 'Chunked',
         },
         [
             { name: 'path', filename: uploadFileName, type: fileType,  data: RNFetchBlob.wrap(Source) },
@@ -102,7 +105,7 @@ class Marketingadd extends Component {
             { name : 'ad_category', data: String(4)},
             { name : 'amount', data: String(amount)},
         ])
-        .uploadProgress({ interval : 25 },(written, total) => {
+        .uploadProgress({ interval : 2 },(written, total) => {
             console.log('uploaded', Math.floor(written/total*100) + '%')
         })
         .then((responseData)=>{
@@ -243,7 +246,9 @@ class Marketingadd extends Component {
             title: I18n.t('marketing.videopicker', { locale: lang }),
             takePhotoButtonTitle: I18n.t('marketing.takeVideo', { locale: lang }),
             mediaType: 'video',
-            videoQuality: 'medium',
+            videoQuality: Platform.OS === 'ios' ? 'medium' : 'low',
+            durationLimit: 10,
+            allowsEditing: true,
             storageOptions: {
                 // skipBackup: true
                 cameraRoll: true,

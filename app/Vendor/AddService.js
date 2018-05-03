@@ -390,11 +390,13 @@ class AddService extends Component {
     }
     selectPhotoTapped() {
         const options = {
-            quality: 1.0,
+            quality: 0.6,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-                skipBackup: true
+                // skipBackup: true
+                cameraRoll: true,
+                waitUntilSaved: true,
             }
         };
         ImagePicker.showImagePicker(options, (response) => {
@@ -786,7 +788,7 @@ class AddService extends Component {
                         <View style={commonStyles.textField}>
                             <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                 <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddservice.sppricelbl', { locale: languageChoose })}</Text>
-                                <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                                {/* <Text style={[commonStyles.label,{  textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text> */}
                             </View>
                             <TextInput
                             style={[commonStyles.inputusername, { borderRadius : 5,  textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10, paddingRight:10}]}

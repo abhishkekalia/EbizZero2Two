@@ -1099,11 +1099,26 @@ class SelectItem extends Component{
         .done();
     }
     changeSize(result){
-        this.setState({
-            selectSize: false,
-            size: result.selectedItem.label
-        });
-        this.editCart(result.selectedItem.label)
+        console.log("result:=",result)
+        if (result.selectedItem === undefined) {
+            const {u_id, country, user_type ,deviceId, lang} = this.props;
+            align = (lang === 'ar') ?  'right': 'left';
+
+            MessageBarManager.showAlert({
+                message: 'Please select size',
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+        }
+        else {
+            this.setState({
+                selectSize: false,
+                size: result.selectedItem.label
+            });
+            this.editCart(result.selectedItem.label)
+        }
     }
 
 

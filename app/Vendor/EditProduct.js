@@ -440,11 +440,13 @@ class EditProduct extends Component {
     }
     selectPhotoTapped() {
         const options = {
-            quality: 1.0,
+            quality: 0.6,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-                skipBackup: true
+                // skipBackup: true
+                cameraRoll: true,
+                waitUntilSaved: true,
             }
         };
         ImagePicker.showImagePicker(options, (response) => {

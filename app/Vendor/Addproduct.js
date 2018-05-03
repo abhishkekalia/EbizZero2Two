@@ -377,7 +377,7 @@ class AddProduct extends Component {
                     { name : 'is_feature', data: String(is_feature)},
                     { name : 'gender', data: String(genderty)},
                 ])
-                .uploadProgress((written, total) => {
+                .uploadProgress({ interval : 2 },(written, total) => {
                     console.log('uploaded', Math.floor(written/total*100) + '%')
                 })
                 .then((res)=>{
@@ -403,11 +403,13 @@ class AddProduct extends Component {
     }
     selectPhotoTapped() {
         const options = {
-            quality: 1.0,
+            quality: 0.6,
             maxWidth: 500,
             maxHeight: 500,
             storageOptions: {
-            skipBackup: true
+                // skipBackup: true
+                cameraRoll: true,
+                waitUntilSaved: true,
             }
         };
 
@@ -748,7 +750,7 @@ class AddProduct extends Component {
                             <View style={commonStyles.textField}>
                                 <View style={{ width: '100%', flexDirection: languageChoose == 'ar'?'row-reverse': 'row'}}>
                                     <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>{I18n.t('vendoraddproduct.sppricelbl', { locale: languageChoose })}</Text>
-                                    <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text>
+                                    {/* <Text style={[commonStyles.label,{ textAlign: languageChoose == 'ar'? 'right': 'left'}]}>*</Text> */}
                                 </View>
                                 <TextInput
                                     style={[commonStyles.inputusername, { borderRadius : 5, textAlign: languageChoose == 'ar'? 'right': 'left', paddingLeft:10,paddingRight:10,}]}
