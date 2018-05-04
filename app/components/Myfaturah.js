@@ -69,6 +69,7 @@ export default class Myfaturah extends Component {
        });
 
         if (navState.url.indexOf(BASEURL) != -1) {
+            console.log("navState:=",navState)
             let status = navState.url.split("?")[1];
             let statusId = navState.url.split("?")[2];
             let id = statusId.split("=")[1];

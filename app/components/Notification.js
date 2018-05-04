@@ -113,10 +113,18 @@ class Notification extends Component {
         const {lang} = this.props;
         let side = lang === "ar" ? "right" : "left";
         return (
-            <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
-                <Text> {I18n.t('notification.nonotification', { locale: lang })} </Text>
+            <View style={{ flexDirection:'column', justifyContent:'flex-start', alignItems:'center', flex:1}}>
+                <Text style={{
+                    marginBottom:40,
+                    marginTop:40,
+                    color: "gray",
+                }}> {I18n.t('notification.nonotification', { locale: lang })} </Text>
                 <Image source={require("app/images/notification_img.png")} style={{width: 80, height: 80}}/>
-                <Text style={{ color: "#fbcdc5", alignSelf: 'center'}}> {I18n.t('notification.notifyonce', { locale: lang })} </Text>
+                <Text style={{ 
+                    color: "#fbcdc5", 
+                    alignSelf: 'center',
+                    marginTop:40,
+                }}> {I18n.t('notification.notifyonce', { locale: lang })} </Text>
             </View>
         );
     }

@@ -76,6 +76,10 @@ class Shopingcart extends Component {
         EventEmitter.on("reloadCartlist", (value)=>{
             this.fetchData()
         });
+        EventEmitter.removeAllListeners("onExitCartlist");
+        EventEmitter.on("onExitCartlist", (value)=>{
+            this._drawer.close()
+        });
         EventEmitter.removeAllListeners("redirectToFaturah");
         EventEmitter.on("redirectToFaturah", (value)=>{
             routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
@@ -162,18 +166,19 @@ class Shopingcart extends Component {
                 console.log("Response addToOrder:=",responseData)
             if(responseData.status){
                 this.removeLoader
-            // console.log("calling my Fatureh")
-                var data = ({
-                    uri : responseData.data.url,
-                    order_id : responseData.data.order_id,
-                })
-                // routes.pop()
-                // EventEmitter.emit("redirectToFaturah",data)
-                routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
-            //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
-              }else{
-                this.removeLoader
-            }
+                // console.log("calling my Fatureh")
+                    var data = ({
+                        uri : responseData.data.url,
+                        order_id : responseData.data.order_id,
+                    })
+                    // routes.pop()
+                    // EventEmitter.emit("redirectToFaturah",data)
+                    routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
+                //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+                }
+                else {
+                    this.removeLoader
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -259,6 +264,7 @@ class Shopingcart extends Component {
         .then((response) => response.json())
         .then((responseData) => {
             // console.warn(responseData);
+            console.log("Response cartList:=",responseData)
             var Items = responseData.data,
                 length = Items.length,
                 organization,
@@ -596,7 +602,7 @@ class Shopingcart extends Component {
         special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
 
         let color = data.special_price ? '#a9d5d1' : '#000';
-        let textDecorationLine = data.special_price ? 'line-through' : 'none';
+        let textDecorationLine = data.special_price > 0 ? 'line-through' : 'none';
         return (
             <View style={{
                     flexDirection: 'column',
@@ -652,13 +658,13 @@ class Shopingcart extends Component {
                                     <Text style={{ fontSize:15, color:'#696969', paddingRight: 5,marginBottom:5, textAlign:align}}>{size}</Text>
                                 </View>
                                 <View style={{ flexDirection : direction, justifyContent:"space-between", marginTop:5}}>
-                                    <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign: align}}>{data.special_price} KWD</Text>
-                                    <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine, textAlign: align}}> {data.price} KWD</Text>
+                                    {data.special_price > 0 ? <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign: align}}>{data.special_price} KWD</Text> : undefined} 
+                                    <Text style={{ fontWeight:"bold", fontSize:15, color: color, textDecorationLine: textDecorationLine, textAlign: align}}>{data.price} KWD</Text>
                                 </View>
                                 <View style={{ flexDirection : direction, marginTop:5, marginBottom:5}}>
                                     <Text style={{ fontSize:15, color:'#fbcdc5', marginBottom:5,textAlign: align}}>{I18n.t('cart.subtotal', { locale: lang })}</Text>
                                     <Text style={{ fontSize:15, color:'#fbcdc5', marginBottom:5,textAlign: align}}> : </Text>
-                                    <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}>{ data.quantity*data.special_price}</Text>
+                                    <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}>{data.special_price > 0 ? data.quantity*data.special_price : data.quantity*data.price}</Text>
                                 </View>
                             </View>
                         </View>
@@ -804,11 +810,24 @@ class Footer extends Component {
     }
     changeSize(result){
         console.log("result:=",result)
-        this.setState({
-            selectSize: false,
-            size: result.selectedItem.label
-        });
-        this.editCart(result.selectedItem.label)
+        const {u_id, country, user_type ,deviceId, lang} = this.props;
+        align = (lang === 'ar') ?  'right': 'left';
+        if (result.selectedItem === 'undefined') {
+            MessageBarManager.showAlert({
+                message: I18n.t('productdetail.sizeerr', { locale: lang }),
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+        }
+        else {
+            this.setState({
+                selectSize: false,
+                size: result.selectedItem.label
+            });
+            this.editCart(result.selectedItem.label)
+        }
     }
     componentDidMount(){
         var data =this.props.size_arr,

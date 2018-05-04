@@ -156,6 +156,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                         titleStyle={{color : "#FFF", alignSelf: 'center'}}
                                         type="replace"
                                         onEnter={()=> EventEmitter.emit("reloadProducts")}
+                                        onExit={()=> EventEmitter.emit("onExitHome")}
                                          />
                                     </Stack>
                                     <Stack
@@ -172,6 +173,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                         component={wishList}
                                         title={I18n.t("wishlist.wishlistTitle", { locale: lang })}
                                         onEnter={()=> EventEmitter.emit("reloadWishlist")}
+                                        onExit={()=> EventEmitter.emit("onExitWishlist")}
                                         />
                                     </Stack>
                                     <Stack
@@ -190,6 +192,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                         component={Shopingcart}
                                         title={I18n.t("cart.carttitle", { locale: lang })}
                                         onEnter={()=> EventEmitter.emit("reloadCartlist")}
+                                        onExit={()=> EventEmitter.emit("onExitCartlist")}
                                         />
                                     </Stack>
                                     <Stack
@@ -204,6 +207,8 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                         key="profilePage"
                                         component={ProfilePage}
                                         title={I18n.t("profile.profiletitle", { locale: lang })}
+                                        onEnter={()=> EventEmitter.emit("reloadProfile")} 
+                                        onExit={()=> EventEmitter.emit("onExitUserProfile")}                                       
                                         />
                                     </Stack>
                                 </Tabs>

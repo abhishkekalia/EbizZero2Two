@@ -330,6 +330,12 @@ class EditProduct extends Component {
                 genderty= gender.label == "Male" ? 1 : 0
             }
 
+            var totalQty = 0
+                for (var i = 0; i < Quantity.length ; i++) {
+                    totalQty = totalQty + parseInt(Quantity[i])
+                }
+                console.log("totalQty:= ,Quantity:=, quantityRows:=",totalQty, Quantity, quantityRows)
+
             console.log("editProduct:=size_id",size_id.toString())
             console.log("editProduct:=Size_ar",Size_ar.toString())
             console.log("editProduct:=Quantity",Quantity.toString())
@@ -381,7 +387,7 @@ class EditProduct extends Component {
                 { name : 'quantity_for_product_size', data: Quantity.toString()},
                 { name : 'size_id', data: size_id.toString()},
                 { name : 'size', data: Size_ar.toString()},
-                { name : 'quantity', data: quantityRows.toString()},
+                { name : 'quantity', data: String(totalQty)},
                 { name : 'is_feature', data: String(is_feature)},
                 { name : 'gender', data: String(genderty)},
             ])
@@ -534,11 +540,13 @@ class EditProduct extends Component {
         ];
         borderColorImage= imageSelect ? "#a9d5d1" : '#f53d3d';
         let is_feature;
+        console.log("is_feature:=",this.state.is_feature)
         if(this.state.is_feature === '0' ){
             is_feature = false
         } else {
             is_feature = true
         }
+        console.log("is_feature:=",is_feature)
         let sizeArr = [];
         return (
             <ScrollView

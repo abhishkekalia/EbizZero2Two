@@ -517,11 +517,13 @@ class EditService extends Component {
         textline = lang == 'ar'? 'right': 'left';
 
         let is_feature;
+        console.log("is_feature:=",this.state.is_feature)
         if(this.state.is_feature === '0' ){
             is_feature = false
         } else {
             is_feature = true
         }
+        console.log("is_feature:=",is_feature)
         let is_weekend_work,
             weekend_work_value;
         if(is_weekend === '0'){

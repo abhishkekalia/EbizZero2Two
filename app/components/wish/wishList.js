@@ -67,6 +67,11 @@ class WishList extends Component {
             console.log("reloadWishlist")
             this.fetchData()
         });
+
+        EventEmitter.removeAllListeners("onExitWishlist");
+        EventEmitter.on("onExitWishlist", (value)=>{
+            this._drawer.close()
+        });
     }
     _renderLeftButton = () => {
          return(
@@ -514,7 +519,7 @@ class WishList extends Component {
                             </View>
                             <View style={{ flexDirection: direction, justifyContent:"space-between"}}>
                             <View style={{ flexDirection: direction, marginTop:10, marginBottom:5}}>
-                                <Text style={{fontWeight :'bold', fontSize:15}}>{special_price} </Text>
+                                <Text style={{fontWeight :'bold', fontSize:15}}>{special_price > 0 ? special_price : price} </Text>
                                 <Text style={{fontWeight:'bold', fontSize:15}}> KWD</Text>
                             </View>
                             </View>
@@ -667,11 +672,24 @@ class SelectItem extends Component{
         .done();
     }
     changeSize(result){
-        this.setState({
-            selectSize: false,
-            size: result.selectedItem.label
-        });
-        this.editWishlist(result.selectedItem.label)
+        if (result.selectedItem === 'undefined') {
+            const {u_id, country, user_type ,deviceId, lang} = this.props;
+            align = (lang === 'ar') ?  'right': 'left';
+            MessageBarManager.showAlert({
+                message: I18n.t('productdetail.sizeerr', { locale: lang }),
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+        }
+        else {
+            this.setState({
+                selectSize: false,
+                size: result.selectedItem.label
+            });
+            this.editWishlist(result.selectedItem.label)
+        }
     }
     render(){
         const {lang }  = this.props;

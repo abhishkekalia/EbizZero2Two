@@ -350,6 +350,12 @@ class AddProduct extends Component {
                     visibleModal : true
                 });
 
+                var totalQty = 0
+                for (var i = 0; i < quantityRows.length ; i++) {
+                    totalQty = totalQty + parseInt(quantityRows[i])
+                }
+                console.log("totalQty:=",totalQty)
+
                 RNFetchBlob.fetch('POST', Utils.gurl('productAdd'),{
                     Authorization : "Bearer access-token",
                     'Accept': 'application/json',
@@ -371,7 +377,7 @@ class AddProduct extends Component {
                     { name : 'special_price_in_arabic', data: String(special)},
                     { name : 'discount', data: String(10)},
                     { name : 'final_price', data: String(special)},
-                    { name: 'quantity',data: "10"},
+                    { name : 'quantity',data: String(totalQty)},
                     { name : 'quantity_for_product_size', data: quantityRows.toString()},
                     { name : 'size', data: sizeRows.toString()},
                     { name : 'is_feature', data: String(is_feature)},

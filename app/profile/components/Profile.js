@@ -41,6 +41,12 @@ class Profile extends Component {
         EventEmitter.on("reloadAddressProfile", (value)=>{
             console.log("reloadAddressProfile", value);
             this.getAddress()
+		});
+		
+		EventEmitter.removeAllListeners("reloadProfile");
+        EventEmitter.on("reloadProfile", (value)=>{
+            console.log("reloadProfile")
+            this._drawer.close()
         });
     }
     componentWillMount() {

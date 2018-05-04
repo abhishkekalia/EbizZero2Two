@@ -176,11 +176,19 @@ class ProductDescription extends Component {
         console.log("JSON Value:=",JSON.stringify(value)) 
         try {
             const { u_id, country,data ,count} = this.state;
+            var amount = 0
+            if (data.special_price > 0) {
+                amount = data.special_price*count
+            }
+            else {
+                amount = data.price*count
+            }
+
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('order_detail', JSON.stringify(value));
-            formData.append('amount', String(data.special_price*count));
+            formData.append('amount', String(amount));
             const config = {
                 method: 'POST',
                 headers: {
@@ -354,7 +362,7 @@ class ProductDescription extends Component {
                 "quantity": count,
                 "delivery_address_id": delivery_address_id,
                 "vendor_id":data.vendor_id,
-                "price":(data.special_price*count),
+                "price":(data.special_price > 0 ? data.special_price*count : data.price*count),
                 "delivery_datetime": currentdate,
                 "order_date": nextdate
             }
@@ -417,7 +425,7 @@ class ProductDescription extends Component {
         special_price = (lang == 'ar')? this.state.data.special_price_in_arabic : this.state.data.special_price;
         let titleColor = this.state.size ? '#a9d5d1' : '#ccc';
         let color = this.state.data.special_price ? '#a9d5d1' : '#000';
-        let textDecorationLine = this.state.data.special_price ? 'line-through' : 'none';
+        let textDecorationLine = this.state.data.special_price > 0 ? 'line-through' : 'none';
         let colorOffer = this.state.data.special_price ? 'orange' : '#fff';
         if (!this.state.status) {
             return this.renderLoading();
@@ -485,7 +493,7 @@ class ProductDescription extends Component {
                                     lang={lang}
                                     />
                                 <View style={{flexDirection: direction, justifyContent:'space-between', marginBottom : 10}}>
-                                    <Text style={{color : '#a9d5d1', fontWeight:'bold',textAlign: align }}>  {special_price} KWD</Text>
+                                    {special_price > 0 ? <Text style={{color : '#a9d5d1', fontWeight:'bold',textAlign: align }}>  {special_price} KWD</Text> : undefined} 
                                     <Text style={{color: '#696969', textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5, textAlign: align}}>{price} KWD</Text>
                                 </View>
                             </View>

@@ -337,7 +337,7 @@ class Settings extends Component {
     }
 
     render() {
-        const { lang} = this.props ,
+        const { lang, isGuest} = this.props ,
         direction = lang == 'ar'? 'row-reverse': 'row',
         textline = lang == 'ar'? 'right': 'left';
       let notify = (this.state.is_notification === "1") ? true : false
@@ -399,9 +399,13 @@ class Settings extends Component {
                             {this.loadCountry()}
                         </Picker>
                     </View>
-                    <TouchableOpacity style={styles.locact} onPress={()=>this.clearOrderHistory()}>
-                        <Text style={{ textAlign: textline}}>{I18n.t('settings.clearorderhistory', { locale: lang })}</Text>
-                    </TouchableOpacity>
+
+                    {isGuest === '1' ? undefined : 
+                        <TouchableOpacity style={styles.locact} onPress={()=>this.clearOrderHistory()}>
+                            <Text style={{ textAlign: textline}}>{I18n.t('settings.clearorderhistory', { locale: lang })}</Text>
+                        </TouchableOpacity>
+                    }
+                    
                 </View>
 
                 <View style={{flexDirection : 'column', top : 5 }}>
@@ -484,7 +488,8 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
 	return {
-		lang: state.auth.lang,
+        lang: state.auth.lang,
+        isGuest: state.auth.isGuest,
 	};
 }
 export default connect(mapStateToProps)(Settings);

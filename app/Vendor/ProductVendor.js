@@ -381,7 +381,7 @@ class ProductVendor extends Component {
             // formData.append('service_time', String(scheduleTime));
             formData.append('address_id', String(value));
             formData.append('service_provider_id', String(service_provider_id));
-            formData.append('amount', String(this.props.special_price));
+            formData.append('amount', String(this.props.special_price > 0 ? this.props.special_price : this.props.price));
             const config = {
                 method: 'POST',
                 headers: {
@@ -399,7 +399,7 @@ class ProductVendor extends Component {
                     routes.bookmyservice({
                         uri : responseData.data.url,
                         service_id : this.props.service_id,
-                        price : this.props.special_price,
+                        price : this.props.special_price > 0 ? this.props.special_price : this.props.price,
                         callback: this.removeLoader
                     })
                 }else{
@@ -483,7 +483,7 @@ class ProductVendor extends Component {
     render () {
         const { date_in, count, ScheduleDate, BookingTime } = this.state;
         let color = this.props.special_price ? '#a9d5d1' : '#000';
-        let textDecorationLine = this.props.special_price ? 'line-through' : 'none';
+        let textDecorationLine = this.props.special_price > 0 ? 'line-through' : 'none';
         const { lang} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
@@ -529,8 +529,8 @@ class ProductVendor extends Component {
                         <View >
                             <Text style={{ padding : 10, color : '#696969', fontSize:15, textAlign: textline}}>{this.props.product_name}</Text>
                             <View style={{flexDirection: direction, justifyContent:'space-between', marginBottom : 10}}>
-                                <Text style={{color : '#a9d5d1', fontWeight:'bold' }}>  {this.props.special_price} KWD</Text>
-                                <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5}}>{this.props.price} KWD</Text>
+                                {this.props.special_price > 0 ? <Text style={{color : '#a9d5d1', fontWeight:'bold', marginLeft:10 }}>{this.props.special_price} KWD</Text> : undefined} 
+                                <Text style={{color: color, textDecorationLine: textDecorationLine, fontWeight:'bold', paddingRight:5, marginLeft:10}}>{this.props.price} KWD</Text>
                             </View>
                             { this.props.is_user ?
                                 <View style={{ borderColor :"#ccc", borderWidth:0.5, paddingTop : 10}}>

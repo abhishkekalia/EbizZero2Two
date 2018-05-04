@@ -116,6 +116,12 @@ class MainView extends Component {
             // this.fetchData()
         });
 
+        EventEmitter.removeAllListeners("onExitHome");
+        EventEmitter.on("onExitHome", (value)=>{
+            // this.fetchData()
+            this._drawer.close()
+        });
+
         EventEmitter.removeAllListeners("reloadProductsFromWhishlist");
         EventEmitter.on("reloadProductsFromWhishlist", (value)=>{
             this._onRefresh()
@@ -326,7 +332,7 @@ class MainView extends Component {
             fetch(Utils.gurl('listOfAllShop'), config)
             .then((response) => response.json())
             .then((responseData) => {
-                console.log("responseData.data:=",responseData.data)
+                console.log("listOfAllShop responseData:=",responseData)
                 this.setState({
                     dataArray: responseData.data,
                 });
@@ -378,6 +384,27 @@ class MainView extends Component {
         if (!this.state.dataArray || this.state.dataArray.length === 0)return;
         var len = this.state.dataArray.length;
         var views = [];
+
+        for (var i = 0; i < len; i++) {
+            views.push(
+                <View key={i}>
+                    <View style={styles.item}>
+                        {this.renderCheckBox(this.state.dataArray[i])}
+                    </View>
+                </View>
+            )
+        }
+        // views.push(
+        //     <View key={len - 1}>
+        //         <View style={styles.item}>
+        //             {len % 2 === 0 ? this.renderCheckBox(this.state.dataArray[len - 2]) : null}
+        //             {this.renderCheckBox(this.state.dataArray[len - 1])}
+        //         </View>
+        //     </View>
+        // )
+
+        return views
+
         for (var i = 0, l = len - 2; i < l; i += 2) {
             views.push(
                 <View key={i}>
@@ -399,6 +426,7 @@ class MainView extends Component {
         return views;
     }
     renderCheckBox(data) {
+        console.log("data:=",data)
         const { lang } = this.props;
         var leftText = data.ShopName;
         var icon_name = data.icon_name;
@@ -1115,6 +1143,9 @@ class MainView extends Component {
 
     renderAllServiceViews() {
         const { lang} = this.props;
+
+        console.log("this.props:=",this.props)
+        console.log("lang:=",lang)
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left',
         position = (lang === 'ar') ?  'left': 'right';
@@ -1256,6 +1287,7 @@ class MainView extends Component {
         fetch(Utils.gurl('serviceList'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("Response serviceList:=",responseData)
             this.setState({
                 serviceArray: responseData.data,
                 serviceArrayStatus : responseData.status
@@ -1405,6 +1437,27 @@ class MainView extends Component {
         if (!this.state.serviceArray || this.state.serviceArray.length === 0)return;
         var len = this.state.serviceArray.length;
         var views = [];
+
+        for (var i = 0; i < len; i++) {
+            views.push(
+                <View key={i}>
+                    <View style={styles.item}>
+                        {this.renderServiceChec(this.state.serviceArray[i])}
+                    </View>
+                </View>
+            )
+        }
+        // views.push(
+        //     <View key={len - 1}>
+        //         <View style={styles.item}>
+        //             {len % 2 === 0 ? this.renderServiceChec(this.state.serviceArray[len - 2]) : null}
+        //             {this.renderServiceChec(this.state.serviceArray[len - 1])}
+        //         </View>
+        //     </View>
+        // )
+
+        return views;
+
         for (var i = 0, l = len - 2; i < l; i += 2) {
             views.push(
                 <View key={i}>
@@ -1433,6 +1486,7 @@ class MainView extends Component {
         );
     }
     renderServiceChec(data) {
+        console.log("renderServiceChec:=data:=",data)
         const { lang } = this.props;
         if (!this.state.serviceArrayStatus) {
             return this.noServiceFound();
@@ -1515,7 +1569,7 @@ class MainView extends Component {
                     <View style={{flexDirection: direction , justifyContent: "center"}}>
                         <TouchableOpacity
                         onPress={()=> this.moveToDesc(product_name, data.product_id, data.is_wishlist)}>
-                            <LoadImage productImages={data.productImages} special_price={special_price}/>
+                            <LoadImage productImages={data.productImages} special_price={special_price} price={price}/>
                         </TouchableOpacity>
                         <EvilIcons style={{ position : 'absolute', left : 5, top:5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
                             name="share-google"
@@ -1564,7 +1618,7 @@ class MainView extends Component {
                     <View style={{flexDirection: direction, justifyContent: "center"}}>
                         <TouchableOpacity
                             onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price)}>
-                            <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages} special_price={special_price}/>
+                            <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages} special_price={special_price} price={price}/>
                         </TouchableOpacity>
                     </View>
                     <View style={{ padding :15}}>
@@ -1789,7 +1843,7 @@ class LoadImage extends Component {
                         />
                 }
                 BadgeElement={
-                    <Text style={{color:'#FFFFFF'}}>{this.props.special_price} KWD</Text>
+                    <Text style={{color:'#FFFFFF'}}>{this.props.special_price > 0 ? this.props.special_price : this.props.price} KWD</Text>
                 }
                 IconBadgeStyle={
                     {
@@ -1815,7 +1869,7 @@ class LoadImage extends Component {
                         />
                 }
                 BadgeElement={
-                    <Text style={{color:'#FFFFFF'}}>{this.props.special_price} KWD</Text>
+                    <Text style={{color:'#FFFFFF'}}>{this.props.special_price > 0 ? this.props.special_price : this.props.price} KWD</Text>
                 }
                 IconBadgeStyle={
                     {

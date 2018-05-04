@@ -86,17 +86,26 @@ class WelcomeScreen extends Component {
             // }).map((item)=>{
             //     return item;
             // });
+            console.log("data[0].city:=",data[0].city)
             var source_data = data[0].city,
-            length = data[0].city.length,
             city_list= []
             city_list.push('Cancel');
             city_name_list = []
-            for(var i=0; i < length; i++) {
-                order = source_data[i];
-                city_name = order.city_name;
-                city_list.push(city_name);
-                city_name_list.push(city_name);
+
+            if (source_data === undefined) {
+                city_list.push('Selected country has no any city')
             }
+            else {
+                var length = data[0].city.length
+
+                for(var i=0; i < length; i++) {
+                    order = source_data[i];
+                    city_name = order.city_name;
+                    city_list.push(city_name);
+                    city_name_list.push(city_name);
+                }
+            }
+            
             this.setState({
                 deliveryareas: city_list,
                 arrCityList: city_name_list,
@@ -111,6 +120,15 @@ class WelcomeScreen extends Component {
         if (this.state.selectCountry === '') {
             MessageBarManager.showAlert({
                 message: "Please select country",
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:'left'},
+            })
+        }
+        else if (this.state.arrCityList.length <= 0) {
+            MessageBarManager.showAlert({
+                message: "Selected country has no any city",
                 title:'',
                 alertType: 'extra',
                 titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },

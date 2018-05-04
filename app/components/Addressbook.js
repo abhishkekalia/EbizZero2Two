@@ -121,22 +121,23 @@ class AddressBook extends Component {
                    },
                    body: formData,
               }
+            console.log("Request addToOrder:=",config)
             fetch(Utils.gurl('addToOrder'), config)
             .then((response) => response.json())
             .then((responseData) => {
-            if(responseData.status){
-            // console.log("calling my Fatureh")
-                var data = ({
-                    uri : responseData.data.url,
-                    order_id : responseData.data.order_id,
-                })
-                routes.pop()
-                EventEmitter.emit("redirectToFaturah",data)
-
-            //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
-              }else{
-                this.removeLoader
-            }
+                if(responseData.status){
+                    console.log("Response addToOrder:=",responseData)
+                    // console.log("calling my Fatureh")
+                    var data = ({
+                        uri : responseData.data.url,
+                        order_id : responseData.data.order_id,
+                    })
+                    routes.pop()
+                    EventEmitter.emit("redirectToFaturah",data)
+                    //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
+                } else {
+                    this.removeLoader
+                }
             })
             .catch((error) => {
                 console.log(error);

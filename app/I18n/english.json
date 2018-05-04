@@ -29,7 +29,7 @@
         "pleaseenter_validemail":"Please Enter Valid Email Address",
         "pleaseenterpwd":"Please Enter Your Password",
         "passwordvalidation":"Password Must have Six Character",
-        "skip":"Skip Signing",
+        "skip":"Skip Signing"
     },
     "forgotpassword":{
         "emailaddress":"Email Address",
@@ -122,8 +122,6 @@
         "done":"Done",
         "noitem":"No Item Found",
         "linkcopied":"Link Copied to Clipboard",
-        "wishlistmsg1":"product added in wishlist",
-        "wishlistmsg2":"product remove from wishlist",
         "wishlistmsg3":"something wents wrong",
         "shop":"Shop",
         "service":"Service"
@@ -185,7 +183,7 @@
         "logout":"Logout",
         "logoutConfirm":"Are you sure to logout?",
         "cancel":"Cancel",
-        "ok":"OK",
+        "ok":"OK"
     },
     "wishlist":{
         "wishlistTitle":"Wishlist",
@@ -237,7 +235,7 @@
         "settings":"Settings",
         "resetPass":"Password Reset",
         "guest":"Guest",
-        "email":"E",
+        "email":"E"
     },
     "addressbook":{
         "addresstitle":"My Address",
@@ -345,7 +343,7 @@
         "productnm":"Product Name",
         "quantity":"Quantity",
         "orderstatus":"Order Status",
-        "price":"price",
+        "priceSmall":"price",
         "bookingdt":"Booking Date",
         "amount":"Amount",
         "servicename":"Service Name",
@@ -520,13 +518,13 @@
         "quantity":"Quantity",
         "price":"Price",
         "displaydt":"Display Date",
-        "uploadad":"UploadAdd",
+        "uploadadAdd":"UploadAdd",
         "marketingtitle":"Marketing",
         "uploadad":"Upload",
         "selectfiletoupload":"Select files to upload ",
         "selectcategory":"Select Ad Category",
         "adcategory1":"Products",
-        "adcategory2":"accessories",
+        "adcategory2":"Accessories",
         "adcategory3":"Services",
         "adcategory4":"External",
         "addesc":"Raise your awareness about your brand by promoting video and images that show behind the scene footage, product lounches or customer Stories",
