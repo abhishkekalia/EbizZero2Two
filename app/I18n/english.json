@@ -226,7 +226,10 @@
         "somethingwentswrong":"something wents wrong",
         "cartUpdate":"Cart update successfully",
         "shipingchage": "Shipping Charges",
-        "moveToWishlist" : "Move to Whishlist"
+        "moveToWishlist" : "Move to Whishlist",
+        "productOutOfStock" : "Product Out Of Stock",
+        "availableQuantity" : "Available Quantity",
+        "removeOutOfStockProduct" : "Please remove out of stock product from cart."
     },
     "profile":{
         "profiletitle":"Profile",

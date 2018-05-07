@@ -150,26 +150,28 @@ class MyService extends Component {
                         borderBottomWidth : 1,
                         borderColor : "#ccc",
                     }}
-                    onPress={()=>routes.editservice({
-                        u_id : this.state.u_id,
-                        country : this.state.country,
-                        service_id: data.service_id,
-                        service_type:data.service_type,
-                        service_name: data.service_name,
-                        service_name_in_arabic: data.service_name_in_arabic,
-                        detail_description: data.detail_description,
-                        short_description_in_arabic: data.short_description_in_arabic,
-                        short_description: data.short_description,
-                        detail_description_in_arabic: data.detail_description_in_arabic,
-                        price: price,
-                        special_price: special_price,
-                        is_active: data.is_active,
-                        is_weekend:data.is_weekend,
-                        serviceImages: data.serviceImages,
-                        is_from_featureList: false,
-                        service_type_id: data.service_type_id,
-                        
-                    })}>
+                    // onPress={()=>routes.editservice({
+                    //     u_id : this.state.u_id,
+                    //     country : this.state.country,
+                    //     service_id: data.service_id,
+                    //     service_type:data.service_type,
+                    //     service_name: data.service_name,
+                    //     service_name_in_arabic: data.service_name_in_arabic,
+                    //     detail_description: data.detail_description,
+                    //     short_description_in_arabic: data.short_description_in_arabic,
+                    //     short_description: data.short_description,
+                    //     detail_description_in_arabic: data.detail_description_in_arabic,
+                    //     price: price,
+                    //     special_price: special_price,
+                    //     is_active: data.is_active,
+                    //     is_weekend:data.is_weekend,
+                    //     serviceImages: data.serviceImages,
+                    //     is_from_featureList: false,
+                    //     service_type_id: data.service_type_id,
+                    //     is_feature: data.is_feature,
+                    // })}
+                    onPress={this.gotoEditService.bind(this,data,price,special_price)}
+                    >
 
                     <Image style={[styles.thumb, {margin: 10}]}
                         resizeMode={"stretch"}
@@ -212,6 +214,30 @@ class MyService extends Component {
                     lang={lang}/>
             </View>
         );
+    }
+
+    gotoEditService(data,price,special_price) {
+        console.log("Selected Service List:=",data)
+        routes.editservice({
+            u_id : this.state.u_id,
+            country : this.state.country,
+            service_id: data.service_id,
+            service_type:data.service_type,
+            service_name: data.service_name,
+            service_name_in_arabic: data.service_name_in_arabic,
+            detail_description: data.detail_description,
+            short_description_in_arabic: data.short_description_in_arabic,
+            short_description: data.short_description,
+            detail_description_in_arabic: data.detail_description_in_arabic,
+            price: price,
+            special_price: special_price,
+            is_active: data.is_active,
+            is_weekend:data.is_weekend,
+            serviceImages: data.serviceImages,
+            is_from_featureList: false,
+            service_type_id: data.service_type_id,
+            is_feature: data.is_feature,
+        })
     }
 }
 

@@ -16,6 +16,7 @@ import {
     Clipboard,
     ToastAndroid,
     AlertIOS,
+    ActivityIndicator,
 } from 'react-native';
 import Utils from 'app/common/Utils';
 import {connect} from 'react-redux';
@@ -68,6 +69,7 @@ class Shopingcart extends Component {
             title:'',
             message:'',
             url:'',
+            loaded:false,
         };
     }
     componentDidMount(){
@@ -305,11 +307,13 @@ class Shopingcart extends Component {
                 }
 
                 this.setState({
-                    cartIdList:cartIdList
+                    cartIdList:cartIdList,
+                    loaded: true,
                 });
             }else {
                 this.setState({
-                    status : responseData.status
+                    status : responseData.status,
+                    loaded: true,
                 })
             }
         })
@@ -334,6 +338,27 @@ class Shopingcart extends Component {
             })
             return false
         }
+
+        var isOutOfStock = false
+        for (var i=0; i < this.state.SetToList.length ; i++) {
+            var cartData = this.state.SetToList[i]
+            if (cartData.is_out_of_stock === '1') {
+                isOutOfStock = true
+                break
+            }
+        }
+
+        if (isOutOfStock == true) {
+            MessageBarManager.showAlert({
+                message: I18n.t('cart.removeOutOfStockProduct', { locale: lang }),
+                title:'',
+                alertType: 'extra',
+                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+            })
+            return false
+        }
+
             return true;
     }
     getSize(size){
@@ -435,6 +460,41 @@ class Shopingcart extends Component {
             </Drawer>
         );
     }
+
+    loadingView(){
+        const {lang} = this.props;
+        let side = lang === "ar" ? "right" : "left";
+        return (
+            <Drawer
+                ref={(ref) => this._drawer = ref}
+                type="overlay"
+                content={<Menu closeDrawer={()=> this.closeControlPanel()} />}
+                tapToClose={true}
+                openDrawerOffset={0.2}
+                panCloseMask={0.2}
+                closedDrawerOffset={0}
+                styles={drawerStyles}
+                tweenHandler={(ratio) => ({
+                    main: { opacity:(2-ratio)/2 }
+                })}
+                side= {side}
+                >
+                <View style={{flex: 1}}>
+                    <View style={{height: Platform.OS === 'ios' ? 60 : 54,alignItems: 'center', backgroundColor: "#a9d5d1", justifyContent: 'space-between', flexDirection: lang === "ar" ? "row-reverse" : "row"}}>
+                        {this._renderLeftButton()}
+                        <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('cart.carttitle', { locale: lang })}</Text>
+                        {this._renderRightButton()}
+                    </View>
+                    <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
+                    <ActivityIndicator
+                        // style={[styles.centering]}
+                        color="#a9d5d1"
+                        size="large"/>
+                    </View>
+                </View>
+            </Drawer>
+        );
+    }
     closeControlPanel = () => {
         this._drawer.close()
     };
@@ -452,6 +512,10 @@ class Shopingcart extends Component {
             url: this.state.url,
             subject: "Share Link" //  for email
         };
+
+        if (!this.state.loaded) {
+            return this.loadingView();
+        }
 
         let side = lang === "ar" ? "right" : "left";
         let listView = (<View></View>);
@@ -592,6 +656,7 @@ class Shopingcart extends Component {
         );
     }
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
+        console.log("Cart Data:=",data)
         const { lang, country, u_id, deviceId } = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left',
@@ -639,23 +704,35 @@ class Shopingcart extends Component {
                             <View style={{flexDirection : 'column'}}>
                                 <Text style={{ fontSize:18, marginTop: 10, color:'#696969', marginBottom:5, textAlign: align}}>{product_name}</Text>
                                 <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}>{short_description}</Text>
-                                <View style={{ flexDirection :direction,  width:width/1.5}}>
-                                    <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center', fontSize:15}}> {I18n.t('cart.quantity', { locale: lang })} </Text>
-                                        <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center'}}> : </Text>
-                                    <Countmanager
-                                        quantity={data.quantity}
-                                        u_id={u_id}
-                                        product_id={data.product_id}
-                                        updatetype={"1"}
-                                        country={country}
-                                        deviceId={deviceId}
-                                        callback={this.fetchData.bind(this)}
-                                        />
-                                </View>
+                                {data.is_out_of_stock === '1' ? 
+                                    <View style={{ flexDirection :direction,  width:width/1.5}}>
+                                        <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center', fontSize:15, color:'red'}}>{I18n.t('cart.productOutOfStock', { locale: lang })}</Text>
+                                    </View>
+                                    :                             
+                                    <View style={{ flexDirection :direction,  width:width/1.5}}>
+                                        <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center', fontSize:15}}>{I18n.t('cart.quantity', { locale: lang })} </Text>
+                                            <Text style={{paddingRight : 10, textAlign: align, alignSelf: 'center'}}> : </Text>
+                                        <Countmanager
+                                            quantity={data.quantity}
+                                            u_id={u_id}
+                                            product_id={data.product_id}
+                                            updatetype={"1"}
+                                            country={country}
+                                            deviceId={deviceId}
+                                            callback={this.fetchData.bind(this)}
+                                            />
+                                    </View>
+                                }
+                                
                                 <View style={{ flexDirection : direction ,justifyContent: 'flex-start', marginTop:5}}>
                                     <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}>{I18n.t('cart.size', { locale: lang })}</Text>
                                     <Text style={{ fontSize:15, color:'#696969', marginBottom:5, textAlign: align}}> : </Text>
                                     <Text style={{ fontSize:15, color:'#696969', paddingRight: 5,marginBottom:5, textAlign:align}}>{size}</Text>
+                                </View>
+                                <View style={{ flexDirection : direction ,justifyContent: 'flex-start', marginTop:5}}>
+                                    <Text>{I18n.t('cart.availableQuantity', { locale: lang })}</Text>
+                                    <Text> : </Text>
+                                    <Text>{data.remaning_quantity}</Text>
                                 </View>
                                 <View style={{ flexDirection : direction, justifyContent:"space-between", marginTop:5}}>
                                     {data.special_price > 0 ? <Text style={{ fontWeight:"bold", color:'#696969', marginBottom:5, textAlign: align}}>{data.special_price} KWD</Text> : undefined} 

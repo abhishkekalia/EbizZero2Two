@@ -305,9 +305,8 @@ class Menu extends React.Component {
                         setTimeout(() => {
                             Share.shareSingle(Object.assign(shareOptions, {
                                 "social": "twitter"
-                            }
-                        ));
-                    },300);}}>Twitter
+                            }));
+                        },300);}}>Twitter
                 </Button>
                 <Button iconSrc={{ uri: FACEBOOK_ICON }}
                     onPress={()=>{
@@ -315,9 +314,8 @@ class Menu extends React.Component {
                         setTimeout(() => {
                             Share.shareSingle(Object.assign(shareOptions, {
                                 "social": "facebook"
-                            }
-                        ));
-                    },300);}}>Facebook
+                            }));
+                        },300);}}>Facebook
                 </Button>
                 <Button iconSrc={{ uri: WHATSAPP_ICON }}
                     onPress={()=>{
@@ -325,9 +323,8 @@ class Menu extends React.Component {
                         setTimeout(() => {
                             Share.shareSingle(Object.assign(shareOptions, {
                                 "social": "whatsapp"
-                            }
-                        ));
-                    },300);}}>Whatsapp
+                            }));
+                        },300);}}>Whatsapp
                 </Button>
                 <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
                     onPress={()=>{
@@ -335,9 +332,8 @@ class Menu extends React.Component {
                         setTimeout(() => {
                             Share.shareSingle(Object.assign(shareOptions, {
                                 "social": "googleplus"
-                            }
-                        ));
-                    },300);}}>Google +
+                            }));
+                        },300);}}>Google +
                 </Button>
             </ShareSheet>
         );

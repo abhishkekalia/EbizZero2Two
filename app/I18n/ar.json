@@ -191,9 +191,9 @@
         "sizelbl":"المقاس",
         "shareerr":"لا يمكن لتطبيقات تنفيذ هذا الإجراء",
         "selectsize":"اختر المقاس",
-        "selectsize":"اختر المقاس",
         "cancel":"الغاء",
         "ok":"تم",
+        "quantity":"الكمية",
         "changewishlistalert":"تحديث قائمة الامنيات بنجاح",
         "share":"شارك مفضلتك ",
         "movetocart":"نقل الى سلة الشتريات",
@@ -209,7 +209,7 @@
     "cart":{
         "carttitle":"السلة",
         "size":"المقاس",
-        "quantity":" الكمية",
+        "quantity":"الكمية",
         "subtotal":"المجموع",
         "remove":"حذف",
         "edit":"تعديل السلة",
@@ -226,7 +226,10 @@
         "somethingwentswrong":"حصل خطأ ما",
         "cartUpdate":"تم تحديث سلة التسوق بنجاح",
         "shipingchage": "رسوم التوصيل",
-        "moveToWishlist" : "نقل الى المفضلة "
+        "moveToWishlist" : "نقل الى المفضلة ",
+        "productOutOfStock" : "Product Out Of Stock",
+        "availableQuantity" : "Available Quantity",
+        "removeOutOfStockProduct" : "Please remove out of stock product from cart"
     },
     "profile":{
         "profiletitle":"الملف الشخصي",
@@ -235,7 +238,7 @@
         "settings":"اعدادات",
         "resetPass":"إعادة ضبط كلمة المرور",
         "guest":"ضيف",
-        "email":"بريد الالكتروني",
+        "email":"بريد الالكتروني"
     },
     "addressbook":{
         "addresstitle":"عنواني",

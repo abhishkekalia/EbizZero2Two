@@ -64,7 +64,7 @@ class EditService extends Component {
             Imagepath : [],
             removed_images : [],
             languageChoose: '',
-            is_feature:0,
+            is_feature:this.props.is_feature,
             is_weekend:this.props.is_weekend,
             is_weekend_work :this.props.is_weekend,
             is_from_featureList: this.props.is_from_featureList,
@@ -516,7 +516,7 @@ class EditService extends Component {
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
 
-        let is_feature;
+        var is_feature;
         console.log("is_feature:=",this.state.is_feature)
         if(this.state.is_feature === '0' ){
             is_feature = false
@@ -524,7 +524,7 @@ class EditService extends Component {
             is_feature = true
         }
         console.log("is_feature:=",is_feature)
-        let is_weekend_work,
+        var is_weekend_work,
             weekend_work_value;
         if(is_weekend === '0'){
             is_weekend_work = "checkbox-blank-outline";
