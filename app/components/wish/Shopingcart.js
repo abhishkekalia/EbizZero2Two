@@ -262,6 +262,7 @@ class Shopingcart extends Component {
             },
             body: formData,
         }
+        console.log("Request cartList:=",config)
         fetch(Utils.gurl('cartList'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -762,7 +763,7 @@ class Shopingcart extends Component {
                             <Text style={{ left : 5, paddingVertical:5}}>{I18n.t('wishlist.shareItem', { locale: lang })}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]}
-                            onPress={()=>this.addtoWishlist(data.cart_id, data.product_id)}>
+                            onPress={()=>this.addtoWishlist(data.cart_id, data.product_id, data)}>
                             {/* <Image source={require('../../images/cart_icon.png')} style={{ width:"10%", height : "100%"}}/> */}
                             <Ionicons name={'md-heart'} size={20} color="#a9d5d1" style={{ alignSelf: 'center'}}/>
                             <Text style={{ left :5, paddingVertical:5}}>{I18n.t('cart.moveToWishlist', { locale: lang })}</Text>
@@ -791,7 +792,51 @@ class Shopingcart extends Component {
         this.setState({visible:false});
     }
 
-    addtoWishlist (cart_id,product_id){
+    // addtoWishlist (cart_id,product_id, data){
+    //     console.log("data:=",data)
+    //     return;
+    //     const {u_id, country, deviceId, lang} = this.props;
+    //     let un_id= (u_id === undefined) ? '' : u_id,
+    //     align = (lang === 'ar') ?  'right': 'left';
+    //     let formData = new FormData();
+    //     formData.append('u_id', String(un_id));
+    //     formData.append('country', String(country));
+    //     formData.append('product_id', String(product_id));
+    //     formData.append('device_uid', String(deviceId));
+    //     formData.append('quantity',String(data.quantity));
+    //     formData.append('size',String(data.size));
+    //     const config = {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //                 'Content-Type': 'multipart/form-data;',
+    //             },
+    //             body: formData,
+    //         }
+    //         fetch(Utils.gurl('addToWishlist'), config)
+    //         .then((response) => response.json())
+    //         .then((responseData) => {
+    //             if(responseData.status){
+    //                 MessageBarManager.showAlert({
+    //                     message: I18n.t('home.wishlistmsg1', { locale: lang }),
+    //                     alertType: 'extra',
+    //                     title:'',
+    //                     titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+    //                     messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+    //                     // stylesheetWarning : {{ backgroundColor : '#FFC0CB'}}
+    //                 })
+    //             }
+    //         })
+    //         .then(()=>this.removeFromCartGloabl(cart_id,product_id))
+    //         .catch((error) => {
+    //             console.log(error);
+    //         })
+    //         .done();
+    // }
+
+    addtoWishlist (cart_id,product_id, data){
+        console.log("data:=",data)
+        // return;
         const {u_id, country, deviceId, lang} = this.props;
         let un_id= (u_id === undefined) ? '' : u_id,
         align = (lang === 'ar') ?  'right': 'left';
@@ -800,6 +845,8 @@ class Shopingcart extends Component {
         formData.append('country', String(country));
         formData.append('product_id', String(product_id));
         formData.append('device_uid', String(deviceId));
+        formData.append('quantity',String(data.quantity));
+        formData.append('size',String(data.size));
         const config = {
                 method: 'POST',
                 headers: {
@@ -808,7 +855,7 @@ class Shopingcart extends Component {
                 },
                 body: formData,
             }
-            fetch(Utils.gurl('addToWishlist'), config)
+            fetch(Utils.gurl('moveToWishlist'), config)
             .then((response) => response.json())
             .then((responseData) => {
                 if(responseData.status){

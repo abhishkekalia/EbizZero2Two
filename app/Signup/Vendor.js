@@ -97,25 +97,25 @@ class Vendorreg extends Component {
 			u_id: '',
 			otp : '',
 			isLoading: true,
-			LATITUDE : 22.966425,
-			LONGITUDE : 72.615933,
+			LATITUDE : 29.389713, //22.966425,
+			LONGITUDE : 48.003288, //72.615933,
 			LATITUDE_DELTA : 0.0922,
 			LONGITUDE_DELTA : LATITUDE_DELTA * ASPECT_RATIO,
 			region: {
-				latitude: 37.78825,
-				longitude: -122.4324,
+				latitude: 29.389713, //37.78825,
+				longitude: 48.003288, //-122.4324,
 				latitudeDelta: 0.0922,
 				longitudeDelta: 0.0421,
 			  },
 			  initialRegion: {
-                latitude: 22.966425,
-                longitude: -122.4324,
+                latitude: 29.389713, //22.966425,
+                longitude: 48.003288, //-122.4324,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
             coordinate:{
-                latitude: 22.966425,
-                longitude: 72.615933,
+                latitude: 29.389713, //22.966425,
+                longitude: 48.003288, //72.615933,
                 latitudeDelta:  0.0922,
                 longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO
             }
@@ -969,16 +969,16 @@ class Vendorreg extends Component {
 				})
 				return false;
 			}
-			if(emailArr[emailArr.length- 1] !== "com"){
-				MessageBarManager.showAlert({
-					message: I18n.t('venderregister.maildomain', { locale: lang }),
-					title:'',
-					alertType: 'extra',
-					titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-					messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-				});
-				return false;
-			}
+			// if(emailArr[emailArr.length- 1] !== "com"){
+			// 	MessageBarManager.showAlert({
+			// 		message: I18n.t('venderregister.maildomain', { locale: lang }),
+			// 		title:'',
+			// 		alertType: 'extra',
+			// 		titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+			// 		messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			// 	});
+			// 	return false;
+			// }
 			if (!address.length){
 				MessageBarManager.showAlert({
 					message: I18n.t('venderregister.pleaseenteraddr', { locale: lang }),

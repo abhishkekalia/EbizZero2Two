@@ -211,12 +211,23 @@ class GetMarketingadNew extends Component {
                 <View style={{
                     height:40,
                     width:40, 
-                    backgroundColor: data.index % 2 == 0 ? 'black' : 'white', 
+                    // backgroundColor: data.index % 2 == 0 ? 'black' : 'white', 
                     borderRadius:20, 
                     margin:5,
-                    borderColor:'gray',
-                    borderWidth:0.5,
-                }}></View> 
+                    // borderColor:'gray',
+                    // borderWidth:0.5,
+                }}>
+                    <Image style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius : 20,
+                        zIndex: 1,
+                        // margin: 5,
+                        borderColor:'gray',
+                        borderWidth:0.5,
+                    }}
+                        source={ data.index % 2 == 0 ?  require('../images/logo_black.png') : require('../images/logo.png') } />
+                </View> 
                <Text>{lang === 'en' ? data.title : data.arabicTitle}</Text> 
             </View>
         );

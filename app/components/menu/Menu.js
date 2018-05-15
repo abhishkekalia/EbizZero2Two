@@ -151,46 +151,57 @@ class Menu extends React.Component {
                             marginBottom: 10,
                             paddingLeft : '0%', paddingTop : 0, color:"#fff", marginTop:0}}>{identity.username}</Text>
                 </View>
-                <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
-                    {
-                        this.state.notificationCount > 0 ?
-                        <IconBadge
-                            MainElement={
-                                <Ionicons
-                                    name="ios-notifications"
-                                    color="#a9d5d1" size={30}
-                                    style={{ left : 5}}
-                                    />
-                            }
-                            BadgeElement={
-                                <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
-                            }
-                            IconBadgeStyle={{
-                                width:16,
-                                height:18,
-                                // left : 10,
-                                backgroundColor: 'orange'
-                            }}
-                            />
-                        :
-                        <Ionicons
-                            name="ios-notifications"
-                            color="#a9d5d1" size={30}
-                            style={{ left : 5}}
-                            />
-                    }
-                    <Text onPress={this.notificationShow.bind(this)}
-                        style={{
-                            fontSize: 12,
-                            padding: 10,
-                            marginTop : 1,
-                            left :5,
-                        }}>	{I18n.t('sidemenu.notification', { locale: lang })}
-                    </Text>
-                </View>
+                {isGuest == '1' ? 
+                    undefined
+                : 
+                    <View style={[styles.badge, styles.seprator, {flexDirection: (lang == 'ar') ? 'row-reverse' : 'row'}]}>
+                        {
+                            this.state.notificationCount > 0 ?
+                            <IconBadge
+                                MainElement={
+                                    <Ionicons
+                                        name="ios-notifications"
+                                        color="#a9d5d1" size={30}
+                                        style={{ left : 5}}
+                                        />
+                                }
+                                BadgeElement={
+                                    <Text style={{color:'#FFFFFF'}}>{this.state.notificationCount}</Text>
+                                }
+                                IconBadgeStyle={{
+                                    width:16,
+                                    height:18,
+                                    // left : 10,
+                                    backgroundColor: 'orange'
+                                }}
+                                />
+                            :
+                            <Ionicons
+                                name="ios-notifications"
+                                color="#a9d5d1" size={30}
+                                style={{ left : 5}}
+                                />
+                        }
+                        <Text onPress={this.notificationShow.bind(this)}
+                            style={{
+                                fontSize: 12,
+                                padding: 10,
+                                marginTop : 1,
+                                left :5,
+                            }}>	{I18n.t('sidemenu.notification', { locale: lang })}
+                        </Text>
+                    </View>
+                }
+                
                 {/* in feedback it says to remove padding b/w notification and home*/}
-
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                {isGuest == '1' ? 
+                    <View style={{
+                        height:5,
+                    }}></View> 
+                :
+                    <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                }
+                
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                     onPress={Actions.deals}
@@ -241,7 +252,7 @@ class Menu extends React.Component {
                 <Text
                     onPress={()=>this.onOpen()}
                     style={[styles.item, styles.seprator]}> {I18n.t('sidemenu.share', { locale: lang })}</Text>
-                <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/>
+                {/* <View style={{height:1,backgroundColor:'#dfdfdf',width:'60%'}}/> */}
                 {/* in feedback it says to remove rate us
                     <Text
                     onPress={Actions.sync}

@@ -84,6 +84,7 @@ class WishList extends Component {
         );
     };
     refreshfromCount(){
+        EventEmitter.emit('reloadProductsFromWhishlist')
         this.fetchData()
     }
     onCancel() {

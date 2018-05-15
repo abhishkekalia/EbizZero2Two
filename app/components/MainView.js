@@ -1024,7 +1024,7 @@ class MainView extends Component {
                         <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10,marginRight:10, textAlign: align} : {color:'#fff',marginLeft:10, marginRight:10, textAlign: align}}>{I18n.t('home.done', { locale: lang })}</Text>
                     </TouchableOpacity>
                 </View>
-                <ScrollView contentContainerStyle={styles.contentContainer}
+                <ScrollView contentContainerStyle={[styles.contentContainer,{paddingTop:0}]}
                     showsVerticalScrollIndicator={false}>
                     {/* <TouchableOpacity onPress={this.onClickAllShop.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}> */}
                         {/* <Text style={{ padding : 10}}>{I18n.t('home.allshop', { locale: lang })}</Text> */}
@@ -1032,7 +1032,7 @@ class MainView extends Component {
                         { this.state.dataArray.length > 0 ? this.checkShopStatusSelected() ?
                             // undefined
                             <CheckBox
-                                style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
+                                style={{borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc', width : width-50}}
                                 leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
                                 onClick={()=>this.onClickAllShop()}
                                 isChecked={true}
@@ -1164,13 +1164,13 @@ class MainView extends Component {
                         <Text style={Platform.OS === 'ios' ? {color:'#fff', marginTop:10, marginRight:10 ,textAlign: align} : {color:'#fff', marginRight:10,  marginLeft:10, textAlign: align}}>{I18n.t('home.done', { locale: lang })}</Text>
                     </TouchableOpacity>
                 </View>
-                <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+                <ScrollView contentContainerStyle={[styles.contentContainer,{paddingTop:0}]} showsVerticalScrollIndicator={false}>
                     {/* <TouchableOpacity onPress={this.onClickAllService.bind(this)} style={{ flexDirection:(lang === 'ar') ? 'row' :'row-reverse', justifyContent:(lang === 'ar') ? 'space-between': 'flex-end', alignItems:'center'}}> */}
                         {/* <Text style={{ padding : 10, textAlign: align}}>{I18n.t('home.allservice', { locale: lang })}</Text> */}
                             { this.state.serviceArray.length > 0 ?  this.checkServiceStatusSelected() ?
                                 // undefined
                                 <CheckBox
-                                    style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
+                                    style={{borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc', width : width-50}}
                                     leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
                                     onClick={()=>this.onClickAllService()}
                                     isChecked={true}
@@ -1180,7 +1180,7 @@ class MainView extends Component {
                                 :
                                 // <Ionicons name="ios-checkmark" size={30} color="green"  style={(lang === 'ar') ?{ paddingRight : 10}: { paddingLeft : 10}}/>
                                 <CheckBox
-                                    style={{borderTopWidth : 0, borderColor : '#ccc', width : width-50}}
+                                    style={{borderTopWidth : StyleSheet.hairlineWidth, borderColor : '#ccc', width : width-50}}
                                     leftTextStyle = {{padding:10, paddingLeft:10, fontWeight:'bold'}}
                                     onClick={()=>this.onClickAllService()}
                                     isChecked={false}
