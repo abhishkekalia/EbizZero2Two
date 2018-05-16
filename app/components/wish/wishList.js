@@ -191,8 +191,10 @@ class WishList extends Component {
             fetch(Utils.gurl('addTocart'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("Response addToCart:=",responseData)
                 if(responseData.status){
                     EventEmitter.emit('reloadProductsFromWhishlist')
+                    this.removeWishlist(product_id,wishlist_id)
                     MessageBarManager.showAlert({
                         message: I18n.t('wishlist.productadded', { locale: lang }),
                         alertType: 'extra',
@@ -202,7 +204,7 @@ class WishList extends Component {
                     })
                 }else {
                     MessageBarManager.showAlert({
-                        message: I18n.t('wishlist.somedatamissing', { locale: lang }),
+                        message: responseData.data.message,
                         alertType: 'extra',
                         title:'',
                         titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
@@ -210,7 +212,7 @@ class WishList extends Component {
                     })
                 }
             })
-            .then(()=>this.removeWishlist(product_id,wishlist_id))
+            // .then(()=>this.removeWishlist(product_id,wishlist_id))
             .catch((error) => {
               console.log(error);
             })

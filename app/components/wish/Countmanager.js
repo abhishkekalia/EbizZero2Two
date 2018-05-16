@@ -170,8 +170,8 @@ const styles = StyleSheet.create ({
         alignItems: 'center',
         borderWidth : 1,
         borderColor : "#ccc",
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
+        // shadowOpacity: 0.2,
+        // shadowRadius: 2,
         // shadowOffset:{width:2,height:4}
     },
         countryIcon: {

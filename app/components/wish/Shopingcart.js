@@ -859,6 +859,7 @@ class Shopingcart extends Component {
             .then((response) => response.json())
             .then((responseData) => {
                 if(responseData.status){
+                    EventEmitter.emit('reloadProductsFromWhishlist')
                     MessageBarManager.showAlert({
                         message: I18n.t('home.wishlistmsg1', { locale: lang }),
                         alertType: 'extra',
