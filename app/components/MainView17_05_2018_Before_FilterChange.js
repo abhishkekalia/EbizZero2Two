@@ -187,9 +187,6 @@ class MainView extends Component {
     })
     filterbyShop = () => {
         console.log("this.state.rows:=",this.state.rows)
-        this.setState({
-            servicerows:[]
-        })
         if (this.state.rows.length == 0) {
             this.state.isModalVisible = !this.state.isModalVisible
             this.state.isFilterProduct = true
@@ -231,11 +228,10 @@ class MainView extends Component {
                     console.log("filterByShop true arrSelectedType:=",this.state.arrSelectedType)
                     if (this.state.arrServiceList.length > 0) {
                         if (arrTmp.length > 0) {
-                            // merge = arrTmp.concat(this.state.arrServiceList)
-                            merge = arrTmp
+                            merge = arrTmp.concat(this.state.arrServiceList)
                         }
                         else {
-                            // merge = this.state.arrServiceList
+                            merge = this.state.arrServiceList
                         }
                     }
                     else {
@@ -252,9 +248,9 @@ class MainView extends Component {
                         }
                     }
                     else {
-                        // if (this.state.arrServiceList.length > 0) {
-                        //     merge = this.state.arrServiceList
-                        // }
+                        if (this.state.arrServiceList.length > 0) {
+                            merge = this.state.arrServiceList
+                        }
                     }
                 }
                 // if (this.state.arrServiceList.length > 0) {
@@ -707,22 +703,10 @@ class MainView extends Component {
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
-
-        if (this.state.isFilterProduct === true) {
-            if (!this.state.status) {
-                return this.noItemFound()
-            }
-        }
-
         if (!this.state.status && !this.state.statusService) {
             return this.noItemFound();
         }
         else {
-            if (this.state.isFilterProduct === true) {
-                if (!this.state.status) {
-                    return this.noItemFound()
-                }
-            }
             console.log("this.state.status:=", this.state.status)
             console.log("this.state.statusService:=", this.state.statusService)
             console.log("this.state.dataSource:=",this.state.dataSource)
@@ -1355,11 +1339,10 @@ class MainView extends Component {
                     console.log("filterByService true:=")
                     if (this.state.arrProductList.length > 0) {
                         if (arrTmp.length > 0) {
-                            // merge = arrTmp.concat(this.state.arrProductList)
-                            merge = arrTmp
+                            merge = arrTmp.concat(this.state.arrProductList)
                         }
                         else {
-                            // merge = this.state.arrProductList
+                            merge = this.state.arrProductList
                         }
                     }
                     else {
@@ -1370,16 +1353,16 @@ class MainView extends Component {
                 }
                 else {
                     console.log("filterByService false:=")
-                    // if (this.state.arrSelectedType[0] == 1) {
-                    //     if (this.state.arrProductList.length > 0) {
-                    //         merge = this.state.arrProductList
-                    //     }
-                    // }
-                    // else {
+                    if (this.state.arrSelectedType[0] == 1) {
+                        if (this.state.arrProductList.length > 0) {
+                            merge = this.state.arrProductList
+                        }
+                    }
+                    else {
                         if (arrTmp.length > 0) {
                             merge = arrTmp
                         }
-                    // }
+                    }
                 }
 
                 console.log("arrTmp:=",arrTmp)
