@@ -49,7 +49,6 @@ class MainView extends Component {
         this.state={
             arrProductList:[],
             arrServiceList:[],
-            arrServiceListBackUp:[],
             dataSource: new ListView.DataSource({   rowHasChanged: (row1, row2) => row1 !== row2 }),
             dataSource2: new ListView.DataSource({  rowHasChanged: (row1, row2) => row1 !== row2 }),
             serviceArrayStatus : false,
@@ -91,33 +90,6 @@ class MainView extends Component {
         .done();
         EventEmitter.removeAllListeners("applyCategoryFilter");
         EventEmitter.on("applyCategoryFilter", (value)=>{
-
-            var dataBackUp = []
-            var dataBackUpProduct = []
-            for (i = 0; i < this.state.serviceArray.length; i++) {
-                this.state.serviceArray[i].checked = false
-            }            
-            console.log("false:=",this.state.serviceArray)
-            for (i = 0; i < this.state.dataArray.length; i++) {
-                this.state.dataArray[i].checked = false
-            }
-            console.log("false:=",this.state.dataArray)
-            dataBackUp = this.state.serviceArray.slice()
-            dataBackUpProduct = this.state.dataArray.slice()
-
-            this.setState({ 
-                serviceArray : [],
-                servicerows : [],
-                rows:[],
-                dataArray:[],
-            })
-
-            var that = this;
-            setTimeout(function() {
-                that.reloadService(dataBackUp)
-                that.reloadShop(dataBackUpProduct)
-            }, 50);
-
             if (value.selCategory.length > 0) {
                 this.setState({
                     arrProductList:[],
@@ -130,10 +102,8 @@ class MainView extends Component {
                 })
                 this.filterByCategory(value.selCategory,value.selGender)
             } else {
-                // this.fetchData()
-                this.fetchProductFromFilter() //Clone of fetchData() for All List Of Service
+                this.fetchData()
                 this.setState({
-                    loaded:false,
                     arrSelectedCategory:value.selCategory,
                     arrSelectedGender:value.selGender,
                     arrSelectedType:value.selType,
@@ -215,54 +185,7 @@ class MainView extends Component {
     modal = () => this.setState({
         isModalVisible: !this.state.isModalVisible
     })
-
-    clickProductFilter() {
-
-        // var dataBackUp = []
-        // for (i = 0; i < this.state.dataArray.length; i++) {
-        //     this.state.dataArray[i].checked = false
-        // }
-        // console.log("false:=",this.state.dataArray)
-        // dataBackUp = this.state.dataArray.slice()
-        // this.setState({
-        //     rows:[],
-        //     dataArray:[],
-        //     isModalVisible: !this.state.isModalVisible
-        // })
-
-        // var that = this;
-        // setTimeout(function() {
-        //     that.reloadShop(dataBackUp)
-        // }, 50);
-
-        this.setState({
-            isModalVisible: !this.state.isModalVisible
-        })
-    }
-
     filterbyShop = () => {
-
-        var dataBackUp = []
-            for (i = 0; i < this.state.serviceArray.length; i++) {
-                this.state.serviceArray[i].checked = false
-            }
-            console.log("false:=",this.state.serviceArray)
-            dataBackUp = this.state.serviceArray.slice()
-            // this.setState({
-            //     servicerows:[],
-            //     serviceArray:[]
-            // })
-
-            this.setState({ 
-                serviceArray : [],
-                servicerows : [],
-            })
-
-            var that = this;
-            setTimeout(function() {
-                that.reloadService(dataBackUp)
-            }, 50);
-
         console.log("this.state.rows:=",this.state.rows)
         this.setState({
             servicerows:[]
@@ -658,7 +581,6 @@ class MainView extends Component {
                 console.log("merge:=",merge)
                 this.setState({
                     arrServiceList: responseData.data,
-                    arrServiceListBackUp: responseData.data,
                     // dataSource2: this.state.dataSource2.cloneWithRows(arrTmp),
                     dataSource: this.state.dataSource.cloneWithRows(merge),
                     isLoading : false,
@@ -718,12 +640,12 @@ class MainView extends Component {
                 var arrTmp = responseData.data.product
                 var merge = []
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    if (this.state.arrServiceListBackUp.length > 0) {
+                    if (this.state.arrServiceList.length > 0) {
                         if (arrTmp.length > 0) {
-                            merge = arrTmp.concat(this.state.arrServiceListBackUp)
+                            merge = arrTmp.concat(this.state.arrServiceList)
                         }
                         else {
-                            merge = this.state.arrServiceListBackUp
+                            merge = this.state.arrServiceList
                         }
                     }
                 }
@@ -734,8 +656,8 @@ class MainView extends Component {
                         }
                     }
                     else {
-                        if (this.state.arrServiceListBackUp.length > 0) {
-                            merge = this.state.arrServiceListBackUp
+                        if (this.state.arrServiceList.length > 0) {
+                            merge = this.state.arrServiceList
                         }
                     }
                 }
@@ -765,87 +687,6 @@ class MainView extends Component {
         })
         .done();
     }
-
-    fetchProductFromFilter(){
-        console.log("fetchData: called")
-        const {u_id, country, deviceId, isGuest } = this.props;
-        let formData = new FormData();
-        console.log("u_id:=",u_id)
-        console.log("isGuest:=",isGuest)
-        if (u_id) {
-            formData.append('u_id', String(u_id));
-        }
-        formData.append('country', String(country));
-        formData.append('device_uid', String(deviceId));
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        console.log("config:=",config)
-        fetch(Utils.gurl('allProductItemList'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            if(responseData.status){
-                var arrTmp = responseData.data
-                var merge = []
-                if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
-                    if (this.state.arrServiceListBackUp.length > 0) {
-                        if (arrTmp.length > 0) {
-                            merge = arrTmp.concat(this.state.arrServiceListBackUp)
-                        }
-                        else {
-                            merge = this.state.arrServiceListBackUp
-                        }
-                    }
-                    else {
-                        if (arrTmp.length > 0) {
-                            merge = arrTmp
-                        }
-                    }
-                }
-                else {
-                    if (this.state.arrSelectedType[0] == 1) {
-                        if (arrTmp.length > 0) {
-                            merge = arrTmp
-                        }
-                    }
-                    else {
-                        if (this.state.arrServiceListBackUp.length > 0) {
-                            merge = this.state.arrServiceListBackUp
-                        }
-                    }
-                }
-                // if (this.state.arrServiceList.length > 0) {
-                //     merge = arrTmp.concat(this.state.arrServiceList)
-                // }
-                console.log("arrTmp:=",arrTmp)
-                console.log("merge:=",merge)
-                this.state.arrProductList = responseData.data
-                this.setState({
-                    arrProductList:responseData.data,
-                    dataSource: this.state.dataSource.cloneWithRows(merge),
-                    status : responseData.status,
-                    loaded: true,
-                    refreshing: false
-                });
-            }else {
-                this.setState({
-                    status : responseData.status,
-                    loaded: true,
-                    refreshing: false
-                })
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
-
     Description( service_id, product_name, productImages , short_description, detail_description, price ,special_price){
         Actions.vendordesc({
             is_user : true,
@@ -992,11 +833,11 @@ class MainView extends Component {
         let listView = (<View></View>);
         listView = (
             <ListView
-                // refreshControl={
-                //     <RefreshControl
-                //         refreshing={this.state.refreshing}
-                //         onRefresh={this._onRefresh.bind(this)} />
-                // }
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh.bind(this)} />
+                }
                 contentContainerStyle={styles.list}
                 dataSource={this.state.dataSource}
                 renderRow={ this.renderData.bind(this)}
@@ -1159,7 +1000,7 @@ class MainView extends Component {
                         backgroundColor : '#fff',
                         padding : 2}
                     }>
-                    <TouchableOpacity onPress={this.clickProductFilter.bind(this)} style={[styles.allshop, {flexDirection : direction}]} >
+                    <TouchableOpacity onPress={this.modal} style={[styles.allshop, {flexDirection : direction}]} >
                         <Text style={{textAlign: align}}>{I18n.t('home.allshop', { locale: lang })}</Text>
                         <Ionicons name="md-arrow-dropdown" size={20} color="#a9d5d1" />
                     </TouchableOpacity>
@@ -1170,8 +1011,7 @@ class MainView extends Component {
                         backgroundColor : '#fff',
                         padding : 2}
                     }>
-                    {/* <TouchableOpacity onPress={this.Service} style={[styles.allshop, {flexDirection : direction}]}> */}
-                    <TouchableOpacity onPress={this.clickServiceFilter.bind(this)} style={[styles.allshop, {flexDirection : direction}]}>
+                    <TouchableOpacity onPress={this.Service} style={[styles.allshop, {flexDirection : direction}]}>
                         <Text style={{textAlign: align}}>{I18n.t('home.services', { locale: lang })}</Text>
                         <Ionicons name="md-arrow-dropdown" size={20} color="#a9d5d1"/>
                     </TouchableOpacity>
@@ -1443,35 +1283,6 @@ class MainView extends Component {
 
        // service  filter
     Service = () => this.setState({ isService: !this.state.isService })
-
-    clickServiceFilter() {
-        // var dataBackUp = []
-        //     for (i = 0; i < this.state.serviceArray.length; i++) {
-        //         this.state.serviceArray[i].checked = false
-        //     }
-        //     console.log("false:=",this.state.serviceArray)
-        //     dataBackUp = this.state.serviceArray.slice()
-        //     // this.setState({
-        //     //     servicerows:[],
-        //     //     serviceArray:[]
-        //     // })
-
-        //     this.setState({ 
-        //         isService: !this.state.isService,
-        //         serviceArray : [],
-        //         servicerows : [],
-        //     })
-
-        //     var that = this;
-        //     setTimeout(function() {
-        //         that.reloadService(dataBackUp)
-        //     }, 50);
-
-        this.setState({ 
-            isService: !this.state.isService,
-        })
-    }
-
     loadServiceData (){
         const {u_id, country} = this.props;
         let formData = new FormData();
@@ -1504,31 +1315,10 @@ class MainView extends Component {
         .done();
     }
     filterbyService () {
-
-        var dataBackUp = []
-            for (i = 0; i < this.state.dataArray.length; i++) {
-                this.state.dataArray[i].checked = false
-            }
-            console.log("false:=",this.state.dataArray)
-            dataBackUp = this.state.dataArray.slice()
-            this.setState({
-                rows:[],
-                dataArray:[],
-            })
-
-            var that = this;
-            setTimeout(function() {
-                that.reloadShop(dataBackUp)
-            }, 50);
-
         console.log("filterbyService filterbyService filterbyService", this.state.servicerows.length )
         if (this.state.servicerows.length == 0) {
-            this.setState({
-                isService: !this.state.isService,
-                isFilterProduct: false
-            })
-            // this.state.isService = !this.state.isService
-            // this.state.isFilterProduct = false
+            this.state.isService = !this.state.isService
+            this.state.isFilterProduct = false
             this.fetchService()
             return
         }

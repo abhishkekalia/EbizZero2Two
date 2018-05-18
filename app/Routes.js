@@ -133,7 +133,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 tabBarPosition={'bottom'}
                                 activeBackgroundColor='#fff'
                                 inactiveBackgroundColor='#fff'
-                                lazy
+                                // lazy
                                 // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
                                 panHandlers={null}
                                 >
@@ -145,8 +145,9 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                     hideNavBar={true}
                                     // navigationBarStyle={{backgroundColor: '#1e2226'}}  titleStyle={{color : "#FFF"}}
                                     navigationBarStyle={{ backgroundColor: '#a9d5d1', }}
-                                    onRight={ ()=> console.log("")}
-                                    rightTitle={null}>
+                                    // onRight={ ()=> console.log("")}
+                                    // rightTitle={null}
+                                    >
                                         <Scene
                                         key="homePage"
                                         titleStyle={{alignSelf: 'center'}}

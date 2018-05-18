@@ -362,7 +362,7 @@ class ProductDescription extends Component {
                 "quantity": count,
                 "delivery_address_id": delivery_address_id,
                 "vendor_id":data.vendor_id,
-                "price":(data.special_price > 0 ? data.special_price : data.price),
+                "price":(data.special_price > 0 ? data.special_price*count : data.price*count),
                 "delivery_datetime": currentdate,
                 "order_date": nextdate
             }
