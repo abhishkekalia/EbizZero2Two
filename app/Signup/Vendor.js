@@ -794,7 +794,7 @@ class Vendorreg extends Component {
 			  )
 			  return
 		}
-
+		Keyboard.dismiss()
 		this.OtpVerification()
 		// .then(()=> this.openOtpVarification())
 		// .then(()=>routes.loginPage())
@@ -807,7 +807,7 @@ class Vendorreg extends Component {
 	resendOTPAPI() {
 		const { u_id} = this.state;
 			let formData = new FormData();
-			formData.append('u_id', String(100));
+			formData.append('u_id', String(u_id));
 			const config = {
 				method: 'POST',
 				headers: {

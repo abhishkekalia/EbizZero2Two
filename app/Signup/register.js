@@ -801,7 +801,7 @@ class Register extends Component {
 			  )
 			  return
 		}
-
+		Keyboard.dismiss()
 		this.OtpVerification()
 		// .then(()=> this.openOtpVarification())
 		// .then(()=>routes.loginPage())
@@ -814,7 +814,7 @@ class Register extends Component {
 	resendOTPAPI() {
 		const { u_id} = this.state;
 			let formData = new FormData();
-			formData.append('u_id', String(100));
+			formData.append('u_id', String(u_id));
 			const config = {
 				method: 'POST',
 				headers: {
@@ -1105,6 +1105,7 @@ class Register extends Component {
 		}
 	}
 	openOtpVarification(u_id){
+		console.log("openOtpVarification u_id",u_id)
 		this.setState({
 			u_id: u_id,
 			otpVarification : !this.state.otpVarification
