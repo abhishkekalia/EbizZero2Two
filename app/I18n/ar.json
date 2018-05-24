@@ -117,6 +117,8 @@
         "allservice":"كل الخدمات",
         "wishlistmsg1":"تم إضافة المنتج في قائمة الأمنيات",
         "wishlistmsg2":"تم حذف المنتج من قائمة الأمنيات",
+        "servicewishlistmsg1":"service added in wishlist",
+        "servicewishlistmsg2":"service remove from wishlist",
         "wishlistmsh3":"حصل خطأ",
         "sharemsg1":"لا يمكن لتطبيقات أن تنفذ هذا الإجراء",
         "done":"تم",

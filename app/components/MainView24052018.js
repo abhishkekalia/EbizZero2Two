@@ -30,7 +30,6 @@ import Service from './Service';
 import CheckBox from 'app/common/CheckBox';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Editwish from './wish/Editwish'
-import EditwishService from './wish/Editwish'
 import Modal from 'react-native-modal';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Feather from 'react-native-vector-icons/Feather';
@@ -1833,15 +1832,14 @@ class MainView extends Component {
         else {
             let color = data.special_price ? '#C5C8C9' : '#000';
             let textDecorationLine = data.special_price ? 'line-through' : 'none';
-            const { lang, deviceId, country, u_id} = this.props;
+            const { lang} = this.props;
             let direction = (lang === 'ar') ? 'row-reverse' :'row',
             align = (lang === 'ar') ?  'right': 'left',
             service_name = (lang == 'ar')? data.service_name_in_arabic : data.service_name,
             short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
             detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
             price = (lang == 'ar')? data.price_in_arabic : data.price,
-            special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price,
-            url =  data.serviceImages[0] ? data.serviceImages[0].image : "null";
+            special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
             return (
                 <View style={styles.row} >
                     <View style={{flexDirection: direction, justifyContent: "center"}}>
@@ -1849,19 +1847,6 @@ class MainView extends Component {
                             onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price)}>
                             <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages} special_price={special_price} price={price}/>
                         </TouchableOpacity>
-                        <EvilIcons style={{ position : 'absolute', left : 5, top:5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
-                            name="share-google"
-                            size={25}
-                            color="#a9d5d1"
-                            onPress={()=>this.onOpen(service_name, data.service_id , url )}/>
-                        <EditwishService
-                            u_id={u_id}
-                            country={country}
-                            is_wishlist={data.is_wishlist}
-                            service_id={data.service_id}
-                            fetchData={()=> this.state.servicerows.length() > 0 ? this.fetchDataByService() : this.fetchService()}
-                            deviceId={deviceId}
-                            lang={lang}/>
                     </View>
                     <View style={{ padding :15}}>
                         <TouchableOpacity  style={styles.name}

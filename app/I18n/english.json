@@ -118,6 +118,8 @@
         "wishlistmsg1":"product added in wishlist",
         "wishlistmsg2":"product remove from wishlist",
         "wishlistmsh3":"something wents wrong",
+        "servicewishlistmsg1":"service added in wishlist",
+        "servicewishlistmsg2":"service remove from wishlist",
         "sharemsg1":"No apps can perform this action",
         "done":"Done",
         "noitem":"No Item Found",
