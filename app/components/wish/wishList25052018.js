@@ -18,7 +18,6 @@ import {
     ToastAndroid,
     AlertIOS,
     Platform,
-    TouchableWithoutFeedback,
 } from 'react-native';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n'
@@ -46,18 +45,12 @@ class WishList extends Component {
     constructor(props) {
         super(props);
         this.fetchData = this.fetchData.bind(this);
-        this.fetchDataService = this.fetchDataService.bind(this);
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-            dataSourceService: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-            productList:[],
-            serviceList:[],
             status : false,
-            statusService : false,
             u_id: null,
             country : null,
             loaded: false,
-            loadedService: false,
             toggle : false,
             refreshing: false,
             color: 'blue',
@@ -65,17 +58,14 @@ class WishList extends Component {
             title:'',
             message:'',
             url:'',
-            selectedIndex:1,
         };
     }
     componentDidMount(){
         this.fetchData()
-        this.fetchDataService()
         EventEmitter.removeAllListeners("reloadWishlist");
         EventEmitter.on("reloadWishlist", (value)=>{
             console.log("reloadWishlist")
             this.fetchData()
-            this.fetchDataService()
         });
 
         EventEmitter.removeAllListeners("onExitWishlist");
@@ -97,10 +87,6 @@ class WishList extends Component {
         EventEmitter.emit('reloadProductsFromWhishlist')
         this.fetchData()
     }
-    refreshfromCountService(){
-        EventEmitter.emit('reloadProductsFromWhishlist')
-        this.fetchDataService()
-    }
     onCancel() {
         console.log("CANCEL")
         this.setState({visible:false});
@@ -115,19 +101,6 @@ class WishList extends Component {
             title: lang === 'ar' ? data.product_name_in_arabic : data.product_name,
             message: lang === 'ar' ? data.short_description_in_arabic : data.short_description,
             url: data.productImages[0] ? data.productImages[0].image : ""
-        });
-    }
-
-    onOpenService(data) {
-        console.log("OPEN")
-        console.log("share Data:=",data)
-        let {lang} = this.props
-
-        this.setState({
-            visible:true,
-            title: lang === 'ar' ? data.service_name_in_arabic : data.service_name,
-            message: lang === 'ar' ? data.short_description_in_arabic : data.short_description,
-            url: data.serviceImages[0] ? data.serviceImages[0].image : ""
         });
     }
     fetchData(){
@@ -158,7 +131,6 @@ class WishList extends Component {
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    productList: responseData.data,
                     status : responseData.status,
                     refreshing : false,
                     loaded : true
@@ -173,53 +145,6 @@ class WishList extends Component {
         })
         .catch((error) => {
           console.log(error);
-        })
-        .done();
-    }
-
-    fetchDataService(){
-        const {u_id, country, deviceId } = this.props;
-        // console.warn(this.props.country);
-        // console.warn(this.props.deviceId);
-
-        let formData = new FormData();
-        formData.append('device_uid', String(deviceId));
-        formData.append('country', String(country));
-        if (u_id) {
-            formData.append('u_id', String(u_id));
-        }
-        
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        console.log("Request wishlistService:=",config);
-        fetch(Utils.gurl('wishlistService'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            console.log("Response wishlistService:=",responseData);
-            if(responseData.status){
-                this.setState({
-                    dataSourceService: this.state.dataSource.cloneWithRows(responseData.data),
-                    serviceList: responseData.data,
-                    statusService : responseData.status,
-                    refreshing : false,
-                    loadedService : true
-                });
-            }else {
-                this.setState({
-                    statusService : responseData.status,
-                    refreshing : false,
-                    loadedService : true
-                })
-            }
-        })
-        .catch((error) => {
-          console.log("Response Error wishlistService:=",error);
         })
         .done();
     }
@@ -331,19 +256,6 @@ class WishList extends Component {
             Quentity: !this.state.Quentity
         });
     }
-
-    onClickProductTab() {
-        this.setState({
-            selectedIndex:1,
-        })
-    }
-
-    onClickServiceTab() {
-        this.setState({
-            selectedIndex:2
-        })
-    }
-
     noItemFound() {
         const {lang} = this.props,
         side = lang === "ar" ? "right" : "left";
@@ -368,57 +280,12 @@ class WishList extends Component {
                         <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
-                    {this.loadTabView()}
                     <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center', flex:1}}>
                         <Text> {I18n.t('wishlist.noitem', { locale: lang })} </Text>
                     </View>
                 </View>
             </Drawer>
         );
-    }
-
-    loadTabView() {
-        return(
-            <View style={{
-                width:width,
-                height:50,
-                flexDirection:'row',
-                alignItems:'center'
-            }}>
-                <TouchableWithoutFeedback onPress={this.onClickProductTab.bind(this)}>
-                    <View style={{
-                        width:(width-20)/2,
-                        height:40,
-                        backgroundColor:'red',
-                        marginLeft:10,
-                        justifyContent:'center',
-                        alignItems:'center',
-                        backgroundColor: this.state.selectedIndex === 1 ? '#fbcdc5'  : '#a9d5d1'
-                    }}>
-                        <Text style={{
-                            color:'white',
-                            fontWeight:'bold',
-                        }}>Product</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={this.onClickServiceTab.bind(this)}>
-                <View style={{
-                    width:(width-20)/2,
-                    height:40,
-                    backgroundColor:'red',
-                    // marginLeft:10,
-                    justifyContent:'center',
-                    alignItems:'center',
-                    backgroundColor: this.state.selectedIndex === 2 ? '#fbcdc5'  : '#a9d5d1'
-                }}>
-                    <Text style={{
-                        color:'white',
-                        fontWeight:'bold',
-                    }}>Service</Text>
-                </View>
-                </TouchableWithoutFeedback>
-            </View>
-        )
     }
     getSize(size){
         this.setState({size});
@@ -451,7 +318,6 @@ class WishList extends Component {
                         <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
-                    {this.loadTabView()}
                     <ActivityIndicator
                         style={[styles.centering]}
                         color="#a9d5d1"
@@ -471,23 +337,12 @@ class WishList extends Component {
             subject: "Share Link" //  for email
         };
 
-        if (this.state.selectedIndex === 1) {
-            if (!this.state.loaded) {
-                return this.renderLoadingView();
-            }
-            if (!this.state.status) {
-                return this.noItemFound();
-            }
+        if (!this.state.loaded) {
+            return this.renderLoadingView();
         }
-        else {
-            if (!this.state.loadedService) {
-                return this.renderLoadingView();
-            }
-            if (!this.state.statusService) {
-                return this.noItemFound();
-            }
+        if (!this.state.status) {
+            return this.noItemFound();
         }
-        
         let listView = (<View></View>);
         listView = (
             <ListView
@@ -499,23 +354,6 @@ class WishList extends Component {
                 contentContainerStyle={styles.container}
                 dataSource={this.state.dataSource}
                 renderRow={this.renderData.bind(this)}
-                enableEmptySections={true}
-                automaticallyAdjustContentInsets={false}
-                showsVerticalScrollIndicator={false}
-                />
-        );
-
-        let listViewService = (<View></View>);
-        listViewService = (
-            <ListView
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.fetchDataService} />
-                }
-                contentContainerStyle={styles.container}
-                dataSource={this.state.dataSourceService}
-                renderRow={this.renderDataService.bind(this)}
                 enableEmptySections={true}
                 automaticallyAdjustContentInsets={false}
                 showsVerticalScrollIndicator={false}
@@ -542,9 +380,8 @@ class WishList extends Component {
                         <Text style={{ color: "#fff", fontWeight: 'bold', fontSize: 15, paddingTop: Platform.OS === 'ios' ? 10 : 0, marginLeft: Platform.OS === 'ios' ? 0 : 0}}>{I18n.t('wishlist.wishlistTitle', { locale: lang })}</Text>
                         {this._renderRightButton()}
                     </View>
-                    {this.loadTabView()}
                     <ScrollView>
-                        {this.state.selectedIndex === 2 ? listViewService : listView}
+                        {listView}
                     </ScrollView>
                     <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
                         <Button iconSrc={{ uri: TWITTER_ICON }}
@@ -712,109 +549,6 @@ class WishList extends Component {
     openControlPanel = () => {
         this._drawer.open()
     };
-
-    renderDataService( data, rowData: string, sectionID: number, rowID: number, index) {
-        let {country, u_id, deviceId, lang} = this.props,
-        direction = (lang === 'ar') ? 'row-reverse' :'row',
-        align = (lang == 'ar')? 'right': 'left';
-
-        let color = data.special_price ? '#a9d5d1' : '#000';
-        let textDecorationLine = data.special_price ? 'line-through' : 'none',
-        product_name = (lang == 'ar')? data.service_name_in_arabic : data.service_name,
-        short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
-        detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
-        price = (lang == 'ar')? data.price_in_arabic : data.price,
-        // size = (lang == 'ar')? data.size_in_arabic : data.size,
-        special_price = (lang == 'ar')? data.special_price_in_arabic : data.special_price;
-
-        return (
-            <View style={{
-                    flexDirection: 'column-reverse' ,
-                    marginTop : 2,
-                    borderWidth : 0.5,
-                    borderColor : "#ccc",
-                    borderRadius : 5,
-                    marginTop: 5,
-                }}>
-                <SelectItemService wishlist_service_id={data.wishlist_service_id} service_id={data.service_id} u_id={u_id} deviceId= {deviceId} country={country} callback={this.refreshfromCountService.bind(this)} lang={lang}>
-                    <View style={{
-                            flexDirection: direction,
-                            backgroundColor : "#fff", alignItems : 'center'}
-                        }>
-                        <Image style={[styles.thumb]}
-                            defaultSource={null}
-                            source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null}}
-                            />
-                        <View style={{flexDirection: 'column', justifyContent : 'space-between', marginLeft: 10}}>
-                            <TouchableOpacity onPress={()=>Actions.vendordesc({
-                                    title: product_name,
-                                    service_id : data.service_id,
-                                    is_user : true,
-                                    product_name : product_name,
-                                    productImages : data.serviceImages,
-                                    short_description : short_description,
-                                    detail_description : detail_description,
-                                    price : price,
-                                    special_price : special_price,
-                                    is_wishlist : 1,
-                                })
-                                }>
-                                <Text style={{fontSize: 18, color: '#696969', marginTop: 10, marginBottom:5 ,textAlign:align}} >{product_name} </Text>
-                            </TouchableOpacity>
-                            <Text style={{ fontSize : 15, color : '#696969',bottom:5, textAlign:align, marginTop:5}} >{short_description} </Text>
-                            {/* <View style={{ flexDirection: direction}}>
-                                <Text style={{fontSize: 15 ,alignSelf: 'center'}}>{I18n.t('wishlist.quantity', { locale: lang })}  </Text>
-                                <Text style={{fontSize: 15 ,alignSelf: 'center'}}> : </Text>
-                                <Countmanager
-                                quantity={data.quantity}
-                                u_id={this.props.u_id}
-                                product_id={data.product_id}
-                                updatetype={"0"}
-                                country={this.props.country}
-                                deviceId={deviceId}
-                                callback={this.refreshfromCount.bind(this)}
-                                />
-                            </View> */}
-                            {/* <View style={{ flexDirection: direction, marginTop:5}}>
-                                <Text style={{fontSize :15}}>{I18n.t('wishlist.sizelbl', { locale: lang })} </Text>
-                                <Text style={{fontSize :15}}> : </Text>
-                                <Text style={{fontSize:15}}> {size}</Text>
-                            </View> */}
-                            <View style={{ flexDirection: direction, justifyContent:"space-between"}}>
-                            <View style={{ flexDirection: direction, marginTop:10, marginBottom:5}}>
-                                <Text style={{fontWeight :'bold', fontSize:15}}>{special_price > 0 ? special_price : price} </Text>
-                                <Text style={{fontWeight:'bold', fontSize:15}}> KWD</Text>
-                            </View>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={[styles.bottom, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row'}]}>
-                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]} onPress={this.onOpenService.bind(this,data)}>
-                            <SimpleLineIcons name="share-alt" size={20} color="#a9d5d1"/>
-                            <Text style={{ left : 5}}>{I18n.t('wishlist.shareItem', { locale: lang })}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.wishbutton, {flexDirection: (lang === 'ar') ? 'row-reverse' : 'row', justifyContent: "center"}]}
-                            onPress={()=>Actions.vendordesc({
-                                title: product_name,
-                                service_id : data.service_id,
-                                is_user : true,
-                                product_name : product_name,
-                                productImages : data.serviceImages,
-                                short_description : short_description,
-                                detail_description : detail_description,
-                                price : price,
-                                special_price : special_price,
-                                is_wishlist : 1,
-                            })
-                            }>
-                            {/* <Image source={require('../../images/cart_icon.png')} style={{ width:"10%", height : "100%"}}/> */}
-                            <Text style={{ left :5}}>{I18n.t('servicedetail.schedule', { locale: lang })}</Text>
-                        </TouchableOpacity>
-                    </View>
-                </SelectItemService>
-            </View>
-        )
-    }
 }
 class SelectItem extends Component{
     constructor(props) {
@@ -998,180 +732,6 @@ class SelectItem extends Component{
     }
 }
 
-class SelectItemService extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            size : '',
-            color : 'blue',
-            selectSize : false,
-            SHORT_LIST : ['0']
-        };
-    }
-    componentDidMount(){
-        // var data =this.props.size_arr,
-        // length = data.length,
-        // sizeList= [];
-        // for(var i=0; i < length; i++) {
-        //     order = data[i];
-        //     sizeof = order.size;
-        //     sizeList.push(sizeof);
-        // }
-        // this.setState({
-        //     SHORT_LIST: sizeList,
-        // })
-    }
-    validate(){
-        // const { color} = this.state;
-        // if (!color.length)
-        // {
-            // MessageBarManager.showAlert({
-            //     message: "Please Select Color",
-            //     alertType: 'alert',
-            //     title:''
-            // })
-        //     return false
-        // }
-        return true;
-    }
-    // editWishlist(size){
-    //     const { color, } = this.state;
-    //     const {wishlist_id, u_id, country, product_id, deviceId } = this.props;
-    //     const { lang } = this.props,
-    //     align = (lang === 'ar') ?  'right': 'left';
-
-    //     let formData = new FormData();
-    //     // formData.append('u_id', String(u_id));
-    //     if (u_id) {
-    //         formData.append('u_id', String(u_id));
-    //     }
-    //     // formData.append('country', String(country));
-    //     // formData.append('device_uid', String(deviceId));
-    //     // formData.append('product_id', String(product_id));
-    //     formData.append('wishlist_id', String(wishlist_id));
-    //     formData.append('size', String(size));
-    //     formData.append('color', String(color));
-    //     const config = {
-    //         method: 'POST',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'multipart/form-data',
-    //         },
-    //         body: formData,
-    //     }
-    //     if (this.validate()) {
-    //         fetch(Utils.gurl('editWishlist'), config)
-    //         .then((response) => response.json())
-    //         .then((responseData) => {
-    //             MessageBarManager.showAlert({
-    //                     message: I18n.t('wishlist.changewishlistalert', { locale: lang }),
-    //                     title:'',
-    //                     alertType: 'extra',
-    //                     titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-    //                     messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-    //                 })
-
-    //         })
-    //         .then(()=>this.props.callback())
-    //         .catch((error) => {
-    //           console.log(error);
-    //         })
-    //         .done();
-    //     }
-    // }
-    removeWishlist(){
-        const {u_id, country, service_id, deviceId, wishlist_service_id } = this.props;
-        let formData = new FormData();
-        // formData.append('u_id', String(u_id));
-        if (u_id) {
-            formData.append('u_id', String(u_id));
-        }
-        formData.append('country', String(country));
-        formData.append('service_id', String(service_id));
-        formData.append('device_uid', String(deviceId));
-        formData.append('wishlist_service_id', String(wishlist_service_id))
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data;',
-            },
-            body: formData,
-        }
-        console.log("Request removeFromWishlistService:=",config)
-        fetch(Utils.gurl('removeFromWishlistService'), config)
-        .then((response) => response.json())
-        .then((responseData) => {
-            console.log("Response removeFromWishlistService:=",responseData)
-            if (responseData.status) {
-                this.props.callback()
-            }
-            else {
-                MessageBarManager.showAlert({
-                    message: responseData.data.message,
-                    title:'error',
-                    alertType: 'extra',
-                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                    messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-                })
-            }
-        })
-        .then(()=>this.props.callback())
-        .catch((error) => {
-          console.log(error);
-        })
-        .done();
-    }
-    changeSize(result){
-        if (result.selectedItem === 'undefined') {
-            const {u_id, country, user_type ,deviceId, lang} = this.props;
-            align = (lang === 'ar') ?  'right': 'left';
-            MessageBarManager.showAlert({
-                message: I18n.t('productdetail.sizeerr', { locale: lang }),
-                title:'',
-                alertType: 'extra',
-                titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
-            })
-        }
-        else {
-            this.setState({
-                selectSize: false,
-                size: result.selectedItem.label
-            });
-            this.editWishlist(result.selectedItem.label)
-        }
-    }
-    render(){
-        const {lang }  = this.props;
-        let { SHORT_LIST } = this.state;
-        let swipeBtns = [{
-                text: I18n.t('wishlist.delete', { locale: lang }),
-                backgroundColor: '#f53d3d',
-                underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-                onPress: () => {this.removeWishlist()}
-            }];
-        return(
-            <Swipeout
-                right={swipeBtns}
-                autoClose={true}
-                backgroundColor= 'transparent'>
-                {this.props.children}
-                <SinglePickerMaterialDialog
-                    title={I18n.t('wishlist.selectsize', { locale: lang })}
-                    items={SHORT_LIST.map((row, index) => ({ value: index, label: row }))}
-                    visible={this.state.selectSize}
-                    selectedItem={this.state.singlePickerSelectedItem}
-                    onCancel={() => this.setState({ selectSize: false })}
-                    onOk={result => this.changeSize(result)}
-                    cancelLabel={I18n.t('wishlist.cancel', { locale: lang })}
-                    okLabel={I18n.t('wishlist.ok', { locale: lang })}
-                    />
-            </Swipeout>
-        )
-    }
-}
-
 const styles = StyleSheet.create ({
     container: {
         flexDirection: 'column',
@@ -1206,9 +766,8 @@ const styles = StyleSheet.create ({
     thumb: {
       resizeMode: 'center',
         width   : '20%',
-        height  : 100, // '50%' ,
-        marginLeft : 10,
-        marginVertical : 10,
+        height  :'50%' ,
+        marginLeft : 10
     },
     textQue :{
         flex: 1,

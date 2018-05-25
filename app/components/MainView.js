@@ -30,7 +30,7 @@ import Service from './Service';
 import CheckBox from 'app/common/CheckBox';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Editwish from './wish/Editwish'
-import EditwishService from './wish/Editwish'
+import EditwishService from './wish/EditwishService'
 import Modal from 'react-native-modal';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Feather from 'react-native-vector-icons/Feather';
@@ -157,6 +157,7 @@ class MainView extends Component {
         EventEmitter.on("reloadProductsFromWhishlist", (value)=>{
             this._onRefresh()
             this.fetchData()
+            this.fetchService()
         });
         EventEmitter.emit("hideLoader",'1')
 
@@ -847,7 +848,7 @@ class MainView extends Component {
         .done();
     }
 
-    Description( service_id, product_name, productImages , short_description, detail_description, price ,special_price){
+    Description( service_id, product_name, productImages , short_description, detail_description, price ,special_price, is_wishlist){
         Actions.vendordesc({
             is_user : true,
             service_id : service_id,
@@ -858,6 +859,7 @@ class MainView extends Component {
             detail_description : detail_description,
             price : price,
             special_price : special_price,
+            is_wishlist : is_wishlist,
         })
     }
     render() {
@@ -1132,7 +1134,7 @@ class MainView extends Component {
             <View style={styles.row} >
                 <View style={{flexDirection: direction, justifyContent: "center"}}>
                     <TouchableOpacity
-                        onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price)}>
+                        onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price, data.is_wishlist)}>
                         <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages} special_price={special_price}/>
                     </TouchableOpacity>
                 </View>
@@ -1846,7 +1848,7 @@ class MainView extends Component {
                 <View style={styles.row} >
                     <View style={{flexDirection: direction, justifyContent: "center"}}>
                         <TouchableOpacity
-                            onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price)}>
+                            onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price, data.is_wishlist)}>
                             <LoadImage productImages={ data.productImages ? data.productImages : data.serviceImages} special_price={special_price} price={price}/>
                         </TouchableOpacity>
                         <EvilIcons style={{ position : 'absolute', left : 5, top:5, alignSelf: 'flex-start', backgroundColor : 'transparent'}}
@@ -1859,7 +1861,7 @@ class MainView extends Component {
                             country={country}
                             is_wishlist={data.is_wishlist}
                             service_id={data.service_id}
-                            fetchData={()=> this.state.servicerows.length() > 0 ? this.fetchDataByService() : this.fetchService()}
+                            fetchData={()=> this.fetchService()}
                             deviceId={deviceId}
                             lang={lang}/>
                     </View>

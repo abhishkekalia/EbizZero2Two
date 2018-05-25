@@ -48,6 +48,7 @@ export default class EditwishService extends Component {
         }
     }
     addtoWishlist ( ){
+        console.log("addtoWishlist called")
         const {u_id, country, service_id, deviceId, lang} = this.props;
         let un_id= (u_id === undefined) ? '' : u_id,
         align = (lang === 'ar') ?  'right': 'left';
@@ -64,9 +65,11 @@ export default class EditwishService extends Component {
                 },
                 body: formData,
             }
+            console.log("addToWishlistService Request:=",config)
             fetch(Utils.gurl('addToWishlistService'), config)
             .then((response) => response.json())
             .then((responseData) => {
+                console.log("addToWishlistService Response:=",responseData)
                 if(responseData.status){
                     MessageBarManager.showAlert({
                         message: I18n.t('home.servicewishlistmsg1', { locale: lang }),
@@ -85,6 +88,7 @@ export default class EditwishService extends Component {
             .done();
         }
     removeToWishlist (){
+        console.log("removeToWishlist called")
         const {u_id, country, service_id, deviceId,lang} = this.props;
         let un_id= (u_id === undefined) ? '' : u_id,
         align = (lang === 'ar') ?  'right': 'left';
@@ -101,9 +105,11 @@ export default class EditwishService extends Component {
             },
             body: formData,
         }
+        console.log("removeFromWishlistService Request:=",config)
         fetch(Utils.gurl('removeFromWishlistService'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("removeFromWishlistService Response:=",responseData)
             MessageBarManager.showAlert({
                 message: I18n.t('home.servicewishlistmsg2', { locale: lang }),
                 alertType: 'extra',
