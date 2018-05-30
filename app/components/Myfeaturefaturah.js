@@ -25,6 +25,7 @@ export default class Myfeaturefaturah extends Component {
             loading: false,
             u_id: '',
             country : '',
+            isAvailableToCall : true,
         };
     }
     componentDidMount(){
@@ -68,10 +69,16 @@ export default class Myfeaturefaturah extends Component {
        });
 
         if (navState.url.indexOf(BASEURL) != -1) {
+            console.log("navState:=",navState)
             let status = navState.url.split("?")[1];
-            let statusId = navState.url.split("?")[2];
+            status = status.split("&")[0]
+            // let statusId = navState.url.split("?")[2];
+            let statusId = navState.url.split("&")[1];
             let id = statusId.split("=")[1];
-            this.orderPayment(status, id)
+            if (this.state.isAvailableToCall === true) {
+                this.state.isAvailableToCall = false
+                this.orderPayment(status, id)
+            }
         }
     }
 
@@ -110,7 +117,7 @@ export default class Myfeaturefaturah extends Component {
                     titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
                     messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
                 })
-                // routes.pop();
+                routes.pop();
             }
         })
         .catch((error) => {

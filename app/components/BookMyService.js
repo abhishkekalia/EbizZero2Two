@@ -65,12 +65,14 @@ export default class BookMyService extends Component {
             }
         this.setState({
             loading: navState.loading,
-       });
+        });
 
         if (navState.url.indexOf(BASEURL) != -1) {
             console.log("navState.url:=",navState.url)
             let status = navState.url.split("?")[1];
-            let statusId = navState.url.split("?")[2];
+            status = status.split("&")[0]
+            // let statusId = navState.url.split("?")[2];
+            let statusId = navState.url.split("&")[1];
             let id = statusId.split("=")[1];
             this.servicePayment(status, id)
         }

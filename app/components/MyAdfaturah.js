@@ -67,7 +67,9 @@ export default class MyAdfaturah extends Component {
        });
         if (navState.url.indexOf(BASEURL) != -1) {
             let status = navState.url.split("?")[1];
-            let statusId = navState.url.split("?")[2];
+            status = status.split("&")[0]
+            // let statusId = navState.url.split("?")[2];
+            let statusId = navState.url.split("&")[1];
             let id = statusId.split("=")[1];
             this.adPayment(status, id)
         }
