@@ -378,6 +378,7 @@ class WishList extends Component {
     }
 
     loadTabView() {
+        const {lang} = this.props;
         return(
             <View style={{
                 width:width,
@@ -398,7 +399,7 @@ class WishList extends Component {
                         <Text style={{
                             color:'white',
                             fontWeight:'bold',
-                        }}>Product</Text>
+                        }}>{I18n.t('wishlist.productTitle', { locale: lang })}</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={this.onClickServiceTab.bind(this)}>
@@ -414,7 +415,7 @@ class WishList extends Component {
                     <Text style={{
                         color:'white',
                         fontWeight:'bold',
-                    }}>Service</Text>
+                    }}>{I18n.t('wishlist.serviceTitle', { locale: lang })}</Text>
                 </View>
                 </TouchableWithoutFeedback>
             </View>

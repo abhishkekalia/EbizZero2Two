@@ -188,6 +188,8 @@
         "ok":"تم"
     },
     "wishlist":{
+        "productTitle":"المنتج",
+        "serviceTitle":"الخدمة",
         "wishlistTitle":"المفضلة",
         "noitem":"لم تتم إضافة منتج/خدمات إلى قائمة المفضلات",
         "sizelbl":"المقاس",

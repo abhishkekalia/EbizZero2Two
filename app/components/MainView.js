@@ -82,6 +82,8 @@ class MainView extends Component {
             arrSelectedType :[],
             isRemoveForAllShop: false,
             isRemoveForAllService: false,
+            isReloadProductCnt : 0,
+            arrMergeList: [],
         }
     }
     componentDidMount(){
@@ -145,6 +147,11 @@ class MainView extends Component {
         EventEmitter.removeAllListeners("reloadProducts");
         EventEmitter.on("reloadProducts", (value)=>{
             // this.fetchData()
+            console.log("reloadProducts Event fire")
+            this.reloadPostsAfterDelay()
+            // this.setState({
+            //     isReloadProductCnt: this.state.isReloadProductCnt+1
+            // })
         });
 
         EventEmitter.removeAllListeners("onExitHome");
@@ -170,6 +177,25 @@ class MainView extends Component {
 
     componentWillUnmount() {
         // BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
+    componentWillUpdate() {
+        console.log("componentWillUpdate called")
+    }
+
+    reloadPostsAfterDelay() {
+        var that = this;
+        that.setState({
+            dataSource: this.state.dataSource.cloneWithRows([]),
+            loaded : false,
+        })
+        setTimeout(function() {
+            that.setState({
+                isReloadProductCnt: that.state.isReloadProductCnt+1,
+                dataSource: that.state.dataSource.cloneWithRows(that.state.arrMergeList),
+                loaded : true
+            })
+        }, 500);
     }
 
     // handleBackButton() {
@@ -348,7 +374,8 @@ class MainView extends Component {
                 arrProductList: responseData.data,
                 status : responseData.status,
                 loaded: true,
-                refreshing: false
+                refreshing: false,
+                arrMergeList: merge,
             });
         })
         .catch((error) => {
@@ -588,7 +615,8 @@ class MainView extends Component {
                     dataSource: this.state.dataSource.cloneWithRows(merge),
                     status : responseData.status,
                     loaded: true,
-                    refreshing: false
+                    refreshing: false,
+                    arrMergeList: merge,
                 });
             }else {
                 this.setState({
@@ -665,6 +693,7 @@ class MainView extends Component {
                     dataSource: this.state.dataSource.cloneWithRows(merge),
                     isLoading : false,
                     statusService : true,
+                    arrMergeList: merge,
                 });
             }
             else{
@@ -832,7 +861,8 @@ class MainView extends Component {
                     dataSource: this.state.dataSource.cloneWithRows(merge),
                     status : responseData.status,
                     loaded: true,
-                    refreshing: false
+                    refreshing: false,
+                    arrMergeList: merge,
                 });
             }else {
                 this.setState({
@@ -1603,7 +1633,8 @@ class MainView extends Component {
                     dataSource: this.state.dataSource.cloneWithRows(merge),
                     statusService : responseData.status,
                     loaded: true,
-                    refreshing: false
+                    refreshing: false,
+                    arrMergeList: merge,
                 });
             } else {
                 console.log("filterByService status false")

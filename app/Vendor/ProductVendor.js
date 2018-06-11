@@ -478,19 +478,19 @@ class ProductVendor extends Component {
         }
     }
     validateScheduleTimings(b){
-        var availabletime =  this.validateSlot(b);
-        if(this.validateSlot(b)){
+        // var availabletime =  this.validateSlot(b);
+        // if(this.validateSlot(b)){
             this.setState({
                 validTime : b
             })
-          MessageBarManager.showAlert({
-              message: " Available to book time Slot",
-              alertType: 'extra',
-              title:'',
-              titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-              messageStyle: { color: 'white', fontSize: 16 , textAlign:"left"},
-          })
-        }
+        //   MessageBarManager.showAlert({
+        //       message: " Available to book time Slot",
+        //       alertType: 'extra',
+        //       title:'',
+        //       titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+        //       messageStyle: { color: 'white', fontSize: 16 , textAlign:"left"},
+        //   })
+        // }
     }
 
     onClickShare() {

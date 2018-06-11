@@ -928,7 +928,7 @@ class Register extends Component {
     		})
 			return false
 		}
-		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,7})+$/ ;
 		if(reg.test(email) === false)
 		{
 			MessageBarManager.showAlert({

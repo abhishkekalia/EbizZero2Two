@@ -94,7 +94,8 @@ class Menu extends React.Component {
                         isGuest == '1' ?
                         <View style={{ height: "85%", width: '80%',  flexDirection: 'row', justifyContent: 'space-around',alignItems: 'center'}}>
                             <TouchableOpacity onPress={Actions.registerPage} style={{alignSelf: 'center', borderRadius: 10, borderWidth :1, backgroundColor: '#a9d5d1', borderColor:"#fff"}} >
-                                <Text style={styles.signinbtn}>{I18n.t('sidemenu.signup', { locale: lang })}</Text>
+                                {/* <Text style={styles.signinbtn}>{I18n.t('sidemenu.signup', { locale: lang })}</Text> */}
+                                {lang === 'ar' ? <Text style={styles.signinbtn}>        {I18n.t('sidemenu.signup', { locale: lang })}</Text> : <Text style={styles.signinbtn}>{I18n.t('sidemenu.signup', { locale: lang })}</Text> } 
                             </TouchableOpacity>
                             <TouchableOpacity onPress={Actions.profile} style={styles.username}>
                                 <View style= {styles.guest}>

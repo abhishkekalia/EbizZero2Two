@@ -133,7 +133,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                                 tabBarPosition={'bottom'}
                                 activeBackgroundColor='#fff'
                                 inactiveBackgroundColor='#fff'
-                                // lazy
+                                // lazy = {true}
                                 // inactiveBackgroundColor="rgba(255, 0, 0, 0.5)"
                                 panHandlers={null}
                                 >

@@ -188,6 +188,8 @@
         "ok":"OK"
     },
     "wishlist":{
+        "productTitle":"Product",
+        "serviceTitle":"Service",
         "wishlistTitle":"Wishlist",
         "noitem":"No Item added to your wishlist",
         "sizelbl":"Size",
