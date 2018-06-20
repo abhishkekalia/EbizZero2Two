@@ -98,9 +98,9 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.ebizzero2two"
+        applicationId "com.zero2two"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         ndk {

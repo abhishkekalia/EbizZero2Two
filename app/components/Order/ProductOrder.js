@@ -29,7 +29,8 @@ const LATITUDE = 22.966425;
 const LONGITUDE = 72.615933;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
+// const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
+const GOOGLE_MAPS_APIKEY = 'AIzaSyBU5Uwb57A6jXutEHzAo8I3T7gRVbs8qHo';
 class ProductOrder extends Component{
      constructor(props) {
         super(props);

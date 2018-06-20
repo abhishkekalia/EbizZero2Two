@@ -33,7 +33,8 @@ import ActionSheet from 'react-native-actionsheet';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 // import MapView, { Marker } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
-Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
+// Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
+Geocoder.setApiKey('AIzaSyBU5Uwb57A6jXutEHzAo8I3T7gRVbs8qHo');
 
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0

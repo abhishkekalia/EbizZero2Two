@@ -1,4 +1,4 @@
-package com.ebizzero2two;
+package com.zero2two;
 
 import android.app.Application;
 

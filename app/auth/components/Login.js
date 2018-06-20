@@ -184,7 +184,7 @@ class Login extends Component {
 			})
 			return false
 		}
-		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,7})+$/ ;
 		if(reg.test(email) === false){
 			MessageBarManager.showAlert({
 				message: I18n.t('login.pleaseenter_validemail', { locale: language }),
@@ -632,10 +632,20 @@ class Login extends Component {
 		const {email, password} = this.state;
 		const { language} = this.props,
 		align = (language === 'ar') ?  'right': 'left';
-		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
-		if(reg.test(email) === false){
+		let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,7})+$/ ;
+		if (!email.length){
 			MessageBarManager.showAlert({
 				message: I18n.t('login.pleaseenteremail', { locale: language }),
+				alertType: 'extra',
+				title:'',
+				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+				messageStyle: { color: 'white', fontSize: 16 , textAlign:align},
+			})
+			return false
+		}
+		if(reg.test(email) === false){
+			MessageBarManager.showAlert({
+				message: I18n.t('login.pleaseenter_validemail', { locale: language }),
 				alertType: 'extra',
 				title:'',
 				titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },

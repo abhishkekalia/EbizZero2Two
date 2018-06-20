@@ -35,7 +35,8 @@ import ActionSheet from 'react-native-actionsheet';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 // import MapView, { Marker } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
-Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
+// Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
+Geocoder.setApiKey('AIzaSyBU5Uwb57A6jXutEHzAo8I3T7gRVbs8qHo');
 
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
@@ -55,7 +56,8 @@ const ASPECT_RATIO = width / height;
 // const LONGITUDE = 72.615933;
 const LATITUDE_DELTA = 0.0922;
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
+// const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
+const GOOGLE_MAPS_APIKEY = 'AIzaSyBU5Uwb57A6jXutEHzAo8I3T7gRVbs8qHo';
 
 class Register extends Component {
 	constructor(props) {
