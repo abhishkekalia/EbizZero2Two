@@ -60,6 +60,7 @@
 		C841D19220AC2A340050929C /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C841D19120AC2A260050929C /* libRNFetchBlob.a */; };
 		C841D19320AC2B2B0050929C /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C841D13320AC118C0050929C /* libRNVectorIcons.a */; };
 		C841D2F920AC43780050929C /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C841D24620AC40C70050929C /* libRNImagePicker.a */; };
+		C86D467120DCF8ED00B44105 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C86D467020DCF8CE00B44105 /* libReactNativePermissions.a */; };
 		C88AB9D4206299AD0023E974 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C88AB9D0206299A60023E974 /* libART.a */; };
 		C8C75EF3206BC76D004D74AF /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8C75EF2206BC73F004D74AF /* libSplashScreen.a */; };
 		C8C75EF5206BD203004D74AF /* AirGoogleMaps in Resources */ = {isa = PBXBuildFile; fileRef = C8C75EF4206BD203004D74AF /* AirGoogleMaps */; };
@@ -468,6 +469,13 @@
 			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
 			remoteInfo = RNImagePicker;
 		};
+		C86D466F20DCF8CE00B44105 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C86D466B20DCF8CC00B44105 /* ReactNativePermissions.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
+			remoteInfo = ReactNativePermissions;
+		};
 		C88AB9CF206299A60023E974 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C88AB9CA206299A50023E974 /* ART.xcodeproj */;
@@ -531,6 +539,7 @@
 		BEA2A9A394BA40489D409CA8 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		C08B40D3D0F7421A8242847A /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		C841D18C20AC2A250050929C /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
+		C86D466B20DCF8CC00B44105 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		C88AB9CA206299A50023E974 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		C8C75EB9206BC73F004D74AF /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		C8C75EF4206BD203004D74AF /* AirGoogleMaps */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AirGoogleMaps; path = "../node_modules/react-native-maps/lib/ios/AirGoogleMaps"; sourceTree = "<group>"; };
@@ -582,6 +591,7 @@
 				C841D2F920AC43780050929C /* libRNImagePicker.a in Frameworks */,
 				C15BFC9BB030478B8E1ACBB8 /* (null) in Frameworks */,
 				360AFAE8E83247848434F2C3 /* libRNImagePicker.a in Frameworks */,
+				C86D467120DCF8ED00B44105 /* libReactNativePermissions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,6 +779,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				C86D466B20DCF8CC00B44105 /* ReactNativePermissions.xcodeproj */,
 				C841D18C20AC2A250050929C /* RNFetchBlob.xcodeproj */,
 				C8C75EB9206BC73F004D74AF /* SplashScreen.xcodeproj */,
 				C88AB9CA206299A50023E974 /* ART.xcodeproj */,
@@ -965,6 +976,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		C86D466C20DCF8CC00B44105 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C86D467020DCF8CE00B44105 /* libReactNativePermissions.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1146,6 +1165,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = C86D466C20DCF8CC00B44105 /* Products */;
+					ProjectRef = C86D466B20DCF8CC00B44105 /* ReactNativePermissions.xcodeproj */;
 				},
 				{
 					ProductGroup = C841D0C420AC11890050929C /* Products */;
@@ -1576,6 +1599,13 @@
 			remoteRef = C841D24520AC40C70050929C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		C86D467020DCF8CE00B44105 /* libReactNativePermissions.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativePermissions.a;
+			remoteRef = C86D466F20DCF8CE00B44105 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C88AB9D0206299A60023E974 /* libART.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1838,6 +1868,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = EbizZero2Two/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1876,6 +1907,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
 				);
 				INFOPLIST_FILE = EbizZero2Two/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

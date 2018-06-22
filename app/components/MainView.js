@@ -648,6 +648,7 @@ class MainView extends Component {
             },
             body: formData,
         }
+        console.log("Request serviceList:=",config)
         fetch(Utils.gurl('serviceList'), config)
         .then((response) => response.json())
         .then((responseData) => {
@@ -896,6 +897,7 @@ class MainView extends Component {
         const {u_id, country, deviceId ,lang} = this.props;
         console.log("isGuest:=",this.props.isGuest)
         console.log("country:=",this.props.country)
+        
         if (!this.state.loaded) {
             return this.renderLoadingView();
         }
@@ -1576,6 +1578,9 @@ class MainView extends Component {
             user_type, servicerows } = this.state;
         const { u_id, country} = this.props;
         let formData = new FormData();
+        if (u_id) {
+            formData.append('u_id', String(u_id));
+        }
         formData.append('service_id', servicerows.toString());
         formData.append('country', String(country));
         const config = {
@@ -1811,7 +1816,7 @@ class MainView extends Component {
     }
 // Service filter complete here
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
-        console.log("data:=",data,"rowData:=",rowData)
+        console.log("data:=321",data,"rowData:=",rowData)
 
         if ("product_id" in data) {
             const { lang , deviceId, country, u_id} = this.props;

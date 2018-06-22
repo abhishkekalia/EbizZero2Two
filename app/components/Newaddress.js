@@ -29,6 +29,8 @@ import Geocoder from 'react-native-geocoding';
 // Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
 Geocoder.setApiKey('AIzaSyBU5Uwb57A6jXutEHzAo8I3T7gRVbs8qHo');
 
+import Permissions from 'react-native-permissions';
+
 
 const { width, height } = Dimensions.get('window')
 const ASPECT_RATIO = width / height;
@@ -94,19 +96,63 @@ class Newaddress extends Component{
      .then(()=>this.fetchData())
      .done();
         //  this.fetchData()
-             this.watchID = navigator.geolocation.watchPosition((position) => {
-                 let region = {
-                     latitude:       position.coords.latitude,
-                     longitude:      position.coords.longitude,
-                     latitudeDelta:  0.00922*1.5,
-                     longitudeDelta: 0.00421*1.5
-                 }
-                 console.warn(region);
-                 this.onRegionChange(region, region.latitude, region.longitude);
-             },
-             // (error) => console.log(error.error),
-             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
-         }
+
+        Permissions.check('location','whenInUse')
+            .then(response => {
+              //returns once the user has chosen to 'allow' or to 'not allow' access
+              //response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+              // this.setState({ photoPermission: response })
+              console.log('location Permission:=',response)
+              if (response == 'authorized') {
+                this.setUpLocationWatch()
+              }
+              else if (response == 'undetermined') {
+                  Permissions.request('location','whenInUse').then(response => {
+                  // Returns once the user has chosen to 'allow' or to 'not allow' access
+                  // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+                  if(response=='authorized') {
+                    this.setUpLocationWatch()
+                  }
+                })
+              }
+              else {
+                console.log('called error part')
+                Alert.alert(
+                    'Zero2Two',
+                    Platform.OS === 'ios' ? 'Your location access is denied, Please allow location access' : 'Your location access is denied, Please allow location access from settings',
+                    Platform.OS == 'ios' ?
+                    [
+                        {text: 'Cancel', onPress: () => console.log('cancel')},
+                        {text: 'Okay', onPress: () => {Permissions.openSettings()}},
+					] : 
+					[
+						{text: 'Okay', onPress: () => console.log('Android Okay')}
+					],
+                    { cancelable: false }
+                )
+            }
+        });
+
+             
+    }
+
+    setUpLocationWatch() {
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+            let region = {
+                latitude:       position.coords.latitude,
+                longitude:      position.coords.longitude,
+                latitudeDelta:  0.00922*1.5,
+                longitudeDelta: 0.00421*1.5
+            }
+            console.warn(region);
+            this.onRegionChange(region, region.latitude, region.longitude);
+        },
+        // (error) => console.log(error.error),
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
+    }
+
+
+
          onRegionChange(region, lastLat, lastLong) {
             //  console.log("region.latitude:=",region.latitude)
             //  console.log("region.longitude:=",region.longitude)

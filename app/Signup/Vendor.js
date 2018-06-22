@@ -38,6 +38,8 @@ import Geocoder from 'react-native-geocoding';
 // Geocoder.setApiKey('AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8');
 Geocoder.setApiKey('AIzaSyBU5Uwb57A6jXutEHzAo8I3T7gRVbs8qHo');
 
+import Permissions from 'react-native-permissions';
+
 const CANCEL_INDEX = 0;
 const DESTRUCTIVE_INDEX = 0
 const countryTitle = 'Select Country'
@@ -127,6 +129,46 @@ class Vendorreg extends Component {
 		this.handlePress = this.handlePress.bind(this)
 	}
 	componentDidMount(){
+		
+		Permissions.check('location','whenInUse')
+            .then(response => {
+              //returns once the user has chosen to 'allow' or to 'not allow' access
+              //response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+              // this.setState({ photoPermission: response })
+              console.log('location Permission:=',response)
+              if (response == 'authorized') {
+                this.setUpLocationWatch()
+              }
+              else if (response == 'undetermined') {
+                  Permissions.request('location','whenInUse').then(response => {
+                  // Returns once the user has chosen to 'allow' or to 'not allow' access
+                  // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+                  if(response=='authorized') {
+                    this.setUpLocationWatch()
+                  }
+                })
+              }
+              else {
+                console.log('called error part')
+                Alert.alert(
+                    'Zero2Two',
+                    Platform.OS === 'ios' ? 'Your location access is denied, Please allow location access' : 'Your location access is denied, Please allow location access from settings',
+                    Platform.OS == 'ios' ?
+                    [
+                        {text: 'Cancel', onPress: () => console.log('cancel')},
+                        {text: 'Okay', onPress: () => {Permissions.openSettings()}},
+					] : 
+					[
+						{text: 'Okay', onPress: () => console.log('Android Okay')}
+					],
+                    { cancelable: false }
+                )
+            }
+        });
+        this.fetchData();
+	}
+	
+	setUpLocationWatch() {
 		this.watchID = navigator.geolocation.watchPosition((position) => {
 			let region = {
 				latitude:       position.coords.latitude,
@@ -136,8 +178,8 @@ class Vendorreg extends Component {
 			}
 			this.onRegionChange(region, region.latitude, region.longitude);
 		});
-        this.fetchData();
-    }
+	}
+
 	onRegionChange(region, lastLat, lastLong) {
 		this.setState({
 			region: region,

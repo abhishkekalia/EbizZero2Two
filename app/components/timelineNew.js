@@ -17,7 +17,6 @@ import { Actions } from 'react-native-router-flux';
 import ProgressBar  from './slider/ProgressBar';
 // import FullscreenVideo from 'react-native-fullscreen-video';
 import Video from 'react-native-video';
-// import { DH_UNABLE_TO_CHECK_GENERATOR } from 'constants';
 import Ionicons from 'react-native-vector-icons/Feather';
 const { width, height } = Dimensions.get('window')
 

@@ -115,34 +115,37 @@ class Shopingcart extends Component {
     };
 
     getItems (delivery_address_id){
-        var Items = this.state.SetToList,
+        if (this.state.SetToList !== null) {
+            var Items = this.state.SetToList,
             length = Items.length,
             organization,
             Select =[],
             user,
             i;
 
-        var today = new Date();
-        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+            var today = new Date();
+            var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
-        currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
-        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
+            currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+            nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
 
-        for (i = 0; i < length; i++) {
-            organization = Items[i];
-            Select.push ({
-                        "product_id": organization.product_id,
-                        "size": organization.size,
-                        "quantity": organization.quantity,
-                        "delivery_address_id": delivery_address_id,
-                        "vendor_id":organization.vendor_id,
-                        "price":organization.price,
-                        "delivery_datetime": currentdate,
-                        "order_date": nextdate
-                    })
+            for (i = 0; i < length; i++) {
+                organization = Items[i];
+                Select.push ({
+                            "product_id": organization.product_id,
+                            "size": organization.size,
+                            "quantity": organization.quantity,
+                            "delivery_address_id": delivery_address_id,
+                            "vendor_id":organization.vendor_id,
+                            "price":organization.price,
+                            "delivery_datetime": currentdate,
+                            "order_date": nextdate
+                        })
+            }
+            this.addToOrder(Select)
+            .done()
         }
-        this.addToOrder(Select)
-        .done()
+        
     }
 
     async addToOrder(value){

@@ -4370,6 +4370,10 @@ react-native-percentage-circle@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-native-percentage-circle/-/react-native-percentage-circle-1.0.6.tgz#773fb65043faf269ce6b59c9faa8c11a33e1e8dd"
 
+react-native-permissions@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
+
 react-native-picker-dropdown@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/react-native-picker-dropdown/-/react-native-picker-dropdown-0.1.1.tgz#f1154c65e9280ef9bded11b5fc9caaff32a14f82"
