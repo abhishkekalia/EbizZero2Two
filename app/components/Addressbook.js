@@ -136,7 +136,14 @@ class AddressBook extends Component {
                     EventEmitter.emit("redirectToFaturah",data)
                     //   routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
                 } else {
-                    this.removeLoader
+                    this.removeLoader()
+                    MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        title:'',
+                        alertType: 'extra',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:'left'},
+                    })
                 }
             })
             .catch((error) => {

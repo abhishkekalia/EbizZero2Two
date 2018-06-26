@@ -205,7 +205,14 @@ class ProductDescription extends Component {
                 if(responseData.status){
                     routes.myfaturah({ uri : responseData.data.url, order_id : responseData.data.order_id, callback: this.removeLoader})
                 }else{
-                    this.removeLoader
+                    this.removeLoader()
+                    MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        title:'',
+                        alertType: 'extra',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:'left'},
+                    })
                 }
             })
             .catch((error) => {
@@ -817,7 +824,7 @@ const styles = {
         alignItems: 'center',
         borderWidth : 1,
         borderColor : "#ccc",
-        shadowOpacity: 0.2,
+        // shadowOpacity: 0.2,
         shadowRadius: 2,
         width : '25%'
         // shadowOffset:{width:2,height:4}

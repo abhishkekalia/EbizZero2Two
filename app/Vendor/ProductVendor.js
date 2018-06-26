@@ -415,7 +415,7 @@ class ProductVendor extends Component {
                         callback: this.removeLoader
                     })
                 }else{
-                    // this.removeLoader
+                    this.removeLoader()
                     MessageBarManager.showAlert({
                         message: responseData.data.message,
                         alertType: 'alert',

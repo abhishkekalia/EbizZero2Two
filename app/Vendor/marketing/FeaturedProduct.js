@@ -29,7 +29,6 @@ export default class FeaturedProduct extends Component {
             country : null,
             status : false
         }
-
     }
     GetItem (flower_name) {
         alert(flower_name);
@@ -390,6 +389,13 @@ class Footer extends Component{
                     let url = responseData.data.url;
                     routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id, amout:10})
                 }else{
+                    MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        title:'',
+                        alertType: 'extra',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:'left'},
+                    })
                 }
             })
             .catch((error) => {
@@ -493,6 +499,13 @@ class FooterService extends Component{
                     let url = responseData.data.url;
                     routes.myfeaturefaturah({ uri : responseData.data.url, feature_id : responseData.data.feature_id, amout:10})
                 }else{
+                    MessageBarManager.showAlert({
+                        message: responseData.data.message,
+                        title:'',
+                        alertType: 'extra',
+                        titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                        messageStyle: { color: 'white', fontSize: 16 , textAlign:'left'},
+                    })
                 }
             })
             .catch((error) => {

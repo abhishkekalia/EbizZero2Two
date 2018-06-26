@@ -552,7 +552,7 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     style={Platform.OS === 'ios' ?
                         {
                         padding:15,
-                        marginTop:10,
+                        marginTop:0,
                     } : {
                     alignSelf: 'center'
                 }}/>}
