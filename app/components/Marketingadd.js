@@ -85,13 +85,18 @@ class Marketingadd extends Component {
         this.setState({
             visibleModal : true
         })
-        RNFetchBlob.config({
-            timeout: 600000
-        }).fetch('POST', Utils.gurl('addMarketingAd'),{
+        // RNFetchBlob.config({
+        //     timeout: 600000
+        // }).fetch('POST', Utils.gurl('addMarketingAd'),{
+        //     Authorization : "Bearer access-token",
+        //     'Accept': 'application/json',
+        //     'Content-Type': 'application/octet-stream',
+        //     'Transfer-Encoding' : 'Chunked',
+        // },
+        RNFetchBlob.fetch('POST', Utils.gurl('addMarketingAd'),{
             Authorization : "Bearer access-token",
             'Accept': 'application/json',
             'Content-Type': 'application/octet-stream',
-            'Transfer-Encoding' : 'Chunked',
         },
         [
             { name: 'path', filename: uploadFileName, type: fileType,  data: RNFetchBlob.wrap(Source) },

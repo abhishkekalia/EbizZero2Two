@@ -13,7 +13,8 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Feather';
 
-var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
+// var BASEURL = 'http://solutiontrackers.com/dev-a/zerototwo/demo.php';
+var BASEURL = 'http://zero2two.com/zerototwo/demo.php';
 
 export default class Myuserfaturah extends Component {
     constructor(props) {
