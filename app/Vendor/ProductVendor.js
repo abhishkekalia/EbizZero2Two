@@ -35,6 +35,7 @@ import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import IoniconsWish from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import MoreService from './MoreService';
 
 import * as authActions from "app/auth/auth.actions";
 import {bindActionCreators} from 'redux';
@@ -437,22 +438,23 @@ class ProductVendor extends Component {
             <View key={`${sectionID}-${rowID}`} style={{ height: adjacentRowHighlighted ? 4 : 1, backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC'}}/>
         );
     }
-    noItemFound(){
-        const { lang,logout,u_id} = this.props;
+
+    noItemFound() {
+        const { lang, logout, u_id } = this.props;
         return (
             <View style={{ flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
                 <Text style={{fontSize: 12, fontWeight: 'bold'}}>{I18n.t('servicedetail.noaddress', { locale: lang })}</Text>
-
-                 {    u_id === undefined ? <Text onPress={
+                {    u_id === undefined ? <Text onPress={
                         ()=>{ Utils.logout()
                             .then(logout)
                             .done()
                         } } style={{fontSize: 12, fontWeight: 'bold'}}> Please login / register to add address </Text> : <Text> </Text>
-                    }
-                    </View>
-                );
-            }
-    validateService(){
+                }
+            </View>
+        );
+    }
+
+    validateService() {
 
         if (this.props.isGuest == '1') {
             this.setState({
@@ -462,7 +464,7 @@ class ProductVendor extends Component {
         else {
             if(this.state.selectedAddress == "Select Address"){
                 MessageBarManager.showAlert({
-                    message: "Please Select Address First",
+                    message: "Please select address first",
                     alertType: 'alert',
                     stylesheetWarning : { backgroundColor : '#87cefa', strokeColor : '#fff' },
                     title:''
@@ -611,7 +613,7 @@ class ProductVendor extends Component {
         const { date_in, count, ScheduleDate, BookingTime } = this.state;
         let color = this.props.special_price ? '#a9d5d1' : '#000';
         let textDecorationLine = this.props.special_price > 0 ? 'line-through' : 'none';
-        const { lang} = this.props,
+        const {country, lang,u_id, deviceId} = this.props,
         direction = lang == 'ar'? 'row-reverse': 'row',
         align = lang == 'ar'? 'flex-end': 'flex-start',
         textline = lang == 'ar'? 'right': 'left';
@@ -731,7 +733,24 @@ class ProductVendor extends Component {
                                 </Text>
                             </View>
                         </View>
+                        {
+                            "u_id" in this.state.serviceFullDetail ? 
+                                ( this.props.is_user === true ? 
+                                    <View>
+                                        <Text style={{padding:10, textAlign: textline}}>{I18n.t('servicedetail.moreServices', { locale: lang })}</Text>
+                                        <MoreService service_type_id={this.state.serviceFullDetail.service_type_id} vendor_id={this.state.serviceFullDetail.u_id} lang={lang} country={country} u_id={u_id} deviceId={deviceId}/>
+                                    </View>
+                                    : 
+                                    undefined
+                                ) 
+                            : 
+                                undefined
+                        }
                     </View>
+
+                    
+
+                    
                 </ScrollView>
                 <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
                     <View style={{flexDirection:direction, justifyContent:'center', width:'100%', marginBottom: -30}}>
@@ -811,6 +830,7 @@ class ProductVendor extends Component {
                             <CirclesLoader />
                         </View>
                     </Modal>
+                    
             </View>
         )
     }

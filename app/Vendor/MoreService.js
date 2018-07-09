@@ -1,25 +1,22 @@
 import React, { Component ,PropTypes } from 'react';
 import {
-    ActivityIndicator,
-    FlatList,
+    // ActivityIndicator,
+    // FlatList,
     ListView,
     TouchableOpacity,
     StyleSheet,
     Dimensions,
-    AsyncStorage,
+    // AsyncStorage,
     Text,
     View,
     Image
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import IconBadge from 'react-native-icon-badge';
+// import IconBadge from 'react-native-icon-badge';
 import Utils from 'app/common/Utils';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import Editwish from './wish/Editwish';
-import { Card } from "react-native-elements";
 const { width, height } = Dimensions.get('window')
 
-export default class Moreproduct extends Component {
+export default class MoreService extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -48,14 +45,14 @@ export default class Moreproduct extends Component {
 
 
     fetchData(){
-        const { product_category, vendor_id, lang, country, u_id, deviceId } = this.props;
+        const { service_type_id, vendor_id, lang, country, u_id, deviceId } = this.props;
         let formData = new FormData();
         // formData.append('u_id', String(u_id));
         if (u_id) {
             formData.append('u_id', String(u_id));
         }
         // formData.append('country', String(country));
-        formData.append('category_id', String(product_category));
+        formData.append('service_type_id', String(service_type_id));
         formData.append('vendor_id', String(vendor_id));
         const config = {
             method: 'POST',
@@ -65,9 +62,11 @@ export default class Moreproduct extends Component {
             },
             body: formData,
         }
-        fetch(Utils.gurl('moreProductNew'), config)
+        console.log("Request moreServiceNew:=",config)
+        fetch(Utils.gurl('moreServiceNew'), config)
         .then((response) => response.json())
         .then((responseData) => {
+            console.log("Response moreServiceNew:=",responseData)
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
@@ -116,13 +115,14 @@ export default class Moreproduct extends Component {
         );
     }
     renderData(data, rowData: string, sectionID: number, rowID: number, index) {
+        console.log("MoreService data:=",data)
         let color = data.special_price ? '#C5C8C9' : '#000';
         let textDecorationLine = data.special_price ? 'line-through' : 'none';
         const { lang , deviceId, country, u_id} = this.props;
         let direction = (lang === 'ar') ? 'row-reverse' :'row',
         align = (lang === 'ar') ?  'right': 'left',
 
-        product_name = (lang == 'ar')? data.product_name_in_arabic : data.product_name,
+        service_name = (lang == 'ar')? data.service_name_in_arabic : data.service_name,
         short_description = (lang == 'ar')? data.short_description_in_arabic : data.short_description,
         detail_description = (lang == 'ar')? data.detail_description_in_arabic : data.detail_description,
         price = (lang == 'ar')? data.price_in_arabic : data.price,
@@ -130,12 +130,10 @@ export default class Moreproduct extends Component {
         return (
             <View style={styles.row}>
                 <View style={{flexDirection: direction, justifyContent: "center", overflow:'hidden', paddingTop:10}}>
-                    <TouchableOpacity
-                    onPress={()=> this.moveToDesc(product_name, data.product_id, null) }
-                    // onPress={()=>Actions.deascriptionPage({ title: data.product_id, product_id : data.product_id , is_wishlist : data.is_wishlist, toggleWishList: toggleWishList})}
-                    >
+                <TouchableOpacity
+                            onPress={()=> this.Description(data.service_id, service_name, data.serviceImages, short_description, detail_description, price ,special_price, data.is_wishlist)}>
                         <Image style={[styles.thumb, { alignSelf: 'center',}]}
-                            source={{ uri : data.productImages[0] ? data.productImages[0].image : null }}
+                            source={{ uri : data.serviceImages[0] ? data.serviceImages[0].image : null }}
                             resizeMode = 'stretch'
                             // resizeMethod='scale'
                         />
@@ -145,7 +143,7 @@ export default class Moreproduct extends Component {
                 <TouchableOpacity  style={styles.name}
                 // onPress={()=>Actions.deascriptionPage({ product_id : data.product_id, is_wishlist : data.is_wishlist })}
                 >
-                    <Text style={{fontSize : 13, color :'#000'}}>{product_name}</Text>
+                    <Text style={{fontSize : 13, color :'#000'}}>{service_name}</Text>
                 </TouchableOpacity>
                 <Text style={styles.description}>{short_description}</Text>
                 <View style={{ flex: 0, flexDirection: direction, justifyContent: 'space-between', top : 5}}>
@@ -161,6 +159,20 @@ export default class Moreproduct extends Component {
                 </View>
             </View>
         );
+    }
+    Description( service_id, product_name, productImages , short_description, detail_description, price ,special_price, is_wishlist){
+        Actions.vendordesc({
+            is_user : true,
+            service_id : service_id,
+            title: product_name,
+            product_name : product_name,
+            productImages : productImages,
+            short_description : short_description,
+            detail_description : detail_description,
+            price : price,
+            special_price : special_price,
+            is_wishlist : is_wishlist,
+        })
     }
 }
 

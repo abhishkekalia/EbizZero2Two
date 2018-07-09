@@ -7,31 +7,31 @@ import {
     Dimensions,
     Text,
     View,
-    // TextInput,
-    // AsyncStorage,
+    TextInput,
+    AsyncStorage,
     StatusBar,
-    // Clipboard,
-    // ToastAndroid,
-    // RefreshControl,
+    Clipboard,
+    ToastAndroid,
+    RefreshControl,
     ActivityIndicator,
-    // AlertIOS,
+    AlertIOS,
     Image,
     Platform,
-    // BackHandler
+    BackHandler
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import IconBadge from 'react-native-icon-badge';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Utils from 'app/common/Utils';
-// import GetMarketing from './GetMarketingad';
-// import ModalPicker from './modalpicker';
-// import Service from './Service';
+import GetMarketing from './GetMarketingad';
+import ModalPicker from './modalpicker';
+import Service from './Service';
 import CheckBox from 'app/common/CheckBox';
-// import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Editwish from './wish/Editwish'
 import EditwishService from './wish/EditwishService'
-// import Modal from 'react-native-modal';
+import Modal from 'react-native-modal';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Feather from 'react-native-vector-icons/Feather';
 import ModalWrapper from 'react-native-modal-wrapper';
@@ -42,7 +42,7 @@ import Menu from './menu/MenuContainer';
 import EventEmitter from "react-native-eventemitter";
 import GetMarketingadNew from './GetMarketingadNew';
 const { width, height } = Dimensions.get('window')
-// let index = 0;
+let index = 0;
 
 class MainView extends Component {
     constructor(props) {
@@ -89,7 +89,7 @@ class MainView extends Component {
     componentDidMount(){
         this.loadData()
         .then( ()=>this.fetchData())
-        // .then( ()=> this.fetchService())
+        .then( ()=> this.fetchService())
         .then( ()=>this.loadServiceData())
         .done();
         EventEmitter.removeAllListeners("applyCategoryFilter");
@@ -113,8 +113,6 @@ class MainView extends Component {
                 servicerows : [],
                 rows:[],
                 dataArray:[],
-                arrProductList:[],
-                dataSource: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             })
 
             var that = this;
@@ -166,7 +164,7 @@ class MainView extends Component {
         EventEmitter.on("reloadProductsFromWhishlist", (value)=>{
             this._onRefresh()
             this.fetchData()
-            // this.fetchService()
+            this.fetchService()
         });
         EventEmitter.emit("hideLoader",'1')
 
@@ -327,7 +325,7 @@ class MainView extends Component {
             },
             body: formData,
         }
-        fetch(Utils.gurl('filterByShopNew'), config)
+        fetch(Utils.gurl('filterByShop'), config)
         .then((response) => response.json())
         .then((responseData) => {
             var arrTmp = responseData.data
@@ -555,7 +553,7 @@ class MainView extends Component {
     }
     fetchData(){
         console.log("fetchData: called")
-        const {u_id, country, deviceId, isGuest, lang } = this.props;
+        const {u_id, country, deviceId, isGuest } = this.props;
         let formData = new FormData();
         console.log("u_id:=",u_id)
         console.log("isGuest:=",isGuest)
@@ -564,7 +562,6 @@ class MainView extends Component {
         }
         formData.append('country', String(country));
         formData.append('device_uid', String(deviceId));
-        formData.append('language', String(lang))
         const config = {
             method: 'POST',
             headers: {
@@ -573,12 +570,10 @@ class MainView extends Component {
             },
             body: formData,
         }
-        console.log("Request allProductItemListNew config:=",config)
-        // 09_07_2018 Update API allProductItemList with allProductItemListNew as per client feedback for logic
-        fetch(Utils.gurl('allProductItemListNew'), config)
+        console.log("config:=",config)
+        fetch(Utils.gurl('allProductItemList'), config)
         .then((response) => response.json())
         .then((responseData) => {
-            console.log("Response allProductItemListNew:=",responseData)
             if(responseData.status){
                 var arrTmp = responseData.data
                 var merge = []
@@ -632,7 +627,7 @@ class MainView extends Component {
             }
         })
         .catch((error) => {
-            console.log("Error allProductItemListNew;=",error)
+            console.log(error);
         })
         .done();
     }
@@ -748,7 +743,7 @@ class MainView extends Component {
             },
             body: formData,
         }
-        fetch(Utils.gurl('filterProductsNew'), config)
+        fetch(Utils.gurl('filterProducts'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -805,7 +800,7 @@ class MainView extends Component {
 
     fetchProductFromFilter(){
         console.log("fetchData: called")
-        const {u_id, country, deviceId, isGuest, lang } = this.props;
+        const {u_id, country, deviceId, isGuest } = this.props;
         let formData = new FormData();
         console.log("u_id:=",u_id)
         console.log("isGuest:=",isGuest)
@@ -814,7 +809,6 @@ class MainView extends Component {
         }
         formData.append('country', String(country));
         formData.append('device_uid', String(deviceId));
-        formData.append('language', String(lang));
         const config = {
             method: 'POST',
             headers: {
@@ -824,7 +818,7 @@ class MainView extends Component {
             body: formData,
         }
         console.log("config:=",config)
-        fetch(Utils.gurl('allProductItemListNew'), config)
+        fetch(Utils.gurl('allProductItemList'), config)
         .then((response) => response.json())
         .then((responseData) => {
             if(responseData.status){
@@ -1903,8 +1897,7 @@ class MainView extends Component {
                             country={country}
                             is_wishlist={data.is_wishlist}
                             service_id={data.service_id}
-                            // fetchData={()=> this.fetchService()}
-                            fetchData={()=> this.fetchData()}
+                            fetchData={()=> this.fetchService()}
                             deviceId={deviceId}
                             lang={lang}/>
                     </View>

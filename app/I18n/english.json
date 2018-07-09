@@ -158,6 +158,7 @@
         "selectTime":"Please Select Time Slot",
         "logintoaddaddr":"Please login / register to add address",
         "anotherTimeslot" : "Please Select another time Slot",
+        "moreServices" : "more Service by ZeroToTwo"
     },
     "bottomTabs":{
         "home":"Home",

@@ -157,7 +157,8 @@
         "selectDate":"يرجى تحديد التاريخ",
         "selectTime":"يرجى اختيار الوقت",
         "logintoaddaddr":"الرجاء تسجيل الدخول / التسجيل لإضافة العنوان",
-        "anotherTimeslot" : "يرجى تغيير الوقت"
+        "anotherTimeslot" : "يرجى تغيير الوقت",
+        "moreServices" : "المزيد من الخدمة من"
     },
     "bottomTabs":{
         "home":"الرئيسية",
