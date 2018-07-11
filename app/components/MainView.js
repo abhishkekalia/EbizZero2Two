@@ -582,6 +582,7 @@ class MainView extends Component {
             if(responseData.status){
                 var arrTmp = responseData.data
                 var merge = []
+                /* //10_07_2018
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrServiceList.length > 0) {
                         if (arrTmp.length > 0) {
@@ -609,12 +610,14 @@ class MainView extends Component {
                         }
                     }
                 }
+                */
                 // if (this.state.arrServiceList.length > 0) {
                 //     merge = arrTmp.concat(this.state.arrServiceList)
                 // }
                 console.log("arrTmp:=",arrTmp)
                 console.log("merge:=",merge)
                 this.state.arrProductList = responseData.data
+                merge = responseData.data
                 this.setState({
                     arrProductList:responseData.data,
                     dataSource: this.state.dataSource.cloneWithRows(merge),
@@ -754,6 +757,7 @@ class MainView extends Component {
             if(responseData.status){
                 var arrTmp = responseData.data.product
                 var merge = []
+                /* //10_07_2018
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrServiceListBackUp.length > 0) {
                         if (arrTmp.length > 0) {
@@ -775,13 +779,14 @@ class MainView extends Component {
                             merge = this.state.arrServiceListBackUp
                         }
                     }
-                }
+                }*/
                 // if (this.state.arrServiceList.length > 0) {
                 //     merge = arrTmp.concat(this.state.arrServiceList)
                 // }
                 console.log("arrTmp:=",arrTmp)
                 console.log("merge:=",merge)
                 this.state.arrProductList = responseData.data.product
+                merge = responseData.data.product
                 this.setState({
                     dataSource: ds.cloneWithRows(merge),
                     arrProductList: responseData.data.product,
@@ -830,6 +835,7 @@ class MainView extends Component {
             if(responseData.status){
                 var arrTmp = responseData.data
                 var merge = []
+                /* //10_07_2018
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     if (this.state.arrServiceListBackUp.length > 0) {
                         if (arrTmp.length > 0) {
@@ -857,12 +863,14 @@ class MainView extends Component {
                         }
                     }
                 }
+                */
                 // if (this.state.arrServiceList.length > 0) {
                 //     merge = arrTmp.concat(this.state.arrServiceList)
                 // }
                 console.log("arrTmp:=",arrTmp)
                 console.log("merge:=",merge)
                 this.state.arrProductList = responseData.data
+                merge = responseData.data
                 this.setState({
                     arrProductList:responseData.data,
                     dataSource: this.state.dataSource.cloneWithRows(merge),
@@ -1570,7 +1578,8 @@ class MainView extends Component {
             })
             // this.state.isService = !this.state.isService
             // this.state.isFilterProduct = false
-            this.fetchService()
+            // this.fetchService()
+            this.fetchData()
             return
         }
         this.setState({
@@ -1605,6 +1614,8 @@ class MainView extends Component {
             if(responseData.status){
                 var arrTmp = responseData.data
                 var merge = []
+
+                /* //10_07_2018
                 if (this.state.arrSelectedType.length == 0 || this.state.arrSelectedType.length == 2) {
                     console.log("filterByService true:=")
                     if (this.state.arrProductList.length > 0) {
@@ -1635,9 +1646,11 @@ class MainView extends Component {
                         }
                     // }
                 }
+                */
 
                 console.log("arrTmp:=",arrTmp)
                 console.log("merge:=",merge)
+                merge = responseData.data
                 this.setState({
                     arrServiceList: responseData.data,
                     // dataSource2: this.state.dataSource2.cloneWithRows(arrTmp),

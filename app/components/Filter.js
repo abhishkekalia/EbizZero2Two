@@ -498,7 +498,7 @@ class Filter extends Component {
                                 <Text style={{color : bgColorGen}}>{I18n.t('filter.gender', { locale: lang })}</Text>
                             </TouchableHighlight>
                         </View>
-                        <View style={{
+                        {/* <View style={{
                                 width: width/3,
                                 borderColor : "#ccc",
                             }} >
@@ -521,7 +521,7 @@ class Filter extends Component {
                                 })} >
                                 <Text style={{color : bgColorType}}>{I18n.t('filter.type', { locale: lang })}</Text>
                             </TouchableHighlight>
-                        </View>
+                        </View> */}
                     </View>
                     {this.renderFilterContainerView()}
                 </View>
