@@ -142,7 +142,7 @@ export default class TimelineNew extends Component{
                             backgroundColor : 'transparent',
                         }
                     }/>
-              {this.props.arrAdvertise[this.state.indexOfAdvertise].ad_type === '1' ? <ImagePlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()} callbackError={this.startCounterWithError.bind(this)}/> : <VideoPlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()} callbackError={this.startCounterWithError.bind(this)}/>}
+              {this.props.arrAdvertise[this.state.indexOfAdvertise].ad_type === '1' ? <ImagePlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()} callbackError={this.startCounterWithError.bind(this)}/> : <VideoPlayer uri = {this.props.arrAdvertise[this.state.indexOfAdvertise].path} callback={()=>this.startCounter()} callbackError={this.startCounterWithError.bind(this)} onEndPlay={this.nextItemToPlay.bind(this)}/>}
               </View>
               </TouchableWithoutFeedback>
               {this.state.isLoading === true ? <ActivityIndicator
@@ -256,7 +256,9 @@ class VideoPlayer extends React.Component {
           style={{height: height, flex: 1, alignSelf: "stretch"}}
           resizeMode="contain"
           source={{uri: this.props.uri}}
+          // source={{uri: "http://zero2two.com/zerototwo/images/markrting/1531720492.MOV"}}
           //  onLoadStart={()=>console.warn('loading')}
+          // onEnd={this.props.onEndPlay}
           onLoad={this.props.callback}
           onError={this.props.callbackError}
          />         

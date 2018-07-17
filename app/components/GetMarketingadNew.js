@@ -93,7 +93,7 @@ class GetMarketingadNew extends Component {
             .catch((error) => {
                 console.log("error:=",error)
                 this.setState({
-                    status : responseData.status
+                    status : false
                 });
             })
             .done();

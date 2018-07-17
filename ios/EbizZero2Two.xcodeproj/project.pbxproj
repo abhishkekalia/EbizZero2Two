@@ -62,6 +62,7 @@
 		C841D2F920AC43780050929C /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C841D24620AC40C70050929C /* libRNImagePicker.a */; };
 		C86D467120DCF8ED00B44105 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C86D467020DCF8CE00B44105 /* libReactNativePermissions.a */; };
 		C88AB9D4206299AD0023E974 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C88AB9D0206299A60023E974 /* libART.a */; };
+		C8B2C45A20FC6CD900FF8A11 /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C841D0FD20AC118C0050929C /* libRCTVideo.a */; };
 		C8C75EF3206BC76D004D74AF /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C8C75EF2206BC73F004D74AF /* libSplashScreen.a */; };
 		C8C75EF5206BD203004D74AF /* AirGoogleMaps in Resources */ = {isa = PBXBuildFile; fileRef = C8C75EF4206BD203004D74AF /* AirGoogleMaps */; };
 		D33212E4A75F42FF84B83C90 /* (null) in Resources */ = {isa = PBXBuildFile; };
@@ -591,6 +592,7 @@
 				C841D2F920AC43780050929C /* libRNImagePicker.a in Frameworks */,
 				C15BFC9BB030478B8E1ACBB8 /* (null) in Frameworks */,
 				360AFAE8E83247848434F2C3 /* libRNImagePicker.a in Frameworks */,
+				C8B2C45A20FC6CD900FF8A11 /* libRCTVideo.a in Frameworks */,
 				C86D467120DCF8ED00B44105 /* libReactNativePermissions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1869,6 +1871,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-mov-to-mp4",
 				);
 				INFOPLIST_FILE = EbizZero2Two/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1908,6 +1911,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-mov-to-mp4",
 				);
 				INFOPLIST_FILE = EbizZero2Two/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

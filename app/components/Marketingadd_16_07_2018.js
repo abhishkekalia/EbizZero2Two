@@ -274,14 +274,13 @@ class Marketingadd extends Component {
             else {
 
                 var filename = Date.now().toString();
-                let name = filename + "." + (Platform.OS === 'ios' ? (response.uri.split('.')[1]) : (response.path.split('.')[1]));
+                let name = filename + "." + response.uri.split('.')[1];
                 let url = response.uri
                 let path =
                 (Platform.OS === 'ios')?
                 url.replace(/^file:\/\//, '') : response.uri
 
                 console.log("selectVideoTapped Path:=",path)
-                console.log("video Response:=",response)
 
                 this.setState({
                     videoSource: path ,
