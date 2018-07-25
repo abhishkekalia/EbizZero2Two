@@ -12,6 +12,7 @@ import {
     Slider,
     TouchableWithoutFeedback,
     ActivityIndicator,
+    StatusBar,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import ProgressBar  from './slider/ProgressBar';
@@ -42,6 +43,7 @@ export default class TimelineNew extends Component{
       console.log("start counter called")
       this.state.isError = false,
       this.state.isLoading = false
+      this.state.progress = 0
       this.updateCounter()
       // var timerVar;
       clearTimeout(timerVar)
@@ -70,6 +72,7 @@ export default class TimelineNew extends Component{
       console.log("Error:=",error)
       this.state.isError = true,
       this.state.isLoading = false
+      this.state.progress = 0
       this.updateCounter()
       // var timerVar;
       clearTimeout(timerVar)
@@ -126,7 +129,7 @@ export default class TimelineNew extends Component{
                   style={{
                     // height:5,
                     width: width,
-                    // marginTop: Platform.OS === 'ios' ? 0 : 0,
+                    marginTop: Platform.OS === 'ios' ? 0 : 0,//StatusBar.currentHeight,
                     zIndex:2,
                     position:'absolute',
                   }}
@@ -175,6 +178,7 @@ export default class TimelineNew extends Component{
     }
 
      nextItemToPlay() {
+       this.state.progress = 0
        clearTimeout(timerVar)
       var nextIndex = 0
       console.log("this.state.indexOfAdvertise:=",this.state.indexOfAdvertise)
@@ -258,8 +262,9 @@ class VideoPlayer extends React.Component {
           source={{uri: this.props.uri}}
           // source={{uri: "http://zero2two.com/zerototwo/images/markrting/1531720492.MOV"}}
           //  onLoadStart={()=>console.warn('loading')}
-          // onEnd={this.props.onEndPlay}
+          onEnd={this.props.onEndPlay}
           onLoad={this.props.callback}
+          // onReadyForDisplay={this.props.callback}
           onError={this.props.callbackError}
          />         
       </View>);
