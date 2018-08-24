@@ -579,5 +579,14 @@
         "date":"تاريخ الموعد",
         "serviceName":"اسم الخدمة",
         "serviceType":"نوع الخدمة"
+    },
+    "fleetCompanyList" : {
+        "title" : "Company List"
+    },
+    "fleetCompanyDetail" : {
+        "title" : "Package Details"
+    },
+    "shippingCityList" : {
+        "title" : "Select City"
     }
 }

@@ -88,6 +88,7 @@ class Vendorreg extends Component {
 			gender : '',
 			contact: '',
 			address: '',
+			city:'',
 			hidden : true,
 			facebook_id : '',
 			twitter_id : '',
@@ -209,9 +210,19 @@ class Vendorreg extends Component {
 	loadAddressFromMap(latitude, longitude) {
 		Geocoder.getFromLatLng(latitude, longitude).then(
 			json => {
-				var address_component = json.results[0].formatted_address;
+				var formatted_component = json.results[0].formatted_address;
+				var address_component = json.results[0].address_component;
+				var city = ''
+				for (let index = 0; index < address_component.length; index++) {
+					const element = address_component[index];
+					if (element.types.includes('locality')) {
+						city = element.long_name
+					}
+				}
+				console.log("Address Detail:=",json.results[0])
 				this.setState({
-					address:address_component
+					address:formatted_component,
+					city: city,
 				});
 
 				// for (let index = 0; index < address_component.length; index++) {
@@ -1108,7 +1119,7 @@ class Vendorreg extends Component {
 	onSubmit() {
 		Keyboard.dismiss();
 		const {company, representative_name, email, password, gender, contact, selectCountry, os, address, type,
-			facebook_id, twitter_id, instagram_id, snapchat_id
+			facebook_id, twitter_id, instagram_id, snapchat_id, city, coordinate
 		} = this.state;
 		const { lang} = this.props,
 		align = lang === 'ar' ? "right" : "left";
@@ -1128,6 +1139,9 @@ class Vendorreg extends Component {
 		formData.append('twitter_id', String(twitter_id));
 		formData.append('instagram_id', String(instagram_id));
 		formData.append('snapchat_id', String(snapchat_id));
+		formData.append('latitude', String(coordinate.latitude));
+		formData.append('longitude', String(coordinate.longitude));
+		formData.append('city', String(city));
 		// formData.append('card_number', String('343454645664'));
 		// formData.append('expiry_month', String('3'));
 		// formData.append('expiry_year', String('20'));

@@ -28,12 +28,18 @@ var api = {
         }
         return fetch(Utils.gurl('addressList'), config).then((res) => res.json())
     },
-    addToOrder( u_id, country, value, data, count){
+    addToOrder( u_id, country, value, data, count, optimalCompany, order_detail){
         let formData = new FormData();
+        var amount =  data.special_price > 0 ? data.special_price*count : data.Price*count
+        amount = parseFloat(amount) + parseFloat(optimalCompany.price)
         formData.append('u_id', String(u_id));
         formData.append('country', String(country));
         formData.append('order_detail', JSON.stringify(value));
-        formData.append('amount', String(data.Price*count));
+        formData.append('amount', String(amount));
+        formData.append('shipping_charge',String(optimalCompany.price))
+        formData.append('company_id',String(optimalCompany.fleetCompanyId))
+        formData.append('other_order_id',String(order_detail.order_id))
+
         const config = {
             method: 'POST',
             headers: {
@@ -143,6 +149,7 @@ var api = {
             },
             body: formData,
         }
+        console.log("Save Order Detail Request:=", config)
         return fetch(Utils.murl('saveOrderDetails'), config).then((res) => res.json())
     },
     fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price){

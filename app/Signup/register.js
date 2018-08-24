@@ -78,6 +78,7 @@ class Register extends Component {
 			contact: '',
 			country: '',
 			address: '',
+			city:'',
 			gender : '',
 			u_id: '',
 			otp : '',
@@ -211,9 +212,19 @@ class Register extends Component {
 	loadAddressFromMap(latitude, longitude) {
 		Geocoder.getFromLatLng(latitude, longitude).then(
 			json => {
-				var address_component = json.results[0].formatted_address;
+				var formatted_component = json.results[0].formatted_address;
+				var address_component = json.results[0].address_component;
+				var city = ''
+				for (let index = 0; index < address_component.length; index++) {
+					const element = address_component[index];
+					if (element.types.includes('locality')) {
+						city = element.long_name
+					}
+				}
+				console.log("Address Detail:=",json.results[0])
 				this.setState({
-					address:address_component,
+					address:formatted_component,
+					city: city,
 					LATITUDE : latitude,
 					LONGITUDE : longitude
 				});
@@ -1087,7 +1098,7 @@ class Register extends Component {
 	async onSubmit() {
 		try {
 			Keyboard.dismiss();
-			const {fullname, email, password, gender, contact, selectCountry, os, address, type } = this.state;
+			const {fullname, email, password, gender, contact, selectCountry, os, address, type, city, coordinate } = this.state;
 			const { lang} = this.props,
 			align = lang === 'ar' ? "right" : "left";
 			let formData = new FormData();
@@ -1106,6 +1117,9 @@ class Register extends Component {
 			formData.append('twitter_id', String('fsdfsd'));
 			formData.append('instagram_id', String('sdfsdf'));
 			formData.append('snapchat_id', String('dfdsf'));
+			formData.append('latitude', String(coordinate.latitude));
+			formData.append('longitude', String(coordinate.longitude));
+			formData.append('city', String(city));
 			if(this.validate()) {
 				this.setState({...INITIAL_STATE, loading: true});
 				const config = {

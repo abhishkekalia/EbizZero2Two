@@ -13,7 +13,8 @@ import {
     ListView,
     StyleSheet,
     ActivityIndicator,
-    TouchableHighlight
+    TouchableHighlight,
+    TouchableWithoutFeedback,
 } from 'react-native';
 import {Actions as routes} from "react-native-router-flux";
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -39,6 +40,8 @@ import I18n from 'react-native-i18n';
 import * as authActions from "app/auth/auth.actions";
 import {bindActionCreators} from 'redux';
 import SizeButton from "app/common/components/SizeButton";
+import api from "app/Api/api";
+
 const {width,height} = Dimensions.get('window');
 const buttons = [
     {
@@ -73,7 +76,13 @@ class ProductDescription extends Component {
             Size : [],
             selectColor: false,
             sizeindex : null,
-            openShareSheet: false
+            openShareSheet: false,
+            isShowFinalPriceWithShipping: false,
+            order_detail: {},
+            fleetCompanyList: [],
+            optimalCompany: {},
+            selAddress: {},
+            conformOrderDetail: {},
         }
         this.loadHandle = this.loadHandle.bind(this)
     }
@@ -99,7 +108,8 @@ class ProductDescription extends Component {
         EventEmitter.removeAllListeners("proceedToGuestCheckout");
         EventEmitter.on("proceedToGuestCheckout", (value)=>{
             console.log("proceedToGuestCheckout", value);
-            this.order(value)
+            // this.order(value)
+            this.getShippingPrice(value.address_id,value)
         });
     }
     onCancel() {
@@ -175,7 +185,7 @@ class ProductDescription extends Component {
     async addToOrder(value){
         console.log("JSON Value:=",JSON.stringify(value)) 
         try {
-            const { u_id, country,data ,count} = this.state;
+            const { u_id, country,data ,count, optimalCompany, order_detail} = this.state;
             var amount = 0
             if (data.special_price > 0) {
                 amount = data.special_price*count
@@ -184,11 +194,17 @@ class ProductDescription extends Component {
                 amount = data.price*count
             }
 
+            amount = parseFloat(amount) + parseFloat(this.state.optimalCompany.price)
+
             let formData = new FormData();
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('order_detail', JSON.stringify(value));
             formData.append('amount', String(amount));
+            formData.append('shipping_charge',String(optimalCompany.price))
+            formData.append('company_id',String(optimalCompany.fleetCompanyId))
+            formData.append('other_order_id',String(order_detail.order_id))
+
             const config = {
                 method: 'POST',
                 headers: {
@@ -217,10 +233,18 @@ class ProductDescription extends Component {
             })
             .catch((error) => {
                 console.log(error);
+                this.setState({
+                    visibleModal:false
+                })
+                alert(error.message)
             })
             .done();
         } catch (error) {
             console.log("Error retrieving data" + error);
+            this.setState({
+                visibleModal:false
+            })
+            alert(error.message)
         }
 
     }
@@ -355,6 +379,145 @@ class ProductDescription extends Component {
         })
         .done();
     }
+
+    getShippingPrice(delivery_address_id, addressObj) {
+        console.log("getShippingPrice:=delivery_address_id:=",delivery_address_id , addressObj )
+        this.setState({
+            selAddress : addressObj,
+        })
+        this.saveOrderDetails(addressObj)
+        return
+        // const{ data , size, color, count  } = this.state;
+        // var Select =[];
+        // var today = new Date();
+        // var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        // currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        // nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
+        // Select.push ({
+        //         "product_id": data.product_id,
+        //         "size": size,
+        //         "quantity": count,
+        //         "delivery_address_id": delivery_address_id,
+        //         "vendor_id":data.vendor_id,
+        //         "price":(data.special_price > 0 ? data.special_price : data.price),
+        //         "delivery_datetime": currentdate,
+        //         "order_date": nextdate
+        //     }
+        // )
+        // this.addToOrder(Select)
+        // .then(()=>this.setState({
+        //     visible:false,
+        //     visibleModal: true,
+        // }))
+        // .done()
+    }
+
+    saveOrderDetails(value){
+        console.log("myfaturah respo", value);
+        const { data, size }= this.state;
+        // console.log("arr_Item:=",arr_Item)
+        var today = new Date();
+        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() ;
+
+        let email_id = "zeroTotwo@gmail.com",
+        product_name = data.product_name,
+        // product_name = "ashvin test dfddfdf",
+        product_size = size,
+        // product_size = "Small",
+        tempreture = "Cold",
+        extra_handling_request = "Heavy",
+        charges = (data.special_price > 0 ? data.special_price : data.price),
+        pickUp_area = data.vendorDetail.address,        //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
+        pickUp_latitude = data.vendorDetail.latitude, //"22.966425",
+        pickUp_longitude = data.vendorDetail.longitude, //"72.615933",
+        pickUp_city = data.vendorDetail.city
+        delivery_date = nextdate,
+        delivery_time = "12:30:32",
+        dropOff_latitude = value.latitude, //"23.215635",
+        dropOff_longitude = value.longitude, //"72.636941",
+        dropOff_area = value.formatted_address, //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
+        dropOff_city = value.city, // "Bayan",
+        dropOff_street = value.street;
+        // console.log("product_name",arr_Item[0].product_name);
+        // console.log("product_size",arr_Item[0].size);
+        // console.log("nextdate",nextdate);
+        api.saveOrderDetails(email_id, product_name, product_size, tempreture, extra_handling_request,
+            charges, pickUp_area, pickUp_latitude, pickUp_longitude, delivery_date, delivery_time,
+            dropOff_latitude, dropOff_longitude, dropOff_area, dropOff_street, dropOff_city, pickUp_city)
+        .then((responseData)=> {
+            console.log("saveOrderDetails respo", responseData);
+            if(responseData.response.status === "200"){
+                AsyncStorage.setItem('order_detail', JSON.stringify(responseData.response.data));
+                this.setState({
+                    order_detail : responseData.response.data,
+                });
+                let order_id = responseData.response.data.order_id;
+                console.log("order_id", order_id);
+                this.fleetCompanyFilter(order_id)
+            }
+        })
+        .catch((error) => {
+            console.log("Error :=", error);
+        })
+        .done();
+    }
+    fleetCompanyFilter(order_id){
+        let pickUp_latitude = this.state.data.vendorDetail.latitude, //"22.966425",
+        pickUp_longitude = this.state.data.vendorDetail.longitude, //"72.615933",
+        min_price = "0",
+        max_price = "5000";
+
+        api.fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price)
+        .then((responseData)=> {
+            if(responseData.response.status === "200"){
+                var arrCompany = responseData.response.data
+                AsyncStorage.setItem('fleetCompanydetail', JSON.stringify(arrCompany));
+                console.log("FleetCompanyList:=",arrCompany)
+
+                if (arrCompany.length > 0) {
+                    if (arrCompany.length === 1) {
+                        this.setState({
+                            optimalCompany: arrCompany[0],
+                            isShowFinalPriceWithShipping: true,
+                            visible: false,
+                        })
+                    }
+                    else {
+                        var selCom = arrCompany[0]
+                        for (i=0; i<arrCompany.length; i++) {
+                            var cmp = arrCompany[i];
+                            if (selCom.price > cmp.price) {
+                                selCom = cmp
+                            }
+                        }
+                        console.log("optimalCompany:= ", selCom)
+                        this.setState({
+                            optimalCompany: selCom,
+                            isShowFinalPriceWithShipping: true,
+                            visible: false,
+                        })
+                    }
+                }
+                else {
+                    alert("Sorry, We can't deliver product at your selected address.")
+                }
+
+                this.setState({
+                    // dataSource2 : this.state.dataSource2.cloneWithRows(responseData.response.data),
+                    fleetCompanyList : arrCompany,
+                    // showFleetCompanydetail : true,
+                });
+                // console.log("fleetCompanydetail", responseData);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+    }
+
     order (delivery_address_id){
         console.log("order:=delivery_address_id:=",delivery_address_id)
         const{ data , size, color, count  } = this.state;
@@ -419,7 +582,7 @@ class ProductDescription extends Component {
             </View>
         );
     }
-    render () {
+    render() {
         console.log("isGuest:=",this.props.isGuest)
         const { date_in, count } = this.state;
         const { lang, country, u_id, deviceId } = this.props;
@@ -598,10 +761,173 @@ class ProductDescription extends Component {
                         <CirclesLoader />
                     </View>
                 </Modal>
+                <Modal isVisible={this.state.isShowFinalPriceWithShipping}>
+                    <View style={{
+                        height:200,
+                        width:'100%',
+                        backgroundColor:'white',
+                        borderRadius:3,
+                    }}>
+                        <Text style={{
+                            // backgroundColor:'red',
+                            textAlign:'center',
+                            fontWeight:'bold',
+                            margin:5,
+                            fontSize:18,
+                        }}>Price Detail</Text>
+                        <View style={{
+                            flexDirection:'row',
+                            // backgroundColor:'red',
+                            marginTop:20,
+                        }}>
+                            <Text style={{
+                                marginLeft:15,
+                            }}>
+                                Product Price
+                            </Text> 
+                            <Text style={{
+                                marginHorizontal:5,
+                            }}>
+                                :
+                            </Text>
+                            <Text>
+                                {special_price > 0 ? special_price : price} KWD
+                            </Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            // backgroundColor:'red',
+                            marginTop:10,
+                        }}>
+                            <Text style={{
+                                marginLeft:15,
+                            }}>
+                                Shipping Price
+                            </Text> 
+                            <Text style={{
+                                marginHorizontal:5,
+                            }}>
+                                :
+                            </Text>
+                            <Text>
+                                { this.state.isShowFinalPriceWithShipping === true ? this.state.optimalCompany.price : 0} KWD
+                            </Text>
+                        </View>
+                        <View style={{
+                            flexDirection:'row',
+                            // backgroundColor:'red',
+                            marginTop:10,
+                        }}>
+                            <Text style={{
+                                marginLeft:15,
+                            }}>
+                                Final Price
+                            </Text> 
+                            <Text style={{
+                                marginHorizontal:5,
+                            }}>
+                                :
+                            </Text>
+                            <Text>
+                                {(special_price > 0 ? parseFloat(special_price) : parseFloat(price)) + (this.state.isShowFinalPriceWithShipping === true ? parseFloat(this.state.optimalCompany.price) : 0.0 )} KWD
+                            </Text>
+                        </View>
+                        <View style={{
+                            flexDirection:"row",
+                            // backgroundColor:'red',
+                            justifyContent:'space-around',
+                            marginTop:20
+                        }}>
+                            <TouchableWithoutFeedback onPress={this.onClickCancelProceed.bind(this)}>
+                                <View style={{
+                                    width:"30%",
+                                    backgroundColor:'#a9d5d1',
+                                    height:35,
+                                    justifyContent:"center",
+                                    alignItems:'center'
+                                }}>
+                                    <Text style={{
+                                        fontSize:15,
+                                        color:'white',
+                                        fontWeight:'bold'
+                                    }}>Cancel</Text> 
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={this.onClickProceedToBuy.bind(this)}>
+                                <View style={{
+                                    width:"30%",
+                                    backgroundColor:'#a9d5d1',
+                                    height:35,
+                                    justifyContent:"center",
+                                    alignItems:'center'
+                                }}>
+                                    <Text style={{
+                                        fontSize:15,
+                                        color:'white',
+                                        fontWeight:'bold'
+                                    }}>Proceed</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </View>
+                </Modal>
                 {this.renderShareSheet()}
             </View>
         )
     }
+
+    onClickCancelProceed() {
+        this.setState({
+            isShowFinalPriceWithShipping: false,
+        })
+    }
+
+    onClickProceedToBuy() {
+        this.setState({
+            isShowFinalPriceWithShipping: false,       
+            visibleModal: true,     
+        },this.conformOrder())
+        // this.order(this.state.selAddress.address_id)
+    }
+
+    conformOrder(){
+        let order_id = this.state.order_detail.order_id,
+        price = this.state.optimalCompany.price,
+        u_id = this.state.order_detail.u_id,
+        fleetCompanyId = this.state.optimalCompany.fleetCompanyId,
+        user_wise_product_id = this.state.order_detail.user_wise_product_id ;
+
+        api.conformOrder(order_id, price, u_id, fleetCompanyId, user_wise_product_id)
+        .then((responseData)=> {
+            console.log("conformOrder respo", responseData);
+            if(responseData.response.status === "200"){
+                AsyncStorage.setItem('conformOrderDetail', JSON.stringify(responseData.response.data));
+                this.setState({
+                    conformOrderDetail : responseData.response.data,
+                    // showFleetCompanydetail :false
+                });
+                // this.orderHistory()
+                // MessageBarManager.showAlert({
+                //     message: responseData.response.data.message,
+                //     title:'',
+                //     alertType: 'extra',
+                //     titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                //     messageStyle: { color: 'white', fontSize: 16 , textAlign: "left"},
+                // })
+                this.order(this.state.selAddress.address_id)
+            }
+        })
+        .catch((error) => {
+            console.log("Error:= ", error);
+            this.setState({
+                visibleModal:false
+            })
+            alert(error.message)
+        })
+        .done();
+    }
+
     openShare() {
         // console.warn("openShare");
         this.setState({
@@ -714,7 +1040,7 @@ class ProductDescription extends Component {
             return this.noItemFound();
         }
         return (
-            <TouchableOpacity style={{ flexDirection: direction ,padding : 10}} onPress= {()=>this.order(data.address_id)}>
+            <TouchableOpacity style={{ flexDirection: direction ,padding : 10}} onPress= {()=>this.getShippingPrice(data.address_id,data)}>
                 <View style={{ flexDirection: 'column' }}>
                     <View style={{ width: width-125, flexDirection: direction , justifyContent: 'space-between'}}>
                         <Text style={{ fontSize: 15,  textAlign: align}}>{data.full_name}</Text>

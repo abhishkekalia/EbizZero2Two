@@ -39,16 +39,17 @@ class AddressBook extends Component {
             isSelected : '',
             loading: false,
             visibleModal: false,
-            status : false
+            status : false,
+            selectedAddress: {}
         };
     }
 
-    onSelect(index, value){
+    onSelect(index, value, address){
         this.setState({
         isSelected: value,
-        visibleModal: true
+        visibleModal: true, 
+        selectedAddress: address
         }, ()=> this.getItems(value))
-
     }
     componentDidMount(){
         this.getKey()
@@ -131,6 +132,7 @@ class AddressBook extends Component {
                     var data = ({
                         uri : responseData.data.url,
                         order_id : responseData.data.order_id,
+                        address : this.state.selectedAddress
                     })
                     routes.pop()
                     EventEmitter.emit("redirectToFaturah",data)
@@ -307,7 +309,7 @@ class AddressBook extends Component {
             style={{ borderBottomWidth :1, borderColor : "#ccc", padding :5, backgroundColor:'#fff',flexDirection:'row' }}>
             <RadioGroup
             style={{justifyContent: 'flex-end'}}
-            onSelect = {(sectionID, value) => this.onSelect(sectionID, data.address_id)}
+            onSelect = {(sectionID, value) => this.onSelect(sectionID, data.address_id, data)}
             >
                 <View style={{ flexDirection: direction }}>
                     <View style={{ flexDirection: 'column' }}>

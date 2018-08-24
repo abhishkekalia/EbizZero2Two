@@ -79,21 +79,26 @@ import SplashScreen from 'react-native-splash-screen';
 
 // -------------vendor ----------
 
+//Shipping Screen
+import FleetCompanyList from "./components/ShippingFlow/FleetCompanyList"
+import FleetCompanyDetail from "./components/ShippingFlow/FleetCompanyDetail"
+import ShippingCityList from "./components/ShippingFlow/ShippingCityList"
+
 // const reducerCreate = params => (state, action) => Reducer(params)(state, action);
 
 const reducerCreate = params => {
     SplashScreen.hide();
-  const defaultReducer = new Reducer(params);
-  return (state, action) => {
-    console.log('ACTION:', action);
-    return defaultReducer(state, action);
-  };
+    const defaultReducer = new Reducer(params);
+    return (state, action) => {
+        console.log('ACTION:', action);
+        return defaultReducer(state, action);
+    };
 };
 
 const getSceneStyle = () => ({
-  backgroundColor: '#F5FCFF',
-  shadowOpacity: 1,
-  shadowRadius: 3,
+    backgroundColor: '#F5FCFF',
+    shadowOpacity: 1,
+    shadowRadius: 3,
 });
 
 const Routes = ({loading, needSignIn, user, vendor, lang}) => (
@@ -626,6 +631,36 @@ const Routes = ({loading, needSignIn, user, vendor, lang}) => (
                     navBar={CustomGenNavBar}
                     type={ActionConst.ANDROID_BACK}
                     // hideNavBar={true}
+                    />
+                </Stack>
+                <Stack key="fleetCompanyList">
+                    <Scene
+                        key="fleetCompanyListScreen"
+                        component={FleetCompanyList}
+                        title={I18n.t("fleetCompanyList.title", { locale: lang })}
+                        navBar={CustomGenNavBar}
+                        type={ActionConst.ANDROID_BACK}
+                        // hideNavBar={true}
+                    />
+                </Stack>
+                <Stack key="fleetCompanyDetail">
+                    <Scene
+                        key="fleetCompanyDetailScreen"
+                        component={FleetCompanyDetail}
+                        title={I18n.t("fleetCompanyDetail.title", { locale: lang })}
+                        navBar={CustomGenNavBar}
+                        type={ActionConst.ANDROID_BACK}
+                        // hideNavBar={true}
+                    />
+                </Stack>
+                <Stack key="shippingCityList">
+                    <Scene
+                        key="shippingCityListScreen"
+                        component={ShippingCityList}
+                        title={I18n.t("shippingCityList.title", { locale: lang })}
+                        navBar={CustomGenNavBar}
+                        type={ActionConst.ANDROID_BACK}
+                        // hideNavBar={true}
                     />
                 </Stack>
             </Modal>

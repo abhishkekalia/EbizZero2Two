@@ -14,6 +14,8 @@ import {
     Image,
     Platform,
     ActivityIndicator,
+    TouchableWithoutFeedback,
+    AsyncStorage,
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -33,6 +35,7 @@ import Drawer from 'react-native-drawer';
 import Menu from './menu/MenuContainer';
 import { Actions as routes} from "react-native-router-flux";
 import EventEmitter from "react-native-eventemitter";
+import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get('window')
 class DealsandOffers extends Component {
@@ -47,6 +50,13 @@ class DealsandOffers extends Component {
             dataSource2: new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 }),
             visibleaddress: false,
             isVendor:this.props.isVendor,
+            isShowFinalPriceWithShipping: false,
+            order_detail: {},
+            fleetCompanyList: [],
+            optimalCompany: {},
+            selAddress: {},
+            conformOrderDetail: {},
+            data:{},
         }
     }
     _onRefresh() {
@@ -63,7 +73,8 @@ class DealsandOffers extends Component {
         EventEmitter.removeAllListeners("proceedToGuestCheckoutDealsOffers");
         EventEmitter.on("proceedToGuestCheckoutDealsOffers", (value)=>{
             console.log("proceedToGuestCheckoutDealsOffers", value);
-            this.order(value)
+            // this.order(value)
+            this.getShippingPrice(value.address_id,value)
         });
 
         EventEmitter.removeAllListeners("reloadAddress");
@@ -109,6 +120,145 @@ class DealsandOffers extends Component {
         })
         .done();
     }
+
+    getShippingPrice(delivery_address_id, addressObj) {
+        console.log("getShippingPrice:=delivery_address_id:=",delivery_address_id , addressObj )
+        this.setState({
+            selAddress : addressObj,
+        })
+        this.saveOrderDetails(addressObj)
+        return
+        // const{ data , size, color, count  } = this.state;
+        // var Select =[];
+        // var today = new Date();
+        // var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        // currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        // nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() + ' '+  nextDay.toLocaleTimeString() ;
+        // Select.push ({
+        //         "product_id": data.product_id,
+        //         "size": size,
+        //         "quantity": count,
+        //         "delivery_address_id": delivery_address_id,
+        //         "vendor_id":data.vendor_id,
+        //         "price":(data.special_price > 0 ? data.special_price : data.price),
+        //         "delivery_datetime": currentdate,
+        //         "order_date": nextdate
+        //     }
+        // )
+        // this.addToOrder(Select)
+        // .then(()=>this.setState({
+        //     visible:false,
+        //     visibleModal: true,
+        // }))
+        // .done()
+    }
+
+    saveOrderDetails(value){
+        console.log("myfaturah respo", value);
+        const { data, size }= this.state;
+        // console.log("arr_Item:=",arr_Item)
+        var today = new Date();
+        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() ;
+
+        let email_id = "zeroTotwo@gmail.com",
+        product_name = data.product_name,
+        // product_name = "ashvin test dfddfdf",
+        product_size = size,
+        // product_size = "Small",
+        tempreture = "Cold",
+        extra_handling_request = "Heavy",
+        charges = (data.special_price > 0 ? data.special_price : data.price),
+        pickUp_area = data.vendorDetail.address,        //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
+        pickUp_latitude = data.vendorDetail.latitude, //"22.966425",
+        pickUp_longitude = data.vendorDetail.longitude, //"72.615933",
+        pickUp_city = data.vendorDetail.city
+        delivery_date = nextdate,
+        delivery_time = "12:30:32",
+        dropOff_latitude = value.latitude, //"23.215635",
+        dropOff_longitude = value.longitude, //"72.636941",
+        dropOff_area = value.formatted_address, //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
+        dropOff_city = value.city, // "Bayan",
+        dropOff_street = value.street;
+        // console.log("product_name",arr_Item[0].product_name);
+        // console.log("product_size",arr_Item[0].size);
+        // console.log("nextdate",nextdate);
+        api.saveOrderDetails(email_id, product_name, product_size, tempreture, extra_handling_request,
+            charges, pickUp_area, pickUp_latitude, pickUp_longitude, delivery_date, delivery_time,
+            dropOff_latitude, dropOff_longitude, dropOff_area, dropOff_street, dropOff_city, pickUp_city)
+        .then((responseData)=> {
+            console.log("saveOrderDetails respo", responseData);
+            if(responseData.response.status === "200"){
+                AsyncStorage.setItem('order_detail', JSON.stringify(responseData.response.data));
+                this.setState({
+                    order_detail : responseData.response.data,
+                });
+                let order_id = responseData.response.data.order_id;
+                console.log("order_id", order_id);
+                this.fleetCompanyFilter(order_id)
+            }
+        })
+        .catch((error) => {
+            console.log("Error :=", error);
+        })
+        .done();
+    }
+    fleetCompanyFilter(order_id){
+        let pickUp_latitude = this.state.data.vendorDetail.latitude, //"22.966425",
+        pickUp_longitude = this.state.data.vendorDetail.longitude, //"72.615933",
+        min_price = "0",
+        max_price = "5000";
+
+        api.fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price)
+        .then((responseData)=> {
+            if(responseData.response.status === "200"){
+                var arrCompany = responseData.response.data
+                AsyncStorage.setItem('fleetCompanydetail', JSON.stringify(arrCompany));
+                console.log("FleetCompanyList:=",arrCompany)
+
+                if (arrCompany.length > 0) {
+                    if (arrCompany.length === 1) {
+                        this.setState({
+                            optimalCompany: arrCompany[0],
+                            isShowFinalPriceWithShipping: true,
+                            visible: false,
+                        })
+                    }
+                    else {
+                        var selCom = arrCompany[0]
+                        for (i=0; i<arrCompany.length; i++) {
+                            var cmp = arrCompany[i];
+                            if (selCom.price > cmp.price) {
+                                selCom = cmp
+                            }
+                        }
+                        console.log("optimalCompany:= ", selCom)
+                        this.setState({
+                            optimalCompany: selCom,
+                            isShowFinalPriceWithShipping: true,
+                            visible: false,
+                        })
+                    }
+                }
+                else {
+                    alert("Sorry, We can't deliver product at your selected address.")
+                }
+
+                this.setState({
+                    // dataSource2 : this.state.dataSource2.cloneWithRows(responseData.response.data),
+                    fleetCompanyList : arrCompany,
+                    // showFleetCompanydetail : true,
+                });
+                // console.log("fleetCompanydetail", responseData);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+        .done();
+    }
+
     order (delivery_address_id){
         const{ data } = this.state;
         var Select =[];
@@ -136,9 +286,10 @@ class DealsandOffers extends Component {
     }
     async addToOrder(value){
         try {
-            const { data ,count} = this.state;
+            const { data ,count, optimalCompany, order_detail} = this.state;
+            console.log("optimalCompany:=", optimalCompany)
             const { u_id, country} = this.props;
-            api.addToOrder(u_id, country, value, data, 1)
+            api.addToOrder(u_id, country, value, data, 1, optimalCompany, order_detail)
             .then((responseData) => {
                 console.log("Response addToOrder:=",responseData)
                 if(responseData.status){
@@ -194,7 +345,15 @@ class DealsandOffers extends Component {
         // if (!this.state.loaded) {
         //     return this.renderLoadingView();
         // }
-        const {identity, logout, lang,u_id} = this.props;
+        const {identity, logout, lang,u_id,country,deviceId} = this.props;
+        // const { lang, country, u_id, deviceId } = this.props;
+        let direction = (lang === 'ar') ? 'row-reverse' :'row',
+        align = (lang === 'ar') ?  'right': 'left',
+        // product_name = "Price" in this.state.data ? (lang == 'ar')? this.state.data.product_name_in_arabic : this.state.data.product_name : "",
+        // short_description = "Price" in this.state.data ? (lang == 'ar')? this.state.data.short_description_in_arabic : this.state.data.short_description : "",
+        // detail_description = "Price" in this.state.data ? (lang == 'ar')? this.state.data.detail_description_in_arabic : this.state.data.detail_description : "",
+        price = "Price" in this.state.data ? (lang == 'ar')? this.state.data.price_in_arabic : this.state.data.Price : "";
+        // special_price = "Price" in this.state.data ? (lang == 'ar')? this.state.data.special_price_in_arabic : this.state.data.special_price : "";
         let side = lang === "ar" ? "right" : "left";
         let listView = (<View></View>);
         listView = (
@@ -266,11 +425,176 @@ class DealsandOffers extends Component {
                     size="large"
                 />
             </View> }
+
+                <Modal isVisible={this.state.isShowFinalPriceWithShipping}>
+                    <View style={{
+                        height:200,
+                        width:'100%',
+                        backgroundColor:'white',
+                        borderRadius:3,
+                    }}>
+                        <Text style={{
+                            // backgroundColor:'red',
+                            textAlign:'center',
+                            fontWeight:'bold',
+                            margin:5,
+                            fontSize:18,
+                        }}>Price Detail</Text>
+                        <View style={{
+                            flexDirection:'row',
+                            // backgroundColor:'red',
+                            marginTop:20,
+                        }}>
+                            <Text style={{
+                                marginLeft:15,
+                            }}>
+                                Product Price
+                            </Text> 
+                            <Text style={{
+                                marginHorizontal:5,
+                            }}>
+                                :
+                            </Text>
+                            <Text>
+                                {price} KWD
+                            </Text>
+                        </View>
+
+                        <View style={{
+                            flexDirection:'row',
+                            // backgroundColor:'red',
+                            marginTop:10,
+                        }}>
+                            <Text style={{
+                                marginLeft:15,
+                            }}>
+                                Shipping Price
+                            </Text> 
+                            <Text style={{
+                                marginHorizontal:5,
+                            }}>
+                                :
+                            </Text>
+                            <Text>
+                                { this.state.isShowFinalPriceWithShipping === true ? this.state.optimalCompany.price : 0} KWD
+                            </Text>
+                        </View>
+                        <View style={{
+                            flexDirection:'row',
+                            // backgroundColor:'red',
+                            marginTop:10,
+                        }}>
+                            <Text style={{
+                                marginLeft:15,
+                            }}>
+                                Final Price
+                            </Text> 
+                            <Text style={{
+                                marginHorizontal:5,
+                            }}>
+                                :
+                            </Text>
+                            <Text>
+                                {parseFloat(price) + (this.state.isShowFinalPriceWithShipping === true ? parseFloat(this.state.optimalCompany.price) : 0.0 )} KWD
+                            </Text>
+                        </View>
+                        <View style={{
+                            flexDirection:"row",
+                            // backgroundColor:'red',
+                            justifyContent:'space-around',
+                            marginTop:20
+                        }}>
+                            <TouchableWithoutFeedback onPress={this.onClickCancelProceed.bind(this)}>
+                                <View style={{
+                                    width:"30%",
+                                    backgroundColor:'#a9d5d1',
+                                    height:35,
+                                    justifyContent:"center",
+                                    alignItems:'center'
+                                }}>
+                                    <Text style={{
+                                        fontSize:15,
+                                        color:'white',
+                                        fontWeight:'bold'
+                                    }}>Cancel</Text> 
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={this.onClickProceedToBuy.bind(this)}>
+                                <View style={{
+                                    width:"30%",
+                                    backgroundColor:'#a9d5d1',
+                                    height:35,
+                                    justifyContent:"center",
+                                    alignItems:'center'
+                                }}>
+                                    <Text style={{
+                                        fontSize:15,
+                                        color:'white',
+                                        fontWeight:'bold'
+                                    }}>Proceed</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </View>
+                </Modal>
+
                 </View>
                 {this.renderAddressSheet()}
             </Drawer>
         );
     }
+
+    onClickCancelProceed() {
+        this.setState({
+            isShowFinalPriceWithShipping: false,
+        })
+    }
+
+    onClickProceedToBuy() {
+        this.setState({
+            isShowFinalPriceWithShipping: false,       
+            visibleModal: true,     
+        },this.conformOrder())
+        // this.order(this.state.selAddress.address_id)
+    }
+
+    conformOrder(){
+        let order_id = this.state.order_detail.order_id,
+        price = this.state.optimalCompany.price,
+        u_id = this.state.order_detail.u_id,
+        fleetCompanyId = this.state.optimalCompany.fleetCompanyId,
+        user_wise_product_id = this.state.order_detail.user_wise_product_id ;
+
+        api.conformOrder(order_id, price, u_id, fleetCompanyId, user_wise_product_id)
+        .then((responseData)=> {
+            console.log("conformOrder respo", responseData);
+            if(responseData.response.status === "200"){
+                AsyncStorage.setItem('conformOrderDetail', JSON.stringify(responseData.response.data));
+                this.setState({
+                    conformOrderDetail : responseData.response.data,
+                    // showFleetCompanydetail :false
+                });
+                // this.orderHistory()
+                // MessageBarManager.showAlert({
+                //     message: responseData.response.data.message,
+                //     title:'',
+                //     alertType: 'extra',
+                //     titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                //     messageStyle: { color: 'white', fontSize: 16 , textAlign: "left"},
+                // })
+                this.order(this.state.selAddress.address_id)
+            }
+        })
+        .catch((error) => {
+            console.log("Error:= ", error);
+            this.setState({
+                visibleModal:false
+            })
+            alert(error.message)
+        })
+        .done();
+    }
+
     renderData(data, rowData, sectionID, rowID, index) {
         const { navigate } = this.props.navigation,
         {lang}= this.props,
@@ -327,6 +651,7 @@ class DealsandOffers extends Component {
    }
 
     buyItNow(data) {
+        console.log("data:=",data)
         if (this.props.isGuest == '1') {
             this.setState({
                 data:data
@@ -348,7 +673,7 @@ class DealsandOffers extends Component {
        direction = (lang === 'ar') ? 'row-reverse' :'row',
        align = (lang === 'ar') ?  'right': 'left';
        return (
-           <TouchableOpacity style={{ flexDirection: direction ,paddingBottom:  10}} onPress= {()=>this.order(data.address_id)}>
+           <TouchableOpacity style={{ flexDirection: direction ,paddingBottom:  10}} onPress= {()=>this.getShippingPrice(data.address_id, data)}>
                <View style={{ flexDirection: 'column' }}>
                    <View style={{ width: width-125, flexDirection: direction , justifyContent: 'space-between'}}>
                        <Text style={{ fontSize: 15,  textAlign: align}}>{data.full_name}</Text>

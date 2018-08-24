@@ -61,6 +61,7 @@ class Newaddress extends Component{
             country : props.isFromEdit ? props.country : '',
             address_type : props.isFromEdit ? props.address_type : '1',
             address_id : props.isFromEdit ? props.address_id : '',
+            formatted_address : props.isFromEdit ? props.formatted_address : '',
             u_id: '',
             FullMapVisible : false,
             LATITUDE : 22.966425,
@@ -248,7 +249,9 @@ class Newaddress extends Component{
             city,
             direction,
             country,
-            address_type
+            address_type,
+            coordinate,
+            formatted_address,
         } = this.state;
         const { lang, u_id} = this.props,
         align = (lang === 'ar') ?  'right': 'left';
@@ -268,6 +271,9 @@ class Newaddress extends Component{
         formData.append('direction', String(direction));
         formData.append('country', String(country));
         formData.append('address_type', String(address_type));
+        formData.append('latitude', String(coordinate.latitude));
+        formData.append('longitude', String(coordinate.longitude));
+        formData.append('formatted_address', String(formatted_address));
 
         if (this.validate()) {
             this.setState({
@@ -293,10 +299,11 @@ class Newaddress extends Component{
 
                     if (this.props.isGuest == '1') {
                         var addressId = responseData.response.data.address_id
-                        EventEmitter.emit("proceedToGuestCheckout",addressId)
+                        var addressObj = responseData.response.data.address_data
+                        EventEmitter.emit("proceedToGuestCheckout",addressObj)
                         EventEmitter.emit("proceedToGuestCheckoutService",addressId)
                         EventEmitter.emit("proceedToGuestCheckoutCart",addressId)
-                        EventEmitter.emit("proceedToGuestCheckoutDealsOffers",addressId)
+                        EventEmitter.emit("proceedToGuestCheckoutDealsOffers",addressObj)
                     }
 
                     EventEmitter.emit("reloadAddressList")
@@ -332,7 +339,9 @@ class Newaddress extends Component{
             city,
             direction,
             country,
-            address_type
+            address_type,
+            coordinate, 
+            formatted_address
         } = this.state;
         let formData = new FormData();
         formData.append('address_id', String(this.state.address_id))
@@ -350,6 +359,9 @@ class Newaddress extends Component{
         formData.append('direction', String(direction));
         formData.append('country', String(country));
         formData.append('address_type', String(address_type));
+        formData.append('latitude', String(coordinate.latitude));
+        formData.append('longitude', String(coordinate.longitude));
+        formData.append('formatted_address', String(formatted_address));
 
         console.log("editAddress formData:=",formData)
 
@@ -968,6 +980,10 @@ class Newaddress extends Component{
                     }
 
                 }
+                var formatted_component = json.results[0].formatted_address;
+                this.setState({
+                    formatted_address: formatted_component
+                })
                 console.log("address_component:=",address_component[0].types[0])
                 console.log("locality:=",json.results[0].address_components.locality)
             },

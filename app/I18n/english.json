@@ -581,5 +581,14 @@
         "date":"Appointment Date",
         "serviceName":"Service Name",
         "serviceType":"Type of Service"
+    },
+    "fleetCompanyList" : {
+        "title" : "Company List"
+    },
+    "fleetCompanyDetail" : {
+        "title" : "Package Details"
+    },
+    "shippingCityList" : {
+        "title" : "Select City"
     }
 }

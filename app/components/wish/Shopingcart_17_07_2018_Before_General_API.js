@@ -18,10 +18,6 @@ import {
     AlertIOS,
     ActivityIndicator,
 } from 'react-native';
-
-import MapView from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
-
 import Utils from 'app/common/Utils';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n'
@@ -48,14 +44,6 @@ import {CirclesLoader} from 'react-native-indicator';
 const { width, height } = Dimensions.get('window');
 // const SHORT_LIST = ['Small', 'Medium', 'Large'];
 
-const ASPECT_RATIO = width / height;
-const LATITUDE = 22.966425;
-const LONGITUDE = 72.615933;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-// const GOOGLE_MAPS_APIKEY = 'AIzaSyAnZx1Y6CCB6MHO4YC_p04VkWCNjqOrqH8';
-const GOOGLE_MAPS_APIKEY = 'AIzaSyBU5Uwb57A6jXutEHzAo8I3T7gRVbs8qHo';
-
 class Shopingcart extends Component {
     constructor(props) {
         super(props);
@@ -63,9 +51,6 @@ class Shopingcart extends Component {
         this.fetchData = this.fetchData.bind(this);
         this.state = {
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-            dataSource2 : new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
-            orderHistory_list : new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
-            arr_Item: [],
             ShopingItems : null,
             SetToList : null,
             itemcount : '',
@@ -85,45 +70,10 @@ class Shopingcart extends Component {
             message:'',
             url:'',
             loaded:false,
-            order_detail: {},
-            fleetCompanyList: [],
-            showFleetCompanydetail : false,
-            showOrderHistry : false,
-            ShowMapTracking : false,
-            coordinates: [
-              {
-                latitude: 22.966425,
-                longitude: 72.615933,
-              },
-              {
-                latitude: 22.996170,
-                longitude: 72.599584,
-              },
-              {
-                 latitude: 23.036734,
-                 longitude: 72.516371,
-               },
-               {
-                  latitude: 23.012777,
-                  longitude: 72.506084,
-                },
-            ],
         };
-        this.mapView = null;
     }
-
-    onMapPress = (e) => {
-        this.setState({
-          coordinates: [
-            ...this.state.coordinates,
-            e.nativeEvent.coordinate,
-          ],
-        });
-    }
-
     componentDidMount(){
         this.fetchData()
-        this.orderHistory()
         EventEmitter.removeAllListeners("reloadCartlist");
         EventEmitter.on("reloadCartlist", (value)=>{
             this.fetchData()
@@ -134,9 +84,7 @@ class Shopingcart extends Component {
         });
         EventEmitter.removeAllListeners("redirectToFaturah");
         EventEmitter.on("redirectToFaturah", (value)=>{
-            console.log("redirectToFaturah address:=",value)
-            // routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
-            this.saveOrderDetails(value);
+            routes.myfaturah({ uri : value.uri, order_id : value.order_id, callback: this.callBackFitura, cartIdList:this.state.cartIdList})
         });
 
         EventEmitter.removeAllListeners("proceedToGuestCheckoutCart");
@@ -154,106 +102,6 @@ class Shopingcart extends Component {
     }
     componentWillMount() {
         routes.refresh({ left: this._renderLeftButton, right: this._renderRightButton,});
-    }
-    getProductTreckingLatitudeLongitude(order_id){
-        let is_all = "1"
-        api.getProductTreckingLatitudeLongitude(order_id, is_all)
-        .then((responseData) => {
-            var arrCoor = responseData.response.data
-            var arrcoorNew = []
-            for (i = 0; i < arrCoor.length; i++) {
-                var dict = {}
-                dict.latitude = parseFloat(arrCoor[i].latitude)
-                dict.longitude = parseFloat(arrCoor[i].longitude)
-                arrcoorNew.push(dict)
-            }
-            // console.log("arrcoorNew:",arrcoorNew);
-            this.setState({
-                coordinates : arrcoorNew,
-                ShowMapTracking: true,
-                refreshing: false
-            });
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
-    }
-
-    saveOrderDetails(value){
-        console.log("myfaturah respo", value);
-        const { arr_Item }= this.state;
-        console.log("arr_Item:=",arr_Item)
-        var today = new Date();
-        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-        currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
-        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() ;
-
-        let email_id = "zeroTotwo@gmail.com",
-        product_name = arr_Item[0].product_name,
-        // product_name = "ashvin test dfddfdf",
-        product_size = arr_Item[0].size,
-        // product_size = "Small",
-        tempreture = "Cold",
-        extra_handling_request = "Heavy",
-        charges = "2000",
-        pickUp_area = "29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
-        pickUp_latitude = "22.966425",
-        pickUp_longitude = "72.615933",
-        delivery_date = nextdate,
-        delivery_time = "12:30:32",
-        dropOff_latitude = "23.215635",
-        dropOff_longitude = "72.636941",
-        dropOff_area = "29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
-        dropOff_city = "Bayan",
-        pickUp_city = "Bidea";
-        // console.log("product_name",arr_Item[0].product_name);
-        // console.log("product_size",arr_Item[0].size);
-        // console.log("nextdate",nextdate);
-        api.saveOrderDetails(email_id, product_name, product_size, tempreture, extra_handling_request,
-            charges, pickUp_area, pickUp_latitude, pickUp_longitude, delivery_date, delivery_time,
-            dropOff_latitude, dropOff_longitude, dropOff_area, dropOff_city, pickUp_city)
-        .then((responseData)=> {
-            console.log("saveOrderDetails respo", responseData);
-            if(responseData.response.status === "200"){
-                AsyncStorage.setItem('order_detail', JSON.stringify(responseData.response.data));
-                this.setState({
-                    order_detail : responseData.response.data,
-                });
-                let order_id = responseData.response.data.order_id;
-                console.log("order_id", order_id);
-                this.fleetCompanyFilter(order_id)
-
-            }
-        })
-        .catch((error) => {
-            console.warn("hello", error);
-            console.log(error);
-        })
-        .done();
-    }
-    fleetCompanyFilter(order_id){
-        let pickUp_latitude = "22.966425",
-        pickUp_longitude = "72.615933",
-        min_price = "0",
-        max_price = "5000";
-
-        api.fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price)
-        .then((responseData)=> {
-            if(responseData.response.status === "200"){
-                AsyncStorage.setItem('fleetCompanydetail', JSON.stringify(responseData.response.data));
-                this.setState({
-                    dataSource2 : this.state.dataSource2.cloneWithRows(responseData.response.data),
-                    fleetCompanyList : responseData.response.data,
-                    showFleetCompanydetail : true,
-                });
-                // console.log("fleetCompanydetail", responseData);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-        .done();
     }
     _renderLeftButton = () => {
          return(
@@ -455,7 +303,6 @@ class Shopingcart extends Component {
             if(responseData.status){
                 this.setState({
                     dataSource: this.state.dataSource.cloneWithRows(responseData.data),
-                    arr_Item : responseData.data,
                     ShopingItems : Select,
                     SetToList : responseData.data,
                     itemcount : responseData.itemcount,
@@ -532,15 +379,6 @@ class Shopingcart extends Component {
         this.setState({color});
     }
     procedToCheckout(){
-
-        // routes.shippingCityList()
-        // return
-
-        routes.fleetCompanyList({
-			data:''
-		})
-        return
-
         let {lang, u_id} = this.props
         // if (u_id === undefined ){
         //     this.setState({
@@ -578,9 +416,6 @@ class Shopingcart extends Component {
                     }>
                     <Text style={{ textAlign: align}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
                     {/*<Text style={{textAlign: align}}> KWD {totalamount}</Text>*/}
-                    <Text style={{textAlign: align}} onPress={()=> this.setState({
-                        showOrderHistry : true
-                    })}> Show Order History</Text>
                 </View>
                 <View style={{
                         flexDirection : direction,
@@ -706,29 +541,6 @@ class Shopingcart extends Component {
                 />
             );
 
-            let fleetlistView = (<View></View>);
-            fleetlistView = (
-                <ListView
-                    contentContainerStyle={styles.container}
-                    dataSource={this.state.dataSource2}
-                    renderRow={this.renderfleet.bind(this)}
-                    enableEmptySections={true}
-                    automaticallyAdjustContentInsets={false}
-                    showsVerticalScrollIndicator={false}
-                    />
-            );
-            let orderHistory_listView = (<View></View>);
-            orderHistory_listView = (
-                <ListView
-                    contentContainerStyle={styles.container}
-                    dataSource={this.state.orderHistory_list}
-                    renderRow={this.renderOrderHistry.bind(this)}
-                    enableEmptySections={true}
-                    automaticallyAdjustContentInsets={false}
-                    showsVerticalScrollIndicator={false}
-                    />
-            );
-
         if (!this.state.status) {
             return this.noItemFound();
         }
@@ -770,87 +582,6 @@ class Shopingcart extends Component {
                             </TouchableHighlight>
                         </View>
                 </Drawer>
-
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    isVisible={this.state.showFleetCompanydetail}
-                    onRequestClose={() => this.setState({ showFleetCompanydetail :false})}>
-                    <View style={{
-                            // flex: 1,
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: "transparent"}
-                        }>
-                            {fleetlistView}
-                    </View>
-                </Modal>
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    isVisible={this.state.showOrderHistry}
-                    onRequestClose={() => this.setState({ showOrderHistry :false})}>
-                    <View style={{
-                            // flex: 1,
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: "transparent"}
-                        }>
-                            {orderHistory_listView}
-                            <Text style={{ height: 20, width: 100, textAlign: 'center'}} onPress={()=>this.setState({
-                                showOrderHistry : false
-                                })
-                            }>Close</Text>
-                    </View>
-
-                </Modal>
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    isVisible={this.state.ShowMapTracking}
-                    onRequestClose={() => this.setState({ ShowMapTracking :false})}>
-                    <View style={{ position: 'absolute', zIndex: 1,backgroundColor: "transparent", justifyContent: 'center', height: 30, width: "90%", alignSelf: 'center', marginTop: 10}}>
-                        <Icon onPress ={()=>this.setState({ ShowMapTracking :false})} name="close" size={25} color="#fff" style={ lang === 'ar'?{alignSelf: 'flex-start'} :{alignSelf: 'flex-end'}} on/>
-                    </View>
-                    <View style={{ flex : 1, justifyContent: 'center', zIndex: 0}}>
-                        <MapView
-                            initialRegion={{
-                                latitude: LATITUDE,
-                                longitude: LONGITUDE,
-                                latitudeDelta: LATITUDE_DELTA,
-                                longitudeDelta: LONGITUDE_DELTA,
-                            }}
-                            style={StyleSheet.absoluteFill}
-                            ref={c => this.mapView = c}
-                            onPress={this.onMapPress}
-                            >
-                            {this.state.coordinates.map((coordinate, index) =>
-                                <MapView.Marker key={`coordinate_${index}`} coordinate={coordinate} >
-                                    <FontAwesome name="car" size={15} color="#FFCC7D"/>
-                                </MapView.Marker>
-                            )}
-                            {(this.state.coordinates.length >= 2) && (
-                                <MapViewDirections
-                                    origin={this.state.coordinates[0]}
-                                    waypoints={ (this.state.coordinates.length > 2) ? this.state.coordinates.slice(1, -1): null}
-                                    destination={this.state.coordinates[this.state.coordinates.length-1]}
-                                    apikey={GOOGLE_MAPS_APIKEY}
-                                    strokeWidth={5}
-                                    strokeColor="#191970"
-                                    onStart={(params) => {
-                                        console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-                                    }}
-                                    onError={(errorMessage) => {
-                                        console.log('GOT AN ERROR');
-                                    }}
-                                    />
-                            )}
-                        </MapView>
-                    </View>
-                </Modal>
-
                 <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
                         <Button iconSrc={{ uri: TWITTER_ICON }}
                             onPress={()=>{
@@ -935,88 +666,6 @@ class Shopingcart extends Component {
         </View>
         );
     }
-
-    orderHistory(){
-        let email_id = "zeroTotwo@gmail.com";
-        api.orderHistory(email_id)
-        .then((responseData)=> {
-            console.log("orderHistory respo", responseData);
-            if(responseData.response.status === "200"){
-                this.setState({
-                    orderHistory_list : this.state.orderHistory_list.cloneWithRows(responseData.response.data),
-                });
-            }
-        })
-        .catch((error) => {
-            console.warn("hello", error);
-            console.log(error);
-        })
-        .done();
-
-    }
-    conformOrder(){
-        let order_id = this.state.order_detail.order_id,
-        price = this.state.fleetCompanyList[0].price,
-        u_id = this.state.order_detail.u_id,
-        fleetCompanyId = this.state.fleetCompanyList[0].fleetCompanyId,
-        user_wise_product_id = this.state.order_detail.user_wise_product_id ;
-
-        api.conformOrder(order_id, price, u_id, fleetCompanyId, user_wise_product_id)
-        .then((responseData)=> {
-            console.log("conformOrder respo", responseData);
-            if(responseData.response.status === "200"){
-                AsyncStorage.setItem('conformOrderDetail', JSON.stringify(responseData.response.data));
-                this.setState({
-                    conformOrderDetail : responseData.response.data,
-                    showFleetCompanydetail :false
-                });
-                this.orderHistory()
-                MessageBarManager.showAlert({
-                    message: responseData.response.data.message,
-                    title:'',
-                    alertType: 'extra',
-                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                    messageStyle: { color: 'white', fontSize: 16 , textAlign: "left"},
-                })
-
-            }
-        })
-        .catch((error) => {
-            console.warn("hello", error);
-            console.log(error);
-        })
-        .done();
-    }
-    renderOrderHistry( data, rowData: string, sectionID: number, rowID: number, index) {
-        return (
-            <View style={{
-                    flexDirection: 'column',
-                    marginTop : 2,
-                    backgroundColor: "#fff",
-                    borderWidth : StyleSheet.hairlineWidth,
-                    borderColor : "#ccc",
-                    borderRadius : 5}
-                }>
-                <Text onPress={()=> this.getProductTreckingLatitudeLongitude(data.order_id)} style={{ fontSize:15, color:'#696969', marginBottom:5}}> {JSON.stringify(data)}</Text>
-                </View>
-        );
-    }
-        renderfleet( data, rowData: string, sectionID: number, rowID: number, index) {
-        console.log("data", data);
-        return (
-            <View style={{
-                    flexDirection: 'column',
-                    marginTop : 2,
-                    backgroundColor: "#fff",
-                    borderWidth : StyleSheet.hairlineWidth,
-                    borderColor : "#ccc",
-                    borderRadius : 5}
-                }>
-                <Text onPress={()=> this.conformOrder()} style={{ fontSize:15, color:'#696969', marginBottom:5}}> {JSON.stringify(data)}</Text>
-                </View>
-        );
-    }
-
     renderData( data, rowData: string, sectionID: number, rowID: number, index) {
         console.log("Cart Data:=",data)
         const { lang, country, u_id, deviceId } = this.props;
