@@ -25,6 +25,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
+import * as Progress from 'react-native-progress';
 const videoIcon = '../images/videoIcon.png';
 const INITIAL_STATE = {avatarSource: ''};
 
@@ -50,6 +51,8 @@ class Marketingadd extends Component {
             amount : '0',
             visibleModal: false,
             imageResource:{},
+            uploadProgress: 0,
+            displayProgress: 0,
         }
     }
     componentDidMount(){
@@ -111,6 +114,14 @@ class Marketingadd extends Component {
             { name : 'amount', data: String(amount)},
         ])
         .uploadProgress({ interval : 2 },(written, total) => {
+            console.log("Real Progress:=",written)
+            var tempProg = Math.floor(written/total*100)
+            var realProg = (tempProg*1)/100
+            console.log("realProg:=",realProg)
+            this.setState({
+                uploadProgress:realProg,
+                displayProgress: tempProg,
+            })
             console.log('uploaded', Math.floor(written/total*100) + '%')
         })
         .then((responseData)=>{
@@ -251,7 +262,7 @@ class Marketingadd extends Component {
             title: I18n.t('marketing.videopicker', { locale: lang }),
             takePhotoButtonTitle: I18n.t('marketing.takeVideo', { locale: lang }),
             mediaType: 'video',
-            videoQuality: Platform.OS === 'ios' ? 'medium' : 'low',
+            videoQuality: Platform.OS === 'ios' ? 'medium' : 'medium',
             durationLimit: 10,
             allowsEditing: true,
             storageOptions: {
@@ -362,7 +373,12 @@ class Marketingadd extends Component {
                 </View>
                 <Modal isVisible={this.state.visibleModal}>
                     <View style={{alignItems : 'center', padding:10}}>
-                        <CirclesLoader />
+                        <Progress.Bar progress={this.state.uploadProgress} width={200} />
+                        <Text style={{
+                            marginTop:20,
+                            color:'white'
+                        }}>Uploading ... {this.state.displayProgress} %</Text>
+                        {/* <CirclesLoader /> */}
                     </View>
                 </Modal>
             </View>

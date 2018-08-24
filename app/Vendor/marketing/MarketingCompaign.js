@@ -26,6 +26,7 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import {connect} from 'react-redux';
 import I18n from 'react-native-i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as Progress from 'react-native-progress';
 
 const videoIcon = '../../images/videoIcon.png';
 // const INITIAL_STATE = {avatarSource: '', ad_category: ''};
@@ -52,7 +53,9 @@ class MarketingCompaign extends Component {
             user_type : null,
             country : null,
             amount : '0',
-            visibleModal: false
+            visibleModal: false,
+            uploadProgress: 0,
+            displayProgress: 0,
         }
     }
     componentDidMount(){
@@ -147,6 +150,14 @@ class MarketingCompaign extends Component {
                 { name : 'amount', data: String(amount)},
             ])
             .uploadProgress({ interval : 2 },(written, total) => {
+                console.log("Real Progress:=",written)
+                var tempProg = Math.floor(written/total*100)
+                var realProg = (tempProg*1)/100
+                console.log("realProg:=",realProg)
+                this.setState({
+                    uploadProgress:realProg,
+                    displayProgress: tempProg,
+                })
                 console.log('uploaded', Math.floor(written/total*100) + '%')
             })
             .then((responseData)=>{
@@ -268,7 +279,7 @@ class MarketingCompaign extends Component {
             title: 'Video Picker',
             takePhotoButtonTitle: 'Take Video...',
             mediaType: 'video',
-            videoQuality: Platform.OS === 'ios' ? 'medium' : 'low',
+            videoQuality: Platform.OS === 'ios' ? 'medium' : 'medium',
             durationLimit: 10,
             allowsEditing: true,
             storageOptions: {
@@ -460,7 +471,12 @@ class MarketingCompaign extends Component {
                     </View>
                     <Modal isVisible={this.state.visibleModal}>
                         <View style={{alignItems : 'center', padding:10}}>
-                            <CirclesLoader />
+                            <Progress.Bar progress={this.state.uploadProgress} width={200} />
+                            <Text style={{
+                                marginTop:20,
+                                color:'white'
+                            }}>Uploading ... {this.state.displayProgress} %</Text>
+                            {/* <CirclesLoader /> */}
                         </View>
                     </Modal>
                     </View>
