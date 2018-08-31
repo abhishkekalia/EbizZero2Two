@@ -173,7 +173,7 @@ class DealsandOffers extends Component {
         pickUp_area = data.vendorDetail.address,        //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
         pickUp_latitude = data.vendorDetail.latitude, //"22.966425",
         pickUp_longitude = data.vendorDetail.longitude, //"72.615933",
-        pickUp_city = data.vendorDetail.city
+        pickUp_city = data.vendorDetail.city,
         delivery_date = nextdate,
         delivery_time = "12:30:32",
         dropOff_latitude = value.latitude, //"23.215635",

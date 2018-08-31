@@ -124,7 +124,7 @@ class ProductOrder extends Component{
         fetch(Utils.gurl('userOrderList'), config)
         .then((response) => response.json())
         .then((responseData) => {
-            console.log("responseData:=",responseData)
+            console.log("userOrderList responseData:=",responseData)
             var orders = responseData.data,
             length = orders.length,
             dataBlob = {},

@@ -10,7 +10,8 @@ let Utils = {
     },
 
     murl: (usersPath)=> {
-        return `http://192.168.0.152/delicon/index.php/generalApi/${usersPath}`;
+        // return `http://192.168.0.152/delicon/index.php/generalApi/${usersPath}`;
+        return `http://solutiontrackers.com/dev-a/z2twodelicon/index.php/generalApi/${usersPath}`;
     },
 
     async getKey() {

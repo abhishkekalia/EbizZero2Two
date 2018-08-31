@@ -414,7 +414,7 @@ class ProductDescription extends Component {
 
     saveOrderDetails(value){
         console.log("myfaturah respo", value);
-        const { data, size }= this.state;
+        const { data, size, count }= this.state;
         // console.log("arr_Item:=",arr_Item)
         var today = new Date();
         var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
@@ -428,11 +428,11 @@ class ProductDescription extends Component {
         // product_size = "Small",
         tempreture = "Cold",
         extra_handling_request = "Heavy",
-        charges = (data.special_price > 0 ? data.special_price : data.price),
+        charges = (data.special_price > 0 ? data.special_price * parseFloat(count) : data.price * parseFloat(count)),
         pickUp_area = data.vendorDetail.address,        //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
         pickUp_latitude = data.vendorDetail.latitude, //"22.966425",
         pickUp_longitude = data.vendorDetail.longitude, //"72.615933",
-        pickUp_city = data.vendorDetail.city
+        pickUp_city = data.vendorDetail.city,
         delivery_date = nextdate,
         delivery_time = "12:30:32",
         dropOff_latitude = value.latitude, //"23.215635",
@@ -791,7 +791,7 @@ class ProductDescription extends Component {
                                 :
                             </Text>
                             <Text>
-                                {special_price > 0 ? special_price : price} KWD
+                                {special_price > 0 ? special_price * parseFloat(count) : price * parseFloat(count)} KWD
                             </Text>
                         </View>
 
@@ -830,7 +830,7 @@ class ProductDescription extends Component {
                                 :
                             </Text>
                             <Text>
-                                {(special_price > 0 ? parseFloat(special_price) : parseFloat(price)) + (this.state.isShowFinalPriceWithShipping === true ? parseFloat(this.state.optimalCompany.price) : 0.0 )} KWD
+                                {(special_price > 0 ? parseFloat(special_price) * parseFloat(count) : parseFloat(price) * parseFloat(count)) + (this.state.isShowFinalPriceWithShipping === true ? parseFloat(this.state.optimalCompany.price) : 0.0 )} KWD
                             </Text>
                         </View>
                         <View style={{

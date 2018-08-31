@@ -45,11 +45,13 @@ class AddressBook extends Component {
     }
 
     onSelect(index, value, address){
-        this.setState({
-        isSelected: value,
-        visibleModal: true, 
-        selectedAddress: address
-        }, ()=> this.getItems(value))
+        // this.setState({
+        // isSelected: value,
+        // visibleModal: true, 
+        // selectedAddress: address
+        // }, ()=> this.getItems(value))
+        EventEmitter.emit("proceedToGuestCheckoutCart",address)
+        routes.pop()
     }
     componentDidMount(){
         this.getKey()

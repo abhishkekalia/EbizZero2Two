@@ -167,6 +167,7 @@ var api = {
             },
             body: formData,
         }
+        console.log("fleetCompanyFilter Request:=",config)
         return fetch(Utils.murl('fleetCompanyFilter'), config).then((res) => res.json())
     },
     getFleetCompanyDetail(fleetCompanyId){
@@ -196,6 +197,7 @@ var api = {
             },
             body: formData,
         }
+        console.log("conformOrder Request:=",config)
         return fetch(Utils.murl('conformOrder'), config).then((res) => res.json())
     },
     ordeFilter(email_id, last_week, last_month){

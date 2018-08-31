@@ -302,7 +302,7 @@ class Newaddress extends Component{
                         var addressObj = responseData.response.data.address_data
                         EventEmitter.emit("proceedToGuestCheckout",addressObj)
                         EventEmitter.emit("proceedToGuestCheckoutService",addressId)
-                        EventEmitter.emit("proceedToGuestCheckoutCart",addressId)
+                        EventEmitter.emit("proceedToGuestCheckoutCart",addressObj)
                         EventEmitter.emit("proceedToGuestCheckoutDealsOffers",addressObj)
                     }
 

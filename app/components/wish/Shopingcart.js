@@ -17,6 +17,7 @@ import {
     ToastAndroid,
     AlertIOS,
     ActivityIndicator,
+    TouchableWithoutFeedback,
 } from 'react-native';
 
 import MapView from 'react-native-maps';
@@ -88,6 +89,9 @@ class Shopingcart extends Component {
             order_detail: {},
             fleetCompanyList: [],
             showFleetCompanydetail : false,
+            optimalCompany: {},
+            selAddress: {},
+            conformOrderDetail: {},
             showOrderHistry : false,
             ShowMapTracking : false,
             coordinates: [
@@ -108,6 +112,7 @@ class Shopingcart extends Component {
                   longitude: 72.506084,
                 },
             ],
+            isShowFinalPriceWithShipping: false,
         };
         this.mapView = null;
     }
@@ -143,7 +148,8 @@ class Shopingcart extends Component {
         EventEmitter.on("proceedToGuestCheckoutCart", (value)=>{
             console.log("proceedToGuestCheckoutCart", value);
             // this.order(value)
-            this.getItems(value)
+            // this.getItems(value.address_id)
+            this.getShippingPrice(value.address_id,value)
             // this.setState({
             //     visibleModal:true,
             // })
@@ -180,6 +186,87 @@ class Shopingcart extends Component {
         .done();
     }
 
+    getShippingPrice(delivery_address_id, addressObj) {
+        console.log("getShippingPrice:=delivery_address_id:=",delivery_address_id , addressObj )
+        this.setState({
+            selAddress : addressObj,
+            // visibleModal: true,
+        })
+        this.saveOrderDetails(addressObj)
+    }
+
+    saveOrderDetails(value){
+        console.log("myfaturah respo", value);
+        const { data, size, arr_Item, subtotalamount }= this.state;
+        // console.log("arr_Item:=",arr_Item)
+        var today = new Date();
+        var nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        currentdate= today.getFullYear() +'-'+ parseInt(today.getMonth()+1) + '-'+ today.getDate() + ' '+  today.toLocaleTimeString() ;
+        nextdate= nextDay.getFullYear() +'-'+ parseInt(nextDay.getMonth()+1) + '-'+ nextDay.getDate() ;
+
+        var product_name_tmp = ""
+        var product_size_tmp = ""
+
+        if (arr_Item.length > 1) {
+            product_name_tmp = "multiple"
+            product_size_tmp = "multiple"
+        }
+        else {
+            product_name_tmp = arr_Item[0].product_name
+            product_size_tmp = arr_Item[0].size
+        }
+
+        let email_id = "zeroTotwo@gmail.com",
+        product_name = product_name_tmp,
+        // product_name = "ashvin test dfddfdf",
+        product_size = product_size_tmp,
+        // product_size = "Small",
+        tempreture = "Cold",
+        extra_handling_request = "Heavy",
+        charges = subtotalamount //(data.special_price > 0 ? data.special_price : data.price),
+        pickUp_area = arr_Item[0].vendorDetail.address,        //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
+        pickUp_latitude = arr_Item[0].vendorDetail.latitude, //"22.966425",
+        pickUp_longitude = arr_Item[0].vendorDetail.longitude, //"72.615933",
+        pickUp_city = arr_Item[0].vendorDetail.city,
+        delivery_date = nextdate,
+        delivery_time = "12:30:32",
+        dropOff_latitude = value.latitude, //"23.215635",
+        dropOff_longitude = value.longitude, //"72.636941",
+        dropOff_area = value.formatted_address, //"29 Khalid Ibn Al Waleed St, Kuwait City, Kuwait",
+        dropOff_city = value.city, // "Bayan",
+        dropOff_street = value.street;
+        // console.log("product_name",arr_Item[0].product_name);
+        // console.log("product_size",arr_Item[0].size);
+        // console.log("nextdate",nextdate);
+        api.saveOrderDetails(email_id, product_name, product_size, tempreture, extra_handling_request,
+            charges, pickUp_area, pickUp_latitude, pickUp_longitude, delivery_date, delivery_time,
+            dropOff_latitude, dropOff_longitude, dropOff_area, dropOff_street, dropOff_city, pickUp_city)
+        .then((responseData)=> {
+            console.log("saveOrderDetails respo", responseData);
+            if(responseData.response.status === "200"){
+                AsyncStorage.setItem('order_detail', JSON.stringify(responseData.response.data));
+                this.setState({
+                    order_detail : responseData.response.data,
+                });
+                let order_id = responseData.response.data.order_id;
+                console.log("order_id", order_id);
+                this.fleetCompanyFilter(order_id)
+            }
+            else {
+                this.setState({
+                    visibleModal:false,
+                })
+            }
+        })
+        .catch((error) => {
+            console.log("Error :=", error);
+            this.setState({
+                visibleModal:false,
+            })
+        })
+        .done();
+    }
+    /*
     saveOrderDetails(value){
         console.log("myfaturah respo", value);
         const { arr_Item }= this.state;
@@ -231,7 +318,70 @@ class Shopingcart extends Component {
             console.log(error);
         })
         .done();
+    }*/
+
+    fleetCompanyFilter(order_id){
+        const { data, size, arr_Item, subtotalamount }= this.state;
+        let pickUp_latitude = arr_Item[0].vendorDetail.latitude, //"22.966425",
+        pickUp_longitude = arr_Item[0].vendorDetail.longitude, //"72.615933",
+        min_price = "0",
+        max_price = "5000";
+
+        api.fleetCompanyFilter(order_id, pickUp_latitude, pickUp_longitude, min_price, max_price)
+        .then((responseData)=> {
+            if(responseData.response.status === "200"){
+                var arrCompany = responseData.response.data
+                AsyncStorage.setItem('fleetCompanydetail', JSON.stringify(arrCompany));
+                console.log("FleetCompanyList:=",arrCompany)
+
+                if (arrCompany.length > 0) {
+                    if (arrCompany.length === 1) {
+                        console.log("optimalCompany:= ", arrCompany[0])
+                        this.setState({
+                            optimalCompany: arrCompany[0],
+                            isShowFinalPriceWithShipping: true,
+                            // visible: false,
+                            // visibleModal: false
+                        })
+                    }
+                    else {
+                        var selCom = arrCompany[0]
+                        for (i=0; i<arrCompany.length; i++) {
+                            var cmp = arrCompany[i];
+                            if (selCom.price > cmp.price) {
+                                selCom = cmp
+                            }
+                        }
+                        console.log("optimalCompany:= ", selCom)
+                        this.setState({
+                            optimalCompany: selCom,
+                            isShowFinalPriceWithShipping: true,
+                            // visible: false,
+                            // visibleModal: false
+                        })
+                    }
+                }
+                else {
+                    alert("Sorry, We can't deliver product at your selected address.")
+                }
+
+                this.setState({
+                    // dataSource2 : this.state.dataSource2.cloneWithRows(responseData.response.data),
+                    fleetCompanyList : arrCompany,
+                    // showFleetCompanydetail : true,
+                });
+                // console.log("fleetCompanydetail", responseData);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            this.setState({
+                visibleModal:false,
+            })
+        })
+        .done();
     }
+    /*
     fleetCompanyFilter(order_id){
         let pickUp_latitude = "22.966425",
         pickUp_longitude = "72.615933",
@@ -254,7 +404,7 @@ class Shopingcart extends Component {
             console.log(error);
         })
         .done();
-    }
+    }*/
     _renderLeftButton = () => {
          return(
              <Feather name="menu" size={20} onPress={()=>this.openControlPanel()} color="#fff" style={{ padding : 10,paddingTop: Platform.OS === 'ios' ? 20 : 10}}/>
@@ -297,7 +447,6 @@ class Shopingcart extends Component {
             this.addToOrder(Select)
             .done()
         }
-        
     }
 
     async addToOrder(value){
@@ -307,20 +456,24 @@ class Shopingcart extends Component {
             formData.append('u_id', String(u_id));
             formData.append('country', String(country));
             formData.append('order_detail', JSON.stringify(value));
-            formData.append('amount', String(this.state.subtotalamount));
+            var amount = parseFloat(this.state.subtotalamount) + parseFloat(this.state.optimalCompany.price)
+            formData.append('amount', String(amount));
+            formData.append('shipping_charge',String(this.state.optimalCompany.price))
+            formData.append('company_id',String(this.state.optimalCompany.fleetCompanyId))
+            formData.append('other_order_id',String(this.state.order_detail.order_id))
             const config = {
-                   method: 'POST',
-                   headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data;',
-                   },
-                   body: formData,
-              }
-              console.log("Request addToOrder:=",config)
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data;',
+                },
+                body: formData,
+            }
+            console.log("Request addToOrder:=",config)
             fetch(Utils.gurl('addToOrder'), config)
             .then((response) => response.json())
             .then((responseData) => {
-                console.log("Response addToOrder:=",responseData)
+            console.log("Response addToOrder:=",responseData)
             if(responseData.status){
                 this.removeLoader
                 // console.log("calling my Fatureh")
@@ -346,12 +499,17 @@ class Shopingcart extends Component {
             })
             .catch((error) => {
                 console.log(error);
+                this.setState({
+                    visibleModal:false,
+                })
             })
             .done();
         } catch (error) {
             console.log("Error retrieving data" + error);
+            this.setState({
+                visibleModal:false,
+            })
         }
-
     }
 
     removeLoader = () => this.setState({
@@ -462,7 +620,8 @@ class Shopingcart extends Component {
                     totalamount : responseData.totalamount,
                     subtotalamount : responseData.subtotalamount,
                     refreshing : false,
-                    status : responseData.status
+                    status : responseData.status,
+                    is_multiple : responseData.is_multiple,
                 });
                 let res = responseData.data;
                 let cartIdList = [];
@@ -533,6 +692,26 @@ class Shopingcart extends Component {
     }
     procedToCheckout(){
 
+        if (this.state.is_multiple === 1) {
+            alert("Kindly choose products and services from 1 vendor per purchase.")
+        }
+        else {
+            if (this.validate()) {
+                if (this.props.isGuest == '1') {
+                    routes.newaddress({isFromEdit:false})
+                }
+                else {
+                    routes.AddressLists({
+                        order_detail : this.state.ShopingItems,
+                        SetToList :this.state.SetToList,
+                        totalAmount : this.state.subtotalamount,
+                        cartIdList:this.state.cartIdList
+                    })
+                }
+            }
+        }
+        return
+
         // routes.shippingCityList()
         // return
 
@@ -578,9 +757,9 @@ class Shopingcart extends Component {
                     }>
                     <Text style={{ textAlign: align}}>{I18n.t('cart.items', { locale: lang })}({itemcount})</Text>
                     {/*<Text style={{textAlign: align}}> KWD {totalamount}</Text>*/}
-                    <Text style={{textAlign: align}} onPress={()=> this.setState({
+                    {/* <Text style={{textAlign: align}} onPress={()=> this.setState({
                         showOrderHistry : true
-                    })}> Show Order History</Text>
+                    })}> Show Order History</Text> */}
                 </View>
                 <View style={{
                         flexDirection : direction,
@@ -927,6 +1106,119 @@ class Shopingcart extends Component {
                             }}>More
                         </Button>
                     </ShareSheet>
+
+                    <Modal isVisible={this.state.isShowFinalPriceWithShipping}>
+                        <View style={{
+                            height:200,
+                            width:'100%',
+                            backgroundColor:'white',
+                            borderRadius:3,
+                        }}>
+                            <Text style={{
+                                // backgroundColor:'red',
+                                textAlign:'center',
+                                fontWeight:'bold',
+                                margin:5,
+                                fontSize:18,
+                            }}>Price Detail</Text>
+                            <View style={{
+                                flexDirection:'row',
+                                // backgroundColor:'red',
+                                marginTop:20,
+                            }}>
+                                <Text style={{
+                                    marginLeft:15,
+                                }}>
+                                    Product Price
+                                </Text> 
+                                <Text style={{
+                                    marginHorizontal:5,
+                                }}>
+                                    :
+                                </Text>
+                                <Text>
+                                    {subtotalamount} KWD
+                                </Text>
+                            </View>
+
+                            <View style={{
+                                flexDirection:'row',
+                                // backgroundColor:'red',
+                                marginTop:10,
+                            }}>
+                                <Text style={{
+                                    marginLeft:15,
+                                }}>
+                                    Shipping Price
+                                </Text> 
+                                <Text style={{
+                                    marginHorizontal:5,
+                                }}>
+                                    :
+                                </Text>
+                                <Text>
+                                    { this.state.isShowFinalPriceWithShipping === true ? this.state.optimalCompany.price : 0} KWD
+                                </Text>
+                            </View>
+                            <View style={{
+                                flexDirection:'row',
+                                // backgroundColor:'red',
+                                marginTop:10,
+                            }}>
+                                <Text style={{
+                                    marginLeft:15,
+                                }}>
+                                    Final Price
+                                </Text> 
+                                <Text style={{
+                                    marginHorizontal:5,
+                                }}>
+                                    :
+                                </Text>
+                                <Text>
+                                    {subtotalamount + (this.state.isShowFinalPriceWithShipping === true ? parseFloat(this.state.optimalCompany.price) : 0.0 )} KWD
+                                </Text>
+                            </View>
+                            <View style={{
+                                flexDirection:"row",
+                                // backgroundColor:'red',
+                                justifyContent:'space-around',
+                                marginTop:20
+                            }}>
+                                <TouchableWithoutFeedback onPress={this.onClickCancelProceed.bind(this)}>
+                                    <View style={{
+                                        width:"30%",
+                                        backgroundColor:'#a9d5d1',
+                                        height:35,
+                                        justifyContent:"center",
+                                        alignItems:'center'
+                                    }}>
+                                        <Text style={{
+                                            fontSize:15,
+                                            color:'white',
+                                            fontWeight:'bold'
+                                        }}>Cancel</Text> 
+                                    </View>
+                                </TouchableWithoutFeedback>
+                                <TouchableWithoutFeedback onPress={this.onClickProceedToBuy.bind(this)}>
+                                    <View style={{
+                                        width:"30%",
+                                        backgroundColor:'#a9d5d1',
+                                        height:35,
+                                        justifyContent:"center",
+                                        alignItems:'center'
+                                    }}>
+                                        <Text style={{
+                                            fontSize:15,
+                                            color:'white',
+                                            fontWeight:'bold'
+                                        }}>Proceed</Text>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </View>
+                        </View>
+                    </Modal>
+
                     <Modal isVisible={this.state.visibleModal}>
                         <View style={{alignItems : 'center', padding:10}}>
                             <CirclesLoader />
@@ -934,6 +1226,20 @@ class Shopingcart extends Component {
                     </Modal>
         </View>
         );
+    }
+
+    onClickCancelProceed() {
+        this.setState({
+            isShowFinalPriceWithShipping: false,
+        })
+    }
+
+    onClickProceedToBuy() {
+        this.setState({
+            isShowFinalPriceWithShipping: false,       
+            visibleModal: true,     
+        },this.conformOrder())
+        // this.order(this.state.selAddress.address_id)
     }
 
     orderHistory(){
@@ -956,9 +1262,9 @@ class Shopingcart extends Component {
     }
     conformOrder(){
         let order_id = this.state.order_detail.order_id,
-        price = this.state.fleetCompanyList[0].price,
+        price = this.state.optimalCompany.price,
         u_id = this.state.order_detail.u_id,
-        fleetCompanyId = this.state.fleetCompanyList[0].fleetCompanyId,
+        fleetCompanyId = this.state.optimalCompany.fleetCompanyId,
         user_wise_product_id = this.state.order_detail.user_wise_product_id ;
 
         api.conformOrder(order_id, price, u_id, fleetCompanyId, user_wise_product_id)
@@ -970,14 +1276,15 @@ class Shopingcart extends Component {
                     conformOrderDetail : responseData.response.data,
                     showFleetCompanydetail :false
                 });
-                this.orderHistory()
-                MessageBarManager.showAlert({
-                    message: responseData.response.data.message,
-                    title:'',
-                    alertType: 'extra',
-                    titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
-                    messageStyle: { color: 'white', fontSize: 16 , textAlign: "left"},
-                })
+                // this.orderHistory()
+                this.getItems(this.state.selAddress.address_id)
+                // MessageBarManager.showAlert({
+                //     message: responseData.response.data.message,
+                //     title:'',
+                //     alertType: 'extra',
+                //     titleStyle: {color: 'white', fontSize: 18, fontWeight: 'bold' },
+                //     messageStyle: { color: 'white', fontSize: 16 , textAlign: "left"},
+                // })
 
             }
         })
@@ -998,7 +1305,7 @@ class Shopingcart extends Component {
                     borderRadius : 5}
                 }>
                 <Text onPress={()=> this.getProductTreckingLatitudeLongitude(data.order_id)} style={{ fontSize:15, color:'#696969', marginBottom:5}}> {JSON.stringify(data)}</Text>
-                </View>
+            </View>
         );
     }
         renderfleet( data, rowData: string, sectionID: number, rowID: number, index) {
